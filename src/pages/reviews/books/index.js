@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReviewCard from '../../../components/ReviewCard';
+import Header from '../../../components/Header';
 
 export default function Books() {
   const [books, setBooks] = useState([]);
@@ -92,6 +93,7 @@ export default function Books() {
 
   return (
     <div className="review-container">
+      <Header />
       <h1 className="page-title">📚 Books</h1>
       
       <div className="search-container">

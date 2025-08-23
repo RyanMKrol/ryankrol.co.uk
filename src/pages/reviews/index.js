@@ -1,8 +1,10 @@
 import Link from 'next/link'
+import Header from '../../components/Header'
 
 export default function Reviews() {
   return (
     <div className="container">
+      <Header />
       <h1 className="page-title">Reviews</h1>
       
       <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem'}}>

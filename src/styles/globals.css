@@ -11,9 +11,9 @@ body {
 }
 
 .container {
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 1.5rem 2rem 3rem 2rem;
   background-color: white;
   min-height: 100vh;
 }
@@ -21,7 +21,7 @@ body {
 .review-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 1.5rem 2rem 3rem 2rem;
   background-color: white;
   min-height: 100vh;
 }
@@ -174,4 +174,23 @@ body {
 .sort-select:focus {
   outline: none;
   border-color: #2563eb;
+}
+
+.site-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.home-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  text-decoration: none;
+  font-family: 'Source Code Pro', monospace;
+  transition: color 0.2s;
+}
+
+.home-link:hover {
+  color: #111827;
 }

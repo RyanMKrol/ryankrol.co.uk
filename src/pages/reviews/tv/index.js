@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReviewCard from '../../../components/ReviewCard';
+import Header from '../../../components/Header';
 
 export default function TV() {
   const [tvShows, setTvShows] = useState([]);
@@ -91,6 +92,7 @@ export default function TV() {
 
   return (
     <div className="review-container">
+      <Header />
       <h1 className="page-title">📺 TV Shows</h1>
       
       <div className="search-container">
