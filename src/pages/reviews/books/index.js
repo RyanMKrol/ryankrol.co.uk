@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
 

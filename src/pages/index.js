@@ -12,71 +12,51 @@ export default function Home() {
         </p>
       </div>
 
-      <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem'}}>
-        <Link href="/reviews" style={{
-          backgroundColor: 'white',
-          padding: '1.5rem',
-          borderRadius: '0.5rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          textDecoration: 'none',
-          color: 'inherit',
-          transition: 'box-shadow 0.2s'
-        }}>
-          <div style={{textAlign: 'center'}}>
-            <div style={{fontSize: '2.5rem', marginBottom: '0.75rem'}}>📝</div>
-            <h2 style={{fontSize: '1.25rem', fontWeight: '600', color: '#111827', marginBottom: '0.5rem'}}>All Reviews</h2>
-            <p style={{color: '#6b7280', fontSize: '0.875rem'}}>Browse all reviews</p>
-          </div>
-        </Link>
-        
-        <Link href="/reviews/books" style={{
-          backgroundColor: 'white',
-          padding: '1.5rem',
-          borderRadius: '0.5rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          textDecoration: 'none',
-          color: 'inherit',
-          transition: 'box-shadow 0.2s'
-        }}>
-          <div style={{textAlign: 'center'}}>
-            <div style={{fontSize: '2.5rem', marginBottom: '0.75rem'}}>📚</div>
-            <h2 style={{fontSize: '1.25rem', fontWeight: '600', color: '#111827', marginBottom: '0.5rem'}}>Books</h2>
-            <p style={{color: '#6b7280', fontSize: '0.875rem'}}>Book reviews & ratings</p>
-          </div>
-        </Link>
-        
-        <Link href="/reviews/movies" style={{
-          backgroundColor: 'white',
-          padding: '1.5rem',
-          borderRadius: '0.5rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          textDecoration: 'none',
-          color: 'inherit',
-          transition: 'box-shadow 0.2s'
-        }}>
-          <div style={{textAlign: 'center'}}>
-            <div style={{fontSize: '2.5rem', marginBottom: '0.75rem'}}>🎬</div>
-            <h2 style={{fontSize: '1.25rem', fontWeight: '600', color: '#111827', marginBottom: '0.5rem'}}>Movies</h2>
-            <p style={{color: '#6b7280', fontSize: '0.875rem'}}>Movie reviews & ratings</p>
-          </div>
-        </Link>
-        
-        <Link href="/reviews/tv" style={{
-          backgroundColor: 'white',
-          padding: '1.5rem',
-          borderRadius: '0.5rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          textDecoration: 'none',
-          color: 'inherit',
-          transition: 'box-shadow 0.2s'
-        }}>
-          <div style={{textAlign: 'center'}}>
-            <div style={{fontSize: '2.5rem', marginBottom: '0.75rem'}}>📺</div>
-            <h2 style={{fontSize: '1.25rem', fontWeight: '600', color: '#111827', marginBottom: '0.5rem'}}>TV Shows</h2>
-            <p style={{color: '#6b7280', fontSize: '0.875rem'}}>TV show reviews & ratings</p>
-          </div>
-        </Link>
-      </div>
+      <nav style={{marginTop: '2rem'}}>
+        <ul style={{listStyle: 'none', margin: 0, padding: 0}}>
+          <li style={{marginBottom: '1.5rem'}}>
+            <Link href="/reviews/books" style={{
+              textDecoration: 'none',
+              color: '#111827',
+              display: 'block',
+              padding: '0.75rem 0',
+              borderBottom: '1px solid #e5e7eb',
+              fontSize: '1.125rem',
+              fontWeight: '500',
+              transition: 'color 0.2s'
+            }}>
+              📚 Books
+            </Link>
+          </li>
+          <li style={{marginBottom: '1.5rem'}}>
+            <Link href="/reviews/movies" style={{
+              textDecoration: 'none',
+              color: '#111827',
+              display: 'block',
+              padding: '0.75rem 0',
+              borderBottom: '1px solid #e5e7eb',
+              fontSize: '1.125rem',
+              fontWeight: '500',
+              transition: 'color 0.2s'
+            }}>
+              🎬 Movies
+            </Link>
+          </li>
+          <li>
+            <Link href="/reviews/tv" style={{
+              textDecoration: 'none',
+              color: '#111827',
+              display: 'block',
+              padding: '0.75rem 0',
+              fontSize: '1.125rem',
+              fontWeight: '500',
+              transition: 'color 0.2s'
+            }}>
+              📺 TV Shows
+            </Link>
+          </li>
+        </ul>
+      </nav>
     </div>
   )
 }
