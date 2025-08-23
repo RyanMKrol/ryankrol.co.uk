@@ -47,15 +47,23 @@ export default function Books() {
         return titleB.localeCompare(titleA);
       });
     } else if (sortBy === 'score') {
-      filtered = filtered.sort((a, b) => b.score - a.score);
+      filtered = filtered.sort((a, b) => b.rating - a.rating);
     } else if (sortBy === 'score-desc') {
-      filtered = filtered.sort((a, b) => a.score - b.score);
+      filtered = filtered.sort((a, b) => a.rating - b.rating);
     } else if (sortBy === 'date-desc') {
       // Sort by date (oldest first)
-      filtered = filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+      filtered = filtered.sort((a, b) => {
+        const dateA = new Date(a.date.split('-').reverse().join('-'));
+        const dateB = new Date(b.date.split('-').reverse().join('-'));
+        return dateA - dateB;
+      });
     } else {
       // Sort by date (most recent first)
-      filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+      filtered = filtered.sort((a, b) => {
+        const dateA = new Date(a.date.split('-').reverse().join('-'));
+        const dateB = new Date(b.date.split('-').reverse().join('-'));
+        return dateB - dateA;
+      });
     }
 
     setFilteredBooks(filtered);
