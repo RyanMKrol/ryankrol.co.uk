@@ -1,7 +1,177 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
   font-family: 'Source Code Pro', monospace;
+  background-color: #f3f4f6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.review-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 2rem;
+}
+
+.review-card {
+  background-color: white;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.review-card:last-child {
+  border-bottom: none;
+}
+
+.review-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.rating-score {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.stars {
+  display: flex;
+}
+
+.star {
+  font-size: 1.5rem;
+}
+
+.star.filled {
+  color: #fbbf24;
+}
+
+.star.empty {
+  color: #d1d5db;
+}
+
+.review-text {
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.review-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.loading-container {
+  text-align: center;
+}
+
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid #e5e7eb;
+  border-bottom: 2px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-text {
+  color: #ef4444;
+}
+
+.reviews-wrapper {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.search-container {
+  margin-bottom: 2rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: 'Source Code Pro', monospace;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+}
+
+.search-results-count {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.sort-label {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.sort-select {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-family: 'Source Code Pro', monospace;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.375rem;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: #2563eb;
 }

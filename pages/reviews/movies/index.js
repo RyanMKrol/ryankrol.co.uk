@@ -3,6 +3,9 @@ import ReviewCard from '../../../components/ReviewCard';
 
 export default function Movies() {
   const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('date');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -13,9 +16,7 @@ export default function Movies() {
         if (!response.ok) throw new Error('Failed to fetch movies');
         const data = await response.json();
         
-        // Sort by date (most recent first)
-        const sortedMovies = data.sort((a, b) => new Date(b.date) - new Date(a.date));
-        setMovies(sortedMovies);
+        setMovies(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -26,14 +27,45 @@ export default function Movies() {
     fetchMovies();
   }, []);
 
+  useEffect(() => {
+    let filtered = movies.filter(movie => 
+      movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Sort the filtered results
+    if (sortBy === 'title') {
+      filtered = filtered.sort((a, b) => {
+        const titleA = a.title.replace(/^The\s+/i, '');
+        const titleB = b.title.replace(/^The\s+/i, '');
+        return titleA.localeCompare(titleB);
+      });
+    } else if (sortBy === 'title-desc') {
+      filtered = filtered.sort((a, b) => {
+        const titleA = a.title.replace(/^The\s+/i, '');
+        const titleB = b.title.replace(/^The\s+/i, '');
+        return titleB.localeCompare(titleA);
+      });
+    } else if (sortBy === 'score') {
+      filtered = filtered.sort((a, b) => b.score - a.score);
+    } else if (sortBy === 'score-desc') {
+      filtered = filtered.sort((a, b) => a.score - b.score);
+    } else if (sortBy === 'date-desc') {
+      // Sort by date (oldest first)
+      filtered = filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else {
+      // Sort by date (most recent first)
+      filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    setFilteredMovies(filtered);
+  }, [searchTerm, movies, sortBy]);
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 py-6">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading movie reviews...</p>
-          </div>
+      <div className="review-container">
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading movie reviews...</p>
         </div>
       </div>
     );
@@ -41,32 +73,57 @@ export default function Movies() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-100 py-6">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center">
-            <p className="text-red-600">Error: {error}</p>
-          </div>
+      <div className="review-container">
+        <div className="loading-container">
+          <p className="error-text">Error: {error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6">
-      <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">🎬 Movie Reviews</h1>
-        
-
-        <div className="bg-white rounded-lg shadow-md">
-          {movies.map((movie, index) => (
-            <ReviewCard 
-              key={`${movie.title}-${index}`}
-              item={movie}
-              type="movie"
-              isLast={index === movies.length - 1}
-            />
-          ))}
+    <div className="review-container">
+      <h1 className="page-title">🎬 Movies</h1>
+      
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search movies by title..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+        <div className="sort-container">
+          <label className="sort-label">Sort by:</label>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="sort-select"
+          >
+            <option value="date">Date (newest first)</option>
+            <option value="date-desc">Date (oldest first)</option>
+            <option value="title">Title (A-Z)</option>
+            <option value="title-desc">Title (Z-A)</option>
+            <option value="score">Score (highest first)</option>
+            <option value="score-desc">Score (lowest first)</option>
+          </select>
         </div>
+        {searchTerm && (
+          <div className="search-results-count">
+            Found {filteredMovies.length} movie{filteredMovies.length !== 1 ? 's' : ''}
+          </div>
+        )}
+      </div>
+      
+      <div className="reviews-wrapper">
+        {filteredMovies.map((movie, index) => (
+          <ReviewCard 
+            key={`${movie.title}-${index}`}
+            item={movie}
+            type="movie"
+            isLast={index === filteredMovies.length - 1}
+          />
+        ))}
       </div>
     </div>
   );

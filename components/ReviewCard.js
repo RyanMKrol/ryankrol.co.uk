@@ -21,22 +21,20 @@ export default function ReviewCard({ item, type, isLast = false }) {
   };
 
   return (
-    <div className={`bg-white p-6 ${!isLast ? 'border-b border-gray-200' : ''}`}>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+    <div className={`review-card ${isLast ? '' : 'border-bottom'}`}>
+      <h3 className="review-title">
         {getTitle()}
       </h3>
       
-      <div className="flex items-center mb-3">
-        <span className="text-2xl font-bold text-blue-600 mr-2">
+      <div className="rating-container">
+        <span className="rating-score">
           {getRating()}/10
         </span>
-        <div className="flex">
+        <div className="stars">
           {[...Array(10)].map((_, i) => (
             <span 
               key={i}
-              className={`text-lg ${
-                i < getRating() ? 'text-yellow-400' : 'text-gray-300'
-              }`}
+              className={`star ${i < getRating() ? 'filled' : 'empty'}`}
             >
               ★
             </span>
@@ -45,13 +43,13 @@ export default function ReviewCard({ item, type, isLast = false }) {
       </div>
       
       {getThoughts() && (
-        <p className="text-gray-700 leading-relaxed mb-3">
+        <p className="review-text">
           {getThoughts()}
         </p>
       )}
       
       {item.date && (
-        <p className="text-sm text-gray-500">
+        <p className="review-date">
           Reviewed: {item.date}
         </p>
       )}
