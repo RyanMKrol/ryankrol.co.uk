@@ -1,6 +1,6 @@
-import { DYNAMO_TABLES } from '../../../lib/constants';
-import { withApiCache, generateCacheKey } from '../../../lib/apiCache';
-import { scanTable } from '../../../lib/dynamo';
+import { DYNAMO_TABLES } from '../../../../lib/constants';
+import { withApiCache, generateCacheKey } from '../../../../lib/apiCache';
+import { scanTable } from '../../../../lib/dynamo';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
