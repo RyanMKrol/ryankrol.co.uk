@@ -41,8 +41,8 @@ export default function EditMovieReview() {
         setOriginalData(movie);
         setFormData({
           title: movie.title,
-          rating: movie.overallScore,
-          gist: movie.gist,
+          rating: movie.rating || 0,
+          gist: movie.review_text || '',
           password: ''
         });
       } catch (err) {

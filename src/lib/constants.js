@@ -3,10 +3,10 @@ import NodeCache from 'node-cache';
 const ONE_DAY_S = 60 * 60 * 24;
 
 const DYNAMO_TABLES = {
-  MOVIE_RATINGS_TABLE: 'MovieRatings',
-  BOOK_RATINGS_TABLE: 'BookRatings',
+  MOVIE_RATINGS_TABLE: 'MovieRatingsV3',
+  BOOK_RATINGS_TABLE: 'BookRatingsV3',
   ALBUM_RATINGS_TABLE: 'AlbumRatings',
-  TV_RATINGS_TABLE: 'TelevisionRatings',
+  TV_RATINGS_TABLE: 'TelevisionRatingsV3',
   VINYL_COLLECTION_TABLE: 'VinylCollection',
   CONCERTS_TABLE: 'ConcertDataItems',
 };

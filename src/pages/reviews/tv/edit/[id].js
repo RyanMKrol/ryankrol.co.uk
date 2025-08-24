@@ -41,8 +41,8 @@ export default function EditTVReview() {
         setOriginalData(tvShow);
         setFormData({
           title: tvShow.title,
-          rating: tvShow.overallScore,
-          gist: tvShow.gist,
+          rating: tvShow.rating || 0,
+          gist: tvShow.review_text || '',
           password: ''
         });
       } catch (err) {

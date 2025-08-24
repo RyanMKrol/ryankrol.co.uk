@@ -48,9 +48,9 @@ export default function Movies() {
         return titleB.localeCompare(titleA);
       });
     } else if (sortBy === 'score') {
-      filtered = filtered.sort((a, b) => b.overallScore - a.overallScore);
+      filtered = filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     } else if (sortBy === 'score-desc') {
-      filtered = filtered.sort((a, b) => a.overallScore - b.overallScore);
+      filtered = filtered.sort((a, b) => (a.rating || 0) - (b.rating || 0));
     } else if (sortBy === 'date-desc') {
       // Sort by date (oldest first)
       filtered = filtered.sort((a, b) => {
@@ -133,6 +133,7 @@ export default function Movies() {
             item={movie}
             type="movie"
             isLast={index === filteredMovies.length - 1}
+            styleVariant={2}
           />
         ))}
       </div>

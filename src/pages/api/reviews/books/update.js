@@ -57,9 +57,8 @@ export default async function handler(req, res) {
       title,
       author,
       rating,
-      overview,
-      date: dateString,
-      thumbnail: null
+      review_text: overview,
+      date: dateString
     };
 
     const putParams = {

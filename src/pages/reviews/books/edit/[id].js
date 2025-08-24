@@ -44,8 +44,8 @@ export default function EditBookReview() {
         setFormData({
           title: book.title,
           author: book.author,
-          rating: book.rating,
-          overview: book.overview,
+          rating: book.rating || 0,
+          overview: book.review_text || '',
           password: ''
         });
       } catch (err) {

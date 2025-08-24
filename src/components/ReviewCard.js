@@ -1,4 +1,4 @@
-export default function ReviewCard({ item, type, isLast = false }) {
+export default function ReviewCard({ item, type, isLast = false, styleVariant }) {
   const getTitle = () => {
     if (type === 'book') return `${item.title} by ${item.author}`;
     if (type === 'movie') return item.title;
@@ -7,31 +7,32 @@ export default function ReviewCard({ item, type, isLast = false }) {
   };
 
   const getRating = () => {
-    if (type === 'book') return item.rating;
-    if (type === 'movie') return item.overallScore;
-    if (type === 'tv') return item.overallScore;
-    return item.rating;
+    return item.rating || 0;
   };
 
   const getThoughts = () => {
-    if (type === 'book') return item.overview;
-    if (type === 'movie') return item.gist;
-    if (type === 'tv') return item.gist;
-    return item.overview;
+    return item.review_text || '';
+  };
+
+  const getCardClass = () => {
+    if (styleVariant) {
+      return `review-card review-style-${styleVariant}`;
+    }
+    return `review-card ${isLast ? '' : 'border-bottom'}`;
   };
 
   return (
-    <div className={`review-card ${isLast ? '' : 'border-bottom'}`}>
+    <div className={getCardClass()}>
       <h3 className="review-title">
         {getTitle()}
       </h3>
       
       <div className="rating-container">
         <span className="rating-score">
-          {getRating()}/10
+          {getRating()}/5
         </span>
         <div className="stars">
-          {[...Array(10)].map((_, i) => (
+          {[...Array(5)].map((_, i) => (
             <span 
               key={i}
               className={`star ${i < getRating() ? 'filled' : 'empty'}`}
@@ -50,7 +51,7 @@ export default function ReviewCard({ item, type, isLast = false }) {
       
       {item.date && (
         <p className="review-date">
-          Reviewed: {item.date}
+          Date: {item.date}
         </p>
       )}
     </div>

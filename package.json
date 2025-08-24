@@ -7,13 +7,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate:v2": "node src/scripts/migrateToV2Tables.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1692.0",
+    "dotenv": "^17.2.1",
     "next": "^15.5.0",
     "node-cache": "^5.1.2",
     "react": "^19.1.1",

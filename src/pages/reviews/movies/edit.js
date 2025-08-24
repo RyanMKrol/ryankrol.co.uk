@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
 
 export default function EditMovies() {
@@ -59,17 +60,18 @@ export default function EditMovies() {
       <Header />
       <h1 className="page-title">🎬 Edit Movie Reviews</h1>
       
-      <div className="edit-list">
+      <div className="reviews-wrapper">
         {movies.map((movie, index) => (
-          <div key={`${movie.title}-${index}`} className="edit-item">
-            <div className="edit-item-content">
-              <h3 className="edit-item-title">{movie.title}</h3>
-              <p className="edit-item-rating">Rating: {movie.overallScore}/5</p>
-              <p className="edit-item-date">{movie.date}</p>
-            </div>
+          <div key={`${movie.title}-${index}`} className="review-card-with-edit">
+            <ReviewCard 
+              item={movie}
+              type="movie"
+              isLast={false}
+              styleVariant={2}
+            />
             <Link 
               href={`/reviews/movies/edit/${encodeURIComponent(movie.title)}`}
-              className="edit-button"
+              className="edit-button-overlay"
             >
               Edit
             </Link>

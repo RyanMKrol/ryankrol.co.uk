@@ -113,7 +113,6 @@ body {
 .reviews-wrapper {
   background-color: white;
   border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .search-container {
@@ -367,5 +366,62 @@ body {
 }
 
 .edit-button:hover {
+  background-color: #d97706;
+}
+
+/* Chalky Aesthetic Review Style */
+.review-style-2 {
+  background: #fcf9f4;
+  border: none;
+  border-left: 5px solid #d4af8c;
+  border-radius: 0;
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  box-shadow: 0 1px 3px rgba(139, 109, 83, 0.08);
+}
+
+.review-style-2 .review-title {
+  color: #6b4f37;
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.3px;
+}
+
+.review-style-2 .review-text {
+  color: #a68a70;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.8;
+}
+
+.review-style-2 .review-date {
+  color: #7d5e42;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Edit page styling */
+.review-card-with-edit {
+  position: relative;
+}
+
+.edit-button-overlay {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #f59e0b;
+  color: white;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button-overlay:hover {
   background-color: #d97706;
 }

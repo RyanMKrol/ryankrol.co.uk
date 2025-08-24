@@ -52,14 +52,9 @@ export default async function handler(req, res) {
     
     const reviewData = {
       title,
-      overallScore: rating,
-      craftsmanshipScore: rating,
-      storyScore: rating,
-      characterScore: rating,
-      soundScore: rating,
-      gist,
-      date: dateString,
-      thumbnail: null
+      rating,
+      review_text: gist,
+      date: dateString
     };
 
     const putParams = {

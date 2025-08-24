@@ -49,9 +49,9 @@ export default function Books() {
         return titleB.localeCompare(titleA);
       });
     } else if (sortBy === 'score') {
-      filtered = filtered.sort((a, b) => b.rating - a.rating);
+      filtered = filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     } else if (sortBy === 'score-desc') {
-      filtered = filtered.sort((a, b) => a.rating - b.rating);
+      filtered = filtered.sort((a, b) => (a.rating || 0) - (b.rating || 0));
     } else if (sortBy === 'date-desc') {
       // Sort by date (oldest first)
       filtered = filtered.sort((a, b) => {
@@ -134,6 +134,7 @@ export default function Books() {
             item={book}
             type="book"
             isLast={index === filteredBooks.length - 1}
+            styleVariant={2}
           />
         ))}
       </div>

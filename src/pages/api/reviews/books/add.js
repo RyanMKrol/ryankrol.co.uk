@@ -39,9 +39,8 @@ export default async function handler(req, res) {
       title,
       author,
       rating,
-      overview,
-      date: dateString,
-      thumbnail: null // No thumbnail for simplified reviews
+      review_text: overview,
+      date: dateString
     };
 
     const params = {
