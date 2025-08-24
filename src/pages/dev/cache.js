@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import Header from '../../components/Header';
 
 export default function CacheDevPage() {
   const [stats, setStats] = useState(null);
@@ -102,7 +103,7 @@ export default function CacheDevPage() {
           <title>Cache Dev Tools - ryankrol.co.uk</title>
         </Head>
         
-        <div className="container" style={{ padding: '2rem', maxWidth: '400px' }}>
+        <div className="container" style={{ maxWidth: '400px' }}>
           <h1 style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>
             🔒 Authentication Required
           </h1>
@@ -180,7 +181,8 @@ export default function CacheDevPage() {
         <title>Cache Dev Tools - ryankrol.co.uk</title>
       </Head>
       
-      <div className="container" style={{ padding: '2rem' }}>
+      <div className="container">
+        <Header />
         <h1 style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>
           🔧 Cache Dev Tools
         </h1>
