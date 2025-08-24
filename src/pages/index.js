@@ -77,8 +77,22 @@ export default function Home() {
               🎵 Albums
             </Link>
           </li>
-          <li>
+          <li style={{marginBottom: '1.5rem'}}>
             <Link href="/workouts" style={{
+              textDecoration: 'none',
+              color: '#111827',
+              display: 'block',
+              padding: '0.75rem 0',
+              borderBottom: '1px solid #e5e7eb',
+              fontSize: '1.125rem',
+              fontWeight: '500',
+              transition: 'color 0.2s'
+            }}>
+              🏋️ Workouts
+            </Link>
+          </li>
+          <li>
+            <Link href="/listening" style={{
               textDecoration: 'none',
               color: '#111827',
               display: 'block',
@@ -87,7 +101,7 @@ export default function Home() {
               fontWeight: '500',
               transition: 'color 0.2s'
             }}>
-              🏋️ Workouts
+              🎧 What I've Been Listening To
             </Link>
           </li>
         </ul>
