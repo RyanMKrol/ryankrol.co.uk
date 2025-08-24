@@ -1,5 +1,5 @@
-import { DYNAMO_TABLES, SERVER_CACHES } from '../../../lib/constants';
-import cacheReadthrough from '../../../lib/cache';
+import { DYNAMO_TABLES } from '../../../lib/constants';
+import { withApiCache, generateCacheKey } from '../../../lib/apiCache';
 import { scanTable } from '../../../lib/dynamo';
 
 export default async function handler(req, res) {
@@ -8,11 +8,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const books = await cacheReadthrough(
-      SERVER_CACHES.BOOK_CACHE,
-      'books',
-      async () => scanTable(DYNAMO_TABLES.BOOK_RATINGS_TABLE)
-    );
+    const cacheKey = generateCacheKey('books');
+    
+    const books = await withApiCache(cacheKey, async () => {
+      return await scanTable(DYNAMO_TABLES.BOOK_RATINGS_TABLE);
+    });
 
     res.status(200).json(books);
   } catch (error) {

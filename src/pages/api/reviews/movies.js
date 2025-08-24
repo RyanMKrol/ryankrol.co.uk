@@ -1,5 +1,5 @@
-import { DYNAMO_TABLES, SERVER_CACHES } from '../../../lib/constants';
-import cacheReadthrough from '../../../lib/cache';
+import { DYNAMO_TABLES } from '../../../lib/constants';
+import { withApiCache, generateCacheKey } from '../../../lib/apiCache';
 import { scanTable } from '../../../lib/dynamo';
 
 export default async function handler(req, res) {
@@ -8,11 +8,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const movies = await cacheReadthrough(
-      SERVER_CACHES.MOVIE_CACHE,
-      'movies',
-      async () => scanTable(DYNAMO_TABLES.MOVIE_RATINGS_TABLE)
-    );
+    const cacheKey = generateCacheKey('movies');
+    
+    const movies = await withApiCache(cacheKey, async () => {
+      return await scanTable(DYNAMO_TABLES.MOVIE_RATINGS_TABLE);
+    });
 
     res.status(200).json(movies);
   } catch (error) {
