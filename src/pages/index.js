@@ -8,7 +8,7 @@ export default function Home() {
           Welcome to ryankrol.co.uk
         </h1>
         <p style={{fontSize: '1.25rem', color: 'gray'}}>
-          Your personal space for reviews and more
+          Reviews, workouts, and random thoughts
         </p>
       </div>
 
