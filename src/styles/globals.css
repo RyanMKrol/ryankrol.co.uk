@@ -625,6 +625,144 @@ body {
   border-color: #2563eb;
 }
 
+/* Now Playing Component - Last.fm */
+.now-playing {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.now-playing.loading,
+.now-playing.offline {
+  background: #6b7280;
+  color: #d1d5db;
+}
+
+.now-playing-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  opacity: 0.9;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.now-playing.loading .now-playing-label,
+.now-playing.offline .now-playing-label {
+  margin-bottom: 0;
+}
+
+/* Split layout for static label + marquee text */
+.now-playing-split {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.now-playing-label-inline {
+  font-size: 0.875rem;
+  font-weight: 500;
+  opacity: 0.9;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.track-link-single {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+
+.track-link-single:hover {
+  text-decoration: underline;
+}
+
+.single-line-track {
+  font-size: 0.875rem;
+  font-weight: 500;
+  width: 100%;
+}
+
+/* Marquee Component */
+.marquee-container {
+  width: 100%;
+}
+
+.marquee-text {
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.marquee-text.scrolling {
+  animation-name: marquee;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+
+@keyframes marquee {
+  0% { 
+    transform: translateX(0);
+  }
+  30% { 
+    transform: translateX(0);
+  }
+  90% { 
+    transform: translateX(-100%);
+  }
+  100% { 
+    transform: translateX(-100%);
+  }
+}
+
+/* Header styling for Now Playing */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-now-playing {
+  width: 350px;
+  flex-shrink: 0;
+}
+
+.header-now-playing .now-playing {
+  margin-bottom: 0;
+  padding: 0.5rem 0.75rem;
+  width: 350px;
+}
+
+.header-now-playing .now-playing-label-inline {
+  font-size: 0.75rem;
+}
+
+.header-now-playing .single-line-track {
+  font-size: 0.75rem;
+  width: 100%;
+}
+
+.header-now-playing .marquee-container {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header-now-playing {
+    max-width: none;
+  }
+}
+
 /* Variant 2: Blue-grey gradient */
 .workout-style-2 {
   background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
