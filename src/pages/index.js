@@ -5,7 +5,7 @@ export default function Home() {
     <div className="container">
       <div style={{textAlign: 'center', marginBottom: '3rem'}}>
         <h1 style={{fontSize: '3rem', fontWeight: 'bold', color: 'black', marginBottom: '1rem'}}>
-          Welcome to ryankrol.co.uk
+          Howdy!
         </h1>
         <p style={{fontSize: '1.25rem', color: 'gray'}}>
           Reviews, workouts, and random thoughts
