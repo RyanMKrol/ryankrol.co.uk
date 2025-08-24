@@ -1,15 +1,22 @@
 import Link from 'next/link'
+import NowPlaying from '../components/NowPlaying'
 
 export default function Home() {
   return (
     <div className="container">
-      <div style={{textAlign: 'center', marginBottom: '3rem'}}>
+      <div style={{textAlign: 'center', marginBottom: '2rem'}}>
         <h1 style={{fontSize: '3rem', fontWeight: 'bold', color: 'black', marginBottom: '1rem'}}>
           Howdy!
         </h1>
         <p style={{fontSize: '1.25rem', color: 'gray'}}>
           Reviews, workouts, and random thoughts
         </p>
+      </div>
+
+      <div style={{marginBottom: '2rem', display: 'flex', justifyContent: 'center'}}>
+        <div style={{maxWidth: '400px', width: '100%'}}>
+          <NowPlaying />
+        </div>
       </div>
 
       <nav style={{marginTop: '2rem'}}>

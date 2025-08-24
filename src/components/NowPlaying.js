@@ -42,7 +42,7 @@ export default function NowPlaying() {
   if (error || !track || !track.isPlaying) {
     return (
       <div className="now-playing offline">
-        <span className="now-playing-label">♪ Not listening</span>
+        <span className="now-playing-label">♪ I'm Not listening to anything :)</span>
       </div>
     );
   }
