@@ -141,6 +141,79 @@ export default function Home() {
           </li>
         </ul>
       </nav>
+      
+      <div style={{marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb'}}>
+        <h2 style={{fontSize: '1.25rem', fontWeight: '600', color: '#374151', marginBottom: '1rem'}}>
+          Connect
+        </h2>
+        <div style={{display: 'flex', flexWrap: 'wrap', gap: '1.5rem'}}>
+          <a 
+            href="https://instagram.com/_ryankrol" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: 'none',
+              color: '#111827',
+              fontSize: '1rem',
+              transition: 'color 0.2s'
+            }}
+          >
+            📷 Instagram
+          </a>
+          <a 
+            href="https://facebook.com/krol.ryan" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: 'none',
+              color: '#111827',
+              fontSize: '1rem',
+              transition: 'color 0.2s'
+            }}
+          >
+            📘 Facebook
+          </a>
+          <a 
+            href="https://github.com/RyanMKrol" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: 'none',
+              color: '#111827',
+              fontSize: '1rem',
+              transition: 'color 0.2s'
+            }}
+          >
+            💻 GitHub
+          </a>
+          <a 
+            href="https://linkedin.com/in/ryan-krol-265308a2/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: 'none',
+              color: '#111827',
+              fontSize: '1rem',
+              transition: 'color 0.2s'
+            }}
+          >
+            💼 LinkedIn
+          </a>
+          <a 
+            href="https://last.fm/user/somethingmeaty" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: 'none',
+              color: '#111827',
+              fontSize: '1rem',
+              transition: 'color 0.2s'
+            }}
+          >
+            🎧 Last.fm
+          </a>
+        </div>
+      </div>
     </div>
   )
 }
