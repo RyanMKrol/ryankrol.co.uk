@@ -33,6 +33,21 @@ export default async function handler(req, res) {
   }
 
   try {
+    // First get the existing review to preserve the original date
+    const getParams = {
+      TableName: DYNAMO_TABLES.BOOK_RATINGS_TABLE,
+      Key: {
+        title: originalTitle,
+        author: originalAuthor
+      }
+    };
+    
+    const existingReview = await dynamoDb.get(getParams).promise();
+    const originalDate = existingReview.Item?.date;
+    
+    // If no original date found, use current date (shouldn't happen for updates)
+    const preservedDate = originalDate || new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+    
     // If title or author changed, we need to delete the old item and create a new one
     // If only other fields changed, we can update in place
     const titleChanged = title !== originalTitle;
@@ -50,16 +65,13 @@ export default async function handler(req, res) {
       await dynamoDb.delete(deleteParams).promise();
     }
 
-    // Create/update the item with new data
-    const now = new Date();
-    const dateString = now.toLocaleDateString('en-GB').replace(/\//g, '-');
-    
+    // Create/update the item with preserved original date
     const reviewData = {
       title,
       author,
       rating,
       review_text: overview,
-      date: dateString
+      date: preservedDate
     };
 
     const putParams = {

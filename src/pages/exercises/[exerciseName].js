@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Header from '../../components/Header';
 import ExerciseProgressCharts from '../../components/ExerciseProgressCharts';
+import CardioProgressCharts from '../../components/CardioProgressCharts';
 
 export default function ExerciseDetailPage() {
   const router = useRouter();
@@ -332,6 +333,13 @@ export default function ExerciseDetailPage() {
 
         {stats && stats.exerciseType === 'strength' && (
           <ExerciseProgressCharts 
+            exerciseHistory={exerciseHistory} 
+            exerciseName={exerciseName}
+          />
+        )}
+        
+        {stats && stats.exerciseType === 'cardio' && (
+          <CardioProgressCharts 
             exerciseHistory={exerciseHistory} 
             exerciseName={exerciseName}
           />

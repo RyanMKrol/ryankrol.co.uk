@@ -152,19 +152,73 @@ export default function Workouts() {
             disabled={pagination.page <= 1}
             className="pagination-button"
           >
-            Previous
+            ← Previous
           </button>
           
-          <span className="pagination-info">
-            Page {pagination.page} of {pagination.pageCount}
-          </span>
+          <div className="pagination-pages">
+            {(() => {
+              const currentPage = pagination.page;
+              const totalPages = pagination.pageCount;
+              const pages = [];
+              
+              // Always show first page
+              if (currentPage > 4) {
+                pages.push(
+                  <button
+                    key={1}
+                    onClick={() => handlePageChange(1)}
+                    className="pagination-page"
+                  >
+                    1
+                  </button>
+                );
+                if (currentPage > 5) {
+                  pages.push(<span key="start-ellipsis" className="pagination-ellipsis">...</span>);
+                }
+              }
+              
+              // Show pages around current page (±3 pages)
+              const startPage = Math.max(1, currentPage - 3);
+              const endPage = Math.min(totalPages, currentPage + 3);
+              
+              for (let i = startPage; i <= endPage; i++) {
+                pages.push(
+                  <button
+                    key={i}
+                    onClick={() => handlePageChange(i)}
+                    className={`pagination-page ${i === currentPage ? 'active' : ''}`}
+                  >
+                    {i}
+                  </button>
+                );
+              }
+              
+              // Always show last page
+              if (currentPage < totalPages - 3) {
+                if (currentPage < totalPages - 4) {
+                  pages.push(<span key="end-ellipsis" className="pagination-ellipsis">...</span>);
+                }
+                pages.push(
+                  <button
+                    key={totalPages}
+                    onClick={() => handlePageChange(totalPages)}
+                    className="pagination-page"
+                  >
+                    {totalPages}
+                  </button>
+                );
+              }
+              
+              return pages;
+            })()}
+          </div>
           
           <button 
             onClick={() => handlePageChange(pagination.page + 1)}
             disabled={pagination.page >= pagination.pageCount}
             className="pagination-button"
           >
-            Next
+            Next →
           </button>
         </div>
       )}
