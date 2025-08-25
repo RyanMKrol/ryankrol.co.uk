@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
-import { DYNAMO_TABLES, SERVER_CACHES } from '../../../../lib/constants';
+import { DYNAMO_TABLES } from '../../../../lib/constants';
+import { clearApiCache } from '../../../../lib/apiCache';
 
 // Configure AWS
 AWS.config.update({
@@ -56,7 +57,7 @@ export default async function handler(req, res) {
     const result = await dynamoDb.update(updateParams).promise();
     
     // Clear the cache
-    SERVER_CACHES.ALBUM_CACHE.del('albums');
+    clearApiCache('api-albums');
     
     res.status(200).json({ 
       message: 'Album review updated successfully',

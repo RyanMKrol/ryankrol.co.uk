@@ -16,6 +16,7 @@ export default function EditTVReview() {
   const [originalData, setOriginalData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
@@ -107,6 +108,54 @@ export default function EditTVReview() {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    
+    if (!confirm('Are you sure you want to delete this review? This action cannot be undone.')) {
+      return;
+    }
+
+    if (!formData.password) {
+      setMessage('Password is required to delete reviews');
+      setMessageType('error');
+      return;
+    }
+
+    setDeleting(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/reviews/tv/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: originalData.title,
+          password: formData.password
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setMessage('TV show review deleted successfully!');
+        setMessageType('success');
+        setTimeout(() => {
+          router.push('/reviews/tv/edit');
+        }, 2000);
+      } else {
+        setMessage(result.message || 'Error deleting review');
+        setMessageType('error');
+      }
+    } catch (error) {
+      setMessage('Error deleting review');
+      setMessageType('error');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="review-container">
@@ -177,13 +226,35 @@ export default function EditTVReview() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="form-button"
-            disabled={saving || formData.rating === 0}
-          >
-            {saving ? 'Updating Review...' : 'Update Review'}
-          </button>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <button
+              type="submit"
+              className="form-button"
+              disabled={saving || deleting || formData.rating === 0}
+            >
+              {saving ? 'Updating Review...' : 'Update Review'}
+            </button>
+            
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={saving || deleting || !formData.password}
+              style={{
+                backgroundColor: '#dc2626',
+                color: 'white',
+                border: 'none',
+                padding: '12px 24px',
+                borderRadius: '6px',
+                cursor: saving || deleting || !formData.password ? 'not-allowed' : 'pointer',
+                opacity: saving || deleting || !formData.password ? 0.6 : 1,
+                fontFamily: 'inherit',
+                fontSize: '16px',
+                fontWeight: '500'
+              }}
+            >
+              {deleting ? 'Deleting Review...' : 'Delete Review'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

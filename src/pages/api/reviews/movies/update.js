@@ -1,4 +1,5 @@
-import { DYNAMO_TABLES, SERVER_CACHES } from '../../../../lib/constants';
+import { DYNAMO_TABLES } from '../../../../lib/constants';
+import { clearApiCache } from '../../../../lib/apiCache';
 import AWS from 'aws-sdk';
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient({
@@ -65,7 +66,7 @@ export default async function handler(req, res) {
     await dynamoDb.put(putParams).promise();
 
     // Clear the cache so updated reviews show up immediately
-    SERVER_CACHES.MOVIE_CACHE.del('movies');
+    clearApiCache('api-movies');
 
     res.status(200).json({ message: 'Review updated successfully', review: reviewData });
   } catch (error) {
