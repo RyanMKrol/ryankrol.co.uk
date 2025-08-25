@@ -23,7 +23,7 @@ export default function Home() {
         <ul style={{listStyle: 'none', margin: 0, padding: 0}}>
           <li style={{marginBottom: '1rem'}}>
             <h2 style={{fontSize: '1.25rem', fontWeight: '600', color: '#374151', marginBottom: '0.75rem'}}>
-              Ratings
+              My Ratings
             </h2>
             <ul style={{listStyle: 'none', margin: 0, padding: 0, paddingLeft: '2rem'}}>
               <li style={{marginBottom: '1rem'}}>
@@ -95,7 +95,7 @@ export default function Home() {
               fontWeight: '500',
               transition: 'color 0.2s'
             }}>
-              🏋️ Workouts
+              🏋️ My Workouts
             </Link>
           </li>
           <li style={{marginBottom: '1.5rem'}}>
@@ -109,11 +109,25 @@ export default function Home() {
               fontWeight: '500',
               transition: 'color 0.2s'
             }}>
-              🎧 What I've Been Listening To
+              🎧 My Listening History
+            </Link>
+          </li>
+          <li style={{marginBottom: '1.5rem'}}>
+            <Link href="/projects" style={{
+              textDecoration: 'none',
+              color: '#111827',
+              display: 'block',
+              padding: '0.75rem 0',
+              borderBottom: '1px solid #e5e7eb',
+              fontSize: '1.125rem',
+              fontWeight: '500',
+              transition: 'color 0.2s'
+            }}>
+              💻 My Projects
             </Link>
           </li>
           <li>
-            <Link href="/projects" style={{
+            <Link href="/vinyl" style={{
               textDecoration: 'none',
               color: '#111827',
               display: 'block',
@@ -122,7 +136,7 @@ export default function Home() {
               fontWeight: '500',
               transition: 'color 0.2s'
             }}>
-              💻 My Projects
+              🎵 My Vinyl
             </Link>
           </li>
         </ul>
