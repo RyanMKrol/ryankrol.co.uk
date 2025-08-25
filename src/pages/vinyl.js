@@ -44,7 +44,14 @@ export default function VinylPage() {
   const groupByLetter = (items) => {
     const grouped = {};
     items.forEach(item => {
-      const firstLetter = (item.artist || '').charAt(0).toUpperCase() || '#';
+      const getArtistForSorting = (artist) => {
+        if (!artist) return '';
+        return artist.replace(/^The\s+/i, '').trim();
+      };
+      
+      const sortingArtist = getArtistForSorting(item.artist);
+      const firstLetter = sortingArtist.charAt(0).toUpperCase() || '#';
+      
       if (!grouped[firstLetter]) {
         grouped[firstLetter] = [];
       }

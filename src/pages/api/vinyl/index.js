@@ -13,9 +13,17 @@ export default async function handler(req, res) {
     const vinylCollection = await withApiCache(cacheKey, async () => {
       const collection = await scanTable(DYNAMO_TABLES.VINYL_COLLECTION_TABLE);
       
-      // Sort by artist, then by title
+      // Sort by artist (ignoring "The"), then by title
       return collection.sort((a, b) => {
-        const artistCompare = (a.artist || '').localeCompare(b.artist || '');
+        const getArtistForSorting = (artist) => {
+          if (!artist) return '';
+          return artist.replace(/^The\s+/i, '').trim();
+        };
+        
+        const artistA = getArtistForSorting(a.artist);
+        const artistB = getArtistForSorting(b.artist);
+        
+        const artistCompare = artistA.localeCompare(artistB);
         if (artistCompare !== 0) return artistCompare;
         return (a.title || '').localeCompare(b.title || '');
       });
