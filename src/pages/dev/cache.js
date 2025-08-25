@@ -9,6 +9,7 @@ export default function CacheDevPage() {
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [messageVisible, setMessageVisible] = useState(true);
+  const [isLocalhost, setIsLocalhost] = useState(false);
 
   const fetchStats = async () => {
     if (!authenticated) return;
@@ -89,6 +90,19 @@ export default function CacheDevPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Check if we're on localhost
+    const hostname = window.location.hostname;
+    const localhostCheck = hostname === 'localhost' || hostname === '127.0.0.1';
+    setIsLocalhost(localhostCheck);
+    
+    // Auto-authenticate on localhost
+    if (localhostCheck) {
+      setAuthenticated(true);
+      console.log('🏠 [DEV] Localhost detected, auto-authenticating');
+    }
+  }, []);
 
   useEffect(() => {
     if (authenticated) {

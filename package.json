@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:v2": "node src/scripts/migrateToV2Tables.js"
+    "migrate:v2": "node src/scripts/migrateToV2Tables.js",
+    "workout:create-tables": "node src/scripts/createWorkoutTables.js",
+    "workout:migrate-data": "node src/scripts/migrateWorkoutData.js"
   },
   "keywords": [],
   "author": "",

@@ -4,6 +4,8 @@ const DYNAMO_TABLES = {
   ALBUM_RATINGS_TABLE: 'AlbumRatingsV2',
   TV_RATINGS_TABLE: 'TelevisionRatingsV3',
   VINYL_COLLECTION_TABLE: 'VinylCollection',
+  WORKOUTS_TABLE: 'Workouts',
+  EXERCISES_TABLE: 'Exercises',
 };
 
 export { DYNAMO_TABLES };

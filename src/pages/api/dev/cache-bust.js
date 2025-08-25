@@ -4,8 +4,18 @@ export default async function handler(req, res) {
   // Check for password in query params or request body
   const password = req.query.password || req.body?.password;
   
-  if (password !== process.env.RYANKROL_SITE_KEY) {
+  // Skip password check for localhost in development
+  const isLocalhost = req.headers.host && (
+    req.headers.host.startsWith('localhost') || 
+    req.headers.host.startsWith('127.0.0.1')
+  );
+  
+  if (!isLocalhost && password !== process.env.RYANKROL_SITE_KEY) {
     return res.status(401).json({ message: 'Unauthorized' });
+  }
+  
+  if (isLocalhost) {
+    console.log('🏠 [DEV] Localhost detected, skipping password authentication');
   }
 
   if (req.method === 'POST') {
