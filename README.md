@@ -41,7 +41,7 @@ npm install
 3. Pull environment variables from Vercel:
 
 ```bash
-vercel env pull .env.local
+vercel env pull .env.local --environment production
 ```
 
 4. Start the development server:
@@ -59,7 +59,7 @@ The site will be available at `http://localhost:3000` (or next available port).
 **Pull from Vercel:**
 
 ```bash
-vercel env pull .env.local
+vercel env pull .env.local --environment production
 ```
 
 **Add new environment variable:**
