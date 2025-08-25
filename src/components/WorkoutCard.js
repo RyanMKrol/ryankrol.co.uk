@@ -133,12 +133,48 @@ export default function WorkoutCard({ workout, isLast = false }) {
                   setLabel = `Set ${setNumber}`;
                 }
                 
+                // Format set display based on what data is available
+                let setDisplay = setLabel + ': ';
+                
+                // Weight + reps (strength training)
+                if (set.weight_kg && set.reps) {
+                  setDisplay += `${set.weight_kg}kg × ${set.reps}`;
+                }
+                // Distance only (running, cycling, etc.)
+                else if (set.distance_meters) {
+                  setDisplay += `${(set.distance_meters / 1000).toFixed(2)}km`;
+                }
+                // Duration only (plank, etc.)
+                else if (set.duration_seconds) {
+                  const minutes = Math.floor(set.duration_seconds / 60);
+                  const seconds = set.duration_seconds % 60;
+                  if (minutes > 0) {
+                    setDisplay += `${minutes}m ${seconds}s`;
+                  } else {
+                    setDisplay += `${seconds}s`;
+                  }
+                }
+                // Distance + duration (cardio with both)
+                else if (set.distance_meters && set.duration_seconds) {
+                  const minutes = Math.floor(set.duration_seconds / 60);
+                  const seconds = set.duration_seconds % 60;
+                  setDisplay += `${(set.distance_meters / 1000).toFixed(2)}km in ${minutes}m ${seconds}s`;
+                }
+                // Reps only (bodyweight)
+                else if (set.reps) {
+                  setDisplay += `${set.reps} reps`;
+                }
+                // Fallback
+                else {
+                  setDisplay += 'completed';
+                }
+                
                 return (
                   <span 
                     key={setIndex} 
                     className={`set-display ${isWarmup ? 'warmup' : ''}`}
                   >
-                    {setLabel}: {set.weight_kg}kg × {set.reps}
+                    {setDisplay}
                   </span>
                 );
               })}

@@ -75,6 +75,7 @@ export function calculateExerciseMetrics(exercise) {
     totalWorkingSets,
     totalWarmupSets,
     totalReps,
+    totalWorkingReps: totalReps, // Working reps (same as totalReps since we only count working sets)
     workingSetVolume: workingSetVolume > 0 ? Math.round(workingSetVolume * 10) / 10 : 0,
     // Only include weight-based metrics if the exercise has weight data
     heaviestWeight: hasWeightData ? heaviestWeight : null,

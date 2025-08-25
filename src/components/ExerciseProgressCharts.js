@@ -68,7 +68,6 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
   const oneRMData = strengthHistory.map(h => h.bestEstimated1RM);
   const maxWeightData = strengthHistory.map(h => h.heaviestWeight);
   const volumeData = strengthHistory.map(h => h.sessionVolume);
-  const workingSetsData = strengthHistory.map(h => h.totalWorkingSets);
 
   const chartOptions = {
     responsive: true,
@@ -166,19 +165,6 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
     ]
   };
 
-  const workingSetsChartData = {
-    labels,
-    datasets: [
-      {
-        label: 'Working Sets',
-        data: workingSetsData,
-        borderColor: '#8b5cf6',
-        backgroundColor: 'rgba(139, 92, 246, 0.1)',
-        borderWidth: 2,
-        fill: true
-      }
-    ]
-  };
 
   const ChartCard = ({ title, children, color = '#374151' }) => (
     <div style={{ 
@@ -215,20 +201,16 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
         gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
         gap: '1.5rem' 
       }}>
+        <ChartCard title="📊 Session Volume" color="#f59e0b">
+          <Line data={volumeChartData} options={chartOptions} />
+        </ChartCard>
+
         <ChartCard title="🎯 Estimated 1RM Progress" color="#3b82f6">
           <Line data={oneRMChartData} options={chartOptions} />
         </ChartCard>
 
         <ChartCard title="💪 Max Weight Progress" color="#10b981">
           <Line data={maxWeightChartData} options={chartOptions} />
-        </ChartCard>
-
-        <ChartCard title="📊 Session Volume" color="#f59e0b">
-          <Line data={volumeChartData} options={chartOptions} />
-        </ChartCard>
-
-        <ChartCard title="🔢 Working Sets" color="#8b5cf6">
-          <Line data={workingSetsChartData} options={chartOptions} />
         </ChartCard>
       </div>
 
