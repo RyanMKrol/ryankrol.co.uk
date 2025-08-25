@@ -9,7 +9,7 @@ export default function Home() {
           Howdy!
         </h1>
         <p style={{fontSize: '1.25rem', color: 'gray'}}>
-          Reviews, workouts, and random thoughts
+          Content consumption and gym attendance
         </p>
       </div>
 
