@@ -66,14 +66,14 @@ export default function VinylPage() {
   return (
     <>
       <Head>
-        <title>My Vinyl Collection - ryankrol.co.uk</title>
+        <title>My Vinyl - ryankrol.co.uk</title>
       </Head>
       
       <div className="container">
         <Header />
         
         <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-          🎵 My Vinyl Collection
+          💿 My Vinyl
         </h1>
         
         <p style={{ fontSize: '1rem', color: '#666', marginBottom: '2rem' }}>

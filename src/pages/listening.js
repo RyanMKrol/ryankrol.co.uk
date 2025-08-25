@@ -30,14 +30,14 @@ export default function ListeningPage() {
   return (
     <>
       <Head>
-        <title>What I've Been Listening To - ryankrol.co.uk</title>
+        <title>🎧 My Listening History - ryankrol.co.uk</title>
       </Head>
       
       <div className="container">
         <Header />
         
         <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-          What I've Been Listening To
+          🎧 My Listening History
         </h1>
         
         <p style={{ fontSize: '1rem', color: '#666', marginBottom: '2rem' }}>

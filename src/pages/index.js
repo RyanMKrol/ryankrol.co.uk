@@ -136,7 +136,7 @@ export default function Home() {
               fontWeight: '500',
               transition: 'color 0.2s'
             }}>
-              🎵 My Vinyl
+              💿 My Vinyl
             </Link>
           </li>
         </ul>

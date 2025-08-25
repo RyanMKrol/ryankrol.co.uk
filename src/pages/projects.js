@@ -59,14 +59,14 @@ export default function ProjectsPage() {
   return (
     <>
       <Head>
-        <title>My Projects - ryankrol.co.uk</title>
+        <title>💻 My Projects - ryankrol.co.uk</title>
       </Head>
       
       <div className="container">
         <Header />
         
         <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-          My Projects
+          💻 My Projects
         </h1>
         
         <p style={{ fontSize: '1rem', color: '#666', marginBottom: '2rem' }}>
