@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function WorkoutCard({ workout, isLast = false }) {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -87,7 +89,33 @@ export default function WorkoutCard({ workout, isLast = false }) {
       <div className="workout-exercises">
         {workout.exercises.map((exercise, index) => (
           <div key={index} className="exercise-item">
-            <h4 className="exercise-title">{exercise.title}</h4>
+            <h4 className="exercise-title">
+              <Link 
+                href={`/exercises/${encodeURIComponent(exercise.title)}`}
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  cursor: 'pointer'
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.color = '#3b82f6';
+                  e.target.style.textDecoration = 'underline';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.color = 'inherit';
+                  e.target.style.textDecoration = 'none';
+                }}
+              >
+                {exercise.title}
+                <span style={{ 
+                  marginLeft: '0.5rem', 
+                  fontSize: '0.7rem',
+                  opacity: 0.7 
+                }}>
+                  📊
+                </span>
+              </Link>
+            </h4>
             <div className="exercise-sets">
               {exercise.sets.map((set, setIndex) => {
                 const isWarmup = set.type === 'warmup';
