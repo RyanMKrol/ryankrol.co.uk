@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import WorkoutCard from '../components/WorkoutCard';
+import Header from '../../components/Header';
+import WorkoutCard from '../../components/WorkoutCard';
 
 export default function Workouts() {
   const [workouts, setWorkouts] = useState([]);
