@@ -3,7 +3,7 @@ import NowPlaying from '../components/NowPlaying'
 
 export default function Home() {
   return (
-    <div className="container">
+    <div className="container" style={{display: 'flex', flexDirection: 'column', minHeight: '100vh'}}>
       <div style={{textAlign: 'center', marginBottom: '2rem'}}>
         <h1 style={{fontSize: '3rem', fontWeight: 'bold', marginBottom: '1rem'}} className="page-title">
           Howdy!
@@ -62,7 +62,7 @@ export default function Home() {
         </Link>
       </div>
 
-      <div style={{marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--color-border)', textAlign: 'center'}}>
+      <div style={{marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid var(--color-border)', textAlign: 'center', paddingBottom: '2rem'}}>
         <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.9rem'}}>
           <a
             href="https://instagram.com/_ryankrol"
