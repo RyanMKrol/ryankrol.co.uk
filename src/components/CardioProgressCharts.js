@@ -25,7 +25,14 @@ ChartJS.register(
 );
 
 export default function CardioProgressCharts({ exerciseHistory, exerciseName }) {
-  const { gridColor, textColor, fontFamily } = useChartTheme();
+  const {
+    gridColor, textColor, fontFamily,
+    chartPrimary, chartPrimaryBg,
+    chartSecondary, chartSecondaryBg,
+    chartTertiary, chartTertiaryBg,
+    chartCardDefault,
+    tooltipBg, tooltipTitle, tooltipBody, tooltipBorder
+  } = useChartTheme();
 
   // Filter only cardio exercises and reverse to get chronological order
   const cardioHistory = exerciseHistory
@@ -87,10 +94,10 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
       tooltip: {
         mode: 'index',
         intersect: false,
-        backgroundColor: 'rgba(0, 12, 0, 0.9)',
-        titleColor: '#00ff41',
-        bodyColor: '#00cc33',
-        borderColor: 'rgba(0, 255, 65, 0.3)',
+        backgroundColor: tooltipBg,
+        titleColor: tooltipTitle,
+        bodyColor: tooltipBody,
+        borderColor: tooltipBorder,
         borderWidth: 1
       }
     },
@@ -137,8 +144,8 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
       {
         label: 'Distance (km)',
         data: distanceData,
-        borderColor: '#00ff41',
-        backgroundColor: 'rgba(0, 255, 65, 0.1)',
+        borderColor: chartPrimary,
+        backgroundColor: chartPrimaryBg,
         borderWidth: 2,
         fill: true
       }
@@ -151,8 +158,8 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
       {
         label: 'Duration (minutes)',
         data: durationData,
-        borderColor: '#00cc33',
-        backgroundColor: 'rgba(0, 204, 51, 0.1)',
+        borderColor: chartSecondary,
+        backgroundColor: chartSecondaryBg,
         borderWidth: 2,
         fill: true
       }
@@ -165,15 +172,15 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
       {
         label: 'Pace (min/km)',
         data: paceData,
-        borderColor: '#33ff66',
-        backgroundColor: 'rgba(51, 255, 102, 0.1)',
+        borderColor: chartTertiary,
+        backgroundColor: chartTertiaryBg,
         borderWidth: 2,
         fill: true
       }
     ]
   };
 
-  const ChartCard = ({ title, children, color = '#00cc33' }) => (
+  const ChartCard = ({ title, children, color = chartCardDefault }) => (
     <div className="chart-card">
       <h3 style={{
         fontSize: '1.1rem',
@@ -205,16 +212,16 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
         gridTemplateColumns: hasPaceData ? 'repeat(auto-fit, minmax(400px, 1fr))' : 'repeat(auto-fit, minmax(500px, 1fr))',
         gap: '1.5rem'
       }}>
-        <ChartCard title="📏 Distance Progress" color="#00ff41">
+        <ChartCard title="📏 Distance Progress" color={chartPrimary}>
           <Line data={distanceChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="⏱️ Duration Progress" color="#00cc33">
+        <ChartCard title="⏱️ Duration Progress" color={chartSecondary}>
           <Line data={durationChartData} options={chartOptions} />
         </ChartCard>
 
         {hasPaceData && (
-          <ChartCard title="🏃 Pace Progress" color="#33ff66">
+          <ChartCard title="🏃 Pace Progress" color={chartTertiary}>
             <Line data={paceChartData} options={chartOptions} />
           </ChartCard>
         )}

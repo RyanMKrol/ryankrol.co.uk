@@ -9,6 +9,11 @@ export default function Document() {
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
       </Head>
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem('matrix-active')==='true'){document.documentElement.classList.add('matrix-active')}}catch(e){}`
+          }}
+        />
         <Main />
         <NextScript />
       </body>

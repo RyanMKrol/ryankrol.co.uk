@@ -25,7 +25,14 @@ ChartJS.register(
 );
 
 export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }) {
-  const { gridColor, textColor, fontFamily } = useChartTheme();
+  const {
+    gridColor, textColor, fontFamily,
+    chartPrimary, chartPrimaryBg,
+    chartSecondary, chartSecondaryBg,
+    chartTertiary, chartTertiaryBg,
+    chartCardDefault,
+    tooltipBg, tooltipTitle, tooltipBody, tooltipBorder
+  } = useChartTheme();
 
   // Filter only strength exercises and reverse to get chronological order
   // Handle both new data (with exerciseType) and legacy data (without exerciseType)
@@ -80,10 +87,10 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       tooltip: {
         mode: 'index',
         intersect: false,
-        backgroundColor: 'rgba(0, 12, 0, 0.9)',
-        titleColor: '#00ff41',
-        bodyColor: '#00cc33',
-        borderColor: 'rgba(0, 255, 65, 0.3)',
+        backgroundColor: tooltipBg,
+        titleColor: tooltipTitle,
+        bodyColor: tooltipBody,
+        borderColor: tooltipBorder,
         borderWidth: 1
       }
     },
@@ -130,8 +137,8 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Estimated 1RM (kg)',
         data: oneRMData,
-        borderColor: '#00ff41',
-        backgroundColor: 'rgba(0, 255, 65, 0.1)',
+        borderColor: chartPrimary,
+        backgroundColor: chartPrimaryBg,
         borderWidth: 2,
         fill: true
       }
@@ -144,8 +151,8 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Max Weight (kg)',
         data: maxWeightData,
-        borderColor: '#00cc33',
-        backgroundColor: 'rgba(0, 204, 51, 0.1)',
+        borderColor: chartSecondary,
+        backgroundColor: chartSecondaryBg,
         borderWidth: 2,
         fill: true
       }
@@ -158,15 +165,15 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Session Volume (kg)',
         data: volumeData,
-        borderColor: '#33ff66',
-        backgroundColor: 'rgba(51, 255, 102, 0.1)',
+        borderColor: chartTertiary,
+        backgroundColor: chartTertiaryBg,
         borderWidth: 2,
         fill: true
       }
     ]
   };
 
-  const ChartCard = ({ title, children, color = '#00cc33' }) => (
+  const ChartCard = ({ title, children, color = chartCardDefault }) => (
     <div className="chart-card">
       <h3 style={{
         fontSize: '1.1rem',
@@ -195,15 +202,15 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
         gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
         gap: '1.5rem'
       }}>
-        <ChartCard title="📊 Session Volume" color="#33ff66">
+        <ChartCard title="📊 Session Volume" color={chartTertiary}>
           <Line data={volumeChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="🎯 Estimated 1RM Progress" color="#00ff41">
+        <ChartCard title="🎯 Estimated 1RM Progress" color={chartPrimary}>
           <Line data={oneRMChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="💪 Max Weight Progress" color="#00cc33">
+        <ChartCard title="💪 Max Weight Progress" color={chartSecondary}>
           <Line data={maxWeightChartData} options={chartOptions} />
         </ChartCard>
       </div>

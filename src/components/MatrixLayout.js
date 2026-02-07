@@ -1,14 +1,16 @@
-import MatrixRain from './MatrixRain';
-import CRTOverlay from './CRTOverlay';
+import dynamic from 'next/dynamic';
 
-export default function MatrixLayout({ children }) {
+const MatrixRain = dynamic(() => import('./MatrixRain'), { ssr: false });
+const CRTOverlay = dynamic(() => import('./CRTOverlay'), { ssr: false });
+
+export default function MatrixLayout({ active, children }) {
   return (
     <>
-      <MatrixRain />
-      <div className="matrix-content-wrapper">
+      {active && <MatrixRain />}
+      <div className={active ? 'matrix-content-wrapper' : undefined}>
         {children}
       </div>
-      <CRTOverlay />
+      {active && <CRTOverlay />}
     </>
   );
 }

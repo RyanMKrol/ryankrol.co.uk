@@ -245,7 +245,7 @@ export default function ExerciseDetailPage() {
                   <div>
                     <div className="stat-label">1RM PROGRESS (RECENT)</div>
                     <div className="stat-value" style={{
-                      color: stats.progress1RM > 0 ? '#10b981' : stats.progress1RM < 0 ? '#ef4444' : undefined
+                      color: stats.progress1RM > 0 ? 'var(--color-progress-positive)' : stats.progress1RM < 0 ? 'var(--color-progress-negative)' : undefined
                     }}>
                       {stats.progress1RM > 0 ? '+' : ''}{stats.progress1RM}%
                     </div>

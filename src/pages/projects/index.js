@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Header from '../../components/Header';
+import useMatrixActive from '../../hooks/useMatrixActive';
 
 export default function ProjectsPage() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [username, setUsername] = useState('');
+  const matrixActive = useMatrixActive();
 
   useEffect(() => {
     async function fetchRepos() {
@@ -39,21 +41,38 @@ export default function ProjectsPage() {
   };
 
   const getLanguageColor = (language) => {
+    if (matrixActive) {
+      const matrixColors = {
+        'JavaScript': '#00ff41',
+        'TypeScript': '#00cc33',
+        'Python': '#33ff66',
+        'Java': '#00aa22',
+        'Go': '#66ff88',
+        'Rust': '#008f11',
+        'C++': '#00cc33',
+        'C': '#00aa22',
+        'HTML': '#33ff66',
+        'CSS': '#66ff88',
+        'Shell': '#00ff41',
+        'Ruby': '#008f11'
+      };
+      return matrixColors[language] || '#00aa22';
+    }
     const colors = {
-      'JavaScript': '#00ff41',
-      'TypeScript': '#00cc33',
-      'Python': '#33ff66',
-      'Java': '#00aa22',
-      'Go': '#66ff88',
-      'Rust': '#008f11',
-      'C++': '#00cc33',
-      'C': '#00aa22',
-      'HTML': '#33ff66',
-      'CSS': '#66ff88',
-      'Shell': '#00ff41',
-      'Ruby': '#008f11'
+      'JavaScript': '#f1e05a',
+      'TypeScript': '#3178c6',
+      'Python': '#3572A5',
+      'Java': '#b07219',
+      'Go': '#00ADD8',
+      'Rust': '#dea584',
+      'C++': '#f34b7d',
+      'C': '#555555',
+      'HTML': '#e34c26',
+      'CSS': '#563d7c',
+      'Shell': '#89e051',
+      'Ruby': '#701516'
     };
-    return colors[language] || '#00aa22';
+    return colors[language] || '#6b7280';
   };
 
   return (
