@@ -87,7 +87,7 @@ export default function Workouts() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">🏋️ Workouts</h1>
+      <h1 className="page-title">workouts</h1>
       
       <div className="search-container">
         <div className="workout-filters">

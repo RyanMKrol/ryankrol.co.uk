@@ -27,16 +27,20 @@ export default function ListeningPage() {
     fetchTopAlbums();
   }, []);
 
+  const maxPlaycount = albums.length > 0
+    ? Math.max(...albums.map(a => Number(a.playcount) || 0))
+    : 1;
+
   return (
     <>
       <Head>
-        <title>🎧 My Listening History - ryankrol.co.uk</title>
+        <title>My Listening History - ryankrol.co.uk</title>
       </Head>
 
       <div className="container">
         <Header />
 
-        <h1 className="page-title">🎧 My Listening History</h1>
+        <h1 className="page-title">listening</h1>
 
         <p className="page-subtitle">
           My most played albums from the last 3 months, via Last.fm
@@ -61,60 +65,69 @@ export default function ListeningPage() {
         )}
 
         {!loading && !error && albums.length > 0 && (
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            {albums.map((album, index) => (
-              <div
-                key={`${album.artist}-${album.name}`}
-                className="listening-item"
-              >
-                <div className="text-muted" style={{
-                  fontSize: '1.25rem',
-                  fontWeight: 'bold',
-                  minWidth: '2rem',
-                  textAlign: 'right'
-                }}>
-                  {index + 1}
-                </div>
+          <div style={{ display: 'grid', gap: '0' }}>
+            {albums.map((album, index) => {
+              const barWidth = ((Number(album.playcount) || 0) / maxPlaycount) * 100;
+              return (
+                <div
+                  key={`${album.artist}-${album.name}`}
+                  className="listening-item-wrapper"
+                >
+                  <div className="listening-item">
+                    <div className={`text-muted listening-rank${index < 3 ? ' top-3' : ''}`} style={{
+                      fontSize: '1.25rem',
+                      fontWeight: 'bold',
+                      minWidth: '2rem',
+                      textAlign: 'right'
+                    }}>
+                      {index + 1}
+                    </div>
 
-                <div style={{ flex: 1 }}>
-                  {album.url ? (
-                    <a
-                      href={album.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        textDecoration: 'none',
-                        color: 'inherit',
-                        display: 'block'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
-                        {album.name}
-                      </div>
-                      <div className="text-muted" style={{ fontSize: '0.9rem' }}>
-                        by {album.artist}
-                      </div>
-                    </a>
-                  ) : (
-                    <>
-                      <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
-                        {album.name}
-                      </div>
-                      <div className="text-muted" style={{ fontSize: '0.9rem' }}>
-                        by {album.artist}
-                      </div>
-                    </>
-                  )}
-                </div>
+                    <div style={{ flex: 1 }}>
+                      {album.url ? (
+                        <a
+                          href={album.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            textDecoration: 'none',
+                            color: 'inherit',
+                            display: 'block'
+                          }}
+                        >
+                          <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
+                            {album.name}
+                          </div>
+                          <div className="text-muted" style={{ fontSize: '0.9rem' }}>
+                            by {album.artist}
+                          </div>
+                        </a>
+                      ) : (
+                        <>
+                          <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
+                            {album.name}
+                          </div>
+                          <div className="text-muted" style={{ fontSize: '0.9rem' }}>
+                            by {album.artist}
+                          </div>
+                        </>
+                      )}
+                    </div>
 
-                <div className="text-muted" style={{
-                  fontSize: '0.9rem',
-                  textAlign: 'right'
-                }}>
-                  {album.playcount} play{album.playcount !== 1 ? 's' : ''}
+                    <div className="text-muted" style={{
+                      fontSize: '0.9rem',
+                      textAlign: 'right'
+                    }}>
+                      {album.playcount} play{album.playcount !== 1 ? 's' : ''}
+                    </div>
+                  </div>
+                  <div
+                    className="popularity-bar"
+                    style={{ width: `${barWidth}%` }}
+                  />
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

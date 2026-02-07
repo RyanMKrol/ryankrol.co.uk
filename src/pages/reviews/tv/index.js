@@ -94,7 +94,7 @@ export default function TV() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">📺 TV Shows</h1>
+      <h1 className="page-title">tv shows</h1>
       
       <div className="search-container">
         <input

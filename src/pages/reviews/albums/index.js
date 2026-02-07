@@ -106,7 +106,7 @@ export default function Albums() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">🎵 Albums</h1>
+      <h1 className="page-title">albums</h1>
       
       <div className="search-container">
         <input

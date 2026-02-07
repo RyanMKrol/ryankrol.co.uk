@@ -94,7 +94,7 @@ export default function Movies() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">🎬 Movies</h1>
+      <h1 className="page-title">movies</h1>
       
       <div className="search-container">
         <input

@@ -8,7 +8,8 @@ export default function Home() {
         <h1 style={{fontSize: '3rem', fontWeight: 'bold', marginBottom: '1rem'}} className="page-title">
           Howdy!
         </h1>
-        <p className="text-muted" style={{fontSize: '1.25rem'}}>
+        <p className="terminal-prompt">
+          <span className="terminal-prompt-char">&gt;</span>
           Content consumption and gym attendance
         </p>
       </div>
@@ -19,102 +20,93 @@ export default function Home() {
         </div>
       </div>
 
-      <nav style={{marginTop: '2rem'}}>
-        <ul style={{listStyle: 'none', margin: 0, padding: 0}}>
-          <li style={{marginBottom: '1rem'}}>
-            <h2 className="home-section-title">
-              My Ratings
-            </h2>
-            <ul style={{listStyle: 'none', margin: 0, padding: 0, paddingLeft: '2rem'}}>
-              <li style={{marginBottom: '1rem'}}>
-                <Link href="/reviews/books" className="home-nav-link">
-                  📚 Books
-                </Link>
-              </li>
-              <li style={{marginBottom: '1rem'}}>
-                <Link href="/reviews/movies" className="home-nav-link">
-                  🎬 Movies
-                </Link>
-              </li>
-              <li style={{marginBottom: '1rem'}}>
-                <Link href="/reviews/tv" className="home-nav-link">
-                  📺 TV Shows
-                </Link>
-              </li>
-              <li style={{marginBottom: '1rem'}}>
-                <Link href="/reviews/albums" className="home-nav-link">
-                  🎵 Albums
-                </Link>
-              </li>
-            </ul>
-          </li>
-          <li style={{marginBottom: '1.5rem'}}>
-            <Link href="/workouts" className="home-nav-link-large">
-              🏋️ My Workouts
-            </Link>
-          </li>
-          <li style={{marginBottom: '1.5rem'}}>
-            <Link href="/listening" className="home-nav-link-large">
-              🎧 My Listening History
-            </Link>
-          </li>
-          <li style={{marginBottom: '1.5rem'}}>
-            <Link href="/projects" className="home-nav-link-large">
-              💻 My Projects
-            </Link>
-          </li>
-          <li>
-            <Link href="/vinyl" className="home-nav-link-large no-border">
-              💿 My Vinyl
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <div className="home-grid">
+        <Link href="/reviews/books" className="home-grid-card magenta">
+          <div className="home-grid-card-path">~/books</div>
+          <div className="home-grid-card-desc">Book reviews and ratings</div>
+        </Link>
 
-      <div style={{marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--color-border)'}}>
-        <h2 className="home-section-title" style={{marginBottom: '1rem'}}>
-          Connect
-        </h2>
-        <div style={{display: 'flex', flexWrap: 'wrap', gap: '1.5rem'}}>
+        <Link href="/reviews/movies" className="home-grid-card magenta">
+          <div className="home-grid-card-path">~/movies</div>
+          <div className="home-grid-card-desc">Movie reviews and ratings</div>
+        </Link>
+
+        <Link href="/reviews/tv" className="home-grid-card magenta">
+          <div className="home-grid-card-path">~/tv</div>
+          <div className="home-grid-card-desc">TV show reviews and ratings</div>
+        </Link>
+
+        <Link href="/reviews/albums" className="home-grid-card magenta">
+          <div className="home-grid-card-path">~/albums</div>
+          <div className="home-grid-card-desc">Album reviews and ratings</div>
+        </Link>
+
+        <Link href="/workouts" className="home-grid-card">
+          <div className="home-grid-card-path">~/workouts</div>
+          <div className="home-grid-card-desc">Gym sessions and progress</div>
+        </Link>
+
+        <Link href="/listening" className="home-grid-card purple">
+          <div className="home-grid-card-path">~/listening</div>
+          <div className="home-grid-card-desc">Most played albums via Last.fm</div>
+        </Link>
+
+        <Link href="/projects" className="home-grid-card gold">
+          <div className="home-grid-card-path">~/projects</div>
+          <div className="home-grid-card-desc">GitHub repositories</div>
+        </Link>
+
+        <Link href="/vinyl" className="home-grid-card pink">
+          <div className="home-grid-card-path">~/vinyl</div>
+          <div className="home-grid-card-desc">Vinyl record collection</div>
+        </Link>
+      </div>
+
+      <div style={{marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--color-border)', textAlign: 'center'}}>
+        <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.9rem'}}>
           <a
             href="https://instagram.com/_ryankrol"
             target="_blank"
             rel="noopener noreferrer"
             className="home-social-link"
           >
-            📷 Instagram
+            instagram
           </a>
+          <span className="text-muted">/</span>
           <a
             href="https://facebook.com/krol.ryan"
             target="_blank"
             rel="noopener noreferrer"
             className="home-social-link"
           >
-            📘 Facebook
+            facebook
           </a>
+          <span className="text-muted">/</span>
           <a
             href="https://github.com/RyanMKrol"
             target="_blank"
             rel="noopener noreferrer"
             className="home-social-link"
           >
-            💻 GitHub
+            github
           </a>
+          <span className="text-muted">/</span>
           <a
             href="https://linkedin.com/in/ryan-krol-265308a2/"
             target="_blank"
             rel="noopener noreferrer"
             className="home-social-link"
           >
-            💼 LinkedIn
+            linkedin
           </a>
+          <span className="text-muted">/</span>
           <a
             href="https://last.fm/user/somethingmeaty"
             target="_blank"
             rel="noopener noreferrer"
             className="home-social-link"
           >
-            🎧 Last.fm
+            last.fm
           </a>
         </div>
       </div>

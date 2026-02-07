@@ -72,7 +72,7 @@ export default function VinylPage() {
       <div className="container">
         <Header />
 
-        <h1 className="page-title">💿 My Vinyl</h1>
+        <h1 className="page-title">vinyl</h1>
 
         <p className="page-subtitle">
           {vinyl.length > 0 ? `${vinyl.length} records in my collection` : 'Loading collection...'}
@@ -167,7 +167,7 @@ export default function VinylPage() {
                         <div style={{
                           fontSize: '0.9rem',
                           fontWeight: 'bold',
-                          color: '#059669',
+                          color: 'var(--color-accent)',
                           textAlign: 'right'
                         }}>
                           ${record.price}

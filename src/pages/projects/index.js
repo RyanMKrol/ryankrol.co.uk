@@ -59,32 +59,32 @@ export default function ProjectsPage() {
       return matrixColors[language] || '#00aa22';
     }
     const colors = {
-      'JavaScript': '#f1e05a',
-      'TypeScript': '#3178c6',
-      'Python': '#3572A5',
-      'Java': '#b07219',
-      'Go': '#00ADD8',
-      'Rust': '#dea584',
-      'C++': '#f34b7d',
-      'C': '#555555',
-      'HTML': '#e34c26',
-      'CSS': '#563d7c',
-      'Shell': '#89e051',
-      'Ruby': '#701516'
+      'JavaScript': '#ffd700',
+      'TypeScript': '#00fff5',
+      'Python': '#ff00ff',
+      'Java': '#ff6633',
+      'Go': '#00ccff',
+      'Rust': '#ff3366',
+      'C++': '#a855f7',
+      'C': '#66ffcc',
+      'HTML': '#ff6699',
+      'CSS': '#cc66ff',
+      'Shell': '#00ff88',
+      'Ruby': '#ff3399'
     };
-    return colors[language] || '#6b7280';
+    return colors[language] || '#6a6a99';
   };
 
   return (
     <>
       <Head>
-        <title>💻 My Projects - ryankrol.co.uk</title>
+        <title>My Projects - ryankrol.co.uk</title>
       </Head>
 
       <div className="container">
         <Header />
 
-        <h1 className="page-title">💻 My Projects</h1>
+        <h1 className="page-title">projects</h1>
 
         <p className="page-subtitle">
           My GitHub repositories, sorted by recent activity

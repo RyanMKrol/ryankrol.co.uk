@@ -95,7 +95,7 @@ export default function Books() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">📚 Books</h1>
+      <h1 className="page-title">books</h1>
       
       <div className="search-container">
         <input
