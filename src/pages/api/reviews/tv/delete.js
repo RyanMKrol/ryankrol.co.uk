@@ -1,14 +1,7 @@
+import { DeleteCommand } from '@aws-sdk/lib-dynamodb';
+import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
-import AWS from 'aws-sdk';
-
-const dynamoDb = new AWS.DynamoDB.DocumentClient({
-  region: 'us-east-2',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
 
 export default async function handler(req, res) {
   if (req.method !== 'DELETE') {
@@ -35,7 +28,7 @@ export default async function handler(req, res) {
       }
     };
 
-    await dynamoDb.delete(params).promise();
+    await docClient.send(new DeleteCommand(params));
 
     // Clear the cache so deleted reviews are removed immediately
     clearApiCache('api-tv');

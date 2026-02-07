@@ -8,8 +8,10 @@ export default function Header() {
         <Link href="/" className="home-link">
           ← ryankrol.co.uk
         </Link>
-        <div className="header-now-playing">
-          <NowPlaying />
+        <div className="header-right">
+          <div className="header-now-playing">
+            <NowPlaying />
+          </div>
         </div>
       </div>
     </header>

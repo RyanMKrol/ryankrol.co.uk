@@ -1,17 +1,7 @@
-import AWS from 'aws-sdk';
+import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
-
-// Configure AWS
-AWS.config.update({
-  region: 'us-east-2',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
-
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -54,12 +44,12 @@ export default async function handler(req, res) {
       ReturnValues: 'ALL_NEW'
     };
 
-    const result = await dynamoDb.update(updateParams).promise();
-    
+    const result = await docClient.send(new UpdateCommand(updateParams));
+
     // Clear the cache
     clearApiCache('api-albums');
-    
-    res.status(200).json({ 
+
+    res.status(200).json({
       message: 'Album review updated successfully',
       album: result.Attributes
     });

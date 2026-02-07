@@ -10,16 +10,19 @@
     "lint": "next lint",
     "migrate:v2": "node src/scripts/migrateToV2Tables.js",
     "workout:create-tables": "node src/scripts/createWorkoutTables.js",
-    "workout:migrate-data": "node src/scripts/migrateWorkoutData.js"
+    "workout:migrate-data": "node src/scripts/migrateWorkoutData.js",
+    "workout:audit": "node src/scripts/auditWorkouts.js",
+    "workout:audit-backfill": "node src/scripts/auditWorkouts.js --backfill"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1692.0",
+    "@aws-sdk/client-dynamodb": "^3.985.0",
+    "@aws-sdk/lib-dynamodb": "^3.985.0",
     "chart.js": "^4.5.0",
     "dotenv": "^17.2.1",
-    "next": "^15.5.0",
+    "next": "^15.5.12",
     "node-cache": "^5.1.2",
     "react": "^19.1.1",
     "react-chartjs-2": "^5.3.0",

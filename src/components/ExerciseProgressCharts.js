@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +10,7 @@ import {
   Filler
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import useChartTheme from '../hooks/useChartTheme';
 
 // Register ChartJS components
 ChartJS.register(
@@ -25,6 +25,8 @@ ChartJS.register(
 );
 
 export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }) {
+  const { gridColor, textColor, fontFamily } = useChartTheme();
+
   // Filter only strength exercises and reverse to get chronological order
   // Handle both new data (with exerciseType) and legacy data (without exerciseType)
   const strengthHistory = exerciseHistory
@@ -33,23 +35,22 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       if (h.exerciseType === 'strength' && h.bestEstimated1RM > 0) {
         return true;
       }
-      
+
       // Legacy data: infer from presence of weight-based metrics
       if (!h.exerciseType && h.bestEstimated1RM > 0 && h.heaviestWeight > 0) {
         console.log(`📊 [CHARTS] Inferring strength exercise for legacy data: ${exerciseName}`);
         return true;
       }
-      
+
       return false;
     })
     .reverse(); // Oldest first for chronological charts
 
   if (strengthHistory.length < 2) {
     return (
-      <div style={{ 
-        textAlign: 'center', 
-        padding: '2rem',
-        color: '#6b7280'
+      <div className="text-muted" style={{
+        textAlign: 'center',
+        padding: '2rem'
       }}>
         <p>Need at least 2 strength training sessions to show progress charts.</p>
         <p style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>
@@ -60,9 +61,9 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
   }
 
   // Prepare data for charts
-  const labels = strengthHistory.map(h => new Date(h.workout_date).toLocaleDateString('en-US', { 
-    month: 'short', 
-    day: 'numeric' 
+  const labels = strengthHistory.map(h => new Date(h.workout_date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric'
   }));
 
   const oneRMData = strengthHistory.map(h => h.bestEstimated1RM);
@@ -79,34 +80,34 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       tooltip: {
         mode: 'index',
         intersect: false,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#fff',
-        bodyColor: '#fff',
-        borderColor: '#374151',
+        backgroundColor: 'rgba(0, 12, 0, 0.9)',
+        titleColor: '#00ff41',
+        bodyColor: '#00cc33',
+        borderColor: 'rgba(0, 255, 65, 0.3)',
         borderWidth: 1
       }
     },
     scales: {
       x: {
         grid: {
-          color: '#f3f4f6'
+          color: gridColor
         },
         ticks: {
-          color: '#6b7280',
+          color: textColor,
           font: {
-            family: 'JetBrains Mono, monospace',
+            family: fontFamily,
             size: 10
           }
         }
       },
       y: {
         grid: {
-          color: '#f3f4f6'
+          color: gridColor
         },
         ticks: {
-          color: '#6b7280',
+          color: textColor,
           font: {
-            family: 'JetBrains Mono, monospace',
+            family: fontFamily,
             size: 10
           }
         }
@@ -129,8 +130,8 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Estimated 1RM (kg)',
         data: oneRMData,
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: '#00ff41',
+        backgroundColor: 'rgba(0, 255, 65, 0.1)',
         borderWidth: 2,
         fill: true
       }
@@ -143,8 +144,8 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Max Weight (kg)',
         data: maxWeightData,
-        borderColor: '#10b981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderColor: '#00cc33',
+        backgroundColor: 'rgba(0, 204, 51, 0.1)',
         borderWidth: 2,
         fill: true
       }
@@ -157,26 +158,19 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Session Volume (kg)',
         data: volumeData,
-        borderColor: '#f59e0b',
-        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+        borderColor: '#33ff66',
+        backgroundColor: 'rgba(51, 255, 102, 0.1)',
         borderWidth: 2,
         fill: true
       }
     ]
   };
 
-
-  const ChartCard = ({ title, children, color = '#374151' }) => (
-    <div style={{ 
-      backgroundColor: 'white',
-      padding: '1.5rem',
-      borderRadius: '8px',
-      border: '1px solid #e5e7eb',
-      marginBottom: '1.5rem'
-    }}>
-      <h3 style={{ 
-        fontSize: '1.1rem', 
-        fontWeight: 'bold', 
+  const ChartCard = ({ title, children, color = '#00cc33' }) => (
+    <div className="chart-card">
+      <h3 style={{
+        fontSize: '1.1rem',
+        fontWeight: 'bold',
         marginBottom: '1rem',
         color: color,
         display: 'flex',
@@ -196,46 +190,40 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
         📈 Progress Charts
       </h2>
 
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
-        gap: '1.5rem' 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        gap: '1.5rem'
       }}>
-        <ChartCard title="📊 Session Volume" color="#f59e0b">
+        <ChartCard title="📊 Session Volume" color="#33ff66">
           <Line data={volumeChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="🎯 Estimated 1RM Progress" color="#3b82f6">
+        <ChartCard title="🎯 Estimated 1RM Progress" color="#00ff41">
           <Line data={oneRMChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="💪 Max Weight Progress" color="#10b981">
+        <ChartCard title="💪 Max Weight Progress" color="#00cc33">
           <Line data={maxWeightChartData} options={chartOptions} />
         </ChartCard>
       </div>
 
       {/* Summary insights */}
-      <div style={{ 
-        marginTop: '2rem',
-        padding: '1rem',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        border: '1px solid #e5e7eb'
-      }}>
+      <div className="insights-panel" style={{ marginTop: '2rem' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.75rem' }}>
           📋 Progress Insights
         </h3>
-        
-        <div style={{ fontSize: '0.9rem', color: '#374151', lineHeight: '1.5' }}>
+
+        <div className="text-secondary" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>
           <p>
             <strong>Sessions analyzed:</strong> {strengthHistory.length} strength training sessions
           </p>
           <p>
-            <strong>1RM improvement:</strong> {oneRMData[0].toFixed(1)}kg → {oneRMData[oneRMData.length - 1].toFixed(1)}kg 
+            <strong>1RM improvement:</strong> {oneRMData[0].toFixed(1)}kg → {oneRMData[oneRMData.length - 1].toFixed(1)}kg
             ({oneRMData.length > 1 ? (((oneRMData[oneRMData.length - 1] - oneRMData[0]) / oneRMData[0]) * 100).toFixed(1) : '0'}% change)
           </p>
           <p>
-            <strong>Max weight improvement:</strong> {maxWeightData[0].toFixed(1)}kg → {maxWeightData[maxWeightData.length - 1].toFixed(1)}kg 
+            <strong>Max weight improvement:</strong> {maxWeightData[0].toFixed(1)}kg → {maxWeightData[maxWeightData.length - 1].toFixed(1)}kg
             ({maxWeightData.length > 1 ? (((maxWeightData[maxWeightData.length - 1] - maxWeightData[0]) / maxWeightData[0]) * 100).toFixed(1) : '0'}% change)
           </p>
           <p>

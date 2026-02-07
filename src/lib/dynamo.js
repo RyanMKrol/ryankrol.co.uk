@@ -1,18 +1,34 @@
-import AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb';
 
-const CREDENTIALS = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-};
-
-const DYNAMO_REGION = 'us-east-2';
-
-AWS.config.update({
-  region: DYNAMO_REGION,
-  credentials: CREDENTIALS
+const dynamoClient = new DynamoDBClient({
+  region: 'us-east-2',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
 });
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+const docClient = DynamoDBDocumentClient.from(dynamoClient);
+
+/**
+ * Paginated scan that loops on LastEvaluatedKey so results are never
+ * silently truncated at the 1 MB DynamoDB response limit.
+ * @param {Object} params ScanCommand parameters (TableName, FilterExpression, etc.)
+ * @returns {Array} All matching items across every page
+ */
+async function paginatedScan(params) {
+  let allItems = [];
+  let lastKey;
+  do {
+    const result = await docClient.send(
+      new ScanCommand({ ...params, ExclusiveStartKey: lastKey })
+    );
+    allItems.push(...(result.Items || []));
+    lastKey = result.LastEvaluatedKey;
+  } while (lastKey);
+  return allItems;
+}
 
 /**
  * Method to scan a table in Dynamo
@@ -20,12 +36,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
  * @returns {any} Data from the table
  */
 async function scanTable(table) {
-  const params = {
-    TableName: table
-  };
-  
-  const result = await dynamodb.scan(params).promise();
-  return result.Items;
+  return paginatedScan({ TableName: table });
 }
 
-export { scanTable };
+export { paginatedScan, scanTable, docClient, dynamoClient };

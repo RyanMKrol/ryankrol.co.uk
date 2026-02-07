@@ -1,21 +1,15 @@
 import dotenv from 'dotenv';
-import AWS from 'aws-sdk';
+import { DynamoDBClient, CreateTableCommand, waitUntilTableExists } from '@aws-sdk/client-dynamodb';
 
 dotenv.config({ path: '.env.local' });
 
-const CREDENTIALS = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-};
-
-const DYNAMO_REGION = 'us-east-2';
-
-AWS.config.update({
-  region: DYNAMO_REGION,
-  credentials: CREDENTIALS
+const dynamodb = new DynamoDBClient({
+  region: 'us-east-2',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
 });
-
-const dynamodb = new AWS.DynamoDB();
 
 async function createWorkoutsTable() {
   const params = {
@@ -54,10 +48,10 @@ async function createWorkoutsTable() {
   };
 
   try {
-    const result = await dynamodb.createTable(params).promise();
+    const result = await dynamodb.send(new CreateTableCommand(params));
     console.log('✅ Workouts table created successfully:', JSON.stringify(result.TableDescription.TableName, null, 2));
   } catch (error) {
-    if (error.code === 'ResourceInUseException') {
+    if (error.name === 'ResourceInUseException') {
       console.log('⚠️  Workouts table already exists');
     } else {
       console.error('❌ Error creating Workouts table:', error);
@@ -127,10 +121,10 @@ async function createExercisesTable() {
   };
 
   try {
-    const result = await dynamodb.createTable(params).promise();
+    const result = await dynamodb.send(new CreateTableCommand(params));
     console.log('✅ Exercises table created successfully:', JSON.stringify(result.TableDescription.TableName, null, 2));
   } catch (error) {
-    if (error.code === 'ResourceInUseException') {
+    if (error.name === 'ResourceInUseException') {
       console.log('⚠️  Exercises table already exists');
     } else {
       console.error('❌ Error creating Exercises table:', error);
@@ -141,13 +135,12 @@ async function createExercisesTable() {
 
 async function waitForTableToBeActive(tableName) {
   console.log(`⏳ Waiting for table ${tableName} to be active...`);
-  
-  const params = {
-    TableName: tableName
-  };
 
   try {
-    await dynamodb.waitFor('tableExists', params).promise();
+    await waitUntilTableExists(
+      { client: dynamodb, maxWaitTime: 120 },
+      { TableName: tableName }
+    );
     console.log(`✅ Table ${tableName} is now active`);
   } catch (error) {
     console.error(`❌ Error waiting for table ${tableName}:`, error);

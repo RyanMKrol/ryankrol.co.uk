@@ -5,7 +5,7 @@ export default function WorkoutCard({ workout, isLast = false }) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', {
       day: '2-digit',
-      month: '2-digit', 
+      month: '2-digit',
       year: 'numeric'
     }).replace(/\//g, '-');
   };
@@ -23,7 +23,7 @@ export default function WorkoutCard({ workout, isLast = false }) {
     const end = new Date(endTime);
     const diffMs = end - start;
     const diffMins = Math.round(diffMs / (1000 * 60));
-    
+
     if (diffMins < 60) {
       return `${diffMins}m`;
     } else {
@@ -64,12 +64,12 @@ export default function WorkoutCard({ workout, isLast = false }) {
       <h3 className="review-title">
         {workout.title || 'Untitled Workout'}
       </h3>
-      
+
       <div className="workout-meta">
         <p className="review-author">
           {formatDate(workout.start_time)} • {formatTime(workout.start_time)} - {formatTime(workout.end_time)}
         </p>
-        
+
         <div className="workout-stats">
           <span className="workout-stat">
             <strong>Duration:</strong> {getDuration(workout.start_time, workout.end_time)}
@@ -90,27 +90,15 @@ export default function WorkoutCard({ workout, isLast = false }) {
         {workout.exercises.map((exercise, index) => (
           <div key={index} className="exercise-item">
             <h4 className="exercise-title">
-              <Link 
+              <Link
                 href={`/exercises/${encodeURIComponent(exercise.title)}`}
-                style={{
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  cursor: 'pointer'
-                }}
-                onMouseOver={(e) => {
-                  e.target.style.color = '#3b82f6';
-                  e.target.style.textDecoration = 'underline';
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.color = 'inherit';
-                  e.target.style.textDecoration = 'none';
-                }}
+                className="exercise-link"
               >
                 {exercise.title}
-                <span style={{ 
-                  marginLeft: '0.5rem', 
+                <span style={{
+                  marginLeft: '0.5rem',
                   fontSize: '0.7rem',
-                  opacity: 0.7 
+                  opacity: 0.7
                 }}>
                   📊
                 </span>
@@ -121,7 +109,7 @@ export default function WorkoutCard({ workout, isLast = false }) {
                 const isWarmup = set.type === 'warmup';
                 const warmupSets = exercise.sets.filter(s => s.type === 'warmup');
                 const workingSets = exercise.sets.filter(s => s.type !== 'warmup');
-                
+
                 let setNumber, setLabel;
                 if (isWarmup) {
                   const warmupIndex = warmupSets.findIndex(s => s === set);
@@ -132,10 +120,10 @@ export default function WorkoutCard({ workout, isLast = false }) {
                   setNumber = workingIndex + 1;
                   setLabel = `Set ${setNumber}`;
                 }
-                
+
                 // Format set display based on what data is available
                 let setDisplay = setLabel + ': ';
-                
+
                 // Weight + reps (strength training)
                 if (set.weight_kg && set.reps) {
                   setDisplay += `${set.weight_kg}kg × ${set.reps}`;
@@ -168,10 +156,10 @@ export default function WorkoutCard({ workout, isLast = false }) {
                 else {
                   setDisplay += 'completed';
                 }
-                
+
                 return (
-                  <span 
-                    key={setIndex} 
+                  <span
+                    key={setIndex}
                     className={`set-display ${isWarmup ? 'warmup' : ''}`}
                   >
                     {setDisplay}

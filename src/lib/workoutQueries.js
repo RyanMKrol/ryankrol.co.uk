@@ -1,19 +1,6 @@
-import AWS from 'aws-sdk';
+import { GetCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { docClient, paginatedScan } from './dynamo';
 import { DYNAMO_TABLES } from './constants';
-
-const CREDENTIALS = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-};
-
-const DYNAMO_REGION = 'us-east-2';
-
-AWS.config.update({
-  region: DYNAMO_REGION,
-  credentials: CREDENTIALS
-});
-
-const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 /**
  * Get paginated workouts from DynamoDB, sorted by start_time descending
@@ -24,7 +11,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 export async function getWorkoutsPaginated(page = 1, pageSize = 10) {
   try {
     console.log(`🗄️  [DYNAMO] Scanning workouts table for pagination (page ${page}, size ${pageSize})`);
-    
+
     // First, get all workouts to sort them properly
     // Note: DynamoDB doesn't support sorting on non-key attributes without scanning
     const scanParams = {
@@ -33,10 +20,9 @@ export async function getWorkoutsPaginated(page = 1, pageSize = 10) {
     };
 
     const startTime = Date.now();
-    const result = await dynamodb.scan(scanParams).promise();
-    const allWorkouts = result.Items || [];
+    const allWorkouts = await paginatedScan(scanParams);
     const queryTime = Date.now() - startTime;
-    
+
     console.log(`🗄️  [DYNAMO] Scan completed: ${allWorkouts.length} workouts found in ${queryTime}ms`);
 
     // Sort by start_time descending (most recent first)
@@ -47,7 +33,7 @@ export async function getWorkoutsPaginated(page = 1, pageSize = 10) {
     const totalPages = Math.ceil(totalWorkouts / pageSize);
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    
+
     // Get the slice for this page
     const pageWorkouts = allWorkouts.slice(startIndex, endIndex);
 
@@ -75,7 +61,7 @@ export async function getWorkoutsPaginated(page = 1, pageSize = 10) {
 export async function getWorkoutById(workoutId) {
   try {
     console.log(`🗄️  [DYNAMO] Getting workout by ID: ${workoutId}`);
-    
+
     const params = {
       TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
       Key: {
@@ -84,12 +70,12 @@ export async function getWorkoutById(workoutId) {
     };
 
     const startTime = Date.now();
-    const result = await dynamodb.get(params).promise();
+    const result = await docClient.send(new GetCommand(params));
     const queryTime = Date.now() - startTime;
-    
+
     const found = result.Item ? 'found' : 'not found';
     console.log(`🗄️  [DYNAMO] Workout ${workoutId} ${found} (${queryTime}ms)`);
-    
+
     return result.Item || null;
 
   } catch (error) {
@@ -115,8 +101,7 @@ export async function getWorkoutsByDateRange(startDate, endDate) {
       }
     };
 
-    const result = await dynamodb.scan(params).promise();
-    const workouts = result.Items || [];
+    const workouts = await paginatedScan(params);
 
     // Sort by start_time descending
     workouts.sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
@@ -145,7 +130,7 @@ export async function getExercisesByWorkout(workoutId) {
       }
     };
 
-    const result = await dynamodb.query(params).promise();
+    const result = await docClient.send(new QueryCommand(params));
     const exercises = result.Items || [];
 
     // Sort by exercise_index to maintain workout order
@@ -178,7 +163,7 @@ export async function getExerciseHistory(exerciseName, limit = 50) {
       Limit: limit
     };
 
-    const result = await dynamodb.query(params).promise();
+    const result = await docClient.send(new QueryCommand(params));
     return result.Items || [];
 
   } catch (error) {
@@ -194,17 +179,16 @@ export async function getExerciseHistory(exerciseName, limit = 50) {
 export async function getWorkoutStats() {
   try {
     console.log('🗄️  [DYNAMO] Scanning workouts table for statistics');
-    
+
     const params = {
       TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
       ProjectionExpression: 'totalVolume, durationMinutes, workoutType, uniqueExercises, workoutDate'
     };
 
     const startTime = Date.now();
-    const result = await dynamodb.scan(params).promise();
-    const workouts = result.Items || [];
+    const workouts = await paginatedScan(params);
     const queryTime = Date.now() - startTime;
-    
+
     console.log(`🗄️  [DYNAMO] Stats scan completed: ${workouts.length} workouts processed in ${queryTime}ms`);
 
     if (workouts.length === 0) {
@@ -220,7 +204,7 @@ export async function getWorkoutStats() {
     // Calculate statistics
     const totalVolume = workouts.reduce((sum, w) => sum + (w.totalVolume || 0), 0);
     const averageDuration = workouts.reduce((sum, w) => sum + (w.durationMinutes || 0), 0) / workouts.length;
-    
+
     const workoutTypes = {};
     workouts.forEach(workout => {
       const type = workout.workoutType || 'unknown';

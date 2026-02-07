@@ -1,14 +1,7 @@
+import { GetCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
+import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
-import AWS from 'aws-sdk';
-
-const dynamoDb = new AWS.DynamoDB.DocumentClient({
-  region: 'us-east-2',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -41,18 +34,18 @@ export default async function handler(req, res) {
         author: originalAuthor
       }
     };
-    
-    const existingReview = await dynamoDb.get(getParams).promise();
+
+    const existingReview = await docClient.send(new GetCommand(getParams));
     const originalDate = existingReview.Item?.date;
-    
+
     // If no original date found, use current date (shouldn't happen for updates)
     const preservedDate = originalDate || new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
-    
+
     // If title or author changed, we need to delete the old item and create a new one
     // If only other fields changed, we can update in place
     const titleChanged = title !== originalTitle;
     const authorChanged = author !== originalAuthor;
-    
+
     if (titleChanged || authorChanged) {
       // Delete the old item
       const deleteParams = {
@@ -62,7 +55,7 @@ export default async function handler(req, res) {
           author: originalAuthor
         }
       };
-      await dynamoDb.delete(deleteParams).promise();
+      await docClient.send(new DeleteCommand(deleteParams));
     }
 
     // Create/update the item with preserved original date
@@ -79,7 +72,7 @@ export default async function handler(req, res) {
       Item: reviewData
     };
 
-    await dynamoDb.put(putParams).promise();
+    await docClient.send(new PutCommand(putParams));
 
     // Clear the cache so updated reviews show up immediately
     clearApiCache('api-books');

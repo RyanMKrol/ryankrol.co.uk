@@ -1,35 +1,32 @@
 import dotenv from 'dotenv';
-import AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { calculateExerciseMetrics, calculateWorkoutMetrics } from '../lib/workoutMetrics.js';
 
 dotenv.config({ path: '.env.local' });
 
-const CREDENTIALS = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-};
-
-const DYNAMO_REGION = 'us-east-2';
-
-AWS.config.update({
-  region: DYNAMO_REGION,
-  credentials: CREDENTIALS
+const client = new DynamoDBClient({
+  region: 'us-east-2',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
 });
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+const dynamodb = DynamoDBDocumentClient.from(client);
 
 // Rate limiting helper - 100ms between calls
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function fetchAllWorkoutsFromHevy() {
   const HEVY_API_KEY = process.env.HEVY_API_KEY;
-  
+
   if (!HEVY_API_KEY) {
     throw new Error('HEVY_API_KEY environment variable not found');
   }
 
   console.log('📡 Starting to fetch all workouts from Hevy API...');
-  
+
   let allWorkouts = [];
   let page = 1;
   let hasMorePages = true;
@@ -37,7 +34,7 @@ async function fetchAllWorkoutsFromHevy() {
 
   while (hasMorePages) {
     console.log(`📄 Fetching page ${page}...`);
-    
+
     try {
       const response = await fetch(
         `https://api.hevyapp.com/v1/workouts?page=${page}&pageSize=${pageSize}`,
@@ -56,9 +53,9 @@ async function fetchAllWorkoutsFromHevy() {
       }
 
       const data = await response.json();
-      
+
       console.log(`   ✅ Got ${data.workouts?.length || 0} workouts (page ${data.page} of ${data.page_count})`);
-      
+
       if (data.workouts && data.workouts.length > 0) {
         allWorkouts.push(...data.workouts);
       }
@@ -84,7 +81,7 @@ async function fetchAllWorkoutsFromHevy() {
 
 async function storeWorkoutInDynamoDB(workout) {
   const metrics = calculateWorkoutMetrics(workout);
-  
+
   const workoutItem = {
     id: workout.id,
     title: workout.title || 'Untitled Workout',
@@ -105,10 +102,10 @@ async function storeWorkoutInDynamoDB(workout) {
   };
 
   try {
-    await dynamodb.put(params).promise();
+    await dynamodb.send(new PutCommand(params));
     return true;
   } catch (error) {
-    if (error.code === 'ConditionalCheckFailedException') {
+    if (error.name === 'ConditionalCheckFailedException') {
       console.log(`   ⚠️  Workout ${workout.id} already exists, skipping`);
       return false;
     } else {
@@ -120,7 +117,7 @@ async function storeWorkoutInDynamoDB(workout) {
 async function storeExerciseInDynamoDB(workout, exercise, exerciseIndex) {
   const metrics = calculateExerciseMetrics(exercise);
   const workoutDate = new Date(workout.start_time).toISOString().split('T')[0];
-  
+
   const exerciseItem = {
     exercise_id: `${workout.id}_${exerciseIndex}`,
     workout_id: workout.id,
@@ -145,10 +142,10 @@ async function storeExerciseInDynamoDB(workout, exercise, exerciseIndex) {
   };
 
   try {
-    await dynamodb.put(params).promise();
+    await dynamodb.send(new PutCommand(params));
     return true;
   } catch (error) {
-    if (error.code === 'ConditionalCheckFailedException') {
+    if (error.name === 'ConditionalCheckFailedException') {
       console.log(`   ⚠️  Exercise ${exerciseItem.exercise_id} already exists, skipping`);
       return false;
     } else {
@@ -159,7 +156,7 @@ async function storeExerciseInDynamoDB(workout, exercise, exerciseIndex) {
 
 async function migrateWorkoutData(workouts) {
   console.log(`💾 Starting to store ${workouts.length} workouts in DynamoDB...\n`);
-  
+
   let workoutsStored = 0;
   let workoutsSkipped = 0;
   let exercisesStored = 0;
@@ -208,7 +205,7 @@ async function main() {
   try {
     // Fetch all workouts from Hevy API
     const workouts = await fetchAllWorkoutsFromHevy();
-    
+
     if (workouts.length === 0) {
       console.log('⚠️  No workouts found, nothing to migrate');
       return;

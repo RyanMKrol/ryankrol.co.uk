@@ -258,18 +258,7 @@ export default function EditAlbumReview() {
               type="button"
               onClick={handleDelete}
               disabled={saving || deleting || !formData.password}
-              style={{
-                backgroundColor: '#dc2626',
-                color: 'white',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                cursor: saving || deleting || !formData.password ? 'not-allowed' : 'pointer',
-                opacity: saving || deleting || !formData.password ? 0.6 : 1,
-                fontFamily: 'inherit',
-                fontSize: '16px',
-                fontWeight: '500'
-              }}
+              className="btn-danger"
             >
               {deleting ? 'Deleting Review...' : 'Delete Review'}
             </button>

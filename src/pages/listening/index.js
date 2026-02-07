@@ -32,15 +32,13 @@ export default function ListeningPage() {
       <Head>
         <title>🎧 My Listening History - ryankrol.co.uk</title>
       </Head>
-      
+
       <div className="container">
         <Header />
-        
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-          🎧 My Listening History
-        </h1>
-        
-        <p style={{ fontSize: '1rem', color: '#666', marginBottom: '2rem' }}>
+
+        <h1 className="page-title">🎧 My Listening History</h1>
+
+        <p className="page-subtitle">
           My most played albums from the last 3 months, via Last.fm
         </p>
 
@@ -51,13 +49,7 @@ export default function ListeningPage() {
         )}
 
         {error && (
-          <div style={{ 
-            padding: '1rem', 
-            backgroundColor: '#fee', 
-            border: '1px solid #fcc', 
-            borderRadius: '4px',
-            marginBottom: '2rem'
-          }}>
+          <div className="inline-error">
             {error}
           </div>
         )}
@@ -71,34 +63,27 @@ export default function ListeningPage() {
         {!loading && !error && albums.length > 0 && (
           <div style={{ display: 'grid', gap: '1rem' }}>
             {albums.map((album, index) => (
-              <div 
+              <div
                 key={`${album.artist}-${album.name}`}
-                style={{
-                  padding: '1rem',
-                  borderBottom: '1px solid #e5e7eb',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '1rem'
-                }}
+                className="listening-item"
               >
-                <div style={{ 
-                  fontSize: '1.25rem', 
-                  fontWeight: 'bold', 
-                  color: '#666',
+                <div className="text-muted" style={{
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
                   minWidth: '2rem',
                   textAlign: 'right'
                 }}>
                   {index + 1}
                 </div>
-                
+
                 <div style={{ flex: 1 }}>
                   {album.url ? (
-                    <a 
-                      href={album.url} 
-                      target="_blank" 
+                    <a
+                      href={album.url}
+                      target="_blank"
                       rel="noopener noreferrer"
-                      style={{ 
-                        textDecoration: 'none', 
+                      style={{
+                        textDecoration: 'none',
                         color: 'inherit',
                         display: 'block'
                       }}
@@ -106,7 +91,7 @@ export default function ListeningPage() {
                       <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
                         {album.name}
                       </div>
-                      <div style={{ color: '#666', fontSize: '0.9rem' }}>
+                      <div className="text-muted" style={{ fontSize: '0.9rem' }}>
                         by {album.artist}
                       </div>
                     </a>
@@ -115,16 +100,15 @@ export default function ListeningPage() {
                       <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
                         {album.name}
                       </div>
-                      <div style={{ color: '#666', fontSize: '0.9rem' }}>
+                      <div className="text-muted" style={{ fontSize: '0.9rem' }}>
                         by {album.artist}
                       </div>
                     </>
                   )}
                 </div>
-                
-                <div style={{ 
-                  fontSize: '0.9rem', 
-                  color: '#666',
+
+                <div className="text-muted" style={{
+                  fontSize: '0.9rem',
                   textAlign: 'right'
                 }}>
                   {album.playcount} play{album.playcount !== 1 ? 's' : ''}

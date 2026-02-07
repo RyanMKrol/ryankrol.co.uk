@@ -1,14 +1,7 @@
+import { PutCommand } from '@aws-sdk/lib-dynamodb';
+import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
-import AWS from 'aws-sdk';
-
-const dynamoDb = new AWS.DynamoDB.DocumentClient({
-  region: 'us-east-2',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -35,7 +28,7 @@ export default async function handler(req, res) {
   try {
     const now = new Date();
     const dateString = now.toLocaleDateString('en-GB').replace(/\//g, '-');
-    
+
     const reviewData = {
       title,
       author,
@@ -49,7 +42,7 @@ export default async function handler(req, res) {
       Item: reviewData
     };
 
-    await dynamoDb.put(params).promise();
+    await docClient.send(new PutCommand(params));
 
     // Clear the cache so new reviews show up immediately
     clearApiCache('api-books');
