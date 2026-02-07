@@ -2,9 +2,9 @@
 
 :root {
   /* Typography */
-  --font-body: 'JetBrains Mono', monospace;
-  --font-heading: 'JetBrains Mono', monospace;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Share Tech Mono', monospace;
+  --font-heading: 'Share Tech Mono', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
   --line-height-body: 1.6;
   --font-size-base: 0.8em;
 
