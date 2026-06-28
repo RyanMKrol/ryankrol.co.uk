@@ -77,12 +77,24 @@ vercel env add VARIABLE_NAME production
 npm run dev       # Start development server
 npm run build     # Build for production
 npm run start     # Start production server
-npm run lint      # Run ESLint (if configured)
+npm test          # Run the Jest unit suite
+npm run test:watch # Run Jest in watch mode
+npm run lint      # ESLint — NOT configured yet (opens an interactive setup prompt)
 
 # Workout data migration
 npm run workout:create-tables  # Create DynamoDB tables for workouts
 npm run workout:migrate-data   # Migrate all data from Hevy API
 ```
+
+> **Contributing with Claude:** see [`CLAUDE.md`](./CLAUDE.md) for architecture,
+> conventions, the "how to add a review type" recipe, and the Definition of Done
+> (which includes `npm test` + `npm run build` passing and docs kept current).
+
+### Testing
+
+Unit tests run on **Jest** (via `next/jest`) and are co-located next to source as
+`*.test.js`. The current suite covers the pure logic in `src/lib`
+(`workoutMetrics`, `apiCache`). New logic should ship with tests.
 
 ## Database Schema
 

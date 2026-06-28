@@ -47,6 +47,8 @@ next-env.d.ts
 # The ideas inbox is a PRIVATE, transient capture scratchpad (raw, unfleshed ideas). The mechanism
 # travels via .harness/CLAUDE.md; each repo grows its own private inbox.
 .harness/IDEAS.md
+# Private seed data pasted alongside an idea (e.g. spreadsheet dumps) — same privacy as the inbox.
+.harness/perfume-seed-data.tsv
 # atomic-write temps for the owner-owned overlays + TASKS.json.
 .harness/TASKS.json.tmp
 .harness/reviews.json.tmp*
