@@ -205,16 +205,23 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
 
 Run before declaring done, and keep them green:
 
+- **`npm run lint`** — ESLint (flat config, `eslint-config-next` / core-web-vitals) must report
+  **no errors**. A handful of `react-hooks/exhaustive-deps` *warnings* are tolerated (they don't
+  fail the gate); don't introduce new errors. `npm run lint:fix` auto-fixes what it can.
 - **`npm test`** — the Jest suite (via `next/jest`; jsdom env). **New logic ships with tests** —
   especially pure functions in `src/lib`. Tests are co-located as `*.test.js`.
 - **`npm run build`** — `next build` must succeed.
 - **Docs updated** in the same commit (the rule above).
 - Vercel auto-deploys `main` on push, so `main` must always be build-green.
 
+**ESLint setup:** flat config in `eslint.config.mjs` extends `next/core-web-vitals`, ignores build
+artefacts, and adds a jest-globals override for `*.test.js`. `npm run lint` runs the `eslint` CLI
+directly (not the deprecated `next lint`).
+
 **Known gaps (flag, don't silently work around):**
-- **ESLint is not configured.** `npm run lint` (`next lint`) just opens an interactive setup
-  prompt — there's no eslint config in the repo. Lint is therefore NOT an enforced gate yet.
-  Setting it up (and fixing the resulting findings) is a worthwhile separate task.
+- **`react-hooks/exhaustive-deps` warnings** remain in a couple of pages (`dev/cache`,
+  `workouts/index`) — pre-existing intentional-looking effect deps, left as warnings rather than
+  changing behaviour. Worth revisiting, not urgent.
 - **No component/integration tests yet** — only pure-logic unit tests. Adding React Testing
   Library coverage for the review forms / charts is a good next step (the deps are installed).
 

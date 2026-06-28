@@ -79,7 +79,8 @@ npm run build     # Build for production
 npm run start     # Start production server
 npm test          # Run the Jest unit suite
 npm run test:watch # Run Jest in watch mode
-npm run lint      # ESLint — NOT configured yet (opens an interactive setup prompt)
+npm run lint      # ESLint (flat config, eslint-config-next)
+npm run lint:fix  # ESLint with autofix
 
 # Workout data migration
 npm run workout:create-tables  # Create DynamoDB tables for workouts

@@ -158,7 +158,7 @@ export default function VinylPage() {
                             fontSize: '0.9rem',
                             fontStyle: 'italic'
                           }}>
-                            "{record.notes}"
+                            &quot;{record.notes}&quot;
                           </p>
                         )}
                       </div>

@@ -78,7 +78,7 @@ export default function Workouts() {
         <Header />
         <div className="loading-container">
           <p className="error-text">Error: {error}</p>
-          <p>We're working on connecting to the Hevy API. Please try again later.</p>
+          <p>We&apos;re working on connecting to the Hevy API. Please try again later.</p>
         </div>
       </div>
     );
