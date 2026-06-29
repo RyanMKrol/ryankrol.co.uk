@@ -568,6 +568,91 @@
       "verify": [],
       "expectsTest": false,
       "spec": ".harness/tasks/T023.md"
+    },
+    {
+      "id": "T024",
+      "title": "Local backlog dashboard (read-only)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "harness",
+        "dashboard"
+      ],
+      "facets": {
+        "layer": "harness",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        ".harness/dashboard.js",
+        ".harness/dashboard-lib.js",
+        "package.json",
+        "eslint.config.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T024.md"
+    },
+    {
+      "id": "T025",
+      "title": "Local backlog dashboard: interactive owner actions",
+      "status": "pending",
+      "dependsOn": [
+        "T024"
+      ],
+      "gate": null,
+      "tags": [
+        "harness",
+        "dashboard"
+      ],
+      "facets": {
+        "layer": "harness",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        ".harness/dashboard.js",
+        ".harness/dashboard-lib.js",
+        ".harness/mark-done.sh"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T025.md"
+    },
+    {
+      "id": "T026",
+      "title": "Proportional time x-axis on all date charts",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "charts",
+        "workouts"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/components/ExerciseProgressCharts.js",
+        "src/components/CardioProgressCharts.js",
+        "src/components/ProgrammeOverviewCharts.js",
+        "src/lib/chartTime.js",
+        "package.json",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T026.md"
     }
   ]
 }
