@@ -4,7 +4,7 @@
     {
       "id": "T001",
       "title": "Fix workouts-page pagination + filtering (count, results, page clamp)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
