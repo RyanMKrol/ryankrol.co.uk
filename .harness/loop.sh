@@ -34,6 +34,7 @@ WORKLOG="$HARNESS_DIR/worklog"
 OUTCOMES="$HARNESS_DIR/outcomes.jsonl"             # append-only escalation ledger — the SOLE input to difficulty calibration (forward-only); ONE terminal row per task
 FAILURES="$HARNESS_DIR/failures.jsonl"             # append-only PER-ATTEMPT failure ledger — ONE row per failed attempt (kind+cause). Diagnostics only, NOT calibration; committed so causes are queryable across tasks
 HUMAN_DONE="$HARNESS_DIR/human-done.json"          # owner-owned overlay: { "<id>": { "done": true, "at": <iso> } } — marks needs-human tasks the loop never builds itself as completed (read by task_done)
+MANUAL_FAIL="$HARNESS_DIR/manual-fail.json"        # owner-owned overlay (id → {failed,reason,at}); committed, written ONLY by mark-failed.sh, NEVER by the loop. Read-only correction the calibration readers honor (designs/manual-fail-signal.md)
 FAILBUF="$WORKLOG/.failures.buf"                   # gitignored scratch buffer for the current task's failures: survives cold_reset (git clean -fd keeps ignored files), flushed into FAILURES at each terminal event
 NAME="$(basename "$ROOT")"
 MODEL="${MODEL:-claude-sonnet-4-6}"               # COLD-START FLOOR — cheapest tier; the policy tunes UP from here (pin the full id; the bare alias drifts)
@@ -100,6 +101,14 @@ task_done()    { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="done"'
 deps_for()     { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.dependsOn[]?' | tr '\n' ' '; }
 task_gated()   { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.gate!=null' >/dev/null; }
 task_blocked() { [ -f "$WORKLOG/$1.md" ] && grep -qiE 'failed:blocked|needs-human' "$WORKLOG/$1.md"; }
+# manual_fail_ids — JSON array of task ids the OWNER manually marked FAILED via the
+# .harness/manual-fail.json overlay (designs/manual-fail-signal.md). The loop NEVER writes this file
+# (only mark-failed.sh does); it READS it so a falsely-recorded success is re-counted as a failure
+# for calibration AND dropped from its cell's confirmed-audited count (→ stronger model + more audits).
+manual_fail_ids() {
+  [ -f "$MANUAL_FAIL" ] || { echo '[]'; return; }
+  jq -c '[to_entries[] | select(.value.failed == true) | .key]' "$MANUAL_FAIL" 2>/dev/null || echo '[]'
+}
 # A task's do/doneWhen live in a per-task Markdown spec (T131), referenced by the
 # JSON `spec` field (path relative to the repo root, e.g. .harness/tasks/T001.md).
 task_spec_rel() { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.spec // empty'; }
@@ -224,7 +233,7 @@ pick_base() {
   if [ -z "$layer" ] || [ -z "$wt" ] || [ ! -s "$OUTCOMES" ] || [ -z "$tiers" ] || [ ! -f "$POLICY_JQ" ]; then printf '%s' "$cold"; return; fi
   jq -n -f "$POLICY_JQ" --slurpfile rows "$OUTCOMES" --argjson tiers "$tiers" \
      --arg layer "$layer" --arg wt "$wt" --argjson floor "$POLICY_FLOOR" --argjson minN "$POLICY_MINN" \
-     --argjson coldIdx "$cold" \
+     --argjson coldIdx "$cold" --argjson failedIds "$(manual_fail_ids)" \
      --argjson auditCount -1 --argjson auditStartN "$AUDIT_START_N" --argjson auditFloorN "$AUDIT_FLOOR_N" --argjson auditFloorPM "$AUDIT_FLOOR_PM" \
      2>/dev/null || printf '%s' "$cold"
 }
@@ -478,12 +487,14 @@ audit_gate() {
   layer="$(tj -r --arg id "$id" '.tasks[]|select(.id==$id)|.facets.layer // empty')"
   wt="$(tj -r --arg id "$id" '.tasks[]|select(.id==$id)|.facets.workType // empty')"
   if [ -n "$layer" ] && [ -n "$wt" ] && [ -s "$OUTCOMES" ]; then
-    count="$(jq -s --arg l "$layer" --arg w "$wt" '[.[]|select(.facets!=null and .facets.layer==$l and .facets.workType==$w and .blocked==false and .verification=="audited")]|length' "$OUTCOMES" 2>/dev/null || echo 0)"
+    # Exclude owner-marked manual failures (designs/manual-fail-signal.md): a false success must stop
+    # suppressing this cell's audit rate, so a manually-failed id no longer counts as confirmed-audited.
+    count="$(jq -s --arg l "$layer" --arg w "$wt" --argjson failed "$(manual_fail_ids)" '[.[]|select(.facets!=null and .facets.layer==$l and .facets.workType==$w and .blocked==false and .verification=="audited" and ((.id as $i|$failed|index($i))==null))]|length' "$OUTCOMES" 2>/dev/null || echo 0)"
   else count=0; fi
   count="${count:-0}"
   pm="$(jq -n -f "$POLICY_JQ" --argjson auditCount "$count" \
         --argjson auditStartN "$AUDIT_START_N" --argjson auditFloorN "$AUDIT_FLOOR_N" --argjson auditFloorPM "$AUDIT_FLOOR_PM" \
-        --argjson rows '[]' --argjson tiers '[]' --arg layer '' --arg wt '' --argjson floor 0 --argjson minN 0 --argjson coldIdx 0 2>/dev/null || echo 1000)"
+        --argjson rows '[]' --argjson tiers '[]' --arg layer '' --arg wt '' --argjson floor 0 --argjson minN 0 --argjson coldIdx 0 --argjson failedIds '[]' 2>/dev/null || echo 1000)"
   pm="${pm:-1000}"
   if [ "$(( RANDOM % 1000 ))" -ge "$pm" ]; then
     log "audit: $id cell (${layer:-?}×${wt:-?}) $count confirmed, p=${pm}per-mille → NOT sampled (ci-only)"; return 0
