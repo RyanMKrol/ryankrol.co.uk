@@ -54,6 +54,35 @@ export async function getWorkoutsPaginated(page = 1, pageSize = 10) {
 }
 
 /**
+ * Get all workouts from DynamoDB, sorted by start_time descending.
+ * Used by the workouts page for client-side filter + pagination.
+ * @returns {Array} All workout records
+ */
+export async function getAllWorkouts() {
+  try {
+    console.log('🗄️  [DYNAMO] Scanning workouts table (all records)');
+
+    const scanParams = {
+      TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
+      ProjectionExpression: 'id, title, start_time, end_time, totalVolume, totalWorkingSets, totalWarmupSets, uniqueExercises, durationMinutes, workoutType, exercises'
+    };
+
+    const startTime = Date.now();
+    const allWorkouts = await paginatedScan(scanParams);
+    const queryTime = Date.now() - startTime;
+
+    console.log(`🗄️  [DYNAMO] Scan completed: ${allWorkouts.length} workouts in ${queryTime}ms`);
+
+    allWorkouts.sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
+
+    return allWorkouts;
+  } catch (error) {
+    console.error('❌ [DYNAMO] Error fetching all workouts:', error);
+    throw error;
+  }
+}
+
+/**
  * Get a single workout by ID
  * @param {string} workoutId - The workout ID
  * @returns {Object|null} The workout data or null if not found

@@ -1,38 +1,28 @@
 import { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import WorkoutCard from '../../components/WorkoutCard';
+import { filterWorkouts, paginateWorkouts } from '../../lib/workoutPagination';
+
+const PAGE_SIZE = 10;
 
 export default function Workouts() {
-  const [workouts, setWorkouts] = useState([]);
+  const [allWorkouts, setAllWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pageCount: 1,
-    pageSize: 10
-  });
-  const [filteredWorkouts, setFilteredWorkouts] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     async function fetchWorkouts() {
       try {
         setLoading(true);
-        const response = await fetch(`/api/workouts?page=${pagination.page}&pageSize=${pagination.pageSize}`);
+        const response = await fetch('/api/workouts?mode=all');
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to fetch workouts');
         }
-        
         const result = await response.json();
-        
-        setWorkouts(result.workouts || []);
-        setPagination({
-          page: result.page || 1,
-          pageCount: result.page_count || 1,
-          pageSize: pagination.pageSize
-        });
-        
+        setAllWorkouts(result.workouts || []);
       } catch (err) {
         console.error('Error fetching workouts:', err);
         setError(err.message);
@@ -40,24 +30,19 @@ export default function Workouts() {
         setLoading(false);
       }
     }
-
     fetchWorkouts();
-  }, [pagination.page]);
+  }, []);
 
-  useEffect(() => {
-    // Apply push/pull/legs filter
-    let filtered = workouts;
-    if (activeFilter !== 'all') {
-      filtered = workouts.filter(workout =>
-        workout.title.toLowerCase().includes(activeFilter.toLowerCase())
-      );
-    }
+  const filtered = filterWorkouts(allWorkouts, activeFilter);
+  const { items: pageWorkouts, page, pageCount } = paginateWorkouts(filtered, currentPage, PAGE_SIZE);
 
-    setFilteredWorkouts(filtered);
-  }, [workouts, activeFilter]);
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+    setCurrentPage(1); // always reset to page 1 on filter change
+  };
 
   const handlePageChange = (newPage) => {
-    setPagination(prev => ({ ...prev, page: newPage }));
+    setCurrentPage(newPage);
   };
 
   if (loading) {
@@ -88,134 +73,103 @@ export default function Workouts() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">workouts</h1>
-      
+
       <div className="search-container">
         <div className="workout-filters">
           <span className="filter-label">Filter by type:</span>
           <div className="filter-buttons">
-            <button
-              onClick={() => setActiveFilter('all')}
-              className={`filter-button ${activeFilter === 'all' ? 'active' : ''}`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setActiveFilter('push')}
-              className={`filter-button ${activeFilter === 'push' ? 'active' : ''}`}
-            >
-              Push
-            </button>
-            <button
-              onClick={() => setActiveFilter('pull')}
-              className={`filter-button ${activeFilter === 'pull' ? 'active' : ''}`}
-            >
-              Pull
-            </button>
-            <button
-              onClick={() => setActiveFilter('legs')}
-              className={`filter-button ${activeFilter === 'legs' ? 'active' : ''}`}
-            >
-              Legs
-            </button>
+            {['all', 'push', 'pull', 'legs'].map(f => (
+              <button
+                key={f}
+                onClick={() => handleFilterChange(f)}
+                className={`filter-button ${activeFilter === f ? 'active' : ''}`}
+              >
+                {f.charAt(0).toUpperCase() + f.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
 
         {activeFilter !== 'all' && (
           <div className="search-results-count">
-            Showing {filteredWorkouts.length} {activeFilter} workout{filteredWorkouts.length !== 1 ? 's' : ''}
+            Showing {filtered.length} {activeFilter} workout{filtered.length !== 1 ? 's' : ''}
           </div>
         )}
       </div>
-      
+
       <div className="pagination-info">
-        <p>Page {pagination.page} of {pagination.pageCount} ({workouts.length} workouts on this page)</p>
+        <p>Page {page} of {pageCount} ({filtered.length} workout{filtered.length !== 1 ? 's' : ''})</p>
       </div>
-      
+
       <div className="reviews-wrapper">
-        {filteredWorkouts.length === 0 ? (
+        {pageWorkouts.length === 0 ? (
           <p>No workouts found matching your search.</p>
         ) : (
-          filteredWorkouts.map((workout, index) => (
-            <WorkoutCard 
+          pageWorkouts.map((workout, index) => (
+            <WorkoutCard
               key={workout.id || index}
               workout={workout}
-              isLast={index === filteredWorkouts.length - 1}
+              isLast={index === pageWorkouts.length - 1}
             />
           ))
         )}
       </div>
 
-      {pagination.pageCount > 1 && (
+      {pageCount > 1 && (
         <div className="pagination">
-          <button 
-            onClick={() => handlePageChange(pagination.page - 1)}
-            disabled={pagination.page <= 1}
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page <= 1}
             className="pagination-button"
           >
             ← Previous
           </button>
-          
+
           <div className="pagination-pages">
             {(() => {
-              const currentPage = pagination.page;
-              const totalPages = pagination.pageCount;
               const pages = [];
-              
-              // Always show first page
-              if (currentPage > 4) {
+              const startPage = Math.max(1, page - 3);
+              const endPage = Math.min(pageCount, page + 3);
+
+              if (page > 4) {
                 pages.push(
-                  <button
-                    key={1}
-                    onClick={() => handlePageChange(1)}
-                    className="pagination-page"
-                  >
-                    1
-                  </button>
+                  <button key={1} onClick={() => handlePageChange(1)} className="pagination-page">1</button>
                 );
-                if (currentPage > 5) {
+                if (page > 5) {
                   pages.push(<span key="start-ellipsis" className="pagination-ellipsis">...</span>);
                 }
               }
-              
-              // Show pages around current page (±3 pages)
-              const startPage = Math.max(1, currentPage - 3);
-              const endPage = Math.min(totalPages, currentPage + 3);
-              
+
               for (let i = startPage; i <= endPage; i++) {
                 pages.push(
                   <button
                     key={i}
                     onClick={() => handlePageChange(i)}
-                    className={`pagination-page ${i === currentPage ? 'active' : ''}`}
+                    className={`pagination-page ${i === page ? 'active' : ''}`}
                   >
                     {i}
                   </button>
                 );
               }
-              
-              // Always show last page
-              if (currentPage < totalPages - 3) {
-                if (currentPage < totalPages - 4) {
+
+              if (page < pageCount - 3) {
+                if (page < pageCount - 4) {
                   pages.push(<span key="end-ellipsis" className="pagination-ellipsis">...</span>);
                 }
                 pages.push(
-                  <button
-                    key={totalPages}
-                    onClick={() => handlePageChange(totalPages)}
-                    className="pagination-page"
-                  >
-                    {totalPages}
+                  <button key={pageCount} onClick={() => handlePageChange(pageCount)} className="pagination-page">
+                    {pageCount}
                   </button>
                 );
               }
-              
+
               return pages;
             })()}
           </div>
-          
-          <button 
-            onClick={() => handlePageChange(pagination.page + 1)}
-            disabled={pagination.page >= pagination.pageCount}
+
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page >= pageCount}
             className="pagination-button"
           >
             Next →
