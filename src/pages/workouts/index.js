@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Header from '../../components/Header';
 import WorkoutCard from '../../components/WorkoutCard';
 import { filterWorkouts, paginateWorkouts } from '../../lib/workoutPagination';
@@ -73,6 +74,12 @@ export default function Workouts() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">workouts</h1>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <Link href="/programmes" style={{ fontSize: '0.9rem' }}>
+          View programme stats →
+        </Link>
+      </div>
 
       <div className="search-container">
         <div className="workout-filters">
