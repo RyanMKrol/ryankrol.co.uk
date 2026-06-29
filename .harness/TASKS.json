@@ -326,7 +326,7 @@
     {
       "id": "T014",
       "title": "Five bright/joyful themes (palettes + fonts)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T013"
       ],
