@@ -156,7 +156,8 @@ src/lib (the data layer)
 
 **Components:** `Header`, `NowPlaying` (Last.fm poll every 60s), `MarqueeText`, `ReviewCard`,
 `StarRating`, `WorkoutCard`, `ExerciseProgressCharts` / `CardioProgressCharts` (chart.js),
-`MatrixLayout` / `MatrixRain` / `CRTOverlay` (the easter egg).
+`MatrixLayout` / `MatrixRain` / `CRTOverlay` (the easter egg). `MatrixLayout` also owns the
+global fixed 🎨 appearance trigger + `AppearancePicker` modal (present on every page, incl. home).
 
 ## Data model (DynamoDB)
 

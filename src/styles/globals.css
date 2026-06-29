@@ -2523,9 +2523,13 @@ body::before {
 
 /* ===== Appearance Picker Modal ===== */
 
-/* Header trigger button */
-.header-appearance-btn {
-  background: none;
+/* Fixed global appearance trigger — sits above CRT overlay (z-index: 9999) */
+.global-appearance-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10000;
+  background: var(--color-surface);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-base);
   color: var(--color-text-secondary);
@@ -2534,12 +2538,11 @@ body::before {
   line-height: 1;
   padding: 0.35rem 0.5rem;
   transition: border-color 0.2s, background-color 0.2s;
-  flex-shrink: 0;
 }
 
-.header-appearance-btn:hover {
+.global-appearance-btn:hover {
   border-color: var(--color-accent);
-  background-color: var(--btn-bg);
+  background-color: var(--btn-hover-bg);
 }
 
 /* Full-viewport overlay — click outside to close */
