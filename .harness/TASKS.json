@@ -441,7 +441,7 @@
     {
       "id": "T019",
       "title": "Persist TMDB metadata on movie/TV reviews",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T018"
       ],
