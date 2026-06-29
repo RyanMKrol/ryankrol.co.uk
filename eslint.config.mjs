@@ -8,9 +8,10 @@ const __dirname = dirname(__filename);
 const compat = new FlatCompat({ baseDirectory: __dirname });
 
 const eslintConfig = [
-  // Don't lint build output, deps, or coverage reports.
+  // Don't lint build output, deps, coverage, or the standalone Node harness tooling under .harness/
+  // (it's plain Node, not part of the Next app, so the next/core-web-vitals rules don't apply).
   {
-    ignores: ['.next/**', 'node_modules/**', 'out/**', 'coverage/**', 'next-env.d.ts'],
+    ignores: ['.next/**', 'node_modules/**', 'out/**', 'coverage/**', 'next-env.d.ts', '.harness/**'],
   },
   // Next.js' recommended rules (includes React + core-web-vitals).
   ...compat.extends('next/core-web-vitals'),

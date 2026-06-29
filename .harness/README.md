@@ -15,6 +15,10 @@ Authoring rules + the ideas→tasks flow: [`CLAUDE.md`](./CLAUDE.md).
 | `loop.sh` | the loop — selects a task, runs Claude to build it, pushes, gates on CI |
 | `supervise.sh` | re-launches `loop.sh` on a ~5h15m cadence (run this in a terminal) |
 | `postflight.sh` | zero-token status board → also writes `worklog/STATUS.md` |
+| `dashboard.js` | local-only backlog web view (`npm run harness:dashboard`); standalone Node, NOT in the Vercel build |
+| `dashboard-lib.js` | pure status/eligibility logic for the dashboard (mirrors the loop's `task_done` + `select_task`) |
+| `mark-failed.sh` | owner CLI: mark a `done` task a false success → `manual-fail.json` (loop recalibrates + reopens it to rebuild) |
+| `human-done.json` / `manual-fail.json` | owner-owned overlays the loop READS (completion of needs-human tasks; false-success corrections) |
 | `harness.env` | config (model, caps, CI gate, rate-limit backoff) |
 | `facets.json` | difficulty-autotune vocabulary + the tier ladder |
 | `policy.jq` | tier-selection + audit-sampling algorithm |
@@ -37,7 +41,8 @@ marked `expectsTest: true`.
 DRY_RUN=1 .harness/loop.sh     # print the task it would build next
 .harness/loop.sh               # build one task (or as many as fit the quota window)
 .harness/supervise.sh          # leave running: re-launches the loop each window
-.harness/postflight.sh         # status board
+.harness/postflight.sh         # status board (terminal)
+npm run harness:dashboard      # local backlog web view → http://localhost:4790
 ```
 
 Requirements: `jq`, `gh` (authenticated), Node 22.
