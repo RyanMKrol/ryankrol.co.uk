@@ -845,7 +845,7 @@
     {
       "id": "T035",
       "title": "Per-provider search buttons in the book add flow + persist any-provider match",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T034"
       ],
