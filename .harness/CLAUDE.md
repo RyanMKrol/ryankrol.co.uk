@@ -55,11 +55,11 @@ runs first:
   The resulting `TASKS.json` task (+ its spec MD) is the record; the inbox stays a clean, transient
   surface. (No "converted" archive — the inbox is gitignored, so there'd be no history of it anyway.)
 
-**Worked example.** Inbox bullet: *"The services page could show each service's daily usage vs its
-cap."* → **Phase 1** surfaces: is this a sparkline or a number? daily-only or also monthly? does it
-need a new endpoint or is the data already on `GET /api/services/:name`? what's the itch — spotting a
-service about to hit its quota? → once understood, **Phase 2** runs add-to-backlog and produces a
-`ui`/`component` task scoped to the services page (+ any `api` task if a new field is needed), each
+**Worked example.** Inbox bullet: *"The workouts page could show each exercise's best-ever lift."* →
+**Phase 1** surfaces: a badge or a small chart? is the best-1RM already on the exercise record (it
+is — `bestEstimated1RM`), or does `/api/exercises/...` need a new field? what's the itch — seeing PRs
+at a glance? → once understood, **Phase 2** runs add-to-backlog and produces a `page`/`feature` task
+scoped to `src/pages/exercises/[exerciseName].js` (+ any `api` task if a new field is needed), each
 with a real `## Done when`. Then the bullet is deleted from `IDEAS.md`.
 
 > Distribution: the `/idea`, `/convert-ideas`, and `/loop-recover` commands are project-local
@@ -83,16 +83,16 @@ touches a file outside it (test files + the task's own worklog are always allowe
 job is **blast-radius containment**, and its *granularity* is how you express the intended rigour:
 
 - **Greenfield / "this whole area is the blast radius" → scope a DIRECTORY glob**, e.g.
-  `src/jobs/tv-recs/**` or `dashboard/app/components/**`. Anything the builder creates *inside that
+  `src/pages/reviews/perfumes/**` or `src/components/**`. Anything the builder creates *inside that
   tree* — including a proactive new util/helper file it decides it needs — is in-scope and NOT
-  punished. Use this for new workflows, new component areas, etc.
-- **Surgical / shared / dangerous → pin EXACT files**, e.g. `src/core/executor.ts`,
-  `src/db/store.ts`. A new sibling in a shared/core dir then trips scope-creep on purpose, so a
-  stronger model (escalation) or a human looks at a high-blast-radius change.
+  punished. Use this for a new review type, a new component area, etc.
+- **Surgical / shared / dangerous → pin EXACT files**, e.g. `src/lib/dynamo.js`,
+  `src/lib/apiCache.js`. A new sibling in a shared `src/lib` dir then trips scope-creep on purpose, so
+  a stronger model (escalation) or a human looks at a high-blast-radius change.
 
 The matcher understands an entry as an **exact path** OR a **directory prefix** — a trailing `/**`,
 `/*`, or `/` is stripped to the bare directory, so a file anywhere beneath it counts. (Next.js
-bracket dirs like `dashboard/app/workflows/[name]/page.tsx` are matched literally — the brackets are
+bracket routes like `src/pages/exercises/[exerciseName].js` are matched literally — the brackets are
 NOT glob character-classes here.) Rule of thumb: if the task legitimately can't predict every file
 (it may refactor or add helpers), scope the **directory**; if it must stay surgical, list the files.
 

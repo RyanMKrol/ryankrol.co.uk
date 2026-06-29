@@ -1,7 +1,9 @@
 # HARNESS.md — the autonomous build harness (in-place Ralph loop)
 
-Authoritative design of the autonomous builder for `local-jobs`. `CLAUDE.md` is the
-coding-conventions rulebook; this file is how the loop *works*.
+Authoritative design of the autonomous builder for `ryankrol.co.uk`. `CLAUDE.md` is the
+coding-conventions rulebook; this file is how the loop *works*. (The harness was ported from the
+owner's `local-jobs` project and localized to this repo — a Next.js pages-router JS site on
+DynamoDB/Vercel, no daemon/dashboard/TypeScript.)
 
 ## 1. What it is
 
@@ -14,11 +16,12 @@ it spans many token-refresh windows.
 ### Why in-place (not the worktree variant)
 The stock Ralph harness isolates each task in a throwaway worktree off `origin/main`. We
 deliberately **don't** here:
-- The real jobs (`src/jobs/places`, `src/jobs/perfumes`) and all their `data/` live **untracked**
-  in this checkout. A clean worktree off `origin/main` literally can't see them, so it couldn't
-  build or verify against them.
+- The harness's own private state (`.harness/IDEAS.md`, `perfume-seed-data.tsv`, local `.env.local`)
+  lives **untracked** in this checkout; an in-place loop can read it, and keeping one checkout avoids
+  worktree-setup overhead for a small solo project.
 - The safety model is **git itself**: every task is one commit on `main`; a bad one is a one-line
-  `git revert`. Simpler, and it keeps the loop able to use the real local data as test fixtures.
+  `git revert`, and Vercel just redeploys. Simpler, and it keeps the loop working against the real
+  repo state.
 
 ## 2. One iteration
 
@@ -61,14 +64,13 @@ npm run build                         # next build must succeed
 Plus: add unit tests for new behaviour; update docs in lockstep (§ CLAUDE.md); record empirical
 observations the task's `verify` field asks for in `.harness/worklog/<TASK>.md`.
 
-**Verify correctness — paid calls are allowed, frugally.** The one hard rule is **never exceed a
-service's monthly cap** (enforced mechanically: the `service_usage` quota makes `callService` throw
-`QuotaExceededError` at the ceiling). Within that, be frugal: try cached data under each job's
-`data/` folder, synthetic fixtures, and the scratch DB **first**; make a live paid call (Google
-Places / Gemini) or a live scrape only when correctness genuinely cannot be confirmed otherwise, and
-then with the smallest sample (1–2 items). **Never skip verification to avoid spend** — an unverified
-task is not done. (Only a task that would have to *exceed* the monthly cap to verify records
-`failed:blocked`.)
+**Verify correctness — hermetically; never touch real data or external services.** This repo has no
+paid-quota service layer; verification must stay **offline + hermetic**: pure-logic unit tests
+(Jest, e.g. `src/lib/*.test.js` with synthetic fixtures) plus `npm run build`. **Never** make a live
+DynamoDB write, a password-gated mutation, or a live external-API call (Last.fm / GitHub / Hevy /
+TMDB / Open Library) just to "verify" — that touches real data or burns rate limits. If a check
+genuinely requires a live external call or real credentials, **don't** do it: record `failed:blocked`
+so a human runs it. **Never skip verification** otherwise — an unverified task is not done.
 
 **The loop adds two gates beyond CI** (see `designs/audit-verification.md`). Before a built task is
 pushed, the loop runs cheap **structural checks** (the diff is non-empty; every changed file is within
@@ -166,23 +168,23 @@ calibration can weight audit-confirmed successes (see `designs/audit-verificatio
 bar for done* are NOT flat strings in TASKS.json — they live in a per-task Markdown file at
 `.harness/tasks/TNNN.md` with exactly two sections, `## Do` and `## Done when`, referenced by the
 task's `spec` field (a repo-relative path). This is more expressive than a JSON string and renders
-cleanly on the dashboard. TASKS.json keeps **every other field** (the orchestration fields above —
-`status`, `dependsOn`, `gate`, `facets`, `scope`, `tags`, `verify`, `design` — but NOT `reviewed`,
-which lives in `.harness/reviews.json`, see below). The loop's per-task prompt reads all orchestration fields from JSON and
-**appends the spec MD's full text** (`task_spec_rel` + `cat` in `loop.sh prompt()`);
-`GET /api/backlog` inlines the file as `specContent` (`readTaskSpec`, confined to
-`.harness/tasks/*.md`) and the Backlog page renders it as markdown.
+cleanly as markdown. TASKS.json keeps **every other field** (the orchestration fields above —
+`status`, `dependsOn`, `gate`, `facets`, `scope`, `tags`, `verify`, `design`). The loop's per-task
+prompt reads all orchestration fields from JSON and **appends the spec MD's full text**
+(`task_spec_rel` + `cat` in `loop.sh prompt()`). To review the backlog without a dashboard, run
+`.harness/postflight.sh` (the status board) or read `TASKS.json` + the `tasks/*.md` specs directly.
 
-**Owner-owned overlay flags — `reviewed` (T136) and `done` (T208).** These are the
-human/dashboard-owned pieces of backlog state. Both live **entirely outside TASKS.json**, in their
-own committed files, and **the loop NEVER writes either file** (it only ever writes TASKS.json
-`status` + the worklog). The loop's `jq` status write and the daemon's overlay writes can never
-conflict — different files, always clean merges.
+**Owner-owned overlays.** Pieces of backlog state that the OWNER controls, NOT the loop. Each lives
+**entirely outside TASKS.json**, in its own committed file, and **the loop NEVER writes them** (it
+only ever writes TASKS.json `status` + the worklog) — so the loop's `jq` status write and any overlay
+write touch different files and never conflict. This repo has three: `human-done.json` (read by the
+loop — see below), `manual-fail.json` (read by calibration — written by `mark-failed.sh`), and
+`reviews.json`.
 
-- **`.harness/reviews.json`** — `id → { "reviewed": bool, "at": <ISO-8601> }`. Set via
-  `POST /api/backlog/:id/reviewed { reviewed }` or bulk `POST /api/backlog/reviewed-bulk`. Atomically
-  writes the file (read-modify-write, temp-file + rename, field-scoped) then commits+pushes under the
-  repo lock. `GET /api/backlog` overlays `reviewed = reviews[id]?.reviewed ?? false`.
+- **`.harness/reviews.json`** — `id → { "reviewed": bool, "at": <ISO-8601> }`. **Inert in this repo:**
+  it's the "reviewed" flag the upstream dashboard's Backlog page writes via `POST
+  /api/backlog/:id/reviewed`; this repo has no dashboard, so nothing writes it and the loop ignores it.
+  Kept only so the file set matches upstream.
 - **`.harness/human-done.json`** (T208) — `id → { "done": true, "at": <ISO-8601> }`. Marks a
   `needs-human` task complete WITHOUT touching TASKS.json `status` (the loop owns status; a gated task
   is never built so the loop never flips it). **`task_done()` in `loop.sh` reads this overlay** — a
@@ -197,12 +199,12 @@ conflict — different files, always clean merges.
     (or any editor) — then commits it. This is an OWNER action outside a loop run, distinct from the
     under-loop builder, which must never hand-edit status or either overlay.
 
-Both endpoints use the **SAME mkdir lock loop.sh uses** (`src/core/repo-lock.ts`, the
-`<git-common-dir>/<basename(repo-root)>-loop.lock` dir with stale-pid-reclaim) — daemon git ops are
-mutually exclusive with the loop. The push is **best-effort** (non-fatal warning on failure; the local
-commit is the durability guarantee). The agent must NOT hand-edit either overlay file — they are owner
-UI actions. **loop.sh and the daemon must agree on the lock path byte-for-byte** (see `repo-lock.ts`'s
-header + loop.sh's `acquire_lock`).
+The one overlay writer in this repo, `mark-failed.sh`, commits+pushes under the **SAME mkdir lock
+loop.sh uses** (`acquire_lock` — the `<git-common-dir>/<basename(repo-root)>-loop.lock` dir with
+stale-pid-reclaim), by sourcing `loop.sh` with `LOOP_SOURCE_ONLY=1`, so it can never race the loop's
+git ops. The push is **best-effort** (non-fatal warning on failure; the local commit is the
+durability guarantee). The under-loop builder must NOT hand-edit TASKS.json `status` or any overlay —
+those are owner actions (an operator editing `human-done.json`, or running `mark-failed.sh`).
 
 ### Backlog authoring: a new task = JSON object + spec MD (T131)
 

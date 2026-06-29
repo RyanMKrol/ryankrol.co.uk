@@ -5,9 +5,9 @@
 #
 # This is the IN-PLACE variant of the Ralph harness (no git worktree, no per-task branches),
 # living entirely under .harness/ to keep it separate from the project source. It was chosen
-# because the real jobs (places/perfumes) + their data live UNTRACKED in this checkout, so an
-# isolated worktree off origin/main couldn't see them; the safety model is git itself (every
-# task is a commit on main, trivially reverted). See .harness/HARNESS.md for the full design.
+# because the harness's private state (IDEAS.md, seed data, local .env.local) lives UNTRACKED in
+# this checkout, and one checkout is simplest for a small solo site; the safety model is git itself
+# (every task is a commit on main, trivially reverted + Vercel redeploys). See HARNESS.md for the design.
 #
 # Each iteration:
 #   SELECT (shell)  — from .harness/TASKS.json: the next not-done task whose dependsOn are all
@@ -68,11 +68,11 @@ command -v jq >/dev/null 2>&1 || { log "jq is required to parse TASKS.json — i
 SENSITIVE_RE='(^|/)\.env($|\.)|(^|/)\.vercel/|\.pem$|\.key$|\.p12$|service-account|credentials\.json|(^|/)\.aws/|aws-credentials'
 
 # --- Concurrency guard: only one loop at a time (exit, don't queue) ----------
-# ⚠️ The lock path below ($GIT_COMMON/${NAME}-loop.lock + a `pid` file + stale-pid
-# reclaim) MUST stay byte-identical to src/core/repo-lock.ts, which the daemon uses
-# to serialize its `.harness/reviews.json` commit+push against this loop (T136). If
-# you change the derivation here (GIT_COMMON / NAME / lock name / pid protocol),
-# change repo-lock.ts in the same commit, and vice-versa.
+# The lock path below ($GIT_COMMON/${NAME}-loop.lock + a `pid` file + stale-pid reclaim)
+# is also acquired by mark-failed.sh (which sources this file with LOOP_SOURCE_ONLY=1), so the
+# manual-fail overlay write can never race the loop's git ops. Keep that the single lock owner;
+# if you change the derivation (GIT_COMMON / NAME / lock name / pid protocol), nothing else needs
+# to match it in this repo (the upstream daemon/repo-lock.ts coupling does not exist here).
 acquire_lock() {
   LOCK="$GIT_COMMON/${NAME}-loop.lock"
   while ! mkdir "$LOCK" 2>/dev/null; do
@@ -434,7 +434,7 @@ structural_checks() {
       [ -z "$s" ] && continue
       # A scope entry matches as: an EXACT path, OR a directory prefix. A trailing glob (`/**`, `/*`)
       # or slash is stripped to the bare directory so a file ANYWHERE under it counts — this is the
-      # rigour dial: scope a whole area as `src/jobs/foo/**` (proactive in-area files like a new util
+      # rigour dial: scope a whole area as `src/pages/reviews/foo/**` (proactive in-area files like a new util
       # are fine) or pin exact files for surgical/shared changes (tight). Brackets in Next.js paths
       # (`[name]`) are literal here ([ = ] string compare + quoted ${f#"$d"/}), never glob classes.
       d="${s%/}"; d="${d%/\*\*}"; d="${d%/\*}"
