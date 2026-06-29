@@ -642,7 +642,7 @@
     {
       "id": "T028",
       "title": "Last.fm album-search proxy routes + normaliser",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
