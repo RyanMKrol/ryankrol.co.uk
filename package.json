@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "harness:dashboard": "node .harness/dashboard.js",
+    "harness:dashboard": "node .harness/dashboard/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "migrate:v2": "node src/scripts/migrateToV2Tables.js",

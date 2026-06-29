@@ -1,7 +1,7 @@
 'use strict';
 
 // Pure backlog-derivation logic for the local dashboard. NO file I/O here — keep it hermetically
-// testable; dashboard.js reads the files and passes plain objects in. The done/eligibility rules
+// testable; server.js reads the files and passes plain objects in. The done/eligibility rules
 // MIRROR loop.sh / postflight.sh so the dashboard agrees with what the loop will actually do.
 
 // A task is done if TASKS.json says so OR the human-done overlay marks it (mirrors loop.sh task_done).
@@ -29,27 +29,54 @@ function deriveTask(task, opts = {}) {
 }
 
 // Given all tasks + overlays, return tasks with derived status + an eligibility bucket + unmet deps.
-// Buckets: done | needs-human | blocked | ready | waiting (ready = not-done, ungated, all deps done —
-// the same rule select_task uses).
+// Buckets: done | needs-human | blocked | ready | waiting-human | waiting-loop.
+//   ready         = not-done, ungated, all deps done (the rule select_task uses)
+//   waiting-human = has unmet deps AND its dependency closure contains a needs-human/gate task that
+//                   isn't done — i.e. it CANNOT progress until the owner does a human step.
+//   waiting-loop  = has unmet deps but they're all buildable — the loop will build them eventually,
+//                   so this isn't something the owner needs to act on.
 function computeBacklog(tasks, opts = {}) {
   const { humanDone = {}, manualFail = {}, blockedIds = [] } = opts;
   const derived = (tasks || []).map((t) => deriveTask(t, { humanDone, manualFail, blockedIds }));
+  const byId = Object.fromEntries(derived.map((t) => [t.id, t]));
   const doneIds = new Set(derived.filter((t) => t.done).map((t) => t.id));
+  const isHumanBlocker = (t) => !!t && !t.done && (t.gate === 'needs-human' || t.gate === 'gate');
+
+  // Memoized: does this task's unmet-dependency closure contain a human blocker?
+  const memo = {};
+  function blockedByHuman(id, seen) {
+    if (id in memo) return memo[id];
+    seen = seen || new Set();
+    if (seen.has(id)) return false;
+    seen.add(id);
+    const t = byId[id];
+    let res = false;
+    for (const d of (t && t.dependsOn) || []) {
+      if (doneIds.has(d)) continue;
+      if (isHumanBlocker(byId[d]) || blockedByHuman(d, seen)) {
+        res = true;
+        break;
+      }
+    }
+    memo[id] = res;
+    return res;
+  }
+
   return derived.map((t) => {
-    const deps = t.dependsOn || [];
-    const unmetDeps = deps.filter((d) => !doneIds.has(d));
+    const unmetDeps = (t.dependsOn || []).filter((d) => !doneIds.has(d));
     let bucket;
     if (t.done) bucket = 'done';
     else if (t.needsHuman || t.isGate) bucket = 'needs-human';
     else if (t.blocked) bucket = 'blocked';
-    else bucket = unmetDeps.length === 0 ? 'ready' : 'waiting';
+    else if (unmetDeps.length === 0) bucket = 'ready';
+    else bucket = blockedByHuman(t.id) ? 'waiting-human' : 'waiting-loop';
     return { ...t, bucket, unmetDeps };
   });
 }
 
 // Headline counts for the buckets, for a summary line.
 function summarize(computed) {
-  const counts = { ready: 0, waiting: 0, 'needs-human': 0, blocked: 0, done: 0 };
+  const counts = { ready: 0, 'waiting-human': 0, 'needs-human': 0, blocked: 0, 'waiting-loop': 0, done: 0 };
   for (const t of computed) counts[t.bucket] = (counts[t.bucket] || 0) + 1;
   return counts;
 }

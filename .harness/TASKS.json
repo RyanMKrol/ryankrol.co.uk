@@ -598,7 +598,7 @@
     {
       "id": "T025",
       "title": "Local backlog dashboard: interactive owner actions",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T024"
       ],

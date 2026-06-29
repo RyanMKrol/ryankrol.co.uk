@@ -1,4 +1,4 @@
-const { isDone, deriveTask, computeBacklog, summarize } = require('./dashboard-lib');
+const { isDone, deriveTask, computeBacklog, summarize } = require('./lib');
 
 describe('isDone', () => {
   it('is true when TASKS.json status is done', () => {
@@ -14,26 +14,30 @@ describe('isDone', () => {
 });
 
 describe('computeBacklog', () => {
+  // T1 done. T2 ready (dep done). T_h needs-human. T_wh waits transitively on T_h (via T2b).
+  // T_wl waits only on a buildable task. T5 blocked via worklog.
   const tasks = [
     { id: 'T1', status: 'done', gate: null, dependsOn: [] },
     { id: 'T2', status: 'pending', gate: null, dependsOn: ['T1'] }, // ready: dep done
-    { id: 'T3', status: 'pending', gate: null, dependsOn: ['T2'] }, // waiting: dep not done
-    { id: 'T4', status: 'pending', gate: 'needs-human', dependsOn: [] },
+    { id: 'T_h', status: 'pending', gate: 'needs-human', dependsOn: [] }, // needs-human
+    { id: 'T2b', status: 'pending', gate: null, dependsOn: ['T_h'] }, // waiting-human (direct human dep)
+    { id: 'T_wh', status: 'pending', gate: null, dependsOn: ['T2b'] }, // waiting-human (transitive)
+    { id: 'T_wl', status: 'pending', gate: null, dependsOn: ['T2'] }, // waiting-loop (dep buildable)
     { id: 'T5', status: 'pending', gate: null, dependsOn: [] }, // blocked via worklog
   ];
   const res = computeBacklog(tasks, { blockedIds: ['T5'] });
   const by = Object.fromEntries(res.map((t) => [t.id, t]));
 
-  it('puts a done task in the done bucket', () => expect(by.T1.bucket).toBe('done'));
-  it('marks ready when all deps are done', () => expect(by.T2.bucket).toBe('ready'));
-  it('marks waiting when a dep is not done, and lists unmet deps', () => {
-    expect(by.T3.bucket).toBe('waiting');
-    expect(by.T3.unmetDeps).toEqual(['T2']);
-  });
-  it('routes a needs-human gate to needs-human', () => expect(by.T4.bucket).toBe('needs-human'));
-  it('routes a failed:blocked worklog task to blocked', () => expect(by.T5.bucket).toBe('blocked'));
+  it('done bucket', () => expect(by.T1.bucket).toBe('done'));
+  it('ready when all deps done', () => expect(by.T2.bucket).toBe('ready'));
+  it('the needs-human task itself → needs-human', () => expect(by.T_h.bucket).toBe('needs-human'));
+  it('a task with a DIRECT needs-human dep → waiting-human', () => expect(by.T2b.bucket).toBe('waiting-human'));
+  it('a task TRANSITIVELY blocked by a needs-human → waiting-human', () => expect(by.T_wh.bucket).toBe('waiting-human'));
+  it('a task waiting only on a buildable dep → waiting-loop (not the owner\'s concern)', () =>
+    expect(by.T_wl.bucket).toBe('waiting-loop'));
+  it('failed:blocked worklog task → blocked', () => expect(by.T5.bucket).toBe('blocked'));
 
-  it('treats a human-done overlay entry as done (so it unblocks dependents)', () => {
+  it('a human-done overlay entry counts as done and unblocks dependents', () => {
     const r = computeBacklog(
       [
         { id: 'X', status: 'pending', gate: 'needs-human', dependsOn: [] },
@@ -43,7 +47,7 @@ describe('computeBacklog', () => {
     );
     const m = Object.fromEntries(r.map((t) => [t.id, t]));
     expect(m.X.bucket).toBe('done');
-    expect(m.Y.bucket).toBe('ready'); // dependent unblocked by the overlay
+    expect(m.Y.bucket).toBe('ready');
   });
 
   it('flags a manual-failed task', () => {
@@ -53,12 +57,13 @@ describe('computeBacklog', () => {
     expect(r[0].manualFailed).toBe(true);
   });
 
-  it('summarize counts buckets', () => {
+  it('summarize counts every bucket', () => {
     const s = summarize(res);
     expect(s.done).toBe(1);
     expect(s.ready).toBe(1);
-    expect(s.waiting).toBe(1);
     expect(s['needs-human']).toBe(1);
+    expect(s['waiting-human']).toBe(2);
+    expect(s['waiting-loop']).toBe(1);
     expect(s.blocked).toBe(1);
   });
 });

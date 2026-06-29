@@ -15,8 +15,8 @@ Authoring rules + the ideas→tasks flow: [`CLAUDE.md`](./CLAUDE.md).
 | `loop.sh` | the loop — selects a task, runs Claude to build it, pushes, gates on CI |
 | `supervise.sh` | re-launches `loop.sh` on a ~5h15m cadence (run this in a terminal) |
 | `postflight.sh` | zero-token status board → also writes `worklog/STATUS.md` |
-| `dashboard.js` | local-only backlog web view (`npm run harness:dashboard`); standalone Node, NOT in the Vercel build |
-| `dashboard-lib.js` | pure status/eligibility logic for the dashboard (mirrors the loop's `task_done` + `select_task`) |
+| `dashboard/` | local-only backlog web view (`npm run harness:dashboard`); standalone Node (`server.js` + pure `lib.js` + `lib.test.js`), NOT in the Vercel build; has Mark done / Mark failed actions |
+| `mark-done.sh` | owner CLI: mark a `needs-human` task done → `human-done.json` (loop reads it; unblocks dependents) |
 | `mark-failed.sh` | owner CLI: mark a `done` task a false success → `manual-fail.json` (loop recalibrates + reopens it to rebuild) |
 | `human-done.json` / `manual-fail.json` | owner-owned overlays the loop READS (completion of needs-human tasks; false-success corrections) |
 | `harness.env` | config (model, caps, CI gate, rate-limit backoff) |
