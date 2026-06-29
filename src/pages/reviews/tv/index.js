@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
+import SortButtons from '../../../components/SortButtons';
+
+const SORT_FIELDS = [
+  { key: 'date',  label: 'Date',  defaultValue: 'date',  flippedValue: 'date-desc',  defaultArrow: '↓', flippedArrow: '↑' },
+  { key: 'title', label: 'Title', defaultValue: 'title', flippedValue: 'title-desc', defaultArrow: '↑', flippedArrow: '↓' },
+  { key: 'score', label: 'Score', defaultValue: 'score', flippedValue: 'score-desc', defaultArrow: '↓', flippedArrow: '↑' },
+];
 
 export default function TV() {
   const [tvShows, setTvShows] = useState([]);
@@ -104,21 +111,7 @@ export default function TV() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-input"
         />
-        <div className="sort-container">
-          <label className="sort-label">Sort by:</label>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="sort-select"
-          >
-            <option value="date">Date (newest first)</option>
-            <option value="date-desc">Date (oldest first)</option>
-            <option value="title">Title (A-Z)</option>
-            <option value="title-desc">Title (Z-A)</option>
-            <option value="score">Score (highest first)</option>
-            <option value="score-desc">Score (lowest first)</option>
-          </select>
-        </div>
+        <SortButtons fields={SORT_FIELDS} sortBy={sortBy} onChange={setSortBy} />
         {searchTerm && (
           <div className="search-results-count">
             Found {filteredTvShows.length} show{filteredTvShows.length !== 1 ? 's' : ''}
