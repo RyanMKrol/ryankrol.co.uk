@@ -156,7 +156,7 @@ src/lib (the data layer)
 
 **Components:** `Header`, `NowPlaying` (Last.fm poll every 60s), `MarqueeText`, `ReviewCard`,
 `StarRating`, `WorkoutCard`, `ExerciseProgressCharts` / `CardioProgressCharts` (chart.js),
-`MatrixLayout` / `MatrixRain` / `CRTOverlay` (the easter egg).
+`MatrixLayout` / `MatrixRain` / `CRTOverlay` (the easter egg). `AppearancePicker` — the theme/font/mode modal; its trigger button is rendered globally in `MatrixLayout` (fixed top-right), so it is available on every page including the homepage.
 
 ## Data model (DynamoDB)
 
