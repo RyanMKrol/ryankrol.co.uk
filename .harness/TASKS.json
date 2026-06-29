@@ -700,7 +700,7 @@
     {
       "id": "T030",
       "title": "Last.fm search + confirm step in the album & vinyl add flows",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T028",
         "T029"
