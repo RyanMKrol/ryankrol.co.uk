@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../components/Header';
 import StarRating from '../../../components/StarRating';
+import BookSearch from '../../../components/BookSearch';
 
 export default function AddBookReview() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ export default function AddBookReview() {
     overview: '',
     password: ''
   });
+  const [bookMatch, setBookMatch] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -35,13 +37,27 @@ export default function AddBookReview() {
     setLoading(true);
     setMessage('');
 
+    const body = {
+      ...formData,
+      ...(bookMatch && {
+        olid: bookMatch.olid,
+        coverId: bookMatch.coverId,
+        bookAuthors: bookMatch.bookAuthors,
+        firstPublishedYear: bookMatch.firstPublishedYear,
+        isbn: bookMatch.isbn,
+        subjects: bookMatch.subjects,
+        pageCount: bookMatch.pageCount,
+        publisher: bookMatch.publisher,
+      }),
+    };
+
     try {
       const response = await fetch('/api/reviews/books/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(body),
       });
 
       const result = await response.json();
@@ -100,6 +116,14 @@ export default function AddBookReview() {
               onChange={handleInputChange}
               className="form-input"
               required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Open Library Match (optional)</label>
+            <BookSearch
+              initialQuery={formData.title}
+              onSelect={setBookMatch}
             />
           </div>
 
