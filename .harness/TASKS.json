@@ -192,7 +192,7 @@
     {
       "id": "T009",
       "title": "Programmes overview page (/programmes)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T001",
         "T008"
