@@ -123,51 +123,6 @@
       "spec": ".harness/tasks/T005.md"
     },
     {
-      "id": "T006",
-      "title": "Perfume seed-import script",
-      "status": "pending",
-      "dependsOn": [
-        "T004"
-      ],
-      "gate": null,
-      "tags": [
-        "perfumes"
-      ],
-      "facets": {
-        "layer": "db",
-        "workType": "data-migration",
-        "risk": [
-          "touches-data"
-        ]
-      },
-      "scope": [
-        "src/scripts/importPerfumeSeed.js",
-        "src/lib/perfumes.js",
-        "package.json"
-      ],
-      "design": null,
-      "verify": [],
-      "expectsTest": true,
-      "spec": ".harness/tasks/T006.md"
-    },
-    {
-      "id": "T007",
-      "title": "Run the perfume seed import (human step)",
-      "status": "pending",
-      "dependsOn": [
-        "T006"
-      ],
-      "gate": "needs-human",
-      "tags": [
-        "perfumes"
-      ],
-      "scope": [],
-      "design": null,
-      "verify": [],
-      "expectsTest": false,
-      "spec": ".harness/tasks/T007.md"
-    },
-    {
       "id": "T008",
       "title": "Programme (Push/Pull/Legs) stats aggregation helper",
       "status": "done",
@@ -653,6 +608,321 @@
       "verify": [],
       "expectsTest": true,
       "spec": ".harness/tasks/T026.md"
+    },
+    {
+      "id": "T027",
+      "title": "Replace review sort dropdown with segmented sort buttons",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "ui"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/components/SortButtons.js",
+        "src/pages/reviews/movies/index.js",
+        "src/pages/reviews/tv/index.js",
+        "src/pages/reviews/books/index.js",
+        "src/pages/reviews/albums/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T027.md"
+    },
+    {
+      "id": "T028",
+      "title": "Last.fm album-search proxy routes + normaliser",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "albums",
+        "vinyl",
+        "lastfm"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/lastfm/**",
+        "src/lib/lastfm.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T028.md"
+    },
+    {
+      "id": "T029",
+      "title": "Persist Last.fm metadata on album + vinyl add",
+      "status": "pending",
+      "dependsOn": [
+        "T028"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "albums",
+        "vinyl",
+        "lastfm"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/albums/add.js",
+        "src/pages/api/vinyl/add.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T029.md"
+    },
+    {
+      "id": "T030",
+      "title": "Last.fm search + confirm step in the album & vinyl add flows",
+      "status": "pending",
+      "dependsOn": [
+        "T028",
+        "T029"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "albums",
+        "vinyl",
+        "lastfm"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        "src/components/LastfmAlbumSearch.js",
+        "src/pages/reviews/albums/add.js",
+        "src/pages/vinyl/add.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T030.md"
+    },
+    {
+      "id": "T031",
+      "title": "Make the appearance picker reachable on every page (incl. home)",
+      "status": "pending",
+      "dependsOn": [
+        "T015"
+      ],
+      "gate": null,
+      "tags": [
+        "theming"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/components/MatrixLayout.js",
+        "src/components/Header.js",
+        "src/styles/globals.css",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T031.md"
+    },
+    {
+      "id": "T032",
+      "title": "Drive the TMDB movie/TV search from the title field (remove the separate box)",
+      "status": "pending",
+      "dependsOn": [
+        "T020"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "tmdb"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/TmdbSearch.js",
+        "src/pages/reviews/movies/add.js",
+        "src/pages/reviews/tv/add.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T032.md"
+    },
+    {
+      "id": "T033",
+      "title": "Drive the book search from the title + author fields (title+author matching)",
+      "status": "pending",
+      "dependsOn": [
+        "T023"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "books"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/components/BookSearch.js",
+        "src/pages/reviews/books/add.js",
+        "src/pages/api/books/search.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T033.md"
+    },
+    {
+      "id": "T034",
+      "title": "Google Books search provider (normaliser + route dispatch)",
+      "status": "pending",
+      "dependsOn": [
+        "T033"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "books",
+        "googlebooks"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/lib/googlebooks.js",
+        "src/pages/api/books/search.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T034.md"
+    },
+    {
+      "id": "T035",
+      "title": "Per-provider search buttons in the book add flow + persist any-provider match",
+      "status": "pending",
+      "dependsOn": [
+        "T034"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "books",
+        "googlebooks"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/components/BookSearch.js",
+        "src/pages/reviews/books/add.js",
+        "src/pages/api/reviews/books/add.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T035.md"
+    },
+    {
+      "id": "T036",
+      "title": "Dashboard: show each task's worklog (+ audit) in its expanded body",
+      "status": "pending",
+      "dependsOn": [
+        "T025"
+      ],
+      "gate": null,
+      "tags": [
+        "harness",
+        "dashboard"
+      ],
+      "facets": {
+        "layer": "harness",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        ".harness/dashboard/server.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T036.md"
+    },
+    {
+      "id": "T037",
+      "title": "Dashboard: don't let already-reviewed Done tasks be re-selected for Mark reviewed",
+      "status": "pending",
+      "dependsOn": [
+        "T025"
+      ],
+      "gate": null,
+      "tags": [
+        "harness",
+        "dashboard"
+      ],
+      "facets": {
+        "layer": "harness",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "scope": [
+        ".harness/dashboard/server.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T037.md"
     }
   ]
 }
