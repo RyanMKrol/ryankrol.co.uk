@@ -54,6 +54,18 @@ The site will be available at `http://localhost:3000` (or next available port).
 
 ## Environment Variables
 
+### Required Variables
+
+| Variable | Description |
+|---|---|
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | DynamoDB access (region: `us-east-2`) |
+| `RYANKROL_SITE_KEY` | Password gate for all write API routes |
+| `LAST_FM_API_KEY` | Last.fm API key |
+| `LAST_FM_USERNAME` | Last.fm username |
+| `HEVY_API_KEY` | Hevy workout API key |
+| `GITHUB_TOKEN` | GitHub personal access token (repo listing) |
+| `TMDB_API_TOKEN` | TMDB v4 Read Access Token (JWT Bearer token) — used server-side only for the `/api/tmdb/search` proxy; never exposed to the client |
+
 ### Managing Environment Variables
 
 **Pull from Vercel:**

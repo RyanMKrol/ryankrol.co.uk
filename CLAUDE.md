@@ -49,6 +49,16 @@ This repo is **public** (`github.com/RyanMKrol/ryankrol.co.uk`). Hard rules:
 2. **Mutations are password-gated.** Every write endpoint checks `process.env.RYANKROL_SITE_KEY`
    against a `password` field in the request body. Keep new write endpoints gated the same way.
 
+**Key env vars** (managed in Vercel; never hardcode):
+
+| Var | Purpose |
+|---|---|
+| `RYANKROL_SITE_KEY` | Write-gate password for all mutation routes |
+| `LAST_FM_API_KEY` / `LAST_FM_USERNAME` | Last.fm API |
+| `HEVY_API_KEY` | Hevy workout API |
+| `GITHUB_TOKEN` | GitHub repo listing |
+| `TMDB_API_TOKEN` | TMDB v4 Read Access Token (JWT). Used **server-side only** in `/api/tmdb/search` — `Authorization: Bearer` header, never a query param, never sent to the client |
+
 Before any commit: `git status` and confirm no `.env*`, no credentials are staged. The
 `.harness/` ideas inbox + seed data are gitignored on purpose — don't commit those either.
 
@@ -85,6 +95,7 @@ Next.js API routes (src/pages/api/**)  ── every route wraps its work in ─�
 src/lib (the data layer)
    ├─ dynamo.js          docClient + paginatedScan + scanTable   ──▶ AWS DynamoDB (us-east-2)
    ├─ apiCache.js        withApiCache / generateCacheKey / clearApiCache
+   ├─ tmdb.js            mapTmdbResult / tmdbPosterUrl — pure normalisation for TMDB results
    ├─ workoutQueries.js  all workout/exercise DynamoDB reads
    └─ workoutMetrics.js  pure metric math (volume, 1RM) — shared by scripts + backfill
 ```
@@ -125,8 +136,10 @@ src/lib (the data layer)
 | `src/pages/api/github/repos.js` | GitHub repos proxy |
 | `src/pages/api/lastfm/{now-playing,top-albums}.js` | Last.fm proxies |
 | `src/pages/api/dev/cache-bust.js` | Cache stats (GET) / flush-all (POST), gated off localhost |
+| `src/pages/api/tmdb/search.js` | TMDB search proxy (`?query=&type=movie\|tv`); authenticates with `TMDB_API_TOKEN` server-side |
 | `src/lib/dynamo.js` | `docClient`, `paginatedScan`, `scanTable` (region hardcoded `us-east-2`) |
 | `src/lib/apiCache.js` | `withApiCache`, `generateCacheKey`, `clearApiCache`, `getCacheStats` |
+| `src/lib/tmdb.js` | `mapTmdbResult(raw, type)` normaliser + `tmdbPosterUrl(path)` helper |
 | `src/lib/constants.js` | `DYNAMO_TABLES` — the single source of table names |
 | `src/lib/workoutQueries.js` | All workout/exercise DynamoDB reads |
 | `src/lib/workoutMetrics.js` | Pure metric math (`calculateEstimated1RM`, `calculate{Exercise,Workout}Metrics`) |
