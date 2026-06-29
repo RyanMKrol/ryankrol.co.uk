@@ -135,9 +135,12 @@ src/lib (the data layer)
 | `src/pages/api/exercises/[workoutId].js`, `exercises/history/[exerciseName].js` | Exercise reads |
 | `src/pages/api/github/repos.js` | GitHub repos proxy |
 | `src/pages/api/lastfm/{now-playing,top-albums}.js` | Last.fm proxies |
+| `src/pages/api/lastfm/album-search.js` | Last.fm `album.search` proxy (`?query=`); returns `{ results: [mapAlbumSearchResult, ...] }` |
+| `src/pages/api/lastfm/album-info.js` | Last.fm `album.getInfo` proxy (`?artist=&album=` or `?mbid=`); returns `{ info: mapAlbumInfo }` |
 | `src/pages/api/dev/cache-bust.js` | Cache stats (GET) / flush-all (POST), gated off localhost |
 | `src/pages/api/tmdb/search.js` | TMDB search proxy (`?query=&type=movie\|tv`); authenticates with `TMDB_API_TOKEN` server-side |
 | `src/pages/api/books/search.js` | Open Library book-search proxy (`?query=`); keyless, returns normalised book list via `withApiCache` |
+| `src/lib/lastfm.js` | `mapAlbumSearchResult(raw)` + `mapAlbumInfo(raw)` — pure normalisers for Last.fm album search/info responses |
 | `src/lib/openlibrary.js` | `mapBookResult(doc)` normaliser + `bookCoverUrl(coverId, size)` helper |
 | `src/lib/dynamo.js` | `docClient`, `paginatedScan`, `scanTable` (region hardcoded `us-east-2`) |
 | `src/lib/apiCache.js` | `withApiCache`, `generateCacheKey`, `clearApiCache`, `getCacheStats` |
