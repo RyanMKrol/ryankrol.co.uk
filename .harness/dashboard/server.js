@@ -38,6 +38,22 @@ function readSpec(specRel) {
   }
 }
 
+function readWorklog(id) {
+  try {
+    return fs.readFileSync(path.join(HARNESS_DIR, 'worklog', `${id}.md`), 'utf8');
+  } catch {
+    return '';
+  }
+}
+
+function readAudit(id) {
+  try {
+    return fs.readFileSync(path.join(HARNESS_DIR, 'worklog', `${id}.audit.md`), 'utf8');
+  } catch {
+    return '';
+  }
+}
+
 // Task ids whose worklog records a failed:blocked marker (the loop gave up; needs a human).
 function blockedIdsFromWorklog() {
   const dir = path.join(HARNESS_DIR, 'worklog');
@@ -62,7 +78,7 @@ function buildBacklog() {
   const reviewed = readJSON(path.join(HARNESS_DIR, 'reviews.json'), {});
   const blockedIds = blockedIdsFromWorklog();
   const computed = computeBacklog(backlog.tasks || [], { humanDone, manualFail, blockedIds, reviewed });
-  const tasks = computed.map((t) => ({ ...t, specContent: readSpec(t.spec) }));
+  const tasks = computed.map((t) => ({ ...t, specContent: readSpec(t.spec), worklogContent: readWorklog(t.id), auditContent: readAudit(t.id) }));
   return { tasks, counts: summarize(computed), generatedAt: new Date().toISOString() };
 }
 
@@ -201,6 +217,8 @@ function task(t){
     + '<div class="kv"><b>gate</b> '+esc(t.gate||'—')+' &nbsp;·&nbsp; <b>facets</b> '+esc(facets)+' &nbsp;·&nbsp; <b>'+esc(deps)+'</b> &nbsp;·&nbsp; <b>expectsTest</b> '+(t.expectsTest?'yes':'no')+'</div>'
     + '<div class="kv"><b>scope</b> '+esc((t.scope||[]).join('  '))+'</div>'
     + (t.specContent? '<pre>'+esc(t.specContent)+'</pre>' : '<div class="kv">(no spec file)</div>')
+    + (t.worklogContent? '<div class="kv"><b>Worklog</b></div><pre>'+esc(t.worklogContent)+'</pre>' : '')
+    + (t.auditContent? '<div class="kv"><b>Audit</b></div><pre>'+esc(t.auditContent)+'</pre>' : '')
     + '</div></div>';
 }
 fetch('/api/backlog').then(r=>r.json()).then(d=>{
