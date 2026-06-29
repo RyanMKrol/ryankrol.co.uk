@@ -495,7 +495,7 @@
     {
       "id": "T021",
       "title": "Open Library search proxy route + normaliser",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
