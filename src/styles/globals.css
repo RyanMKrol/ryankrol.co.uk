@@ -996,6 +996,39 @@ html[data-theme="ocean"][data-mode="light"] {
   --top-bar-gradient: linear-gradient(90deg, #006898, #0050cc, #008866, #006898);
 }
 
+/* ===== Font Overrides (data-font beats data-theme at same specificity — placed later) =====
+   'theme' has no rule, so the theme's own --font-body wins when the user picks Theme Font.
+   All other values override whichever font the active theme declared.
+   ========================================================================================= */
+
+html[data-font="share-tech-mono"] {
+  --font-body: 'Share Tech Mono', monospace;
+  --font-heading: 'Share Tech Mono', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
+}
+
+html[data-font="vt323"] {
+  --font-body: 'VT323', monospace;
+  --font-heading: 'VT323', monospace;
+}
+
+html[data-font="nunito"] {
+  --font-body: 'Nunito', sans-serif;
+  --font-heading: 'Nunito', sans-serif;
+}
+
+html[data-font="space-mono"] {
+  --font-body: 'Space Mono', monospace;
+  --font-heading: 'Space Mono', monospace;
+  --font-mono: 'Space Mono', monospace;
+}
+
+html[data-font="jetbrains-mono"] {
+  --font-body: 'JetBrains Mono', monospace;
+  --font-heading: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
 /* Motion-reduced overrides — honour explicit user preference stored via data-motion */
 [data-motion="reduced"] .crt-overlay {
   animation: none;
@@ -2505,4 +2538,195 @@ body::before {
 
 .vinyl-record:hover {
   background-color: var(--color-surface-alt);
+}
+
+/* ===== Appearance Picker Modal ===== */
+
+/* Header trigger button */
+.header-appearance-btn {
+  background: none;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-base);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.35rem 0.5rem;
+  transition: border-color 0.2s, background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.header-appearance-btn:hover {
+  border-color: var(--color-accent);
+  background-color: var(--btn-bg);
+}
+
+/* Full-viewport overlay — click outside to close */
+.ap-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Card */
+.ap-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-large);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), var(--matrix-glow-strong);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Card header row */
+.ap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.ap-title {
+  font-size: 1.15rem;
+  font-family: var(--font-heading);
+  color: var(--color-text);
+  font-weight: 600;
+  text-shadow: var(--matrix-glow);
+}
+
+.ap-close {
+  background: none;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-base);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0.2rem 0.5rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.ap-close:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+/* Section */
+.ap-section {
+  margin-bottom: 1.25rem;
+}
+
+.ap-section-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.6rem;
+}
+
+/* Tile grids */
+.ap-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 0.5rem;
+}
+
+.ap-tile-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Individual tile */
+.ap-tile {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.6rem 0.5rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  text-align: center;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.ap-tile:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+  background-color: var(--btn-bg);
+}
+
+.ap-tile--active {
+  border-color: var(--color-accent);
+  background-color: var(--btn-bg);
+  color: var(--color-text);
+  box-shadow: var(--matrix-glow);
+}
+
+.ap-tile-emoji {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.ap-tile-name {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+/* Helper text below mode tiles */
+.ap-helper {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+/* Reduce-motion checkbox row */
+.ap-reduce-motion {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 0.5rem;
+}
+
+.ap-reduce-motion input[type="checkbox"] {
+  accent-color: var(--color-accent);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ap-reduce-motion:hover {
+  color: var(--color-text);
+}
+
+@media (max-width: 520px) {
+  .ap-card {
+    padding: 1.1rem;
+  }
+
+  .ap-tile-grid {
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+  }
 }
