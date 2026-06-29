@@ -413,7 +413,7 @@
     {
       "id": "T018",
       "title": "TMDB search proxy route + normaliser",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T017"
       ],
