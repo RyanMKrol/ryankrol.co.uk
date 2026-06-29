@@ -545,7 +545,7 @@
     {
       "id": "T023",
       "title": "Open Library search + confirm step in the book add flow",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T021",
         "T022"
