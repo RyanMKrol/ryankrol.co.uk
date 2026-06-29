@@ -96,6 +96,7 @@ src/lib (the data layer)
    ├─ dynamo.js          docClient + paginatedScan + scanTable   ──▶ AWS DynamoDB (us-east-2)
    ├─ apiCache.js        withApiCache / generateCacheKey / clearApiCache
    ├─ tmdb.js            mapTmdbResult / tmdbPosterUrl — pure normalisation for TMDB results
+   ├─ googlebooks.js     mapGoogleBooksResult — pure normalisation for Google Books volumes items
    ├─ workoutQueries.js  all workout/exercise DynamoDB reads
    └─ workoutMetrics.js  pure metric math (volume, 1RM) — shared by scripts + backfill
 ```
@@ -139,9 +140,10 @@ src/lib (the data layer)
 | `src/pages/api/lastfm/album-info.js` | Last.fm `album.getInfo` proxy (`?artist=&album=` or `?mbid=`); returns `{ info: mapAlbumInfo }` |
 | `src/pages/api/dev/cache-bust.js` | Cache stats (GET) / flush-all (POST), gated off localhost |
 | `src/pages/api/tmdb/search.js` | TMDB search proxy (`?query=&type=movie\|tv`); authenticates with `TMDB_API_TOKEN` server-side |
-| `src/pages/api/books/search.js` | Open Library book-search proxy (`?title=` required, `?author=` optional; falls back to `?query=`); keyless, returns normalised book list via `withApiCache` |
+| `src/pages/api/books/search.js` | Book-search proxy supporting two providers via `?provider=openlibrary\|googlebooks` (default `openlibrary`); `?title=` required, `?author=` optional; keyless, returns normalised book list tagged with `source` via `withApiCache` |
 | `src/lib/lastfm.js` | `mapAlbumSearchResult(raw)` + `mapAlbumInfo(raw)` — pure normalisers for Last.fm album search/info responses |
 | `src/lib/openlibrary.js` | `mapBookResult(doc)` normaliser + `bookCoverUrl(coverId, size)` helper |
+| `src/lib/googlebooks.js` | `mapGoogleBooksResult(volume)` normaliser — maps Google Books `volumeInfo` to common shape with `source:'googlebooks'`, https `coverUrl`, ISBNs, year from `publishedDate` |
 | `src/lib/dynamo.js` | `docClient`, `paginatedScan`, `scanTable` (region hardcoded `us-east-2`) |
 | `src/lib/apiCache.js` | `withApiCache`, `generateCacheKey`, `clearApiCache`, `getCacheStats` |
 | `src/lib/tmdb.js` | `mapTmdbResult(raw, type)` normaliser + `tmdbPosterUrl(path)` helper |
