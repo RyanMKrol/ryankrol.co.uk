@@ -670,7 +670,7 @@
     {
       "id": "T029",
       "title": "Persist Last.fm metadata on album + vinyl add",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T028"
       ],
