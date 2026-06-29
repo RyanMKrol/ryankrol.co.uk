@@ -397,7 +397,7 @@
     {
       "id": "T017",
       "title": "Obtain a TMDB API key (human step)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "needs-human",
       "tags": [
