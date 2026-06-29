@@ -33,6 +33,7 @@ BACKLOG="$HARNESS_DIR/TASKS.json"
 WORKLOG="$HARNESS_DIR/worklog"
 OUTCOMES="$HARNESS_DIR/outcomes.jsonl"             # append-only escalation ledger — the SOLE input to difficulty calibration (forward-only); ONE terminal row per task
 FAILURES="$HARNESS_DIR/failures.jsonl"             # append-only PER-ATTEMPT failure ledger — ONE row per failed attempt (kind+cause). Diagnostics only, NOT calibration; committed so causes are queryable across tasks
+HUMAN_DONE="$HARNESS_DIR/human-done.json"          # owner-owned overlay: { "<id>": { "done": true, "at": <iso> } } — marks needs-human tasks the loop never builds itself as completed (read by task_done)
 FAILBUF="$WORKLOG/.failures.buf"                   # gitignored scratch buffer for the current task's failures: survives cold_reset (git clean -fd keeps ignored files), flushed into FAILURES at each terminal event
 NAME="$(basename "$ROOT")"
 MODEL="${MODEL:-claude-sonnet-4-6}"               # COLD-START FLOOR — cheapest tier; the policy tunes UP from here (pin the full id; the bare alias drifts)
@@ -92,7 +93,11 @@ release_lock() {
 # --- TASKS.json helpers (read from the local backlog file) ------------------
 tj()           { jq "$@" "$BACKLOG" 2>/dev/null; }
 all_tasks()    { tj -r '.tasks[].id'; }
-task_done()    { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="done"' >/dev/null; }
+# A task is done if TASKS.json says so OR the owner-owned human-done.json overlay marks it done.
+# The overlay is how a `needs-human` task (which the loop never builds, so never flips to status=done
+# itself) gets recorded complete so its dependents unblock.
+task_done()    { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="done"' >/dev/null \
+                 || { [ -f "$HUMAN_DONE" ] && jq -e --arg id "$1" '.[$id].done==true' "$HUMAN_DONE" >/dev/null 2>&1; }; }
 deps_for()     { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.dependsOn[]?' | tr '\n' ' '; }
 task_gated()   { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.gate!=null' >/dev/null; }
 task_blocked() { [ -f "$WORKLOG/$1.md" ] && grep -qiE 'failed:blocked|needs-human' "$WORKLOG/$1.md"; }

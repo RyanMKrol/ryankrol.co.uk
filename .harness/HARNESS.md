@@ -183,11 +183,19 @@ conflict — different files, always clean merges.
   `POST /api/backlog/:id/reviewed { reviewed }` or bulk `POST /api/backlog/reviewed-bulk`. Atomically
   writes the file (read-modify-write, temp-file + rename, field-scoped) then commits+pushes under the
   repo lock. `GET /api/backlog` overlays `reviewed = reviews[id]?.reviewed ?? false`.
-- **`.harness/human-done.json`** (T208) — `id → { "done": true, "at": <ISO-8601> }`. Set via
-  `POST /api/backlog/:id/done` (needs-human tasks ONLY — 400 otherwise). Same atomic write+commit+push
-  pattern. `GET /api/backlog` overlays `done=true` and derives `reviewed=true` (done implies reviewed).
-  TASKS.json `status` is NEVER modified. The Backlog page shows a **"Mark done"** button on
-  needs-human tasks that aren't already done.
+- **`.harness/human-done.json`** (T208) — `id → { "done": true, "at": <ISO-8601> }`. Marks a
+  `needs-human` task complete WITHOUT touching TASKS.json `status` (the loop owns status; a gated task
+  is never built so the loop never flips it). **`task_done()` in `loop.sh` reads this overlay** — a
+  task counts as done if TASKS.json says `status=="done"` OR this file has `<id>.done==true` — so a
+  needs-human completion recorded here unblocks the task's dependents.
+  - In the **full dashboard** deployment this is set via `POST /api/backlog/:id/done` (needs-human
+    tasks ONLY — 400 otherwise; atomic write+commit+push; `GET /api/backlog` overlays `done=true` and
+    derives `reviewed=true`).
+  - In **this repo there is no dashboard**, so the operator records a completion directly after doing
+    the real-world step — e.g.
+    `jq --arg id T0NN --arg at "$(date -u +%FT%TZ)" '.[$id]={done:true,at:$at}' .harness/human-done.json | sponge`
+    (or any editor) — then commits it. This is an OWNER action outside a loop run, distinct from the
+    under-loop builder, which must never hand-edit status or either overlay.
 
 Both endpoints use the **SAME mkdir lock loop.sh uses** (`src/core/repo-lock.ts`, the
 `<git-common-dir>/<basename(repo-root)>-loop.lock` dir with stale-pid-reclaim) — daemon git ops are
