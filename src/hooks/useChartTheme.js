@@ -53,7 +53,7 @@ export default function useChartTheme() {
 
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class', 'data-theme', 'data-mode', 'data-font']
     });
 
     return () => observer.disconnect();

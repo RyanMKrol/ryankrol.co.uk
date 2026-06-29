@@ -113,6 +113,41 @@
   --color-filter-active-hover-bg: rgba(0, 255, 245, 0.15);
 }
 
+/* ===== Data-attribute Theme Scaffolding =====
+   Palettes for data-theme values (e.g. "matrix", "light") are added in T014.
+   This block establishes the structural hooks — motion control and the
+   interaction between data-mode and the existing matrix-active overlay.
+   ============================================ */
+
+/* Honour explicit user motion preference stored in data-motion="reduced".
+   Complements @media (prefers-reduced-motion: reduce) — whichever fires wins. */
+[data-motion="reduced"] .crt-overlay {
+  animation: none;
+  opacity: 0.8;
+}
+
+[data-motion="reduced"] * {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* Typing cursor and spinner keep short durations so they still function */
+[data-motion="reduced"] .typing-effect::after {
+  animation: none;
+  opacity: 1;
+}
+
+[data-motion="reduced"] .spinner {
+  animation: none;
+  border-bottom-color: var(--color-accent);
+}
+
+/* Placeholder sections — T014 fills in palette overrides here:
+   [data-theme="cyberpunk"] { } — default, already defined in :root
+   [data-theme="matrix"]    { } — green-on-black matrix variant
+   [data-mode="light"]      { } — light-mode overrides per theme
+*/
+
 /* ===== Matrix Theme Override ===== */
 
 html.matrix-active {
