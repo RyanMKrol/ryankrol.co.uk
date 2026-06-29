@@ -467,7 +467,7 @@
     {
       "id": "T020",
       "title": "TMDB search + confirm step in the movie/TV add flow",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T018",
         "T019"
