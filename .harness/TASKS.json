@@ -877,7 +877,7 @@
     {
       "id": "T036",
       "title": "Dashboard: show each task's worklog (+ audit) in its expanded body",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T025"
       ],
