@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../components/Header';
 import StarRating from '../../../components/StarRating';
+import TmdbSearch from '../../../components/TmdbSearch';
 
 export default function AddMovieReview() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ export default function AddMovieReview() {
     gist: '',
     password: ''
   });
+  const [tmdbMatch, setTmdbMatch] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -34,13 +36,24 @@ export default function AddMovieReview() {
     setLoading(true);
     setMessage('');
 
+    const body = {
+      ...formData,
+      ...(tmdbMatch && {
+        tmdbId: tmdbMatch.tmdbId,
+        mediaType: tmdbMatch.mediaType,
+        posterPath: tmdbMatch.posterPath,
+        tmdbOverview: tmdbMatch.overview,
+        tmdbDate: tmdbMatch.date,
+      }),
+    };
+
     try {
       const response = await fetch('/api/reviews/movies/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(body),
       });
 
       const result = await response.json();
@@ -67,7 +80,7 @@ export default function AddMovieReview() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">🎬 Add Movie Review</h1>
-      
+
       <div className="form-container">
         {message && (
           <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
@@ -86,6 +99,15 @@ export default function AddMovieReview() {
               onChange={handleInputChange}
               className="form-input"
               required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">TMDB Match (optional)</label>
+            <TmdbSearch
+              mediaType="movie"
+              initialQuery={formData.title}
+              onSelect={setTmdbMatch}
             />
           </div>
 
