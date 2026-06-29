@@ -168,8 +168,8 @@ Full workout/exercise schemas are in `README.md`; summary:
 | `MovieRatingsV3` | `title` | `{ title, rating(0–5), review_text, date 'DD-MM-YYYY' }` |
 | `TelevisionRatingsV3` | `title` | same shape as movies |
 | `BookRatingsV3` | `title` + `author` | adds `author`; `review_text` comes from form field `overview` |
-| `AlbumRatingsV2` | `title` + `artist` | `{ title, artist, rating, highlights, date, thumbnail }` |
-| `VinylCollection` | `title` + `artist` | `{ title, artist }` |
+| `AlbumRatingsV2` | `title` + `artist` | `{ title, artist, rating, highlights, date, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` |
+| `VinylCollection` | `title` + `artist` | `{ title, artist, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` |
 | `Workouts` | `id` | GSI `start_time-index`; computed metrics (volume, type, duration) |
 | `Exercises` | `exercise_id` | GSIs `workout_id-index`, `exercise_name-workout_date-index` |
 
@@ -254,10 +254,6 @@ directly (not the deprecated `next lint`).
   (`workoutQueries.js`) `paginatedScan`s ALL workouts, sorts, and `.slice()`s the page — there's
   no DynamoDB-native paging, and the Push/Pull/Legs filter is applied client-side to the current
   page only. (This is the root of the known pagination bug.)
-- **Vinyl cache-clear is a no-op bug.** `api/vinyl/add.js` calls `clearApiCache('vinyl-collection')`
-  but the read is cached under `generateCacheKey('vinyl-collection')` = `api-vinyl-collection`. The
-  clear misses the real key, so a new vinyl entry won't appear until the 4h TTL expires. Fix is to
-  clear `'api-vinyl-collection'`.
 - **Cache is per serverless instance** (see Architecture) — a write only busts the instance that
   served it. Use `/dev/cache` to flush everywhere if you need an immediate global refresh.
 - **Workout backfill fires on cache miss.** `GET /api/workouts` (page 1) and `GET /api/workouts/stats`

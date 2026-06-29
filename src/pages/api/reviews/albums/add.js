@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, artist, rating, highlights, password } = req.body;
+  const { title, artist, rating, highlights, password, lastfm } = req.body;
 
   // Validate password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -21,16 +21,28 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Create new album review
     const albumData = {
       title,
       artist,
       rating: Number(rating),
       highlights,
       date: new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
-      // Note: thumbnail would typically be fetched from Last.FM API in production
-      thumbnail: ''
+      thumbnail: lastfm?.images?.[lastfm.images.length - 1]?.['#text'] || ''
     };
+
+    if (lastfm) {
+      albumData.lastfm = {
+        mbid: lastfm.mbid || '',
+        url: lastfm.url || '',
+        listeners: lastfm.listeners || '',
+        playcount: lastfm.playcount || '',
+        tags: lastfm.tags || [],
+        trackCount: lastfm.trackCount || 0,
+        summary: lastfm.summary || '',
+        releaseDate: lastfm.releaseDate || '',
+        images: lastfm.images || []
+      };
+    }
 
     const params = {
       TableName: DYNAMO_TABLES.ALBUM_RATINGS_TABLE,
@@ -39,7 +51,6 @@ export default async function handler(req, res) {
 
     await docClient.send(new PutCommand(params));
 
-    // Clear the cache
     clearApiCache('api-albums');
 
     res.status(201).json({

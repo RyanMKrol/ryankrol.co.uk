@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, artist, password } = req.body;
+  const { title, artist, password, lastfm } = req.body;
 
   // Validate password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -21,11 +21,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Create new vinyl record
     const vinylData = {
       title,
-      artist
+      artist,
+      thumbnail: lastfm?.images?.[lastfm.images.length - 1]?.['#text'] || ''
     };
+
+    if (lastfm) {
+      vinylData.lastfm = {
+        mbid: lastfm.mbid || '',
+        url: lastfm.url || '',
+        listeners: lastfm.listeners || '',
+        playcount: lastfm.playcount || '',
+        tags: lastfm.tags || [],
+        trackCount: lastfm.trackCount || 0,
+        summary: lastfm.summary || '',
+        releaseDate: lastfm.releaseDate || '',
+        images: lastfm.images || []
+      };
+    }
 
     const params = {
       TableName: DYNAMO_TABLES.VINYL_COLLECTION_TABLE,
@@ -34,8 +48,7 @@ export default async function handler(req, res) {
 
     await docClient.send(new PutCommand(params));
 
-    // Clear the vinyl cache
-    clearApiCache('vinyl-collection');
+    clearApiCache('api-vinyl-collection');
 
     res.status(201).json({
       message: 'Vinyl record added successfully',

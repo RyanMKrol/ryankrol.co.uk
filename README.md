@@ -113,6 +113,59 @@ Unit tests run on **Jest** (via `next/jest`) and are co-located next to source a
 
 ### DynamoDB Tables
 
+#### AlbumRatingsV2 Table
+Album reviews with optional Last.fm enrichment.
+
+**Primary Key:** `title` (String) + `artist` (String)
+
+**Schema:**
+```javascript
+{
+  title: "OK Computer",              // Partition key
+  artist: "Radiohead",               // Sort key
+  rating: 4,                         // 0–5
+  highlights: "...",                 // Review text
+  date: "15-01-2024",                // DD-MM-YYYY
+  thumbnail: "https://...",          // Last.fm cover URL ('' if not supplied)
+  lastfm: {                          // Optional — omitted if no search was done
+    mbid: "...",
+    url: "https://www.last.fm/...",
+    listeners: "1234567",
+    playcount: "9876543",
+    tags: ["alternative rock"],
+    trackCount: 12,
+    summary: "...",
+    releaseDate: "21 May 1997",
+    images: [{ "#text": "https://...", size: "large" }]
+  }
+}
+```
+
+#### VinylCollection Table
+Vinyl records with optional Last.fm enrichment.
+
+**Primary Key:** `title` (String) + `artist` (String)
+
+**Schema:**
+```javascript
+{
+  title: "OK Computer",              // Partition key
+  artist: "Radiohead",               // Sort key
+  thumbnail: "https://...",          // Last.fm cover URL ('' if not supplied)
+  lastfm: {                          // Optional — omitted if no search was done
+    mbid: "...",
+    url: "https://www.last.fm/...",
+    listeners: "1234567",
+    playcount: "9876543",
+    tags: ["alternative rock"],
+    trackCount: 12,
+    summary: "...",
+    releaseDate: "21 May 1997",
+    images: [{ "#text": "https://...", size: "large" }]
+  }
+}
+```
+
 #### Workouts Table
 Complete workout records with computed metrics.
 
