@@ -5,18 +5,18 @@ import { bookCoverUrl } from '../lib/openlibrary';
  * Open Library search + confirm component for the book add flow.
  *
  * Props:
- *   title    - the title field value from the parent form (drives the search)
- *   author   - the author field value from the parent form (optional, improves matching)
- *   onSelect - called with book metadata on confirm, or null when cleared
+ *   initialQuery - pre-fill the search box (usually the title field value)
+ *   onSelect     - called with book metadata on confirm, or null when cleared
  */
-export default function BookSearch({ title = '', author = '', onSelect }) {
+export default function BookSearch({ initialQuery = '', onSelect }) {
+  const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState(null); // null = not yet searched
   const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
 
   const search = async () => {
-    if (!title.trim()) return;
+    if (!query.trim()) return;
     setSearching(true);
     setError('');
     setResults(null);
@@ -24,9 +24,7 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
     if (onSelect) onSelect(null);
 
     try {
-      const params = new URLSearchParams({ title: title.trim() });
-      if (author.trim()) params.set('author', author.trim());
-      const res = await fetch(`/api/books/search?${params}`);
+      const res = await fetch(`/api/books/search?query=${encodeURIComponent(query.trim())}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Search failed');
       setResults(data);
@@ -34,6 +32,13 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
       setError(err.message);
     } finally {
       setSearching(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      search();
     }
   };
 
@@ -62,11 +67,20 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
   return (
     <div className="book-search">
       <div className="book-search-row">
+        <input
+          type="text"
+          className="form-input book-search-input"
+          placeholder="Search Open Library for this book…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={searching}
+        />
         <button
           type="button"
           className="form-button book-search-btn"
           onClick={search}
-          disabled={searching || !title.trim()}
+          disabled={searching || !query.trim()}
         >
           {searching ? 'Searching…' : 'Search'}
         </button>
@@ -90,7 +104,7 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
       {!selected && results !== null && (
         <div className="book-results">
           {results.length === 0 ? (
-            <p className="book-no-results">No results found for &ldquo;{title}&rdquo;.</p>
+            <p className="book-no-results">No results found for &ldquo;{query}&rdquo;.</p>
           ) : (
             results.map((r, i) => (
               <div key={r.olid ?? i} className="book-result-item">
@@ -138,6 +152,10 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
           display: flex;
           gap: 0.5rem;
           align-items: center;
+        }
+        .book-search-input {
+          flex: 1;
+          margin-bottom: 0;
         }
         .book-search-btn,
         .book-select-btn {
