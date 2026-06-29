@@ -353,7 +353,7 @@
     {
       "id": "T015",
       "title": "Appearance picker modal",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T013",
         "T014"
