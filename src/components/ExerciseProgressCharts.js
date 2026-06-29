@@ -1,6 +1,6 @@
 import {
   Chart as ChartJS,
-  CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -9,12 +9,13 @@ import {
   Legend,
   Filler
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
 import useChartTheme from '../hooks/useChartTheme';
+import { toTimeSeries, timeScaleOptions } from '../lib/chartTime';
 
-// Register ChartJS components
 ChartJS.register(
-  CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -67,15 +68,9 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
     );
   }
 
-  // Prepare data for charts
-  const labels = strengthHistory.map(h => new Date(h.workout_date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric'
-  }));
-
-  const oneRMData = strengthHistory.map(h => h.bestEstimated1RM);
-  const maxWeightData = strengthHistory.map(h => h.heaviestWeight);
-  const volumeData = strengthHistory.map(h => h.sessionVolume);
+  const oneRMData = toTimeSeries(strengthHistory, h => h.workout_date, h => h.bestEstimated1RM);
+  const maxWeightData = toTimeSeries(strengthHistory, h => h.workout_date, h => h.heaviestWeight);
+  const volumeData = toTimeSeries(strengthHistory, h => h.workout_date, h => h.sessionVolume);
 
   const chartOptions = {
     responsive: true,
@@ -96,6 +91,7 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
     },
     scales: {
       x: {
+        ...timeScaleOptions,
         grid: {
           color: gridColor
         },
@@ -132,7 +128,6 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
   };
 
   const oneRMChartData = {
-    labels,
     datasets: [
       {
         label: 'Estimated 1RM (kg)',
@@ -146,7 +141,6 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
   };
 
   const maxWeightChartData = {
-    labels,
     datasets: [
       {
         label: 'Max Weight (kg)',
@@ -160,7 +154,6 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
   };
 
   const volumeChartData = {
-    labels,
     datasets: [
       {
         label: 'Session Volume (kg)',
@@ -226,15 +219,15 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
             <strong>Sessions analyzed:</strong> {strengthHistory.length} strength training sessions
           </p>
           <p>
-            <strong>1RM improvement:</strong> {oneRMData[0].toFixed(1)}kg → {oneRMData[oneRMData.length - 1].toFixed(1)}kg
-            ({oneRMData.length > 1 ? (((oneRMData[oneRMData.length - 1] - oneRMData[0]) / oneRMData[0]) * 100).toFixed(1) : '0'}% change)
+            <strong>1RM improvement:</strong> {oneRMData[0].y.toFixed(1)}kg → {oneRMData[oneRMData.length - 1].y.toFixed(1)}kg
+            ({oneRMData.length > 1 ? (((oneRMData[oneRMData.length - 1].y - oneRMData[0].y) / oneRMData[0].y) * 100).toFixed(1) : '0'}% change)
           </p>
           <p>
-            <strong>Max weight improvement:</strong> {maxWeightData[0].toFixed(1)}kg → {maxWeightData[maxWeightData.length - 1].toFixed(1)}kg
-            ({maxWeightData.length > 1 ? (((maxWeightData[maxWeightData.length - 1] - maxWeightData[0]) / maxWeightData[0]) * 100).toFixed(1) : '0'}% change)
+            <strong>Max weight improvement:</strong> {maxWeightData[0].y.toFixed(1)}kg → {maxWeightData[maxWeightData.length - 1].y.toFixed(1)}kg
+            ({maxWeightData.length > 1 ? (((maxWeightData[maxWeightData.length - 1].y - maxWeightData[0].y) / maxWeightData[0].y) * 100).toFixed(1) : '0'}% change)
           </p>
           <p>
-            <strong>Average session volume:</strong> {(volumeData.reduce((sum, v) => sum + v, 0) / volumeData.length).toFixed(1)}kg
+            <strong>Average session volume:</strong> {(volumeData.reduce((sum, v) => sum + v.y, 0) / volumeData.length).toFixed(1)}kg
           </p>
         </div>
       </div>

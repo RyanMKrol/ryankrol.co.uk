@@ -1,6 +1,6 @@
 import {
   Chart as ChartJS,
-  CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -9,12 +9,13 @@ import {
   Legend,
   Filler
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
 import useChartTheme from '../hooks/useChartTheme';
+import { toTimeSeries, timeScaleOptions } from '../lib/chartTime';
 
-// Register ChartJS components
 ChartJS.register(
-  CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -66,20 +67,11 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
     );
   }
 
-  // Prepare data for charts
-  const labels = cardioHistory.map(h => new Date(h.workout_date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric'
-  }));
-
-  const distanceData = cardioHistory.map(h => h.totalDistance ? h.totalDistance / 1000 : 0); // Convert to km
-  const durationData = cardioHistory.map(h => h.totalDuration ? h.totalDuration / 60 : 0); // Convert to minutes
-  const paceData = cardioHistory.map(h => {
-    // Calculate pace (minutes per km)
+  const distanceData = toTimeSeries(cardioHistory, h => h.workout_date, h => h.totalDistance ? h.totalDistance / 1000 : 0);
+  const durationData = toTimeSeries(cardioHistory, h => h.workout_date, h => h.totalDuration ? h.totalDuration / 60 : 0);
+  const paceData = toTimeSeries(cardioHistory, h => h.workout_date, h => {
     if (h.totalDistance > 0 && h.totalDuration > 0) {
-      const distanceKm = h.totalDistance / 1000;
-      const durationMins = h.totalDuration / 60;
-      return durationMins / distanceKm;
+      return (h.totalDuration / 60) / (h.totalDistance / 1000);
     }
     return 0;
   });
@@ -103,6 +95,7 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
     },
     scales: {
       x: {
+        ...timeScaleOptions,
         grid: {
           color: gridColor
         },
@@ -139,7 +132,6 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
   };
 
   const distanceChartData = {
-    labels,
     datasets: [
       {
         label: 'Distance (km)',
@@ -153,7 +145,6 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
   };
 
   const durationChartData = {
-    labels,
     datasets: [
       {
         label: 'Duration (minutes)',
@@ -167,7 +158,6 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
   };
 
   const paceChartData = {
-    labels,
     datasets: [
       {
         label: 'Pace (min/km)',
@@ -199,7 +189,7 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
   );
 
   // Check if we have meaningful pace data (distance and duration both exist)
-  const hasPaceData = paceData.some(pace => pace > 0);
+  const hasPaceData = paceData.some(pt => pt.y > 0);
 
   return (
     <div>
@@ -238,24 +228,24 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
             <strong>Sessions analyzed:</strong> {cardioHistory.length} cardio sessions
           </p>
           <p>
-            <strong>Distance improvement:</strong> {distanceData[0].toFixed(2)}km → {distanceData[distanceData.length - 1].toFixed(2)}km
-            ({distanceData.length > 1 ? (((distanceData[distanceData.length - 1] - distanceData[0]) / distanceData[0]) * 100).toFixed(1) : '0'}% change)
+            <strong>Distance improvement:</strong> {distanceData[0].y.toFixed(2)}km → {distanceData[distanceData.length - 1].y.toFixed(2)}km
+            ({distanceData.length > 1 ? (((distanceData[distanceData.length - 1].y - distanceData[0].y) / distanceData[0].y) * 100).toFixed(1) : '0'}% change)
           </p>
           <p>
-            <strong>Duration improvement:</strong> {durationData[0].toFixed(1)}min → {durationData[durationData.length - 1].toFixed(1)}min
-            ({durationData.length > 1 ? (((durationData[durationData.length - 1] - durationData[0]) / durationData[0]) * 100).toFixed(1) : '0'}% change)
+            <strong>Duration improvement:</strong> {durationData[0].y.toFixed(1)}min → {durationData[durationData.length - 1].y.toFixed(1)}min
+            ({durationData.length > 1 ? (((durationData[durationData.length - 1].y - durationData[0].y) / durationData[0].y) * 100).toFixed(1) : '0'}% change)
           </p>
           {hasPaceData && (
             <p>
-              <strong>Pace improvement:</strong> {paceData[0].toFixed(2)} → {paceData[paceData.length - 1].toFixed(2)} min/km
-              ({paceData.length > 1 ? (((paceData[0] - paceData[paceData.length - 1]) / paceData[0]) * 100).toFixed(1) : '0'}% faster)
+              <strong>Pace improvement:</strong> {paceData[0].y.toFixed(2)} → {paceData[paceData.length - 1].y.toFixed(2)} min/km
+              ({paceData.length > 1 ? (((paceData[0].y - paceData[paceData.length - 1].y) / paceData[0].y) * 100).toFixed(1) : '0'}% faster)
             </p>
           )}
           <p>
-            <strong>Average distance:</strong> {(distanceData.reduce((sum, d) => sum + d, 0) / distanceData.length).toFixed(2)}km
+            <strong>Average distance:</strong> {(distanceData.reduce((sum, d) => sum + d.y, 0) / distanceData.length).toFixed(2)}km
           </p>
           <p>
-            <strong>Average duration:</strong> {(durationData.reduce((sum, d) => sum + d, 0) / durationData.length).toFixed(1)}min
+            <strong>Average duration:</strong> {(durationData.reduce((sum, d) => sum + d.y, 0) / durationData.length).toFixed(1)}min
           </p>
         </div>
       </div>

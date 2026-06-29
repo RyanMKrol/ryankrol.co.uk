@@ -1,6 +1,7 @@
 import {
   Chart as ChartJS,
   CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -10,11 +11,14 @@ import {
   Legend,
   Filler
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import { Line, Bar } from 'react-chartjs-2';
 import useChartTheme from '../hooks/useChartTheme';
+import { toTimeSeries, timeScaleOptions } from '../lib/chartTime';
 
 ChartJS.register(
   CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -24,11 +28,6 @@ ChartJS.register(
   Legend,
   Filler
 );
-
-function formatDate(isoDate) {
-  if (!isoDate) return '';
-  return new Date(isoDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 const ChartCard = ({ title, children, color }) => (
   <div className="chart-card">
@@ -61,44 +60,52 @@ export default function ProgrammeOverviewCharts({ data }) {
 
   const { sessions, frequencyByMonth } = data;
 
-  const sessionLabels = sessions.map(s => formatDate(s.date));
+  const yAxisOptions = {
+    grid: { color: gridColor },
+    ticks: { color: textColor, font: { family: fontFamily, size: 10 } }
+  };
 
-  const baseOptions = {
+  const timeXOptions = {
+    ...timeScaleOptions,
+    grid: { color: gridColor },
+    ticks: { color: textColor, font: { family: fontFamily, size: 10 } }
+  };
+
+  const categoryXOptions = {
+    grid: { color: gridColor },
+    ticks: { color: textColor, font: { family: fontFamily, size: 10 } }
+  };
+
+  const tooltipPlugin = {
+    mode: 'index',
+    intersect: false,
+    backgroundColor: tooltipBg,
+    titleColor: tooltipTitle,
+    bodyColor: tooltipBody,
+    borderColor: tooltipBorder,
+    borderWidth: 1
+  };
+
+  const lineOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        mode: 'index',
-        intersect: false,
-        backgroundColor: tooltipBg,
-        titleColor: tooltipTitle,
-        bodyColor: tooltipBody,
-        borderColor: tooltipBorder,
-        borderWidth: 1
-      }
-    },
-    scales: {
-      x: {
-        grid: { color: gridColor },
-        ticks: { color: textColor, font: { family: fontFamily, size: 10 } }
-      },
-      y: {
-        grid: { color: gridColor },
-        ticks: { color: textColor, font: { family: fontFamily, size: 10 } }
-      }
-    },
-    elements: {
-      point: { radius: 3, hoverRadius: 5 },
-      line: { tension: 0.1 }
-    }
+    plugins: { legend: { display: false }, tooltip: tooltipPlugin },
+    scales: { x: timeXOptions, y: yAxisOptions },
+    elements: { point: { radius: 3, hoverRadius: 5 }, line: { tension: 0.1 } }
+  };
+
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: tooltipPlugin },
+    scales: { x: categoryXOptions, y: yAxisOptions },
+    elements: { point: { radius: 3, hoverRadius: 5 }, line: { tension: 0.1 } }
   };
 
   const volumeChartData = {
-    labels: sessionLabels,
     datasets: [{
       label: 'Volume (kg)',
-      data: sessions.map(s => s.volume),
+      data: toTimeSeries(sessions, s => s.date, s => s.volume),
       borderColor: chartPrimary,
       backgroundColor: chartPrimaryBg,
       borderWidth: 2,
@@ -107,10 +114,9 @@ export default function ProgrammeOverviewCharts({ data }) {
   };
 
   const setsChartData = {
-    labels: sessionLabels,
     datasets: [{
       label: 'Working Sets',
-      data: sessions.map(s => s.workingSets),
+      data: toTimeSeries(sessions, s => s.date, s => s.workingSets),
       borderColor: chartSecondary,
       backgroundColor: chartSecondaryBg,
       borderWidth: 2,
@@ -118,9 +124,8 @@ export default function ProgrammeOverviewCharts({ data }) {
     }]
   };
 
-  const freqLabels = frequencyByMonth.map(f => f.month);
   const freqChartData = {
-    labels: freqLabels,
+    labels: frequencyByMonth.map(f => f.month),
     datasets: [{
       label: 'Sessions',
       data: frequencyByMonth.map(f => f.count),
@@ -133,15 +138,15 @@ export default function ProgrammeOverviewCharts({ data }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '1.5rem' }}>
       <ChartCard title="📊 Volume per Session (kg)" color={chartPrimary}>
-        <Line data={volumeChartData} options={baseOptions} />
+        <Line data={volumeChartData} options={lineOptions} />
       </ChartCard>
 
       <ChartCard title="💪 Working Sets per Session" color={chartSecondary}>
-        <Line data={setsChartData} options={baseOptions} />
+        <Line data={setsChartData} options={lineOptions} />
       </ChartCard>
 
       <ChartCard title="📅 Workout Frequency (per month)" color={chartCardDefault}>
-        <Bar data={freqChartData} options={baseOptions} />
+        <Bar data={freqChartData} options={barOptions} />
       </ChartCard>
     </div>
   );

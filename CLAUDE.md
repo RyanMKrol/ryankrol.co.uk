@@ -215,6 +215,11 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
   disabled under it — keep any new animation guarded the same way.
 - **Be generous with `console.log` in API routes / lib.** The codebase logs cache hits/misses and
   DynamoDB timings with emoji prefixes — match that; it's the visibility story on Vercel.
+- **Date charts use a chart.js `time` scale.** All charts with a date x-axis use `type: 'time'`
+  (via `chartjs-adapter-date-fns`) with `{x: <ms-timestamp>, y: <value>}` data points — never
+  category labels. Use `toTimeSeries(rows, getDate, getValue)` from `src/lib/chartTime.js` to map
+  rows, and spread `timeScaleOptions` into the `scales.x` block. Exception: aggregated bar charts
+  (e.g. frequency-by-month with string labels) stay as category scale.
 
 ## Definition of Done & checks
 
