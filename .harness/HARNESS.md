@@ -177,30 +177,28 @@ prompt reads all orchestration fields from JSON and **appends the spec MD's full
 **Owner-owned overlays.** Pieces of backlog state that the OWNER controls, NOT the loop. Each lives
 **entirely outside TASKS.json**, in its own committed file, and **the loop NEVER writes them** (it
 only ever writes TASKS.json `status` + the worklog) — so the loop's `jq` status write and any overlay
-write touch different files and never conflict. This repo has three: `human-done.json` (read by the
-loop — see below), `manual-fail.json` (read by calibration AND by the loop's `reopen_manual_failed`
-pass, which resets a flagged `done` task to `pending` so it rebuilds — written only by
-`mark-failed.sh`; see `designs/manual-fail-signal.md` §4), and `reviews.json`.
+write touch different files and never conflict. This repo has three: `human-done.json` and
+`manual-fail.json` (both read by the loop — see below) and `reviews.json` (dashboard-only annotation).
+Each loop iteration, **`reconcile_overlays` (pre-flight)** promotes the verdicts in human-done /
+manual-fail into the authoritative TASKS.json `status` — human-done→`done`, manual-fail→`failed`
+(terminal) — so the loop ENACTS the owner's intent while the owner only ever writes the overlays (see
+`designs/manual-fail-signal.md` §4). `manual-fail` is ALSO read by calibration (`manual_fail_ids`).
 
 - **`.harness/reviews.json`** — `id → { "reviewed": bool, "at": <ISO-8601> }`. The owner's "I've
   checked this completed work" flag. Written by `mark-reviewed.sh` (and the local dashboard's Mark
   reviewed buttons) — a **dashboard-only annotation: the loop never reads or writes it**, so it never
   affects what gets built. Purely for triaging which finished tasks you've reviewed.
-- **`.harness/human-done.json`** (T208) — `id → { "done": true, "at": <ISO-8601> }`. Marks a
-  `needs-human` task complete WITHOUT touching TASKS.json `status` (the loop owns status; a gated task
-  is never built so the loop never flips it). **`task_done()` in `loop.sh` reads this overlay** — a
-  task counts as done if TASKS.json says `status=="done"` OR this file has `<id>.done==true` — so a
-  needs-human completion recorded here unblocks the task's dependents.
-  - In the **full dashboard** deployment this is set via `POST /api/backlog/:id/done` (needs-human
-    tasks ONLY — 400 otherwise; atomic write+commit+push; `GET /api/backlog` overlays `done=true` and
-    derives `reviewed=true`).
-  - In **this repo there is no dashboard**, so the operator records a completion directly after doing
-    the real-world step — e.g.
-    `jq --arg id T0NN --arg at "$(date -u +%FT%TZ)" '.[$id]={done:true,at:$at}' .harness/human-done.json | sponge`
-    (or any editor) — then commits it. This is an OWNER action outside a loop run, distinct from the
-    under-loop builder, which must never hand-edit status or either overlay.
+- **`.harness/human-done.json`** — `id → { "done": true, "at": <ISO-8601> }`. Marks a `needs-human`
+  task complete. Set via **`.harness/mark-done.sh <id>`** or the local dashboard's "Mark done" button
+  (needs-human tasks only). `task_done()` treats a task as done if TASKS.json `status=="done"` OR this
+  overlay has `<id>.done==true` (so dependents unblock immediately), and `reconcile_overlays` then
+  promotes it to `status=done` in TASKS.json on the next pass so the file is authoritative.
+- **`.harness/manual-fail.json`** — `id → { "failed": true, "reason", "at" }`. Marks a `done` task a
+  false success. Set via **`.harness/mark-failed.sh <id> "<reason>"`** or the dashboard's "Mark
+  failed" (single, reason required). Read by calibration (`manual_fail_ids` → stronger tier + more
+  audits) and reconciled to **`status=failed` (terminal)** by `reconcile_overlays`.
 
-The one overlay writer in this repo, `mark-failed.sh`, commits+pushes under the **SAME mkdir lock
+The overlay writers (`mark-done.sh` / `mark-failed.sh` / `mark-reviewed.sh`) commit+push under the **SAME mkdir lock
 loop.sh uses** (`acquire_lock` — the `<git-common-dir>/<basename(repo-root)>-loop.lock` dir with
 stale-pid-reclaim), by sourcing `loop.sh` with `LOOP_SOURCE_ONLY=1`, so it can never race the loop's
 git ops. The push is **best-effort** (non-fatal warning on failure; the local commit is the

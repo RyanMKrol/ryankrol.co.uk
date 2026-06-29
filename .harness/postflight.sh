@@ -31,6 +31,7 @@ task_title()   { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.title'; }
 deps_for()     { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.dependsOn[]?' | tr '\n' ' '; }
 is_gate()      { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.gate=="gate"' >/dev/null; }
 needs_human()  { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.gate=="needs-human"' >/dev/null; }
+task_failed()  { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="failed"' >/dev/null; }
 task_blocked() { [ -f "$WORKLOG/$1.md" ] && grep -qiE 'failed:blocked|needs-human' "$WORKLOG/$1.md"; }
 
 board=(); needs=(); ready=0; done_all=1
@@ -38,7 +39,10 @@ for t in $(all_tasks); do
   task_done "$t" && continue
   done_all=0
   title="$(task_title "$t")"
-  if is_gate "$t"; then
+  if task_failed "$t"; then
+    board+=("  ❌ failed        $t  $title")
+    needs+=("$t — ❌ failed (owner marked it a false success): fix the work or author a follow-up ($title)")
+  elif is_gate "$t"; then
     board+=("  🚦 gate         $t  $title")
     needs+=("$t — 🚦 gate: review the deliverable before dependents proceed ($title)")
   elif needs_human "$t" || task_blocked "$t"; then

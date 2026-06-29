@@ -57,6 +57,17 @@ describe('computeBacklog', () => {
     expect(r[0].manualFailed).toBe(true);
   });
 
+  it('a terminal status=failed task → failed bucket, and blocks its dependents (waiting-human)', () => {
+    const r = computeBacklog([
+      { id: 'F', status: 'failed', gate: null, dependsOn: [] },
+      { id: 'G', status: 'pending', gate: null, dependsOn: ['F'] },
+    ]);
+    const m = Object.fromEntries(r.map((t) => [t.id, t]));
+    expect(m.F.bucket).toBe('failed');
+    expect(m.F.failed).toBe(true);
+    expect(m.G.bucket).toBe('waiting-human'); // a failed dep needs the owner, so G waits on a human
+  });
+
   it('flags a reviewed task from the reviews overlay', () => {
     const r = computeBacklog(
       [

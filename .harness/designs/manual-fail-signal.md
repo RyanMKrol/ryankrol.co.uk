@@ -61,20 +61,23 @@ Both calibration readers honor the overlay (`loop.sh` + `policy.jq`):
 Net effect: marking a UI task failed makes future UI tasks both **built with a stronger model** and
 **audited more aggressively** — directly targeting the conditions that let the bug through.
 
-## 4. Reopen-for-rebuild (implemented in this repo)
+## 4. Reconcile overlay verdicts into TASKS.json status (implemented in this repo)
 
-> The upstream design deferred this ("re-open could be layered on later if a real need emerges"). In
-> ryankrol.co.uk it IS implemented — the owner's regular use of mark-failed surfaced the real need.
+The loop keys selection on TASKS.json `status`, NOT on the overlays — so `reconcile_overlays` in
+`loop.sh` runs once per iteration BEFORE selection and promotes the owner's overlay verdicts into the
+authoritative `status`. The loop stays the SOLE `TASKS.json` writer, ENACTING the owner's intent; the
+dashboard/CLI still write ONLY the overlays (the decoupling is intact):
 
-- **The loop reopens a manual-failed task so it rebuilds.** `reopen_manual_failed` in `loop.sh` runs
-  once per iteration before selection: for any task the overlay flags `failed:true` that is still
-  `status:done`, the loop (the **sole** `TASKS.json` status writer) resets it to `pending`, so it is
-  re-selected and rebuilt — at the stronger tier the calibration correction above now prescribes.
-- **The decoupling is preserved.** The loop still only READS `manual-fail.json`; it never writes the
-  overlay. Idempotency is by timestamp: a task reopens ONLY while its latest `outcomes.jsonl` row
-  PREDATES the fail-marking's `at`. After the rebuild appends a newer outcome row it won't reopen
-  again; re-running `mark-failed.sh` updates `at` and re-arms it. So there is no infinite-rebuild loop
-  and no loop-written overlay.
+- **`manual-fail` failed==true → `status=failed`** — TERMINAL. The loop never builds a `failed` task
+  (`select_task` skips it); its dependents stay blocked until a human acts. To recover, fix the work
+  or author a follow-up task. (This repo deliberately chose the **terminal** model over an
+  auto-reopen-and-rebuild model: a false success is a record for a human, not an automatic retry.)
+- **`human-done` done==true (needs-human task) → `status=done`** — unblocks dependents and makes the
+  file reflect reality (rather than relying on a live overlay read).
+
+One-directional + idempotent (overlay→status only; a no-op when nothing changed). It does NOT touch
+`outcomes.jsonl`: human-done tasks aren't loop-built, and manual-fail's calibration effect already
+comes from the overlay via `manual_fail_ids`, not from the status.
 
 ## 4b. What it still deliberately does NOT do
 - **It does not feed the failure reason into the auditor's prompt.** The correction is purely the

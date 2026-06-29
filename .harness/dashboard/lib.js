@@ -19,14 +19,16 @@ function deriveTask(task, opts = {}) {
   const isGate = task.gate === 'gate';
   const manualFailed = !!(manualFail[task.id] && manualFail[task.id].failed === true);
   const isReviewed = !!(reviewed[task.id] && reviewed[task.id].reviewed === true);
-  const blocked = !done && blockedIds.includes(task.id);
+  const failed = task.status === 'failed'; // terminal — owner marked it a false success (reconciled)
+  const blocked = !done && !failed && blockedIds.includes(task.id);
   let derivedStatus;
-  if (done) derivedStatus = 'done';
+  if (failed) derivedStatus = 'failed';
+  else if (done) derivedStatus = 'done';
   else if (blocked) derivedStatus = 'blocked';
   else if (needsHuman) derivedStatus = 'needs-human';
   else if (isGate) derivedStatus = 'gate';
   else derivedStatus = 'pending';
-  return { ...task, derivedStatus, done, needsHuman, isGate, manualFailed, blocked, reviewed: isReviewed };
+  return { ...task, derivedStatus, done, failed, needsHuman, isGate, manualFailed, blocked, reviewed: isReviewed };
 }
 
 // Given all tasks + overlays, return tasks with derived status + an eligibility bucket + unmet deps.
@@ -41,7 +43,9 @@ function computeBacklog(tasks, opts = {}) {
   const derived = (tasks || []).map((t) => deriveTask(t, { humanDone, manualFail, blockedIds, reviewed }));
   const byId = Object.fromEntries(derived.map((t) => [t.id, t]));
   const doneIds = new Set(derived.filter((t) => t.done).map((t) => t.id));
-  const isHumanBlocker = (t) => !!t && !t.done && (t.gate === 'needs-human' || t.gate === 'gate');
+  // A task that can't progress without the owner: a needs-human/gate task, OR a terminal-failed task
+  // (its dependents will never build until the owner fixes it).
+  const isHumanBlocker = (t) => !!t && !t.done && (t.gate === 'needs-human' || t.gate === 'gate' || t.failed);
 
   // Memoized: does this task's unmet-dependency closure contain a human blocker?
   const memo = {};
@@ -67,6 +71,7 @@ function computeBacklog(tasks, opts = {}) {
     const unmetDeps = (t.dependsOn || []).filter((d) => !doneIds.has(d));
     let bucket;
     if (t.done) bucket = 'done';
+    else if (t.failed) bucket = 'failed';
     else if (t.needsHuman || t.isGate) bucket = 'needs-human';
     else if (t.blocked) bucket = 'blocked';
     else if (unmetDeps.length === 0) bucket = 'ready';
@@ -77,7 +82,7 @@ function computeBacklog(tasks, opts = {}) {
 
 // Headline counts for the buckets, for a summary line.
 function summarize(computed) {
-  const counts = { ready: 0, 'waiting-human': 0, 'needs-human': 0, blocked: 0, 'waiting-loop': 0, done: 0 };
+  const counts = { ready: 0, 'waiting-human': 0, 'needs-human': 0, failed: 0, blocked: 0, 'waiting-loop': 0, done: 0 };
   for (const t of computed) counts[t.bucket] = (counts[t.bucket] || 0) + 1;
   return counts;
 }

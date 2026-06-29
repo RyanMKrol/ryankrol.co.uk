@@ -136,6 +136,7 @@ const PAGE = `<!doctype html>
   .p-waiting-loop{color:var(--dim);background:var(--panel2)} .p-done{color:var(--done);background:var(--done-bg)}
   .p-needs-human{color:var(--needs);background:var(--needs-bg)} .p-blocked{color:var(--blocked);background:var(--blocked-bg)}
   .p-reviewed{color:var(--ready);background:var(--ready-bg)} .p-unreviewed{color:var(--dim);background:var(--panel2)}
+  .p-failed{color:var(--blocked);background:var(--blocked-bg)}
   .filt{cursor:pointer;color:var(--dim);text-decoration:none} .filt.on{color:var(--acc);font-weight:600}
   .mf { color:var(--blocked); font-size:11px; }
   .act { cursor:pointer; font-size:12px; padding:4px 11px; border-radius:6px; border:1px solid var(--line);
@@ -153,9 +154,9 @@ const PAGE = `<!doctype html>
 </header>
 <main id="main">Loading…</main>
 <script>
-const ORDER = [['ready','Ready to build'],['waiting-human','Waiting on a human step'],['needs-human','Needs you'],['blocked','Blocked'],['done','Done']];
-const CHIPS = [['ready','Ready'],['waiting-human','Waiting on you'],['needs-human','Needs you'],['blocked','Blocked'],['waiting-loop','Queued for loop'],['done','Done']];
-const PLABEL = {ready:'buildable','waiting-human':'waiting','waiting-loop':'queued','needs-human':'needs human',blocked:'blocked',done:'done'};
+const ORDER = [['ready','Ready to build'],['waiting-human','Waiting on a human step'],['needs-human','Needs you'],['failed','Failed (marked a false success)'],['blocked','Blocked'],['done','Done']];
+const CHIPS = [['ready','Ready'],['waiting-human','Waiting on you'],['needs-human','Needs you'],['failed','Failed'],['blocked','Blocked'],['waiting-loop','Queued for loop'],['done','Done']];
+const PLABEL = {ready:'buildable','waiting-human':'waiting','waiting-loop':'queued','needs-human':'needs human',failed:'failed',blocked:'blocked',done:'done'};
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function post(p,b){return fetch(p,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());}
 window.toggle=function(id){ document.getElementById('task-'+id).classList.toggle('open'); };
