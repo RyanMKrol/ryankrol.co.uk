@@ -786,7 +786,7 @@
     {
       "id": "T033",
       "title": "Drive the book search from the title + author fields (title+author matching)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T023"
       ],
