@@ -271,7 +271,7 @@
     {
       "id": "T012",
       "title": "Date-range filter on the /programmes dashboard",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T009",
         "T010"
