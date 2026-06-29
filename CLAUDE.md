@@ -139,7 +139,7 @@ src/lib (the data layer)
 | `src/pages/api/lastfm/album-info.js` | Last.fm `album.getInfo` proxy (`?artist=&album=` or `?mbid=`); returns `{ info: mapAlbumInfo }` |
 | `src/pages/api/dev/cache-bust.js` | Cache stats (GET) / flush-all (POST), gated off localhost |
 | `src/pages/api/tmdb/search.js` | TMDB search proxy (`?query=&type=movie\|tv`); authenticates with `TMDB_API_TOKEN` server-side |
-| `src/pages/api/books/search.js` | Open Library book-search proxy (`?query=`); keyless, returns normalised book list via `withApiCache` |
+| `src/pages/api/books/search.js` | Open Library book-search proxy (`?title=` required, `?author=` optional; falls back to `?query=`); keyless, returns normalised book list via `withApiCache` |
 | `src/lib/lastfm.js` | `mapAlbumSearchResult(raw)` + `mapAlbumInfo(raw)` — pure normalisers for Last.fm album search/info responses |
 | `src/lib/openlibrary.js` | `mapBookResult(doc)` normaliser + `bookCoverUrl(coverId, size)` helper |
 | `src/lib/dynamo.js` | `docClient`, `paginatedScan`, `scanTable` (region hardcoded `us-east-2`) |
