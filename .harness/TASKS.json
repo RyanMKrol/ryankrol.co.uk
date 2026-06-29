@@ -1,4 +1,573 @@
 {
   "version": 1,
-  "tasks": []
+  "tasks": [
+    {
+      "id": "T001",
+      "title": "Fix workouts-page pagination + filtering (count, results, page clamp)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/pages/api/workouts.js",
+        "src/lib/workoutQueries.js",
+        "src/lib/workoutPagination.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T001.md"
+    },
+    {
+      "id": "T002",
+      "title": "Register perfumes table + create-table script",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "scope": [
+        "src/lib/constants.js",
+        "src/scripts/createPerfumeTable.js",
+        "package.json"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T002.md"
+    },
+    {
+      "id": "T003",
+      "title": "Provision the PerfumeRatings table (human step)",
+      "status": "pending",
+      "dependsOn": [
+        "T002"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "perfumes"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T003.md"
+    },
+    {
+      "id": "T004",
+      "title": "Perfumes review API routes",
+      "status": "pending",
+      "dependsOn": [
+        "T003"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/perfumes/**",
+        "src/lib/perfumes.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T004.md"
+    },
+    {
+      "id": "T005",
+      "title": "Perfumes review pages + nav link",
+      "status": "pending",
+      "dependsOn": [
+        "T004"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/perfumes/**",
+        "src/pages/index.js",
+        "src/components/ReviewCard.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T005.md"
+    },
+    {
+      "id": "T006",
+      "title": "Perfume seed-import script",
+      "status": "pending",
+      "dependsOn": [
+        "T004"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "scope": [
+        "src/scripts/importPerfumeSeed.js",
+        "src/lib/perfumes.js",
+        "package.json"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T006.md"
+    },
+    {
+      "id": "T007",
+      "title": "Run the perfume seed import (human step)",
+      "status": "pending",
+      "dependsOn": [
+        "T006"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "perfumes"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T007.md"
+    },
+    {
+      "id": "T008",
+      "title": "Programme (Push/Pull/Legs) stats aggregation helper",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        "src/lib/programmeStats.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T008.md"
+    },
+    {
+      "id": "T009",
+      "title": "Programmes overview page (/programmes)",
+      "status": "pending",
+      "dependsOn": [
+        "T001",
+        "T008"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/programmes/**",
+        "src/components/ProgrammeOverviewCharts.js",
+        "src/pages/workouts/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T009.md"
+    },
+    {
+      "id": "T010",
+      "title": "Date-range filter helper + control",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "charts"
+      ],
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        "src/lib/dateRange.js",
+        "src/components/DateRangeFilter.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T010.md"
+    },
+    {
+      "id": "T011",
+      "title": "Date-range filter on the per-exercise page",
+      "status": "pending",
+      "dependsOn": [
+        "T010"
+      ],
+      "gate": null,
+      "tags": [
+        "charts",
+        "workouts"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/exercises/[exerciseName].js",
+        "src/pages/api/exercises/history/[exerciseName].js",
+        "src/lib/workoutQueries.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T011.md"
+    },
+    {
+      "id": "T012",
+      "title": "Date-range filter on the /programmes dashboard",
+      "status": "pending",
+      "dependsOn": [
+        "T009",
+        "T010"
+      ],
+      "gate": null,
+      "tags": [
+        "charts",
+        "workouts"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/programmes/**"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T012.md"
+    },
+    {
+      "id": "T013",
+      "title": "Multi-theme infrastructure (attributes, persistence, hooks)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "theming"
+      ],
+      "facets": {
+        "layer": "hook",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/hooks/useTheme.js",
+        "src/hooks/useChartTheme.js",
+        "src/lib/appearance.js",
+        "src/pages/_document.js",
+        "src/pages/_app.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T013.md"
+    },
+    {
+      "id": "T014",
+      "title": "Five bright/joyful themes (palettes + fonts)",
+      "status": "pending",
+      "dependsOn": [
+        "T013"
+      ],
+      "gate": null,
+      "tags": [
+        "theming"
+      ],
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/styles/globals.css",
+        "src/pages/_document.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T014.md"
+    },
+    {
+      "id": "T015",
+      "title": "Appearance picker modal",
+      "status": "pending",
+      "dependsOn": [
+        "T013",
+        "T014"
+      ],
+      "gate": null,
+      "tags": [
+        "theming"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/AppearancePicker.js",
+        "src/components/Header.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T015.md"
+    },
+    {
+      "id": "T016",
+      "title": "Aesthetic review of the themes + picker (human step)",
+      "status": "pending",
+      "dependsOn": [
+        "T015"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "theming"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T016.md"
+    },
+    {
+      "id": "T017",
+      "title": "Obtain a TMDB API key (human step)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "reviews",
+        "tmdb"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T017.md"
+    },
+    {
+      "id": "T018",
+      "title": "TMDB search proxy route + normaliser",
+      "status": "pending",
+      "dependsOn": [
+        "T017"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "tmdb"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/tmdb/**",
+        "src/lib/tmdb.js",
+        "README.md",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T018.md"
+    },
+    {
+      "id": "T019",
+      "title": "Persist TMDB metadata on movie/TV reviews",
+      "status": "pending",
+      "dependsOn": [
+        "T018"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "tmdb"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/movies/add.js",
+        "src/pages/api/reviews/tv/add.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T019.md"
+    },
+    {
+      "id": "T020",
+      "title": "TMDB search + confirm step in the movie/TV add flow",
+      "status": "pending",
+      "dependsOn": [
+        "T018",
+        "T019"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "tmdb"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        "src/components/TmdbSearch.js",
+        "src/pages/reviews/movies/add.js",
+        "src/pages/reviews/tv/add.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T020.md"
+    },
+    {
+      "id": "T021",
+      "title": "Open Library search proxy route + normaliser",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "books"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/books/**",
+        "src/lib/openlibrary.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T021.md"
+    },
+    {
+      "id": "T022",
+      "title": "Persist Open Library metadata on book reviews",
+      "status": "pending",
+      "dependsOn": [
+        "T021"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "books"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/books/add.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T022.md"
+    },
+    {
+      "id": "T023",
+      "title": "Open Library search + confirm step in the book add flow",
+      "status": "pending",
+      "dependsOn": [
+        "T021",
+        "T022"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "books"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        "src/components/BookSearch.js",
+        "src/pages/reviews/books/add.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T023.md"
+    }
+  ]
 }

@@ -25,7 +25,11 @@ jobs:
       - name: Install
         run: npm ci
 
-      # ESLint is not set up in this repo yet (`next lint` is interactive). Once it's configured to
-      # run headless, add a `Lint` step here AND `npm run lint &&` to LOCAL_DOD in harness.env.
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build
