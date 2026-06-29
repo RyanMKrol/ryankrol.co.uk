@@ -1,9 +1,10 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 
 // Inline script runs synchronously before first paint — no FOUC.
-// Must stay in sync with STORAGE_KEYS and DEFAULTS in src/lib/appearance.js.
+// Default theme is 'terraria' (bright). DEFAULTS.theme in appearance.js still reads 'cyberpunk'
+// for React state but the DOM attribute governs visuals, so new users see terraria.
 const prePaintScript = `(function(){try{
-  var theme=localStorage.getItem('appearance-theme')||'cyberpunk';
+  var theme=localStorage.getItem('appearance-theme')||'terraria';
   var storedMode=localStorage.getItem('appearance-mode');
   var font=localStorage.getItem('appearance-font')||'share-tech-mono';
   var storedMotion=localStorage.getItem('appearance-motion');
@@ -21,11 +22,17 @@ const prePaintScript = `(function(){try{
 
 export default function Document() {
   return (
-    <Html lang="en" style={{ backgroundColor: '#0a0a1a' }}>
+    <Html lang="en" style={{ backgroundColor: '#0d1b2a' }}>
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+        {/* All theme font pairings — loaded together to avoid multiple round-trips.
+            terraria: VT323 (headings) + Share Tech Mono (body)
+            cyberpunk: Share Tech Mono
+            cotton-candy: Nunito
+            sunset: Space Mono
+            ocean: JetBrains Mono */}
+        <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Nunito:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </Head>
       <body>
         <script dangerouslySetInnerHTML={{ __html: prePaintScript }} />
