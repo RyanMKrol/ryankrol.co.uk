@@ -612,7 +612,7 @@
     {
       "id": "T027",
       "title": "Replace review sort dropdown with segmented sort buttons",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
