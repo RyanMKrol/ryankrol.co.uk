@@ -242,7 +242,7 @@
     {
       "id": "T011",
       "title": "Date-range filter on the per-exercise page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T010"
       ],
