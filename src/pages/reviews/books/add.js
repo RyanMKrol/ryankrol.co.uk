@@ -40,8 +40,11 @@ export default function AddBookReview() {
     const body = {
       ...formData,
       ...(bookMatch && {
+        source: bookMatch.source,
         olid: bookMatch.olid,
         coverId: bookMatch.coverId,
+        coverUrl: bookMatch.coverUrl,
+        volumeId: bookMatch.volumeId,
         bookAuthors: bookMatch.bookAuthors,
         firstPublishedYear: bookMatch.firstPublishedYear,
         isbn: bookMatch.isbn,
@@ -120,7 +123,7 @@ export default function AddBookReview() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Open Library Match (optional)</label>
+            <label className="form-label">Book Match (optional)</label>
             <BookSearch
               title={formData.title}
               author={formData.author}

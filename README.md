@@ -166,6 +166,35 @@ Vinyl records with optional Last.fm enrichment.
 }
 ```
 
+#### BookRatingsV3 Table
+Book reviews with optional provider-search enrichment.
+
+**Primary Key:** `title` (String) + `author` (String)
+
+**Schema:**
+```javascript
+{
+  title: "Dune",                      // Partition key
+  author: "Frank Herbert",            // Sort key
+  rating: 4,                         // 0–5
+  review_text: "...",                // Review text (from `overview` form field)
+  date: "15-01-2024",                // DD-MM-YYYY
+
+  // Optional — only present when a search match was selected
+  source: "googlebooks",             // 'openlibrary' | 'googlebooks'
+  coverUrl: "https://books.google…", // Google Books cover URL (when source='googlebooks')
+  volumeId: "abc123",                // Google Books volume ID (when source='googlebooks')
+  olid: "/works/OL123456W",          // Open Library work ID (when source='openlibrary')
+  coverId: 1234567,                  // Open Library cover ID (when source='openlibrary')
+  bookAuthors: ["Frank Herbert"],    // Author list from provider
+  firstPublishedYear: 1965,
+  isbn: "9780441013593",
+  subjects: ["Science Fiction"],
+  pageCount: 412,
+  publisher: "Chilton Books"
+}
+```
+
 #### Workouts Table
 Complete workout records with computed metrics.
 

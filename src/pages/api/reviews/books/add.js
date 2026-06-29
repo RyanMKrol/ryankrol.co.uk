@@ -10,7 +10,8 @@ export default async function handler(req, res) {
 
   const {
     title, author, rating, overview, password,
-    olid, coverId, bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher
+    source, olid, coverId, coverUrl, volumeId,
+    bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher
   } = req.body;
 
   // Verify password
@@ -38,8 +39,11 @@ export default async function handler(req, res) {
       rating,
       review_text: overview,
       date: dateString,
+      ...(source !== undefined && { source }),
       ...(olid !== undefined && { olid }),
       ...(coverId !== undefined && { coverId }),
+      ...(coverUrl !== undefined && { coverUrl }),
+      ...(volumeId !== undefined && { volumeId }),
       ...(bookAuthors !== undefined && { bookAuthors }),
       ...(firstPublishedYear !== undefined && { firstPublishedYear }),
       ...(isbn !== undefined && { isbn }),

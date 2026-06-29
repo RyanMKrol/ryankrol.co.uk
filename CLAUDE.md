@@ -170,7 +170,7 @@ Full workout/exercise schemas are in `README.md`; summary:
 |---|---|---|
 | `MovieRatingsV3` | `title` | `{ title, rating(0–5), review_text, date 'DD-MM-YYYY' }` |
 | `TelevisionRatingsV3` | `title` | same shape as movies |
-| `BookRatingsV3` | `title` + `author` | adds `author`; `review_text` comes from form field `overview` |
+| `BookRatingsV3` | `title` + `author` | adds `author`; `review_text` comes from form field `overview`; optional search fields: `source` (`'openlibrary'`\|`'googlebooks'`), `coverUrl` (Google Books full URL), `volumeId` (Google Books), `olid`/`coverId` (Open Library), `bookAuthors`, `firstPublishedYear`, `isbn`, `subjects`, `pageCount`, `publisher` |
 | `AlbumRatingsV2` | `title` + `artist` | `{ title, artist, rating, highlights, date, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` |
 | `VinylCollection` | `title` + `artist` | `{ title, artist, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` |
 | `Workouts` | `id` | GSI `start_time-index`; computed metrics (volume, type, duration) |

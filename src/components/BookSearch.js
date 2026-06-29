@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { bookCoverUrl } from '../lib/openlibrary';
 
 /**
- * Open Library search + confirm component for the book add flow.
+ * Multi-provider book search + confirm component for the book add flow.
  *
  * Props:
  *   title    - the book title from the form (used as search param)
@@ -14,17 +14,24 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
   const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
+  const [currentProvider, setCurrentProvider] = useState(null);
 
-  const search = async () => {
+  const PROVIDERS = [
+    { key: 'openlibrary', label: 'Search Open Library' },
+    { key: 'googlebooks', label: 'Search Google Books' },
+  ];
+
+  const search = async (provider) => {
     if (!title.trim()) return;
     setSearching(true);
     setError('');
     setResults(null);
     setSelected(null);
+    setCurrentProvider(provider);
     if (onSelect) onSelect(null);
 
     try {
-      const params = new URLSearchParams({ title: title.trim() });
+      const params = new URLSearchParams({ title: title.trim(), provider });
       if (author.trim()) params.set('author', author.trim());
       const res = await fetch(`/api/books/search?${params}`);
       const data = await res.json();
@@ -41,8 +48,11 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
     setSelected(result);
     if (onSelect) {
       onSelect({
+        source: result.source,
         olid: result.olid,
         coverId: result.coverId,
+        coverUrl: result.coverUrl,
+        volumeId: result.volumeId,
         bookAuthors: result.authors,
         firstPublishedYear: result.firstPublishedYear,
         isbn: result.isbn,
@@ -56,27 +66,39 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
   const handleClear = () => {
     setSelected(null);
     setResults(null);
+    setCurrentProvider(null);
     if (onSelect) onSelect(null);
+  };
+
+  const providerLabel = currentProvider === 'googlebooks' ? 'Google Books' : 'Open Library';
+
+  const getCoverSrc = (r) => {
+    if (r.coverUrl) return r.coverUrl;
+    if (r.coverId) return bookCoverUrl(r.coverId, 'S');
+    return null;
   };
 
   return (
     <div className="book-search">
       <div className="book-search-row">
-        <button
-          type="button"
-          className="form-button book-search-btn"
-          onClick={search}
-          disabled={searching || !title.trim()}
-        >
-          {searching ? 'Searching…' : 'Search'}
-        </button>
+        {PROVIDERS.map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            className="form-button book-search-btn"
+            onClick={() => search(key)}
+            disabled={searching || !title.trim()}
+          >
+            {searching && currentProvider === key ? 'Searching…' : label}
+          </button>
+        ))}
       </div>
 
       {error && <p className="error-message">{error}</p>}
 
       {selected && (
         <div className="book-confirmed">
-          <span className="book-confirmed-label">✓ Open Library match selected:</span>
+          <span className="book-confirmed-label">✓ {providerLabel} match selected:</span>
           <strong> {selected.title}</strong>
           {selected.firstPublishedYear && (
             <span className="book-confirmed-year"> ({selected.firstPublishedYear})</span>
@@ -89,43 +111,47 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
 
       {!selected && results !== null && (
         <div className="book-results">
+          <p className="book-source-label">Results from {providerLabel}</p>
           {results.length === 0 ? (
             <p className="book-no-results">No results found for &ldquo;{title}&rdquo;.</p>
           ) : (
-            results.map((r, i) => (
-              <div key={r.olid ?? i} className="book-result-item">
-                {bookCoverUrl(r.coverId) ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={bookCoverUrl(r.coverId, 'S')}
-                    alt={r.title}
-                    className="book-cover"
-                    width={40}
-                    height={60}
-                  />
-                ) : (
-                  <div className="book-cover book-cover-placeholder" />
-                )}
-                <div className="book-result-info">
-                  <p className="book-result-title">
-                    {r.title}
-                    {r.firstPublishedYear && (
-                      <span className="book-result-year"> ({r.firstPublishedYear})</span>
-                    )}
-                  </p>
-                  {r.authors && r.authors.length > 0 && (
-                    <p className="book-result-authors">{r.authors.join(', ')}</p>
+            results.map((r, i) => {
+              const coverSrc = getCoverSrc(r);
+              return (
+                <div key={r.olid ?? r.volumeId ?? i} className="book-result-item">
+                  {coverSrc ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={coverSrc}
+                      alt={r.title}
+                      className="book-cover"
+                      width={40}
+                      height={60}
+                    />
+                  ) : (
+                    <div className="book-cover book-cover-placeholder" />
                   )}
+                  <div className="book-result-info">
+                    <p className="book-result-title">
+                      {r.title}
+                      {r.firstPublishedYear && (
+                        <span className="book-result-year"> ({r.firstPublishedYear})</span>
+                      )}
+                    </p>
+                    {r.authors && r.authors.length > 0 && (
+                      <p className="book-result-authors">{r.authors.join(', ')}</p>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    className="form-button book-select-btn"
+                    onClick={() => handleSelect(r)}
+                  >
+                    Select
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  className="form-button book-select-btn"
-                  onClick={() => handleSelect(r)}
-                >
-                  Select
-                </button>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       )}
@@ -138,12 +164,18 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
           display: flex;
           gap: 0.5rem;
           align-items: center;
+          flex-wrap: wrap;
         }
         .book-search-btn,
         .book-select-btn {
           white-space: nowrap;
           padding: 0.5rem 1rem;
           font-size: 0.85rem;
+        }
+        .book-source-label {
+          font-size: 0.8rem;
+          opacity: 0.6;
+          margin: 0 0 0.4rem;
         }
         .book-confirmed {
           margin-top: 0.6rem;
