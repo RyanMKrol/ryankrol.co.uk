@@ -23,7 +23,10 @@ command -v jq >/dev/null 2>&1 || { echo "[postflight] jq required to parse TASKS
 
 tj()           { jq "$@" "$BACKLOG" 2>/dev/null; }
 all_tasks()    { tj -r '.tasks[].id'; }
-task_done()    { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="done"' >/dev/null; }
+# A task is done if TASKS.json says so OR the owner-owned human-done.json overlay marks it done
+# (mirrors loop.sh's task_done — a needs-human task completed out-of-loop lives only in the overlay).
+task_done()    { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="done"' >/dev/null \
+                 || { [ -f "$HARNESS_DIR/human-done.json" ] && jq -e --arg id "$1" '.[$id].done==true' "$HARNESS_DIR/human-done.json" >/dev/null 2>&1; }; }
 task_title()   { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.title'; }
 deps_for()     { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.dependsOn[]?' | tr '\n' ' '; }
 is_gate()      { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.gate=="gate"' >/dev/null; }

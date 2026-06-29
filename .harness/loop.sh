@@ -51,7 +51,6 @@ CLAUDE_FLAGS="${CLAUDE_FLAGS:---dangerously-skip-permissions}"
 # Rate-limit-aware backoff: when Claude hits the usage limit, sleep and resume the SAME task.
 RL_BACKOFF_MIN="${RL_BACKOFF_MIN:-300}"            # first backoff (5 min)
 RL_BACKOFF_MAX="${RL_BACKOFF_MAX:-18000}"          # cap (~5h = the quota window)
-RL_BUFFER="${RL_BUFFER:-120}"                      # extra wait after a parsed reset
 FORCE_TASK="${1:-}"
 POSTFLIGHT="$HARNESS_DIR/postflight.sh"
 
