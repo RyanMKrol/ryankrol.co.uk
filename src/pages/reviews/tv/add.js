@@ -106,7 +106,7 @@ export default function AddTVReview() {
             <label className="form-label">TMDB Match (optional)</label>
             <TmdbSearch
               mediaType="tv"
-              initialQuery={formData.title}
+              query={formData.title}
               onSelect={setTmdbMatch}
             />
           </div>

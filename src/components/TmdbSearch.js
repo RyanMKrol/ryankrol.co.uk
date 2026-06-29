@@ -6,12 +6,11 @@ import { tmdbPosterUrl } from '../lib/tmdb';
  *
  * Props:
  *   mediaType  - 'movie' | 'tv'
- *   initialQuery - pre-fill the search box (usually the title field value)
+ *   query      - the search term (driven by the parent's title field)
  *   onSelect   - called with { tmdbId, mediaType, posterPath, overview, date } on confirm,
  *                or with null when the selection is cleared
  */
-export default function TmdbSearch({ mediaType, initialQuery = '', onSelect }) {
-  const [query, setQuery] = useState(initialQuery);
+export default function TmdbSearch({ mediaType, query = '', onSelect }) {
   const [results, setResults] = useState(null); // null = not yet searched
   const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -39,13 +38,6 @@ export default function TmdbSearch({ mediaType, initialQuery = '', onSelect }) {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      search();
-    }
-  };
-
   const handleSelect = (result) => {
     setSelected(result);
     if (onSelect) {
@@ -68,15 +60,6 @@ export default function TmdbSearch({ mediaType, initialQuery = '', onSelect }) {
   return (
     <div className="tmdb-search">
       <div className="tmdb-search-row">
-        <input
-          type="text"
-          className="form-input tmdb-search-input"
-          placeholder={`Search TMDB for this ${mediaType === 'tv' ? 'TV show' : 'movie'}…`}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={searching}
-        />
         <button
           type="button"
           className="form-button tmdb-search-btn"
@@ -149,10 +132,6 @@ export default function TmdbSearch({ mediaType, initialQuery = '', onSelect }) {
           display: flex;
           gap: 0.5rem;
           align-items: center;
-        }
-        .tmdb-search-input {
-          flex: 1;
-          margin-bottom: 0;
         }
         .tmdb-search-btn,
         .tmdb-select-btn {
