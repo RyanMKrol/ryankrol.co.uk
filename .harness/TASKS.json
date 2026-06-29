@@ -759,7 +759,7 @@
     {
       "id": "T032",
       "title": "Drive the TMDB movie/TV search from the title field (remove the separate box)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T020"
       ],
