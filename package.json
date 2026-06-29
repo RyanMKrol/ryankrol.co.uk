@@ -15,7 +15,8 @@
     "workout:create-tables": "node src/scripts/createWorkoutTables.js",
     "workout:migrate-data": "node src/scripts/migrateWorkoutData.js",
     "workout:audit": "node src/scripts/auditWorkouts.js",
-    "workout:audit-backfill": "node src/scripts/auditWorkouts.js --backfill"
+    "workout:audit-backfill": "node src/scripts/auditWorkouts.js --backfill",
+    "perfume:create-table": "node src/scripts/createPerfumeTable.js"
   },
   "keywords": [],
   "author": "",

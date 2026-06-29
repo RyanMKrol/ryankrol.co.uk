@@ -6,6 +6,7 @@ const DYNAMO_TABLES = {
   VINYL_COLLECTION_TABLE: 'VinylCollection',
   WORKOUTS_TABLE: 'Workouts',
   EXERCISES_TABLE: 'Exercises',
+  PERFUME_RATINGS_TABLE: 'PerfumeRatings',
 };
 
 export { DYNAMO_TABLES };
