@@ -6,21 +6,22 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { query } = req.query;
+  const { title, author } = req.query;
 
-  if (!query) {
-    return res.status(400).json({ message: 'query parameter is required' });
+  if (!title) {
+    return res.status(400).json({ message: 'title parameter is required' });
   }
 
   try {
-    const cacheKey = generateCacheKey('book-search', { query });
+    const cacheKey = generateCacheKey('book-search', { title, author });
 
     const results = await withApiCache(cacheKey, async () => {
       const url = new URL('https://openlibrary.org/search.json');
-      url.searchParams.set('q', query);
+      url.searchParams.set('title', title);
+      if (author) url.searchParams.set('author', author);
       url.searchParams.set('limit', '20');
 
-      console.log(`📚 [OpenLibrary] Searching books: "${query}"`);
+      console.log(`📚 [OpenLibrary] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
 
       const response = await fetch(url.toString(), {
         headers: { accept: 'application/json' },

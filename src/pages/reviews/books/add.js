@@ -122,7 +122,8 @@ export default function AddBookReview() {
           <div className="form-group">
             <label className="form-label">Open Library Match (optional)</label>
             <BookSearch
-              initialQuery={formData.title}
+              title={formData.title}
+              author={formData.author}
               onSelect={setBookMatch}
             />
           </div>
