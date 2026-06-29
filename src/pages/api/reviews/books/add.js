@@ -8,7 +8,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, author, rating, overview, password } = req.body;
+  const {
+    title, author, rating, overview, password,
+    olid, coverId, bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher
+  } = req.body;
 
   // Verify password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -34,7 +37,15 @@ export default async function handler(req, res) {
       author,
       rating,
       review_text: overview,
-      date: dateString
+      date: dateString,
+      ...(olid !== undefined && { olid }),
+      ...(coverId !== undefined && { coverId }),
+      ...(bookAuthors !== undefined && { bookAuthors }),
+      ...(firstPublishedYear !== undefined && { firstPublishedYear }),
+      ...(isbn !== undefined && { isbn }),
+      ...(subjects !== undefined && { subjects }),
+      ...(pageCount !== undefined && { pageCount }),
+      ...(publisher !== undefined && { publisher }),
     };
 
     const params = {
