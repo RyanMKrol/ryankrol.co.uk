@@ -520,7 +520,7 @@
     {
       "id": "T022",
       "title": "Persist Open Library metadata on book reviews",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T021"
       ],
