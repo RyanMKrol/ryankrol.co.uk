@@ -170,7 +170,7 @@
     {
       "id": "T008",
       "title": "Programme (Push/Pull/Legs) stats aggregation helper",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
