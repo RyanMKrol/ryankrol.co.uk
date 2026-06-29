@@ -26,9 +26,10 @@ Authoring rules + the ideas→tasks flow: [`CLAUDE.md`](./CLAUDE.md).
 
 The CI workflow lives at `.github/workflows/ci.yml` (GitHub requires that location — it's the one
 harness piece that can't move under `.harness/`). Its `name:` MUST match `CI_WORKFLOW` in
-`harness.env`. The Definition of Done for this repo is **`npm run build`** (a Next.js pages-router
-JavaScript app — no TypeScript typecheck, no unit-test runner; ESLint isn't set up yet, so lint is
-not in the DoD — add it once `next lint` runs headless).
+`harness.env`. The Definition of Done for this repo is **`npm run lint && npm test && npm run build`**
+(a Next.js pages-router JavaScript app — ESLint flat config + `eslint-config-next`, Jest via
+`next/jest`; no TypeScript typecheck). The structural gate also requires a test file on any task
+marked `expectsTest: true`.
 
 ## Usage
 

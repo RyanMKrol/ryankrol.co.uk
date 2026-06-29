@@ -53,9 +53,9 @@ purpose, so they are not blocked.)
 Run locally before committing; identical to `.github/workflows/ci.yml`:
 
 ```sh
-npx tsc --noEmit                      # typecheck
-npm test                              # unit suite (scratch DB; discovers *.test.ts)
-npm --prefix dashboard run build      # only for dashboard/ changes
+npm run lint                          # ESLint (flat config, eslint-config-next) — no errors
+npm test                              # Jest unit suite (via next/jest; co-located *.test.js)
+npm run build                         # next build must succeed
 ```
 
 Plus: add unit tests for new behaviour; update docs in lockstep (§ CLAUDE.md); record empirical
@@ -74,7 +74,7 @@ task is not done. (Only a task that would have to *exceed* the monthly cap to ve
 pushed, the loop runs cheap **structural checks** (the diff is non-empty; every changed file is within
 the task's declared `scope` — a hard blast-radius boundary, matched as an exact path or a directory
 prefix so a `dir/**` entry admits anything beneath it; if the task sets
-`expectsTest: true`, a test file changed; the `LOCAL_DOD` commands — `tsc`/`test` — pass), then — for
+`expectsTest: true`, a test file changed; the `LOCAL_DOD` commands — `lint`/`test`/`build` — pass), then — for
 a *sampled* fraction of tasks — a **blocking audit**: a fresh, independent Claude (at
 `max(opus-4.8/medium, the builder's tier)`) reads the spec's `## Done when` + the diff and must answer
 `PASS`. A structural or audit failure is a failed attempt → cold retry → escalate, exactly like a red

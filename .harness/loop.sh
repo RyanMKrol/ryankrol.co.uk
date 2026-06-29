@@ -201,7 +201,7 @@ AUDIT_FLOOR_PM="$(jq -r '((.policy.auditFloor // 0.10) * 1000) | round' "$FACETS
 AUDITOR_MODEL="$(jq -r '.policy.auditorModel // "claude-opus-4-8"' "$FACETS" 2>/dev/null || echo claude-opus-4-8)"
 AUDITOR_EFFORT="$(jq -r '.policy.auditorEffort // "medium"' "$FACETS" 2>/dev/null || echo medium)"
 # Optional in-place "local DoD" gate the loop runs before the audit (the cheap CI-proxy). Empty =
-# skip (CI still gates). Set in harness.env, e.g. LOCAL_DOD="npm run build".
+# skip (CI still gates). Set in harness.env, e.g. LOCAL_DOD="npm run lint && npm test && npm run build".
 LOCAL_DOD="${LOCAL_DOD:-}"
 
 # gtier <idx> — echo "model effort" for the ladder tier at idx, clamped to [0, top].

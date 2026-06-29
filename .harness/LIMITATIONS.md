@@ -28,19 +28,19 @@ Each entry: **what** it is · **why** we chose it · **impact** · **when to rev
   *Impact:* `main` can be briefly red — and Vercel may deploy a red commit — until a human reverts.
   *Revisit:* if red happens often, move to a push-to-branch → ff-main gate (and Vercel preview deploys).
 
-- **Definition of Done is a production `build` only — no lint, no test suite.**
-  *Why:* this repo is a Next.js pages-router JavaScript app with no TypeScript typecheck and no unit
-  test framework. ESLint was never set up (`next lint` is interactive and would hang an unattended
-  loop), so lint is excluded too — the strongest cheap *non-interactive* gate available is "the
-  production build succeeds cleanly".
-  *Impact:* the harness can verify a change compiles/bundles, but NOT that it lints clean or behaves
-  correctly — a behavioural regression (or a lint-style issue) that still builds will pass the local
-  DoD and CI. The sampled blocking **audit** (a fresh independent Claude reviewing the diff) is the
-  main compensating control.
-  *Revisit:* first cheap win — configure ESLint to run headless (add `eslint` + `eslint-config-next` +
-  `.eslintrc.json`), then add `npm run lint &&` to `LOCAL_DOD` and a Lint step to `ci.yml`. Later, add
-  a test runner (e.g. Vitest + React Testing Library) + a Playwright smoke check and set `expectsTest`
-  on relevant tasks. (Wiring up ESLint is a natural first task to run through the harness itself.)
+- **Definition of Done = lint + unit tests + build; no integration/e2e coverage yet.**
+  *Why:* the DoD now runs `npm run lint && npm test && npm run build` — ESLint (flat config,
+  `eslint-config-next`) and Jest (via `next/jest`) — both locally (`LOCAL_DOD` in `harness.env`) and
+  in `ci.yml`, and the structural gate enforces a test file on any `expectsTest: true` task. What's
+  still missing is higher-level coverage: only co-located unit tests exist (mostly pure `src/lib`
+  logic) — no component/integration or end-to-end (e.g. Playwright) tests.
+  *Impact:* the harness verifies a change lints clean, passes unit tests, and builds — but a
+  behavioural regression with no unit coverage (e.g. a broken page interaction) can still pass. The
+  sampled blocking **audit** (a fresh independent Claude reviewing the diff) is the main compensating
+  control for that gap.
+  *Revisit:* add React Testing Library component tests for the review forms / charts and a Playwright
+  smoke check, and set `expectsTest` on more tasks. (ESLint + Jest were wired up 2026-06; the earlier
+  "build-only" DoD limitation is resolved.)
 
 - **No live external-API calls in verification.**
   *Why:* the site reads Last.fm and writes DynamoDB; hitting those to "verify" touches real data/quota.
