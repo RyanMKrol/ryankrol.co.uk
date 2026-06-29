@@ -730,7 +730,7 @@
     {
       "id": "T031",
       "title": "Make the appearance picker reachable on every page (incl. home)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T015"
       ],
