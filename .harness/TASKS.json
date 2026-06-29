@@ -31,7 +31,7 @@
     {
       "id": "T002",
       "title": "Register perfumes table + create-table script",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
