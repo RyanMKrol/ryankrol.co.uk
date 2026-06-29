@@ -176,10 +176,9 @@ export async function getExercisesByWorkout(workoutId) {
 /**
  * Get exercise history for a specific exercise name
  * @param {string} exerciseName - The name of the exercise
- * @param {number} limit - Maximum number of records to return
  * @returns {Array} Array of exercise records sorted by date descending
  */
-export async function getExerciseHistory(exerciseName, limit = 50) {
+export async function getExerciseHistory(exerciseName) {
   try {
     const params = {
       TableName: DYNAMO_TABLES.EXERCISES_TABLE,
@@ -189,11 +188,18 @@ export async function getExerciseHistory(exerciseName, limit = 50) {
         ':exerciseName': exerciseName
       },
       ScanIndexForward: false, // Sort descending by workout_date
-      Limit: limit
     };
 
-    const result = await docClient.send(new QueryCommand(params));
-    return result.Items || [];
+    const items = [];
+    let lastKey;
+    do {
+      if (lastKey) params.ExclusiveStartKey = lastKey;
+      const result = await docClient.send(new QueryCommand(params));
+      items.push(...(result.Items || []));
+      lastKey = result.LastEvaluatedKey;
+    } while (lastKey);
+
+    return items;
 
   } catch (error) {
     console.error(`Error fetching exercise history for ${exerciseName}:`, error);

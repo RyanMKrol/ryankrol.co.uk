@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import Header from '../../components/Header';
 import ExerciseProgressCharts from '../../components/ExerciseProgressCharts';
 import CardioProgressCharts from '../../components/CardioProgressCharts';
+import DateRangeFilter from '../../components/DateRangeFilter';
+import { filterByDateRange } from '../../lib/dateRange';
 
 export default function ExerciseDetailPage() {
   const router = useRouter();
@@ -12,7 +14,7 @@ export default function ExerciseDetailPage() {
   const [exerciseHistory, setExerciseHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [stats, setStats] = useState(null);
+  const [dateRange, setDateRange] = useState('1y');
 
   useEffect(() => {
     if (!exerciseName) return;
@@ -20,7 +22,7 @@ export default function ExerciseDetailPage() {
     async function fetchExerciseHistory() {
       try {
         setLoading(true);
-        const response = await fetch(`/api/exercises/history/${encodeURIComponent(exerciseName)}?limit=50`);
+        const response = await fetch(`/api/exercises/history/${encodeURIComponent(exerciseName)}`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch exercise history');
@@ -28,91 +30,6 @@ export default function ExerciseDetailPage() {
 
         const data = await response.json();
         setExerciseHistory(data.history || []);
-
-        // Calculate overall stats
-        if (data.history && data.history.length > 0) {
-          const history = data.history;
-
-          // Determine exercise type from the data
-          const isStrengthExercise = history.some(h =>
-            h.exerciseType === 'strength' ||
-            (!h.exerciseType && h.bestEstimated1RM > 0 && h.heaviestWeight > 0)
-          );
-
-          const isCardioExercise = history.some(h =>
-            h.exerciseType === 'cardio' ||
-            (!h.exerciseType && (h.totalDistance > 0 || h.totalDuration > 0))
-          );
-
-          // Filter relevant history based on exercise type
-          let relevantHistory = history;
-          if (isStrengthExercise) {
-            relevantHistory = history.filter(h => {
-              // New data: explicitly marked as strength
-              if (h.exerciseType === 'strength') return true;
-              // Legacy data: infer from presence of weight-based metrics
-              if (!h.exerciseType && h.bestEstimated1RM > 0 && h.heaviestWeight > 0) return true;
-              return false;
-            });
-          }
-
-          if (relevantHistory.length > 0) {
-            const totalSessions = relevantHistory.length;
-            const firstSession = relevantHistory[relevantHistory.length - 1]?.workout_date;
-            const lastSession = relevantHistory[0]?.workout_date;
-
-            let stats = {
-              totalSessions,
-              firstSession,
-              lastSession,
-              exerciseType: isStrengthExercise ? 'strength' : isCardioExercise ? 'cardio' : 'bodyweight'
-            };
-
-            if (isStrengthExercise) {
-              const allTimeMax1RM = Math.max(...relevantHistory.map(h => h.bestEstimated1RM || 0));
-              const allTimeMaxWeight = Math.max(...relevantHistory.map(h => h.heaviestWeight || 0));
-              const allTimeMaxVolume = Math.max(...relevantHistory.map(h => h.sessionVolume || 0));
-              const totalVolume = relevantHistory.reduce((sum, h) => sum + (h.sessionVolume || 0), 0);
-
-              // Recent progress (last 10 sessions vs previous 10)
-              const recent10 = relevantHistory.slice(0, 10);
-              const previous10 = relevantHistory.slice(10, 20);
-
-              const recentAvg1RM = recent10.reduce((sum, h) => sum + (h.bestEstimated1RM || 0), 0) / recent10.length;
-              const previousAvg1RM = previous10.length > 0 ? previous10.reduce((sum, h) => sum + (h.bestEstimated1RM || 0), 0) / previous10.length : 0;
-
-              const progress1RM = previous10.length > 0 ? ((recentAvg1RM - previousAvg1RM) / previousAvg1RM) * 100 : 0;
-
-              stats = {
-                ...stats,
-                allTimeMax1RM: Math.round(allTimeMax1RM * 10) / 10,
-                allTimeMaxWeight: Math.round(allTimeMaxWeight * 10) / 10,
-                allTimeMaxVolume: Math.round(allTimeMaxVolume * 10) / 10,
-                totalVolume: Math.round(totalVolume),
-                averageVolume: Math.round(totalVolume / totalSessions),
-                progress1RM: Math.round(progress1RM * 10) / 10
-              };
-            } else if (isCardioExercise) {
-              const totalDistance = relevantHistory.reduce((sum, h) => sum + (h.totalDistance || 0), 0);
-              const totalDuration = relevantHistory.reduce((sum, h) => sum + (h.totalDuration || 0), 0);
-              const maxDistance = Math.max(...relevantHistory.map(h => h.totalDistance || 0));
-              const maxDuration = Math.max(...relevantHistory.map(h => h.totalDuration || 0));
-
-              stats = {
-                ...stats,
-                totalDistance: Math.round(totalDistance * 10) / 10,
-                totalDuration,
-                maxDistance: Math.round(maxDistance * 10) / 10,
-                maxDuration,
-                averageDistance: totalSessions > 0 ? Math.round((totalDistance / totalSessions) * 10) / 10 : 0,
-                averageDuration: totalSessions > 0 ? Math.round(totalDuration / totalSessions) : 0
-              };
-            }
-
-            setStats(stats);
-          }
-        }
-
       } catch (err) {
         console.error('Error fetching exercise history:', err);
         setError(err.message);
@@ -123,6 +40,89 @@ export default function ExerciseDetailPage() {
 
     fetchExerciseHistory();
   }, [exerciseName]);
+
+  const filteredHistory = useMemo(() => {
+    return filterByDateRange(exerciseHistory, dateRange, (h) => h.workout_date);
+  }, [exerciseHistory, dateRange]);
+
+  const stats = useMemo(() => {
+    if (!filteredHistory.length) return null;
+
+    const history = filteredHistory;
+
+    const isStrengthExercise = history.some(h =>
+      h.exerciseType === 'strength' ||
+      (!h.exerciseType && h.bestEstimated1RM > 0 && h.heaviestWeight > 0)
+    );
+
+    const isCardioExercise = history.some(h =>
+      h.exerciseType === 'cardio' ||
+      (!h.exerciseType && (h.totalDistance > 0 || h.totalDuration > 0))
+    );
+
+    let relevantHistory = history;
+    if (isStrengthExercise) {
+      relevantHistory = history.filter(h => {
+        if (h.exerciseType === 'strength') return true;
+        if (!h.exerciseType && h.bestEstimated1RM > 0 && h.heaviestWeight > 0) return true;
+        return false;
+      });
+    }
+
+    if (!relevantHistory.length) return null;
+
+    const totalSessions = relevantHistory.length;
+    const firstSession = relevantHistory[relevantHistory.length - 1]?.workout_date;
+    const lastSession = relevantHistory[0]?.workout_date;
+
+    let result = {
+      totalSessions,
+      firstSession,
+      lastSession,
+      exerciseType: isStrengthExercise ? 'strength' : isCardioExercise ? 'cardio' : 'bodyweight'
+    };
+
+    if (isStrengthExercise) {
+      const allTimeMax1RM = Math.max(...relevantHistory.map(h => h.bestEstimated1RM || 0));
+      const allTimeMaxWeight = Math.max(...relevantHistory.map(h => h.heaviestWeight || 0));
+      const allTimeMaxVolume = Math.max(...relevantHistory.map(h => h.sessionVolume || 0));
+      const totalVolume = relevantHistory.reduce((sum, h) => sum + (h.sessionVolume || 0), 0);
+
+      const recent10 = relevantHistory.slice(0, 10);
+      const previous10 = relevantHistory.slice(10, 20);
+
+      const recentAvg1RM = recent10.reduce((sum, h) => sum + (h.bestEstimated1RM || 0), 0) / recent10.length;
+      const previousAvg1RM = previous10.length > 0 ? previous10.reduce((sum, h) => sum + (h.bestEstimated1RM || 0), 0) / previous10.length : 0;
+      const progress1RM = previous10.length > 0 ? ((recentAvg1RM - previousAvg1RM) / previousAvg1RM) * 100 : 0;
+
+      result = {
+        ...result,
+        allTimeMax1RM: Math.round(allTimeMax1RM * 10) / 10,
+        allTimeMaxWeight: Math.round(allTimeMaxWeight * 10) / 10,
+        allTimeMaxVolume: Math.round(allTimeMaxVolume * 10) / 10,
+        totalVolume: Math.round(totalVolume),
+        averageVolume: Math.round(totalVolume / totalSessions),
+        progress1RM: Math.round(progress1RM * 10) / 10
+      };
+    } else if (isCardioExercise) {
+      const totalDistance = relevantHistory.reduce((sum, h) => sum + (h.totalDistance || 0), 0);
+      const totalDuration = relevantHistory.reduce((sum, h) => sum + (h.totalDuration || 0), 0);
+      const maxDistance = Math.max(...relevantHistory.map(h => h.totalDistance || 0));
+      const maxDuration = Math.max(...relevantHistory.map(h => h.totalDuration || 0));
+
+      result = {
+        ...result,
+        totalDistance: Math.round(totalDistance * 10) / 10,
+        totalDuration,
+        maxDistance: Math.round(maxDistance * 10) / 10,
+        maxDuration,
+        averageDistance: totalSessions > 0 ? Math.round((totalDistance / totalSessions) * 10) / 10 : 0,
+        averageDuration: totalSessions > 0 ? Math.round(totalDuration / totalSessions) : 0
+      };
+    }
+
+    return result;
+  }, [filteredHistory]);
 
   if (loading) {
     return (
@@ -208,6 +208,10 @@ export default function ExerciseDetailPage() {
 
           <h1 className="page-title">📊 {exerciseName}</h1>
 
+          <div style={{ marginBottom: '1.5rem' }}>
+            <DateRangeFilter value={dateRange} onChange={setDateRange} />
+          </div>
+
           {stats && (
             <div className="stat-panel" style={{
               display: 'grid',
@@ -280,18 +284,24 @@ export default function ExerciseDetailPage() {
               )}
             </div>
           )}
+
+          {!stats && !loading && (
+            <p className="text-muted" style={{ marginBottom: '2rem' }}>
+              No sessions in the selected date range.
+            </p>
+          )}
         </div>
 
         {stats && stats.exerciseType === 'strength' && (
           <ExerciseProgressCharts
-            exerciseHistory={exerciseHistory}
+            exerciseHistory={filteredHistory}
             exerciseName={exerciseName}
           />
         )}
 
         {stats && stats.exerciseType === 'cardio' && (
           <CardioProgressCharts
-            exerciseHistory={exerciseHistory}
+            exerciseHistory={filteredHistory}
             exerciseName={exerciseName}
           />
         )}
@@ -302,7 +312,7 @@ export default function ExerciseDetailPage() {
           </h2>
 
           <div className="session-history-container">
-            {exerciseHistory.slice(0, 20).map((session, index) => {
+            {filteredHistory.slice(0, 20).map((session, index) => {
               const isStrength = session.exerciseType === 'strength' ||
                                (!session.exerciseType && session.bestEstimated1RM > 0 && session.heaviestWeight > 0);
               const isCardio = session.exerciseType === 'cardio' ||
@@ -313,7 +323,7 @@ export default function ExerciseDetailPage() {
                   key={session.exercise_id}
                   style={{
                     padding: '1rem',
-                    borderBottom: index < 19 && index < exerciseHistory.length - 1 ? '1px solid var(--color-border)' : 'none',
+                    borderBottom: index < 19 && index < filteredHistory.length - 1 ? '1px solid var(--color-border)' : 'none',
                     display: 'grid',
                     gridTemplateColumns: isStrength ? 'auto 1fr auto auto auto' : isCardio ? 'auto 1fr auto auto' : 'auto 1fr auto',
                     gap: '1rem',
@@ -379,13 +389,13 @@ export default function ExerciseDetailPage() {
             })}
           </div>
 
-          {exerciseHistory.length > 20 && (
+          {filteredHistory.length > 20 && (
             <p className="text-muted" style={{
               textAlign: 'center',
               fontSize: '0.9rem',
               marginTop: '1rem'
             }}>
-              Showing latest 20 of {exerciseHistory.length} sessions
+              Showing latest 20 of {filteredHistory.length} sessions
             </p>
           )}
         </div>
