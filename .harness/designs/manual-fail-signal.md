@@ -61,12 +61,22 @@ Both calibration readers honor the overlay (`loop.sh` + `policy.jq`):
 Net effect: marking a UI task failed makes future UI tasks both **built with a stronger model** and
 **audited more aggressively** — directly targeting the conditions that let the bug through.
 
-## 4. What it deliberately does NOT do
+## 4. Reopen-for-rebuild (implemented in this repo)
 
-- **It does not change the task's `status` or re-open it.** The loop owns `status`; re-opening for a
-  rebuild would require the loop to read the overlay during selection and un-`done` the task, which would
-  dent the strict decoupling. Out of scope by choice. After marking failed, the owner fixes the work or
-  authors a follow-up task. (Re-open could be layered on later if a real need emerges.)
+> The upstream design deferred this ("re-open could be layered on later if a real need emerges"). In
+> ryankrol.co.uk it IS implemented — the owner's regular use of mark-failed surfaced the real need.
+
+- **The loop reopens a manual-failed task so it rebuilds.** `reopen_manual_failed` in `loop.sh` runs
+  once per iteration before selection: for any task the overlay flags `failed:true` that is still
+  `status:done`, the loop (the **sole** `TASKS.json` status writer) resets it to `pending`, so it is
+  re-selected and rebuilt — at the stronger tier the calibration correction above now prescribes.
+- **The decoupling is preserved.** The loop still only READS `manual-fail.json`; it never writes the
+  overlay. Idempotency is by timestamp: a task reopens ONLY while its latest `outcomes.jsonl` row
+  PREDATES the fail-marking's `at`. After the rebuild appends a newer outcome row it won't reopen
+  again; re-running `mark-failed.sh` updates `at` and re-arms it. So there is no infinite-rebuild loop
+  and no loop-written overlay.
+
+## 4b. What it still deliberately does NOT do
 - **It does not feed the failure reason into the auditor's prompt.** The correction is purely the
   sampling-rate + tier bump above; teaching the auditor *what to look for* from past reasons is a possible
   future extension, not part of this design.

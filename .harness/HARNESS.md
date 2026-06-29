@@ -178,8 +178,9 @@ prompt reads all orchestration fields from JSON and **appends the spec MD's full
 **entirely outside TASKS.json**, in its own committed file, and **the loop NEVER writes them** (it
 only ever writes TASKS.json `status` + the worklog) — so the loop's `jq` status write and any overlay
 write touch different files and never conflict. This repo has three: `human-done.json` (read by the
-loop — see below), `manual-fail.json` (read by calibration — written by `mark-failed.sh`), and
-`reviews.json`.
+loop — see below), `manual-fail.json` (read by calibration AND by the loop's `reopen_manual_failed`
+pass, which resets a flagged `done` task to `pending` so it rebuilds — written only by
+`mark-failed.sh`; see `designs/manual-fail-signal.md` §4), and `reviews.json`.
 
 - **`.harness/reviews.json`** — `id → { "reviewed": bool, "at": <ISO-8601> }`. **Inert in this repo:**
   it's the "reviewed" flag the upstream dashboard's Backlog page writes via `POST

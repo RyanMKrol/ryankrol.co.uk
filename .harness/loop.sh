@@ -182,6 +182,41 @@ mark_done() {
   git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null || log "WARN: couldn't push status update for $id"
 }
 
+# reopen_manual_failed — the loop (the SOLE TASKS.json status writer) reopens any task the owner
+# marked failed in manual-fail.json (designs/manual-fail-signal.md) that is still status=done: it
+# resets that task to `pending` so it gets RE-SELECTED and REBUILT once — at the stronger tier the
+# manual-fail calibration now prescribes for its cell. Run once per loop iteration before selection.
+#
+# Idempotency WITHOUT writing the owner-owned overlay: a task is reopened ONLY while its latest
+# outcomes.jsonl row PREDATES the fail-marking's `at` timestamp. After the rebuild, mark_done appends
+# a newer outcome row (ts > at) → it won't reopen again. Re-running mark-failed.sh updates `at` to now
+# (> the latest outcome) → it re-arms. So the loop only ever reads manual-fail.json + outcomes.jsonl
+# and writes its OWN TASKS.json status — the strict overlay/status decoupling is preserved.
+reopen_manual_failed() {
+  [ -f "$MANUAL_FAIL" ] || return 0
+  local ids id tmp
+  ids="$(jq -rn --slurpfile mf "$MANUAL_FAIL" --slurpfile bk "$BACKLOG" --slurpfile oc "$OUTCOMES" '
+      ($mf[0] // {}) as $m | ($bk[0].tasks // []) as $tasks |
+      $m | to_entries[] | select(.value.failed == true)
+      | .key as $id | (.value.at // "") as $at
+      | (($tasks[] | select(.id == $id) | .status) // "") as $st
+      | select($st == "done")
+      | (([$oc[] | select(.id == $id) | .ts] | max) // "") as $lastTs
+      | select($lastTs < $at)
+      | $id
+    ' 2>/dev/null)" || return 0
+  [ -n "$ids" ] || return 0
+  for id in $ids; do
+    tmp="$BACKLOG.tmp"
+    jq --arg id "$id" '(.tasks[]|select(.id==$id)|.status)="pending"' "$BACKLOG" >"$tmp" \
+      && jq empty "$tmp" && mv "$tmp" "$BACKLOG" || { rm -f "$tmp"; log "WARN: reopen $id — couldn't rewrite TASKS.json"; continue; }
+    git -C "$ROOT" add "$BACKLOG" 2>/dev/null || true
+    git -C "$ROOT" commit -q -m "$id: reopen — owner marked a recorded success failed (manual-fail) [skip ci]" 2>/dev/null || true
+    git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null || log "WARN: couldn't push reopen for $id"
+    log "REOPENED $id (manual-fail) → status pending; it will rebuild at the stronger tier."
+  done
+}
+
 # Optional post-integration hook (deploy/restart so the running product matches main).
 run_integrate_hook() {
   [ -n "$INTEGRATE_HOOK" ] || return 0
@@ -599,6 +634,7 @@ _missing_facets="$(tj -r '[.tasks[]|select(.status!="done" and (.gate==null) and
 if [ -n "$_missing_facets" ]; then log "WARN: buildable tasks MISSING facets (no auto-tuning until tagged — see facets.json): $_missing_facets"; fi
 for ((i = 1; i <= MAX_ITERS; i++)); do
   git -C "$ROOT" fetch origin --quiet 2>/dev/null || true
+  reopen_manual_failed                    # owner marked a done task failed → reset it to pending so it rebuilds (once)
   sel="$(select_task || true)"
   if [ -z "$sel" ]; then
     log "no eligible task — backlog complete or everything left is gate/human-blocked."

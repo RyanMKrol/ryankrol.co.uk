@@ -11,8 +11,10 @@
 # loop never writes this file; it only READS it to CORRECT calibration — a falsely-recorded success
 # is re-counted as a failure for difficulty tuning AND dropped from its (layer×workType) cell's
 # confirmed-audited count, so that category gets BUILT WITH A STRONGER MODEL and AUDITED MORE often
-# going forward. It does NOT change the task's status or re-open it (the loop owns status); fix the
-# work yourself or author a follow-up task.
+# going forward. AND in this repo the loop also REOPENS the task: on its next pass it resets a
+# manual-failed `done` task to `pending` (the loop is the SOLE TASKS.json status writer) so it
+# REBUILDS once at that stronger tier — see `reopen_manual_failed` in loop.sh. This script itself
+# still only writes the overlay; it never touches TASKS.json status.
 #
 # Usage:
 #   .harness/mark-failed.sh <TNNN> "<reason>"     # mark T<NNN> failed, with a short reason
