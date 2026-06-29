@@ -331,11 +331,14 @@ You run head-less and unattended. Obey CLAUDE.md and .harness/HARNESS.md exactly
 
 2. DEFINITION OF DONE — all must hold before you report `done`:
    a. Run the FULL local suite (it MIRRORS CI), all must pass:
-        npm run build
-      This is a Next.js (pages-router) JavaScript app — there is NO TypeScript typecheck, NO unit
-      test framework, and ESLint is not set up (`next lint` is interactive — do NOT run it). The bar
-      is: the production build succeeds cleanly. Do NOT invent a test runner or add *.test.* files
-      unless the task's spec explicitly asks for one.
+        npm run lint && npm test && npm run build
+      This is a Next.js (pages-router) JavaScript app. ESLint is configured (flat config,
+      eslint-config-next) — `npm run lint` must report NO errors (a few pre-existing
+      `react-hooks/exhaustive-deps` WARNINGS are tolerated; do not add new errors; `npm run lint:fix`
+      auto-fixes trivia). Jest (via next/jest) is set up — `npm test` must pass. WRITE TESTS for new
+      pure logic (co-located `*.test.js`, especially in `src/lib`); if the task's JSON has
+      `expectsTest:true`, your diff MUST add/modify a test file or a structural gate FAILS the task.
+      There is no TypeScript typecheck. Keep tests hermetic — never hit real DynamoDB / paid APIs.
    b. NEVER make live calls to metered/paid third-party APIs (e.g. Last.fm, AWS DynamoDB writes) just
       to "verify" — that touches real data/quota. Verify by reading the code and `npm run build`. If a
       check genuinely requires a live external call, stop and record failed:blocked.
