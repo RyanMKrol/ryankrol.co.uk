@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../components/Header';
 import Head from 'next/head';
+import LastfmAlbumSearch from '../../components/LastfmAlbumSearch';
 
 export default function AddVinyl() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function AddVinyl() {
     artist: '',
     password: ''
   });
+  const [lastfmMatch, setLastfmMatch] = useState(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -21,10 +23,26 @@ export default function AddVinyl() {
     });
   };
 
+  const handleLastfmSelect = (match) => {
+    if (match) {
+      setFormData(prev => ({
+        ...prev,
+        title: match.title || prev.title,
+        artist: match.artist || prev.artist,
+      }));
+    }
+    setLastfmMatch(match);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     setMessage('');
+
+    const body = {
+      ...formData,
+      ...(lastfmMatch && { lastfm: lastfmMatch.lastfm }),
+    };
 
     try {
       const response = await fetch('/api/vinyl/add', {
@@ -32,7 +50,7 @@ export default function AddVinyl() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(body),
       });
 
       const result = await response.json();
@@ -60,11 +78,11 @@ export default function AddVinyl() {
       <Head>
         <title>Add Vinyl - ryankrol.co.uk</title>
       </Head>
-      
+
       <div className="review-container">
         <Header />
         <h1 className="page-title">💿 Add Vinyl Record</h1>
-        
+
         <div className="form-container">
           {message && (
             <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
@@ -102,6 +120,28 @@ export default function AddVinyl() {
             </div>
 
             <div className="form-group">
+              <label className="form-label">Last.fm Match (optional)</label>
+              <LastfmAlbumSearch
+                titleQuery={formData.title}
+                onSelect={handleLastfmSelect}
+              />
+            </div>
+
+            {lastfmMatch?.thumbnail && (
+              <div className="form-group lastfm-cover-preview">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={lastfmMatch.thumbnail}
+                  alt={formData.title}
+                  className="lastfm-preview-img"
+                  width={80}
+                  height={80}
+                />
+                <span className="lastfm-preview-label">Cover from Last.fm</span>
+              </div>
+            )}
+
+            <div className="form-group">
               <label className="form-label" htmlFor="password">Password *</label>
               <input
                 type="password"
@@ -124,6 +164,23 @@ export default function AddVinyl() {
           </form>
         </div>
       </div>
+
+      <style jsx>{`
+        .lastfm-cover-preview {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+        .lastfm-preview-img {
+          object-fit: cover;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+        .lastfm-preview-label {
+          font-size: 0.85rem;
+          opacity: 0.7;
+        }
+      `}</style>
     </>
   );
 }
