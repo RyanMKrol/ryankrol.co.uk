@@ -57,6 +57,19 @@ describe('computeBacklog', () => {
     expect(r[0].manualFailed).toBe(true);
   });
 
+  it('flags a reviewed task from the reviews overlay', () => {
+    const r = computeBacklog(
+      [
+        { id: 'A', status: 'done', gate: null, dependsOn: [] },
+        { id: 'B', status: 'done', gate: null, dependsOn: [] },
+      ],
+      { reviewed: { A: { reviewed: true } } }
+    );
+    const m = Object.fromEntries(r.map((t) => [t.id, t]));
+    expect(m.A.reviewed).toBe(true);
+    expect(m.B.reviewed).toBe(false);
+  });
+
   it('summarize counts every bucket', () => {
     const s = summarize(res);
     expect(s.done).toBe(1);

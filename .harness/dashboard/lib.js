@@ -13,11 +13,12 @@ function isDone(task, humanDone) {
 
 // Derive a display status + flags for ONE task (no cross-task knowledge).
 function deriveTask(task, opts = {}) {
-  const { humanDone = {}, manualFail = {}, blockedIds = [] } = opts;
+  const { humanDone = {}, manualFail = {}, blockedIds = [], reviewed = {} } = opts;
   const done = isDone(task, humanDone);
   const needsHuman = task.gate === 'needs-human';
   const isGate = task.gate === 'gate';
   const manualFailed = !!(manualFail[task.id] && manualFail[task.id].failed === true);
+  const isReviewed = !!(reviewed[task.id] && reviewed[task.id].reviewed === true);
   const blocked = !done && blockedIds.includes(task.id);
   let derivedStatus;
   if (done) derivedStatus = 'done';
@@ -25,7 +26,7 @@ function deriveTask(task, opts = {}) {
   else if (needsHuman) derivedStatus = 'needs-human';
   else if (isGate) derivedStatus = 'gate';
   else derivedStatus = 'pending';
-  return { ...task, derivedStatus, done, needsHuman, isGate, manualFailed, blocked };
+  return { ...task, derivedStatus, done, needsHuman, isGate, manualFailed, blocked, reviewed: isReviewed };
 }
 
 // Given all tasks + overlays, return tasks with derived status + an eligibility bucket + unmet deps.
@@ -36,8 +37,8 @@ function deriveTask(task, opts = {}) {
 //   waiting-loop  = has unmet deps but they're all buildable — the loop will build them eventually,
 //                   so this isn't something the owner needs to act on.
 function computeBacklog(tasks, opts = {}) {
-  const { humanDone = {}, manualFail = {}, blockedIds = [] } = opts;
-  const derived = (tasks || []).map((t) => deriveTask(t, { humanDone, manualFail, blockedIds }));
+  const { humanDone = {}, manualFail = {}, blockedIds = [], reviewed = {} } = opts;
+  const derived = (tasks || []).map((t) => deriveTask(t, { humanDone, manualFail, blockedIds, reviewed }));
   const byId = Object.fromEntries(derived.map((t) => [t.id, t]));
   const doneIds = new Set(derived.filter((t) => t.done).map((t) => t.id));
   const isHumanBlocker = (t) => !!t && !t.done && (t.gate === 'needs-human' || t.gate === 'gate');

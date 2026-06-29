@@ -18,7 +18,8 @@ Authoring rules + the ideas→tasks flow: [`CLAUDE.md`](./CLAUDE.md).
 | `dashboard/` | local-only backlog web view (`npm run harness:dashboard`); standalone Node (`server.js` + pure `lib.js` + `lib.test.js`), NOT in the Vercel build; has Mark done / Mark failed actions |
 | `mark-done.sh` | owner CLI: mark a `needs-human` task done → `human-done.json` (loop reads it; unblocks dependents) |
 | `mark-failed.sh` | owner CLI: mark a `done` task a false success → `manual-fail.json` (loop recalibrates + reopens it to rebuild) |
-| `human-done.json` / `manual-fail.json` | owner-owned overlays the loop READS (completion of needs-human tasks; false-success corrections) |
+| `mark-reviewed.sh` | owner CLI: mark a task reviewed → `reviews.json` (dashboard-only annotation; the loop ignores it) |
+| `human-done.json` / `manual-fail.json` / `reviews.json` | owner-owned overlays: the loop READS human-done + manual-fail (steer it); `reviews.json` is a dashboard-only "I've checked this" flag the loop ignores |
 | `harness.env` | config (model, caps, CI gate, rate-limit backoff) |
 | `facets.json` | difficulty-autotune vocabulary + the tier ladder |
 | `policy.jq` | tier-selection + audit-sampling algorithm |

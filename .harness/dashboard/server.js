@@ -59,8 +59,9 @@ function buildBacklog() {
   const backlog = readJSON(path.join(HARNESS_DIR, 'TASKS.json'), { tasks: [] });
   const humanDone = readJSON(path.join(HARNESS_DIR, 'human-done.json'), {});
   const manualFail = readJSON(path.join(HARNESS_DIR, 'manual-fail.json'), {});
+  const reviewed = readJSON(path.join(HARNESS_DIR, 'reviews.json'), {});
   const blockedIds = blockedIdsFromWorklog();
-  const computed = computeBacklog(backlog.tasks || [], { humanDone, manualFail, blockedIds });
+  const computed = computeBacklog(backlog.tasks || [], { humanDone, manualFail, blockedIds, reviewed });
   const tasks = computed.map((t) => ({ ...t, specContent: readSpec(t.spec) }));
   return { tasks, counts: summarize(computed), generatedAt: new Date().toISOString() };
 }
@@ -134,6 +135,8 @@ const PAGE = `<!doctype html>
   .p-ready{color:var(--ready);background:var(--ready-bg)} .p-waiting-human{color:var(--waiting);background:var(--waiting-bg)}
   .p-waiting-loop{color:var(--dim);background:var(--panel2)} .p-done{color:var(--done);background:var(--done-bg)}
   .p-needs-human{color:var(--needs);background:var(--needs-bg)} .p-blocked{color:var(--blocked);background:var(--blocked-bg)}
+  .p-reviewed{color:var(--ready);background:var(--ready-bg)} .p-unreviewed{color:var(--dim);background:var(--panel2)}
+  .filt{cursor:pointer;color:var(--dim);text-decoration:none} .filt.on{color:var(--acc);font-weight:600}
   .mf { color:var(--blocked); font-size:11px; }
   .act { cursor:pointer; font-size:12px; padding:4px 11px; border-radius:6px; border:1px solid var(--line);
     background:var(--panel2); color:var(--txt); white-space:nowrap; } .act:hover { border-color:var(--acc); }
@@ -161,11 +164,19 @@ window.markDone=function(e,id){ e.preventDefault(); e.stopPropagation(); if(!con
   post('/api/mark-done',{id}).then(r=>{ if(r.ok){location.reload();}else{alert('Mark done failed:\\n'+(r.error||'unknown'));}}).catch(x=>alert('Error: '+x)); };
 window.markFailed=function(e,id){ e.preventDefault(); e.stopPropagation(); var reason=prompt('Mark '+id+' as a false success — what was actually wrong?'); if(!reason)return;
   post('/api/mark-failed',{id,reason:reason}).then(r=>{ if(r.ok){location.reload();}else{alert('Mark failed failed:\\n'+(r.error||'unknown'));}}).catch(x=>alert('Error: '+x)); };
-window.updateBulk=function(){ const n=document.querySelectorAll('.sel:checked').length; const b=document.getElementById('bulkBtn'); if(b){ b.textContent='Mark '+n+' done'; b.disabled=n===0; } };
-window.toggleAll=function(cb){ document.querySelectorAll('.sel').forEach(c=>{c.checked=cb.checked;}); updateBulk(); };
-window.markDoneBulk=function(){ const ids=[...document.querySelectorAll('.sel:checked')].map(c=>c.dataset.id); if(!ids.length)return;
+window.updateBulk=function(){
+  var d=document.querySelectorAll('.sel-done:checked').length; var bd=document.getElementById('bulkDoneBtn'); if(bd){bd.textContent='Mark '+d+' done'; bd.disabled=d===0;}
+  var r=document.querySelectorAll('.sel-rev:checked').length; var br=document.getElementById('bulkRevBtn'); if(br){br.textContent='Mark '+r+' reviewed'; br.disabled=r===0;}
+};
+window.toggleAllDone=function(cb){ document.querySelectorAll('.sel-done').forEach(c=>{c.checked=cb.checked;}); updateBulk(); };
+window.toggleAllRev=function(cb){ document.querySelectorAll('.sel-rev').forEach(c=>{ c.checked = cb.checked && c.dataset.reviewed!=='true'; }); updateBulk(); };
+window.markDoneBulk=function(){ var ids=[...document.querySelectorAll('.sel-done:checked')].map(c=>c.dataset.id); if(!ids.length)return;
   if(!confirm('Mark '+ids.length+' task(s) done? Writes human-done.json + commits.'))return;
-  post('/api/mark-done-bulk',{ids}).then(r=>{ if(r.ok){location.reload();} else { alert('Some failed:\\n'+(r.results||[]).filter(x=>!x.ok).map(x=>x.id+': '+x.error).join('\\n')); location.reload(); } }).catch(x=>alert('Error: '+x)); };
+  post('/api/mark-done-bulk',{ids}).then(r=>{ if(!r.ok){alert('Some failed:\\n'+(r.results||[]).filter(x=>!x.ok).map(x=>x.id+': '+x.error).join('\\n'));} location.reload(); }).catch(x=>alert('Error: '+x)); };
+window.markReviewedBulk=function(){ var ids=[...document.querySelectorAll('.sel-rev:checked')].map(c=>c.dataset.id); if(!ids.length)return;
+  post('/api/mark-reviewed-bulk',{ids}).then(r=>{ if(!r.ok){alert('Some failed:\\n'+(r.results||[]).filter(x=>!x.ok).map(x=>x.id+': '+x.error).join('\\n'));} location.reload(); }).catch(x=>alert('Error: '+x)); };
+window.filterDone=function(mode,el){ document.querySelectorAll('#done-section .task').forEach(t=>{ var rv=t.dataset.reviewed==='true'; t.style.display=(mode==='all'||(mode==='reviewed'&&rv)||(mode==='unreviewed'&&!rv))?'':'none'; });
+  document.querySelectorAll('.filt').forEach(b=>b.classList.remove('on')); if(el)el.classList.add('on'); };
 function pill(t){ return '<span class="pill p-'+t.bucket+'">'+(PLABEL[t.bucket]||t.derivedStatus)+'</span>'; }
 function actions(t){
   if (t.bucket === 'needs-human') return '<button class="act" onclick="markDone(event,\\''+t.id+'\\')">✓ Mark done</button>';
@@ -173,15 +184,18 @@ function actions(t){
   return '';
 }
 function task(t){
-  const sel = t.bucket==='needs-human' ? '<input type="checkbox" class="sel" data-id="'+t.id+'" onclick="stop(event)" onchange="updateBulk()">' : '';
+  var sel='';
+  if (t.bucket==='needs-human') sel='<input type="checkbox" class="sel-done" data-id="'+t.id+'" onclick="stop(event)" onchange="updateBulk()">';
+  else if (t.bucket==='done') sel='<input type="checkbox" class="sel-rev" data-id="'+t.id+'" data-reviewed="'+(t.reviewed?'true':'false')+'" onclick="stop(event)" onchange="updateBulk()">';
+  var rev = t.bucket==='done' ? (t.reviewed?'<span class="pill p-reviewed">reviewed</span>':'<span class="pill p-unreviewed">not reviewed</span>') : '';
   const deps = (t.dependsOn||[]).length ? (t.unmetDeps&&t.unmetDeps.length? 'needs '+t.unmetDeps.join(', ') : 'deps '+t.dependsOn.join(', ')) : 'no deps';
   const facets = t.facets ? (t.facets.layer+'/'+t.facets.workType+(t.facets.risk&&t.facets.risk.length?' · '+t.facets.risk.join(','):'')) : '—';
-  return '<div class="task" id="task-'+t.id+'">'
+  return '<div class="task" id="task-'+t.id+'" data-reviewed="'+(t.reviewed?'true':'false')+'">'
     + '<div class="row" onclick="toggle(\\''+t.id+'\\')">'
     + sel + '<span class="caret">▸</span>'
     + '<span class="id">'+esc(t.id)+'</span><span class="title">'+esc(t.title)+'</span>'
     + (t.manualFailed?'<span class="mf">⚑ manual-failed</span>':'')
-    + actions(t) + pill(t) + '</div>'
+    + rev + actions(t) + pill(t) + '</div>'
     + '<div class="body">'
     + '<div class="kv"><b>gate</b> '+esc(t.gate||'—')+' &nbsp;·&nbsp; <b>facets</b> '+esc(facets)+' &nbsp;·&nbsp; <b>'+esc(deps)+'</b> &nbsp;·&nbsp; <b>expectsTest</b> '+(t.expectsTest?'yes':'no')+'</div>'
     + '<div class="kv"><b>scope</b> '+esc((t.scope||[]).join('  '))+'</div>'
@@ -193,11 +207,20 @@ fetch('/api/backlog').then(r=>r.json()).then(d=>{
   document.getElementById('counts').innerHTML = CHIPS.map(([k,l])=>'<span class="chip">'+l+': '+(d.counts[k]||0)+'</span>').join('');
   const groups = {}; d.tasks.forEach(t=>{ (groups[t.bucket]=groups[t.bucket]||[]).push(t); });
   document.getElementById('main').innerHTML = ORDER.filter(([k])=>groups[k]&&groups[k].length).map(([k,l])=>{
-    const bar = k==='needs-human'
-      ? '<div class="bulkbar"><label><input type="checkbox" onchange="toggleAll(this)"> Select all ('+groups[k].length+')</label>'
-        + '<button id="bulkBtn" class="act" disabled onclick="markDoneBulk()">Mark 0 done</button></div>'
-      : '';
-    return '<section><h2>'+l+' ('+groups[k].length+')</h2>'+bar+groups[k].map(task).join('')+'</section>';
+    var rows = groups[k].map(task).join('');
+    if (k==='needs-human'){
+      var bar='<div class="bulkbar"><label><input type="checkbox" onchange="toggleAllDone(this)"> Select all ('+groups[k].length+')</label>'
+        +'<button id="bulkDoneBtn" class="act" disabled onclick="markDoneBulk()">Mark 0 done</button></div>';
+      return '<section><h2>'+l+' ('+groups[k].length+')</h2>'+bar+rows+'</section>';
+    }
+    if (k==='done'){
+      var nrev=groups[k].filter(t=>t.reviewed).length, nun=groups[k].length-nrev;
+      var bar='<div class="bulkbar"><label><input type="checkbox" onchange="toggleAllRev(this)"> Select all unreviewed ('+nun+')</label>'
+        +'<button id="bulkRevBtn" class="act" disabled onclick="markReviewedBulk()">Mark 0 reviewed</button>'
+        +'<span style="margin-left:auto">Show: <a class="filt on" onclick="filterDone(\\'all\\',this)">All</a> · <a class="filt" onclick="filterDone(\\'reviewed\\',this)">Reviewed</a> · <a class="filt" onclick="filterDone(\\'unreviewed\\',this)">Not reviewed</a></span></div>';
+      return '<section id="done-section"><h2>'+l+' ('+groups[k].length+' · '+nrev+' reviewed · '+nun+' not reviewed)</h2>'+bar+rows+'</section>';
+    }
+    return '<section><h2>'+l+' ('+groups[k].length+')</h2>'+rows+'</section>';
   }).join('') || '<p class="sub">No tasks.</p>';
 }).catch(e=>{ document.getElementById('main').textContent = 'Error loading backlog: '+e; });
 </script></body></html>`;
@@ -205,19 +228,24 @@ fetch('/api/backlog').then(r=>r.json()).then(d=>{
 const server = http.createServer(async (req, res) => {
   const url = (req.url || '/').split('?')[0];
 
-  if (req.method === 'POST' && (url === '/api/mark-done' || url === '/api/mark-failed' || url === '/api/mark-done-bulk')) {
+  const MUTATIONS = ['/api/mark-done', '/api/mark-failed', '/api/mark-done-bulk', '/api/mark-reviewed', '/api/mark-reviewed-bulk'];
+  if (req.method === 'POST' && MUTATIONS.includes(url)) {
     if (!isLoopback(req)) return sendJSON(res, 403, { ok: false, error: 'localhost only' });
     const body = await readBody(req);
-    if (url === '/api/mark-done-bulk') {
+    // Bulk endpoints: loop the matching script over ids (each its own commit).
+    if (url === '/api/mark-done-bulk' || url === '/api/mark-reviewed-bulk') {
       const ids = Array.isArray(body.ids) ? body.ids : [];
       if (!ids.length) return sendJSON(res, 400, { ok: false, error: 'no ids' });
+      const script = url === '/api/mark-done-bulk' ? 'mark-done.sh' : 'mark-reviewed.sh';
       const results = [];
-      for (const id of ids) results.push({ id, ...(await runScript('mark-done.sh', [id])) });
+      for (const id of ids) results.push({ id, ...(await runScript(script, [id])) });
       return sendJSON(res, 200, { ok: results.every((r) => r.ok), results });
     }
     const id = body && body.id;
     if (!id) return sendJSON(res, 400, { ok: false, error: 'missing id' });
     if (url === '/api/mark-done') return sendJSON(res, 200, await runScript('mark-done.sh', [id]));
+    if (url === '/api/mark-reviewed') return sendJSON(res, 200, await runScript('mark-reviewed.sh', [id]));
+    // mark-failed: single only, reason required + stored in manual-fail.json.
     const reason = (body.reason || '').toString().trim();
     if (!reason) return sendJSON(res, 400, { ok: false, error: 'a reason is required' });
     return sendJSON(res, 200, await runScript('mark-failed.sh', [id, reason]));

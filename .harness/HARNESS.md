@@ -182,10 +182,10 @@ loop — see below), `manual-fail.json` (read by calibration AND by the loop's `
 pass, which resets a flagged `done` task to `pending` so it rebuilds — written only by
 `mark-failed.sh`; see `designs/manual-fail-signal.md` §4), and `reviews.json`.
 
-- **`.harness/reviews.json`** — `id → { "reviewed": bool, "at": <ISO-8601> }`. **Inert in this repo:**
-  it's the "reviewed" flag the upstream dashboard's Backlog page writes via `POST
-  /api/backlog/:id/reviewed`; this repo has no dashboard, so nothing writes it and the loop ignores it.
-  Kept only so the file set matches upstream.
+- **`.harness/reviews.json`** — `id → { "reviewed": bool, "at": <ISO-8601> }`. The owner's "I've
+  checked this completed work" flag. Written by `mark-reviewed.sh` (and the local dashboard's Mark
+  reviewed buttons) — a **dashboard-only annotation: the loop never reads or writes it**, so it never
+  affects what gets built. Purely for triaging which finished tasks you've reviewed.
 - **`.harness/human-done.json`** (T208) — `id → { "done": true, "at": <ISO-8601> }`. Marks a
   `needs-human` task complete WITHOUT touching TASKS.json `status` (the loop owns status; a gated task
   is never built so the loop never flips it). **`task_done()` in `loop.sh` reads this overlay** — a
