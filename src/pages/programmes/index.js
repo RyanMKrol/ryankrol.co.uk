@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import Header from '../../components/Header';
 import ProgrammeOverviewCharts from '../../components/ProgrammeOverviewCharts';
+import DateRangeFilter from '../../components/DateRangeFilter';
 import { aggregateProgramme } from '../../lib/programmeStats';
+import { filterByDateRange } from '../../lib/dateRange';
 
 const PROGRAMMES = ['push', 'pull', 'legs'];
 
@@ -10,6 +12,7 @@ export default function Programmes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState('push');
+  const [dateRange, setDateRange] = useState('1y');
 
   useEffect(() => {
     async function fetchWorkouts() {
@@ -32,9 +35,14 @@ export default function Programmes() {
     fetchWorkouts();
   }, []);
 
+  const filteredWorkouts = useMemo(
+    () => filterByDateRange(allWorkouts, dateRange, (w) => w.start_time),
+    [allWorkouts, dateRange]
+  );
+
   const data = useMemo(
-    () => aggregateProgramme(allWorkouts, selected),
-    [allWorkouts, selected]
+    () => aggregateProgramme(filteredWorkouts, selected),
+    [filteredWorkouts, selected]
   );
 
   if (loading) {
@@ -81,6 +89,10 @@ export default function Programmes() {
               </button>
             ))}
           </div>
+        </div>
+        <div className="workout-filters" style={{ marginTop: '0.75rem' }}>
+          <span className="filter-label">Period:</span>
+          <DateRangeFilter value={dateRange} onChange={setDateRange} />
         </div>
       </div>
 
