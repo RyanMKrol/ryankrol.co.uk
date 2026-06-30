@@ -58,6 +58,7 @@ This repo is **public** (`github.com/RyanMKrol/ryankrol.co.uk`). Hard rules:
 | `HEVY_API_KEY` | Hevy workout API |
 | `GITHUB_TOKEN` | GitHub repo listing |
 | `TMDB_API_TOKEN` | TMDB v4 Read Access Token (JWT). Used **server-side only** in `/api/tmdb/search` — `Authorization: Bearer` header, never a query param, never sent to the client |
+| `GOOGLE_BOOKS_API_KEY` | Google Books API key. Used **server-side only** in `/api/books/search` (`?provider=googlebooks`) as the `key` query param. Without it, Google buckets requests into a shared per-IP anonymous quota that is perpetually exhausted from Vercel's datacenter IPs → 429s in production |
 
 Before any commit: `git status` and confirm no `.env*`, no credentials are staged. The
 `.harness/` ideas inbox + seed data are gitignored on purpose — don't commit those either.
@@ -140,7 +141,7 @@ src/lib (the data layer)
 | `src/pages/api/lastfm/album-info.js` | Last.fm `album.getInfo` proxy (`?artist=&album=` or `?mbid=`); returns `{ info: mapAlbumInfo }` |
 | `src/pages/api/dev/cache-bust.js` | Cache stats (GET) / flush-all (POST), gated off localhost |
 | `src/pages/api/tmdb/search.js` | TMDB search proxy (`?query=&type=movie\|tv`); authenticates with `TMDB_API_TOKEN` server-side |
-| `src/pages/api/books/search.js` | Book-search proxy supporting two providers via `?provider=openlibrary\|googlebooks` (default `openlibrary`); `?title=` required, `?author=` optional; keyless, returns normalised book list tagged with `source` via `withApiCache` |
+| `src/pages/api/books/search.js` | Book-search proxy supporting two providers via `?provider=openlibrary\|googlebooks` (default `openlibrary`); `?title=` required, `?author=` optional; returns normalised book list tagged with `source` via `withApiCache`. Open Library is keyless; Google Books appends `GOOGLE_BOOKS_API_KEY` server-side (falls back to keyless anonymous quota with a warning if unset) |
 | `src/lib/lastfm.js` | `mapAlbumSearchResult(raw)` + `mapAlbumInfo(raw)` — pure normalisers for Last.fm album search/info responses |
 | `src/lib/openlibrary.js` | `mapBookResult(doc)` normaliser + `bookCoverUrl(coverId, size)` helper |
 | `src/lib/googlebooks.js` | `mapGoogleBooksResult(volume)` normaliser — maps Google Books `volumeInfo` to common shape with `source:'googlebooks'`, https `coverUrl`, ISBNs, year from `publishedDate` |

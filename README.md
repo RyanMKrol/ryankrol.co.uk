@@ -65,6 +65,7 @@ The site will be available at `http://localhost:3000` (or next available port).
 | `HEVY_API_KEY` | Hevy workout API key |
 | `GITHUB_TOKEN` | GitHub personal access token (repo listing) |
 | `TMDB_API_TOKEN` | TMDB v4 Read Access Token (JWT Bearer token) — used server-side only for the `/api/tmdb/search` proxy; never exposed to the client |
+| `GOOGLE_BOOKS_API_KEY` | Google Books API key — used server-side only for the `/api/books/search` proxy when `provider=googlebooks`; required in production to avoid the shared anonymous per-IP quota (429s on Vercel) |
 
 ### Managing Environment Variables
 

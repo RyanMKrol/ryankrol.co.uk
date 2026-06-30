@@ -54,11 +54,21 @@ async function searchOpenLibrary(title, author) {
 
 async function searchGoogleBooks(title, author) {
   let q = `intitle:${title}`;
-  if (author) q += `+inauthor:${author}`;
+  if (author) q += ` inauthor:${author}`;
 
   const url = new URL('https://www.googleapis.com/books/v1/volumes');
   url.searchParams.set('q', q);
   url.searchParams.set('maxResults', '20');
+
+  // Without a key, Google buckets all requests by source IP into a shared anonymous
+  // quota that is perpetually exhausted from datacenter IPs (Vercel) → 429s in prod.
+  // A key bills against our own per-project quota instead.
+  const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+  if (apiKey) {
+    url.searchParams.set('key', apiKey);
+  } else {
+    console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
+  }
 
   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
 
@@ -67,6 +77,8 @@ async function searchGoogleBooks(title, author) {
   });
 
   if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    console.error(`❌ [GoogleBooks] API error ${response.status}: ${body.slice(0, 300)}`);
     throw new Error(`Google Books API error: ${response.status}`);
   }
 
