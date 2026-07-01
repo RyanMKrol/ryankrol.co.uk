@@ -1981,7 +1981,7 @@
     {
       "id": "T076",
       "title": "Slider input for the perfume rating on the add form",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
