@@ -923,6 +923,1177 @@
       "verify": [],
       "expectsTest": false,
       "spec": ".harness/tasks/T037.md"
+    },
+    {
+      "id": "T038",
+      "title": "Perfume longevity/projection/seasons fields — backend",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/perfumes/add.js",
+        "src/pages/api/reviews/perfumes/update.js",
+        "src/lib/perfumes.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T038.md"
+    },
+    {
+      "id": "T039",
+      "title": "Perfume longevity/projection/seasons fields — form UI",
+      "status": "pending",
+      "dependsOn": [
+        "T038"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js",
+        "src/components/**"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T039.md"
+    },
+    {
+      "id": "T040",
+      "title": "Harness dashboard rework — bucket grouping + sort order (data layer)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "harness-dashboard"
+      ],
+      "facets": {
+        "layer": "harness",
+        "workType": "refactor",
+        "risk": []
+      },
+      "scope": [
+        ".harness/dashboard/lib.js",
+        ".harness/dashboard/lib.test.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T040.md"
+    },
+    {
+      "id": "T041",
+      "title": "Harness dashboard rework — rendering + interactions (server.js)",
+      "status": "pending",
+      "dependsOn": [
+        "T040"
+      ],
+      "gate": null,
+      "tags": [
+        "harness-dashboard"
+      ],
+      "facets": {
+        "layer": "harness",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        ".harness/dashboard/**"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T041.md"
+    },
+    {
+      "id": "T042",
+      "title": "Author three distinct full-site UI/IA rewrite design briefs",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "style",
+        "workType": "docs",
+        "risk": []
+      },
+      "scope": [
+        ".harness/designs/T042-ui-rewrite-briefs.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T042.md"
+    },
+    {
+      "id": "T043",
+      "title": "Variant 1 — shared layout/nav shell + home page",
+      "status": "pending",
+      "dependsOn": [
+        "T042"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v1/**",
+        "src/components/v1/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T043.md"
+    },
+    {
+      "id": "T044",
+      "title": "Variant 2 — shared layout/nav shell + home page",
+      "status": "pending",
+      "dependsOn": [
+        "T042"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v2/**",
+        "src/components/v2/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T044.md"
+    },
+    {
+      "id": "T045",
+      "title": "Variant 3 — shared layout/nav shell + home page",
+      "status": "pending",
+      "dependsOn": [
+        "T042"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v3/**",
+        "src/components/v3/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T045.md"
+    },
+    {
+      "id": "T046",
+      "title": "Variant 1 — reviews list/index pages",
+      "status": "pending",
+      "dependsOn": [
+        "T043"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v1/**",
+        "src/components/v1/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T046.md"
+    },
+    {
+      "id": "T047",
+      "title": "Variant 1 — reviews add forms",
+      "status": "pending",
+      "dependsOn": [
+        "T043"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v1/**",
+        "src/components/v1/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T047.md"
+    },
+    {
+      "id": "T048",
+      "title": "Variant 1 — reviews edit pages",
+      "status": "pending",
+      "dependsOn": [
+        "T043"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v1/**",
+        "src/components/v1/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T048.md"
+    },
+    {
+      "id": "T049",
+      "title": "Variant 1 — vinyl pages",
+      "status": "pending",
+      "dependsOn": [
+        "T043"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v1/**",
+        "src/components/v1/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T049.md"
+    },
+    {
+      "id": "T050",
+      "title": "Variant 1 — workouts + exercises pages",
+      "status": "pending",
+      "dependsOn": [
+        "T043"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v1/**",
+        "src/components/v1/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T050.md"
+    },
+    {
+      "id": "T051",
+      "title": "Variant 1 — listening + projects pages",
+      "status": "pending",
+      "dependsOn": [
+        "T043"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v1/**",
+        "src/components/v1/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T051.md"
+    },
+    {
+      "id": "T052",
+      "title": "Variant 2 — reviews list/index pages",
+      "status": "pending",
+      "dependsOn": [
+        "T044"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v2/**",
+        "src/components/v2/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T052.md"
+    },
+    {
+      "id": "T053",
+      "title": "Variant 2 — reviews add forms",
+      "status": "pending",
+      "dependsOn": [
+        "T044"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v2/**",
+        "src/components/v2/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T053.md"
+    },
+    {
+      "id": "T054",
+      "title": "Variant 2 — reviews edit pages",
+      "status": "pending",
+      "dependsOn": [
+        "T044"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v2/**",
+        "src/components/v2/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T054.md"
+    },
+    {
+      "id": "T055",
+      "title": "Variant 2 — vinyl pages",
+      "status": "pending",
+      "dependsOn": [
+        "T044"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v2/**",
+        "src/components/v2/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T055.md"
+    },
+    {
+      "id": "T056",
+      "title": "Variant 2 — workouts + exercises pages",
+      "status": "pending",
+      "dependsOn": [
+        "T044"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v2/**",
+        "src/components/v2/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T056.md"
+    },
+    {
+      "id": "T057",
+      "title": "Variant 2 — listening + projects pages",
+      "status": "pending",
+      "dependsOn": [
+        "T044"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v2/**",
+        "src/components/v2/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T057.md"
+    },
+    {
+      "id": "T058",
+      "title": "Variant 3 — reviews list/index pages",
+      "status": "pending",
+      "dependsOn": [
+        "T045"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v3/**",
+        "src/components/v3/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T058.md"
+    },
+    {
+      "id": "T059",
+      "title": "Variant 3 — reviews add forms",
+      "status": "pending",
+      "dependsOn": [
+        "T045"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v3/**",
+        "src/components/v3/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T059.md"
+    },
+    {
+      "id": "T060",
+      "title": "Variant 3 — reviews edit pages",
+      "status": "pending",
+      "dependsOn": [
+        "T045"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v3/**",
+        "src/components/v3/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T060.md"
+    },
+    {
+      "id": "T061",
+      "title": "Variant 3 — vinyl pages",
+      "status": "pending",
+      "dependsOn": [
+        "T045"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v3/**",
+        "src/components/v3/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T061.md"
+    },
+    {
+      "id": "T062",
+      "title": "Variant 3 — workouts + exercises pages",
+      "status": "pending",
+      "dependsOn": [
+        "T045"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v3/**",
+        "src/components/v3/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T062.md"
+    },
+    {
+      "id": "T063",
+      "title": "Variant 3 — listening + projects pages",
+      "status": "pending",
+      "dependsOn": [
+        "T045"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v3/**",
+        "src/components/v3/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T063.md"
+    },
+    {
+      "id": "T064",
+      "title": "Review the three complete UI rewrite variants and pick a winner",
+      "status": "pending",
+      "dependsOn": [
+        "T046",
+        "T047",
+        "T048",
+        "T049",
+        "T050",
+        "T051",
+        "T052",
+        "T053",
+        "T054",
+        "T055",
+        "T056",
+        "T057",
+        "T058",
+        "T059",
+        "T060",
+        "T061",
+        "T062",
+        "T063"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "ui-rewrite"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T064.md"
+    },
+    {
+      "id": "T065",
+      "title": "Promote the winning UI rewrite variant, delete the other two",
+      "status": "pending",
+      "dependsOn": [
+        "T064"
+      ],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting",
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/**",
+        "src/components/**",
+        "src/pages/v1/**",
+        "src/pages/v2/**",
+        "src/pages/v3/**"
+      ],
+      "design": ".harness/designs/T042-ui-rewrite-briefs.md",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T065.md"
+    },
+    {
+      "id": "T066",
+      "title": "Shared metadata-backfill lookup+confirm modal component",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "backfill"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/**"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T066.md"
+    },
+    {
+      "id": "T067",
+      "title": "Accept metadata-backfill fields on all four review update APIs",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "backfill"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/books/update.js",
+        "src/pages/api/reviews/albums/update.js",
+        "src/pages/api/reviews/movies/update.js",
+        "src/pages/api/reviews/tv/update.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T067.md"
+    },
+    {
+      "id": "T068",
+      "title": "Backfill-from-API button on the books edit page",
+      "status": "pending",
+      "dependsOn": [
+        "T066",
+        "T067"
+      ],
+      "gate": null,
+      "tags": [
+        "backfill"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/books/edit/[id].js",
+        "src/components/**"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T068.md"
+    },
+    {
+      "id": "T069",
+      "title": "Backfill-from-API button on the albums edit page",
+      "status": "pending",
+      "dependsOn": [
+        "T066",
+        "T067"
+      ],
+      "gate": null,
+      "tags": [
+        "backfill"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/albums/edit/[id].js",
+        "src/components/**"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T069.md"
+    },
+    {
+      "id": "T070",
+      "title": "Backfill-from-API button on the movies edit page",
+      "status": "pending",
+      "dependsOn": [
+        "T066",
+        "T067"
+      ],
+      "gate": null,
+      "tags": [
+        "backfill"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/movies/edit/[id].js",
+        "src/components/**"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T070.md"
+    },
+    {
+      "id": "T071",
+      "title": "Backfill-from-API button on the tv edit page",
+      "status": "pending",
+      "dependsOn": [
+        "T066",
+        "T067"
+      ],
+      "gate": null,
+      "tags": [
+        "backfill"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/tv/edit/[id].js",
+        "src/components/**"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T071.md"
+    },
+    {
+      "id": "T072",
+      "title": "Show the full repo list on /projects (remove the top-20 cap)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/github/repos.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T072.md"
+    },
+    {
+      "id": "T073",
+      "title": "Designer typeahead/autocomplete on the perfume add form",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/perfumes/add.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T073.md"
+    },
+    {
+      "id": "T074",
+      "title": "Perfume Application notes field — backend",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/perfumes/add.js",
+        "src/pages/api/reviews/perfumes/update.js",
+        "src/lib/perfumes.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T074.md"
+    },
+    {
+      "id": "T075",
+      "title": "Perfume Application notes field — form UI",
+      "status": "pending",
+      "dependsOn": [
+        "T074"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T075.md"
+    },
+    {
+      "id": "T076",
+      "title": "Slider input for the perfume rating on the add form",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/perfumes/add.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T076.md"
+    },
+    {
+      "id": "T077",
+      "title": "Remove Open Library from book search (API + toggle UI)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "books"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/books/search.js",
+        "src/components/BookSearch.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T077.md"
+    },
+    {
+      "id": "T078",
+      "title": "Delete src/lib/openlibrary.js + update docs",
+      "status": "pending",
+      "dependsOn": [
+        "T077"
+      ],
+      "gate": null,
+      "tags": [
+        "books"
+      ],
+      "facets": {
+        "layer": "lib",
+        "workType": "docs",
+        "risk": []
+      },
+      "scope": [
+        "src/lib/openlibrary.js",
+        "src/lib/openlibrary.test.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T078.md"
+    },
+    {
+      "id": "T079",
+      "title": "Write migration script: re-fetch Open-Library books from Google Books",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "books"
+      ],
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "scope": [
+        "src/scripts/migrateOpenLibraryBooksToGoogleBooks.js",
+        "package.json"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T079.md"
+    },
+    {
+      "id": "T080",
+      "title": "Run the Open-Library-to-Google-Books book migration against production",
+      "status": "pending",
+      "dependsOn": [
+        "T079"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "books"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T080.md"
     }
   ]
 }
