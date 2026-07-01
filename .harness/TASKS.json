@@ -2270,7 +2270,7 @@
     {
       "id": "T088",
       "title": "Require a confirmed Last.fm match to add an album review",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
