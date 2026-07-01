@@ -33,18 +33,23 @@ export default function AddTVReview() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!tmdbMatch) {
+      setMessage('Search and select a TMDB match before saving');
+      setMessageType('error');
+      return;
+    }
+
     setLoading(true);
     setMessage('');
 
     const body = {
       ...formData,
-      ...(tmdbMatch && {
-        tmdbId: tmdbMatch.tmdbId,
-        mediaType: tmdbMatch.mediaType,
-        posterPath: tmdbMatch.posterPath,
-        tmdbOverview: tmdbMatch.overview,
-        tmdbDate: tmdbMatch.date,
-      }),
+      tmdbId: tmdbMatch.tmdbId,
+      mediaType: tmdbMatch.mediaType,
+      posterPath: tmdbMatch.posterPath,
+      tmdbOverview: tmdbMatch.overview,
+      tmdbDate: tmdbMatch.date,
     };
 
     try {
@@ -103,12 +108,17 @@ export default function AddTVReview() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">TMDB Match (optional)</label>
+            <label className="form-label">TMDB Match</label>
             <TmdbSearch
               mediaType="tv"
               query={formData.title}
               onSelect={setTmdbMatch}
             />
+            {!tmdbMatch && (
+              <p className="error-message">
+                Search and select a TMDB match before saving
+              </p>
+            )}
           </div>
 
           <div className="form-group">
@@ -145,7 +155,7 @@ export default function AddTVReview() {
           <button
             type="submit"
             className="form-button"
-            disabled={loading || formData.rating === 0}
+            disabled={loading || formData.rating === 0 || !tmdbMatch}
           >
             {loading ? 'Adding Review...' : 'Add Review'}
           </button>
