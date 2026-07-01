@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
+import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes } from '../../../../components/PerfumeCharacteristics';
 
 const PERFUME_TYPES = ['EDP', 'EDT', 'Parfum'];
 
@@ -17,6 +18,9 @@ export default function EditPerfumeReview() {
     notes: '',
     considerTravelSize: false,
     considerFullBottle: false,
+    longevity: 0,
+    projection: 1,
+    seasons: [],
     password: '',
   });
   const [originalData, setOriginalData] = useState(null);
@@ -52,6 +56,9 @@ export default function EditPerfumeReview() {
           notes: perfume.notes || '',
           considerTravelSize: !!perfume.considerTravelSize,
           considerFullBottle: !!perfume.considerFullBottle,
+          longevity: perfume.longevity ?? 0,
+          projection: perfume.projection ?? 1,
+          seasons: perfume.seasons || [],
           password: '',
         });
       } catch (err) {
@@ -78,6 +85,27 @@ export default function EditPerfumeReview() {
     setFormData({
       ...formData,
       rating: Number.isNaN(value) ? 0 : value,
+    });
+  };
+
+  const handleLongevityChange = (e) => {
+    setFormData({
+      ...formData,
+      longevity: parseInt(e.target.value, 10),
+    });
+  };
+
+  const handleProjectionChange = (e) => {
+    setFormData({
+      ...formData,
+      projection: parseInt(e.target.value, 10),
+    });
+  };
+
+  const handleSeasonsChange = (seasons) => {
+    setFormData({
+      ...formData,
+      seasons,
     });
   };
 
@@ -296,6 +324,12 @@ export default function EditPerfumeReview() {
               {' '}Consider full bottle
             </label>
           </div>
+
+          <LongevitySlider value={formData.longevity} onChange={handleLongevityChange} />
+
+          <ProjectionSlider value={formData.projection} onChange={handleProjectionChange} />
+
+          <SeasonsCheckboxes value={formData.seasons} onChange={handleSeasonsChange} />
 
           <div className="form-group">
             <label className="form-label" htmlFor="password">Password</label>
