@@ -2216,7 +2216,7 @@
     {
       "id": "T086",
       "title": "Require a confirmed TMDB match to add a TV review",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
