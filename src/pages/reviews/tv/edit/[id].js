@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
 import StarRating from '../../../../components/StarRating';
+import MetadataBackfillModal from '../../../../components/MetadataBackfillModal';
+import { tmdbPosterUrl } from '../../../../lib/tmdb';
 
 export default function EditTVReview() {
   const router = useRouter();
@@ -44,7 +46,12 @@ export default function EditTVReview() {
           title: tvShow.title,
           rating: tvShow.rating || 0,
           gist: tvShow.review_text || '',
-          password: ''
+          password: '',
+          tmdbId: tvShow.tmdbId,
+          mediaType: tvShow.mediaType,
+          posterPath: tvShow.posterPath,
+          tmdbOverview: tvShow.tmdbOverview,
+          tmdbDate: tvShow.tmdbDate
         });
       } catch (err) {
         setMessage('Error loading TV show review');
@@ -68,6 +75,28 @@ export default function EditTVReview() {
     setFormData({
       ...formData,
       rating
+    });
+  };
+
+  const handleBackfillSearch = async () => {
+    const params = new URLSearchParams({
+      query: formData.title.trim(),
+      type: 'tv',
+    });
+    const res = await fetch(`/api/tmdb/search?${params}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Search failed');
+    return data;
+  };
+
+  const handleBackfillConfirm = (result) => {
+    setFormData({
+      ...formData,
+      tmdbId: result.tmdbId,
+      mediaType: result.mediaType,
+      posterPath: result.posterPath,
+      tmdbOverview: result.overview,
+      tmdbDate: result.date,
     });
   };
 
@@ -193,6 +222,28 @@ export default function EditTVReview() {
               disabled
               required
             />
+          </div>
+
+          <div className="form-group">
+            <MetadataBackfillModal
+              buttonLabel="Backfill from TMDB"
+              onSearch={handleBackfillSearch}
+              onConfirm={handleBackfillConfirm}
+              getResultKey={(result, i) => result.tmdbId ?? i}
+              renderResult={(result) => (
+                <>
+                  <strong>{result.title}</strong>
+                  {result.date && ` (${result.date})`}
+                </>
+              )}
+            />
+            {formData.posterPath && (
+              <img
+                src={tmdbPosterUrl(formData.posterPath)}
+                alt={`${formData.title} poster`}
+                style={{ maxWidth: '150px', marginTop: '0.75rem', borderRadius: '4px' }}
+              />
+            )}
           </div>
 
           <div className="form-group">
