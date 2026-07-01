@@ -31,13 +31,23 @@ function deriveTask(task, opts = {}) {
   return { ...task, derivedStatus, done, failed, needsHuman, isGate, manualFailed, blocked, reviewed: isReviewed };
 }
 
+// Parse the numeric part of a "T123"-style id, for numeric (not lexicographic) sorting.
+function numericId(id) {
+  const m = /(\d+)/.exec(id || '');
+  return m ? parseInt(m[1], 10) : Number.MAX_SAFE_INTEGER;
+}
+
 // Given all tasks + overlays, return tasks with derived status + an eligibility bucket + unmet deps.
-// Buckets: done | needs-human | blocked | ready | waiting-human | waiting-loop.
-//   ready         = not-done, ungated, all deps done (the rule select_task uses)
-//   waiting-human = has unmet deps AND its dependency closure contains a needs-human/gate task that
-//                   isn't done — i.e. it CANNOT progress until the owner does a human step.
-//   waiting-loop  = has unmet deps but they're all buildable — the loop will build them eventually,
-//                   so this isn't something the owner needs to act on.
+// Buckets: ready | waiting | needsHuman | done (four display buckets — mirrors local-jobs).
+//   ready      = not-done, ungated, all deps done (the rule select_task uses)
+//   waiting    = has unmet deps AND its dependency closure contains a needs-human/gate/failed
+//                blocker that isn't done — i.e. it CANNOT progress until the owner acts. A task
+//                whose unmet deps are ALL themselves buildable ("waiting-loop") is noise — the
+//                loop will get to its blocker on its own — so it is omitted entirely, not tagged.
+//   needsHuman = union of a needs-human/gate task AND a loop-given-up (`failed:blocked`) task —
+//                both need the owner's attention; `blocked: true` distinguishes the latter for the UI.
+//   done       = union of done tasks AND terminal `status:"failed"` tasks (an owner-marked false
+//                success) — sorted not-reviewed first, then by numeric task id.
 function computeBacklog(tasks, opts = {}) {
   const { humanDone = {}, manualFail = {}, blockedIds = [], reviewed = {} } = opts;
   const derived = (tasks || []).map((t) => deriveTask(t, { humanDone, manualFail, blockedIds, reviewed }));
@@ -67,22 +77,33 @@ function computeBacklog(tasks, opts = {}) {
     return res;
   }
 
-  return derived.map((t) => {
+  const withBucket = derived.map((t) => {
     const unmetDeps = (t.dependsOn || []).filter((d) => !doneIds.has(d));
     let bucket;
-    if (t.done) bucket = 'done';
-    else if (t.failed) bucket = 'failed';
-    else if (t.needsHuman || t.isGate) bucket = 'needs-human';
-    else if (t.blocked) bucket = 'blocked';
+    if (t.done || t.failed) bucket = 'done';
+    else if (t.needsHuman || t.isGate || t.blocked) bucket = 'needsHuman';
     else if (unmetDeps.length === 0) bucket = 'ready';
-    else bucket = blockedByHuman(t.id) ? 'waiting-human' : 'waiting-loop';
+    else bucket = blockedByHuman(t.id) ? 'waiting' : 'waiting-loop';
     return { ...t, bucket, unmetDeps };
   });
+
+  // waiting-loop tasks are noise from the owner's point of view — the loop will build their
+  // blocker on its own — so they're excluded from the returned array entirely.
+  const result = withBucket.filter((t) => t.bucket !== 'waiting-loop');
+
+  // done bucket sort: not-reviewed items first, then ascending numeric task id (within each group).
+  const doneBucket = result.filter((t) => t.bucket === 'done');
+  doneBucket.sort((a, b) => {
+    if (a.reviewed !== b.reviewed) return a.reviewed ? 1 : -1;
+    return numericId(a.id) - numericId(b.id);
+  });
+  const others = result.filter((t) => t.bucket !== 'done');
+  return [...others, ...doneBucket];
 }
 
 // Headline counts for the buckets, for a summary line.
 function summarize(computed) {
-  const counts = { ready: 0, 'waiting-human': 0, 'needs-human': 0, failed: 0, blocked: 0, 'waiting-loop': 0, done: 0 };
+  const counts = { ready: 0, waiting: 0, needsHuman: 0, done: 0 };
   for (const t of computed) counts[t.bucket] = (counts[t.bucket] || 0) + 1;
   return counts;
 }
