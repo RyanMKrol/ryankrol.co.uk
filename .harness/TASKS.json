@@ -1954,7 +1954,7 @@
     {
       "id": "T075",
       "title": "Perfume Application notes field — form UI",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T074"
       ],
