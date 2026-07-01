@@ -2323,7 +2323,7 @@
     },
     {
       "id": "T090",
-      "title": "/projects: include archived repos, warn loudly when GITHUB_TOKEN is missing",
+      "title": "Fix /projects: wrong GitHub API endpoint, missing archived repos, silent token gap",
       "status": "pending",
       "dependsOn": [],
       "gate": null,
