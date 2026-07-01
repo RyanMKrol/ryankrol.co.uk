@@ -2098,7 +2098,7 @@
     {
       "id": "T081",
       "title": "Fix production crash: WorkoutCard assumes exercises always exists",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
