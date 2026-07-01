@@ -168,3 +168,12 @@ size/family-driven hierarchy and from Variant 1's weight/color-driven hierarchy.
 **Shared chrome.** The slim utility bar described above, and nothing else — no
 footer; the timeline simply ends with a `— end of feed —` marker line matching the
 gutter/rule styling of every other entry.
+
+## Decision
+
+None of the three variants were selected. The owner reviewed all three and judged them "all
+pretty bad" — none worth keeping. Rather than promoting a winner (the original T064/T065 plan),
+all three variants (`/v1`, `/v2`, `/v3`) are being deleted outright, with the production pages
+left completely unchanged. See T092 for the deletion task. T064 and T065 (the original
+pick-a-winner review + promote-winner tasks) are marked done as superseded by this decision — T065
+was never built, since its "promote a winner" premise no longer applies.
