@@ -57,7 +57,7 @@
     {
       "id": "T003",
       "title": "Provision the PerfumeRatings table (human step)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T002"
       ],
