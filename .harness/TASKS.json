@@ -2400,6 +2400,189 @@
       ],
       "expectsTest": false,
       "spec": ".harness/tasks/T092.md"
+    },
+    {
+      "id": "T093",
+      "title": "Fix dashboard auto-refresh wiping checkbox selections",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "harness-dashboard"
+      ],
+      "facets": {
+        "layer": "harness",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "scope": [
+        ".harness/dashboard/server.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T093.md"
+    },
+    {
+      "id": "T094",
+      "title": "Per-spot spray count for Application spots — backend",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/perfumes/add.js",
+        "src/pages/api/reviews/perfumes/update.js",
+        "src/lib/perfumes.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T094.md"
+    },
+    {
+      "id": "T095",
+      "title": "Per-spot spray count UI — make it joyful",
+      "status": "pending",
+      "dependsOn": [
+        "T094"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js",
+        "src/components/**"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T095.md"
+    },
+    {
+      "id": "T096",
+      "title": "Remove the Application notes field from the perfume schema — backend",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/reviews/perfumes/add.js",
+        "src/pages/api/reviews/perfumes/update.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T096.md"
+    },
+    {
+      "id": "T097",
+      "title": "Remove the Application notes field from the perfume forms — UI",
+      "status": "pending",
+      "dependsOn": [
+        "T096"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T097.md"
+    },
+    {
+      "id": "T098",
+      "title": "Required Fragrantica URL field on the perfume add + edit forms",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/api/reviews/perfumes/add.js",
+        "src/pages/api/reviews/perfumes/update.js",
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js",
+        "src/lib/perfumes.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T098.md"
+    },
+    {
+      "id": "T099",
+      "title": "Fix perfume slider thumbs not sitting flush at track start",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "bugfix"
+      ],
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "scope": [
+        "src/styles/globals.css",
+        "src/pages/reviews/perfumes/add.js",
+        "src/components/PerfumeCharacteristics.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T099.md"
     }
   ]
 }
