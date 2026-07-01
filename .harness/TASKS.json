@@ -902,7 +902,7 @@
     {
       "id": "T037",
       "title": "Dashboard: don't let already-reviewed Done tasks be re-selected for Mark reviewed",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T025"
       ],
