@@ -187,9 +187,11 @@ export default function AddPerfumeReview() {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="rating">Rating (0-10)</label>
+            <label className="form-label" htmlFor="rating">
+              Rating (0-10): {formData.rating}
+            </label>
             <input
-              type="number"
+              type="range"
               id="rating"
               name="rating"
               min="0"
