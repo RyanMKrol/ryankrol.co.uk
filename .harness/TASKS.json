@@ -1856,7 +1856,7 @@
     {
       "id": "T071",
       "title": "Backfill-from-API button on the tv edit page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T066",
         "T067"
