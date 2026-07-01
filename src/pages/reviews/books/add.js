@@ -34,24 +34,29 @@ export default function AddBookReview() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!bookMatch) {
+      setMessage('Search and select a Google Books match before saving');
+      setMessageType('error');
+      return;
+    }
+
     setLoading(true);
     setMessage('');
 
     const body = {
       ...formData,
-      ...(bookMatch && {
-        source: bookMatch.source,
-        olid: bookMatch.olid,
-        coverId: bookMatch.coverId,
-        coverUrl: bookMatch.coverUrl,
-        volumeId: bookMatch.volumeId,
-        bookAuthors: bookMatch.bookAuthors,
-        firstPublishedYear: bookMatch.firstPublishedYear,
-        isbn: bookMatch.isbn,
-        subjects: bookMatch.subjects,
-        pageCount: bookMatch.pageCount,
-        publisher: bookMatch.publisher,
-      }),
+      source: bookMatch.source,
+      olid: bookMatch.olid,
+      coverId: bookMatch.coverId,
+      coverUrl: bookMatch.coverUrl,
+      volumeId: bookMatch.volumeId,
+      bookAuthors: bookMatch.bookAuthors,
+      firstPublishedYear: bookMatch.firstPublishedYear,
+      isbn: bookMatch.isbn,
+      subjects: bookMatch.subjects,
+      pageCount: bookMatch.pageCount,
+      publisher: bookMatch.publisher,
     };
 
     try {
@@ -123,12 +128,17 @@ export default function AddBookReview() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Book Match (optional)</label>
+            <label className="form-label">Book Match</label>
             <BookSearch
               title={formData.title}
               author={formData.author}
               onSelect={setBookMatch}
             />
+            {!bookMatch && (
+              <p className="error-message">
+                Search and select a Google Books match before saving
+              </p>
+            )}
           </div>
 
           <div className="form-group">
@@ -165,7 +175,7 @@ export default function AddBookReview() {
           <button
             type="submit"
             className="form-button"
-            disabled={loading || formData.rating === 0}
+            disabled={loading || formData.rating === 0 || !bookMatch}
           >
             {loading ? 'Adding Review...' : 'Add Review'}
           </button>

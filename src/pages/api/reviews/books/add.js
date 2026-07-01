@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   }
 
   // Validate required fields
-  if (!title || !author || rating === undefined || !overview) {
+  if (!title || !author || rating === undefined || !overview || !volumeId) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
