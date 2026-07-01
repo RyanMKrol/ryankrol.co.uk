@@ -2005,7 +2005,7 @@
     {
       "id": "T077",
       "title": "Remove Open Library from book search (API + toggle UI)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
