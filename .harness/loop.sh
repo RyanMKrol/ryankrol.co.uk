@@ -50,14 +50,43 @@ INTEGRATE_HOOK="${INTEGRATE_HOOK:-}"               # optional cmd run after each
 CLAUDE_BIN="${CLAUDE_BIN:-claude}"
 CLAUDE_FLAGS="${CLAUDE_FLAGS:---dangerously-skip-permissions}"
 # Rate-limit-aware backoff: when Claude hits the usage limit, sleep and resume the SAME task.
-RL_BACKOFF_MIN="${RL_BACKOFF_MIN:-300}"            # first backoff (5 min)
-RL_BACKOFF_MAX="${RL_BACKOFF_MAX:-18000}"          # cap (~5h = the quota window)
+# Two paths: a PARSED reset time (sleep exactly until then + RL_BUFFER, capped at RL_BACKOFF_MAX —
+# a known reset can legitimately be hours away) or, when unparseable, blind exponential backoff
+# starting at RL_BACKOFF_MIN and capped at RL_EXP_MAX.
+RL_BACKOFF_MIN="${RL_BACKOFF_MIN:-300}"            # exponential-fallback first backoff (5 min)
+RL_EXP_MAX="${RL_EXP_MAX:-3600}"                   # exponential-fallback cap (1h; UNKNOWN-reset path only)
+RL_BACKOFF_MAX="${RL_BACKOFF_MAX:-18000}"          # cap for a PARSED reset wait (~5h — known reset can be hours away)
+RL_BUFFER="${RL_BUFFER:-300}"                      # resume this many secs AFTER a parsed reset (5-min cushion)
 FORCE_TASK="${1:-}"
 POSTFLIGHT="$HARNESS_DIR/postflight.sh"
 
 read -r -a FLAGS <<<"$CLAUDE_FLAGS"
 log() { printf '[loop] %s\n' "$*" >&2; }
 board() { [ -x "$POSTFLIGHT" ] && "$POSTFLIGHT" >/dev/null 2>&1 || true; }
+
+# _hms <seconds> → human duration like "4h 34m" / "12m" / "45s"
+_hms() {
+  local s="$1" h m
+  h=$(( s / 3600 )); m=$(( (s % 3600) / 60 ))
+  if [ "$h" -gt 0 ]; then printf '%dh %dm' "$h" "$m"
+  elif [ "$m" -gt 0 ]; then printf '%dm' "$m"
+  else printf '%ds' "$s"; fi
+}
+# rl_banner <seconds-to-sleep> [extra-note] — human-readable usage-limit banner: echoes what Claude
+# reported, how long we sleep, and the WALL-CLOCK resume time (so it can be sanity-checked against the
+# reset Claude quoted).
+rl_banner() {
+  local secs="$1" note="${2:-}" reset_txt resume
+  reset_txt="$(grep -oiE 'resets[^)]*\)' "$WORKLOG/.claude-out" 2>/dev/null | tail -1)"
+  resume="$(date -v+"${secs}"S '+%a %H:%M %Z' 2>/dev/null || echo "in $(_hms "$secs")")"
+  log "══════════════════════════════════════════════════════════════════════"
+  log "🛑 Claude usage/session limit hit — NOT a failure; the loop will auto-resume."
+  [ -n "$reset_txt" ] && log "   Claude says: ${reset_txt}"
+  [ -n "$note" ] && log "   $note"
+  log "   ⏳ Sleeping $(_hms "$secs")  →  resuming ~${resume}, then RE-ATTEMPT the same task COLD."
+  log "   ✅ SAFE TO Ctrl-C NOW — nothing is running."
+  log "══════════════════════════════════════════════════════════════════════"
+}
 
 command -v jq >/dev/null 2>&1 || { log "jq is required to parse TASKS.json — install it (brew install jq)"; exit 3; }
 [ -f "$BACKLOG" ] || { log "no .harness/TASKS.json — nothing to build"; exit 3; }
@@ -364,7 +393,16 @@ wait_ci_green() {   # 0=green 1=red 2=indeterminate
 }
 
 # --- Claude invocation with rate-limit detection ----------------------------
-RL_RE='usage limit|rate.?limit|429|resets at|try again later|overloaded|quota|insufficient.*credit|exceeded your'
+# NB: the real Claude-CLI message is e.g. "You've hit your session limit · resets 2:30pm (Europe/London)"
+# — so match "session limit"/"hit your … limit" and a bare "resets" (no "at"), not just "usage limit".
+RL_RE='usage limit|session limit|hit your .*limit|rate.?limit|429|resets|try again later|overloaded|quota|insufficient.*credit|exceeded your'
+# Unambiguous "you have hit a usage/session limit" wording. Kept SEPARATE from (and tighter than) the
+# broad RL_RE so it can classify a limit EVEN when the CLI exits 0 — which it frequently does, because
+# the limit notice is a normal assistant message, not a process error. The tightness ensures ordinary
+# task output (e.g. a task literally about "usage quotas") on a SUCCESSFUL run is never misread as a
+# limit. This is the fix for the loop EXITING on a session limit instead of doing its reset-aware
+# backoff: run_claude used to require rc!=0 to detect a limit, so an exit-0 limit slipped through.
+RL_HARD_RE='hit your (session|usage|account|weekly|5.?hour) limit|(session|usage|weekly|account) limit reached|reached your (usage|session|weekly) limit'
 # run_claude <model> <effort> <prompt> → 0 ok | 10 rate-limited | other = failure
 run_claude() {
   local model="$1" effort="$2" pr="$3" out="$WORKLOG/.claude-out" rc
@@ -372,8 +410,65 @@ run_claude() {
   ( cd "$ROOT" && "$CLAUDE_BIN" -p "$pr" --model "$model" --effort "$effort" "${FLAGS[@]}" ) 2>&1 | tee "$out"
   rc=${PIPESTATUS[0]}
   set -e
-  if [ "$rc" -ne 0 ] && grep -qiE "$RL_RE" "$out"; then return 10; fi
+  # Limit detection (see RL_HARD_RE/RL_RE above). The HARD pattern signals a limit regardless of exit
+  # code (the CLI often prints the notice yet exits 0); the BROAD pattern only when the command ALSO
+  # failed. Either way we return 10 so the caller runs the reset-aware backoff — the loop NEVER exits
+  # on a usage limit.
+  if grep -qiE "$RL_HARD_RE" "$out"; then log "run_claude: usage/session-limit notice detected (claude rc=$rc) → signalling backoff (10)"; return 10; fi
+  if [ "$rc" -ne 0 ] && grep -qiE "$RL_RE" "$out"; then log "run_claude: claude rc=$rc + rate-limit-ish output → signalling backoff (10)"; return 10; fi
   return "$rc"
+}
+
+# rl_reset_wait <captured-output-file> — when Claude reports WHEN the usage limit resets, echo the
+# seconds to sleep so the loop resumes right AFTER the reset (+ RL_BUFFER cushion) instead of the
+# blind exponential backoff that over-waits. Returns non-zero (echoes nothing) if no reset time is
+# parseable → caller falls back to exponential. Handles two machine-readable forms plus a confirmed
+# real-world one:
+#   • clock+tz   — "resets 2:30pm (Europe/London)" — computes the NEXT occurrence of that time in
+#                  that tz (past today → tomorrow, so a cross-midnight reset works).
+#   • relative   — "try again in 42 seconds" / "in 5 minutes" / "in 2 hours" / "for 3 minutes"
+#   • ISO-8601   — "...resets at 2025-06-29T21:00:00Z" / "2025-06-29 21:00"
+# Never negative; capped at RL_BACKOFF_MAX.
+rl_reset_wait() {
+  local out="$1" content now secs="" n unit ts epoch h mm ap tz hh24 today
+  [ -f "$out" ] || return 1
+  content="$(cat "$out")"
+  now=$(date +%s)
+  # (a) CONFIRMED real format — clock time + timezone: "resets 2:30pm (Europe/London)" / "resets 3am
+  #     (Europe/London)". Anchored on the am/pm + "(TZ)" so a leading date ("Jun 30 3am") can't be
+  #     mistaken for the hour. Compute the NEXT occurrence of that time in that tz: if it's already
+  #     past today, it's tomorrow (handles a cross-midnight reset, e.g. 10pm now → 3am).
+  if [[ "$content" =~ ([0-9]{1,2})(:([0-9]{2}))?[[:space:]]*([AaPp][Mm])[[:space:]]*\(([A-Za-z_/]+)\) ]]; then
+    h="${BASH_REMATCH[1]}"; mm="${BASH_REMATCH[3]:-00}"; ap="$(printf '%s' "${BASH_REMATCH[4]}" | tr 'APM' 'apm')"; tz="${BASH_REMATCH[5]}"
+    hh24="$h"
+    [ "$ap" = pm ] && [ "$h" -lt 12 ] && hh24=$((h + 12))
+    [ "$ap" = am ] && [ "$h" -eq 12 ] && hh24=0
+    today="$(TZ="$tz" date +%Y-%m-%d 2>/dev/null || true)"
+    if [ -n "$today" ]; then
+      epoch=$(TZ="$tz" date -j -f "%Y-%m-%d %H:%M" "$today $(printf '%02d' "$hh24"):$mm" +%s 2>/dev/null \
+            || TZ="$tz" date -d "$today $hh24:$mm" +%s 2>/dev/null || true)
+      if [ -n "$epoch" ]; then
+        (( epoch <= now )) && epoch=$(( epoch + 86400 ))
+        secs=$(( epoch - now ))
+      fi
+    fi
+  fi
+  # (b) relative: "try again in 42 seconds" / "in 5 minutes" / "in 2 hours"
+  if [ -z "$secs" ] && [[ "$content" =~ (in|for)[[:space:]]+([0-9]+)[[:space:]]*(second|minute|hour) ]]; then
+    n="${BASH_REMATCH[2]}"; unit="${BASH_REMATCH[3]}"
+    case "$unit" in second) secs=$n ;; minute) secs=$((n*60)) ;; hour) secs=$((n*3600)) ;; esac
+  fi
+  # (c) ISO-8601 timestamp: "2025-06-29T21:00:00Z" / "2025-06-29 21:00"
+  if [ -z "$secs" ] && [[ "$content" =~ ([0-9]{4}-[0-9]{2}-[0-9]{2}[T\ ][0-9]{2}:[0-9]{2}(:[0-9]{2})?)Z? ]]; then
+    ts="${BASH_REMATCH[1]}"
+    epoch=$(date -d "$ts" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%S" "${ts/ /T}" +%s 2>/dev/null || true)
+    [ -n "$epoch" ] && secs=$(( epoch - now ))
+  fi
+  [ -z "$secs" ] && return 1
+  (( secs < 0 )) && secs=0
+  secs=$(( secs + RL_BUFFER ))
+  (( secs > RL_BACKOFF_MAX )) && secs="$RL_BACKOFF_MAX"
+  echo "$secs"
 }
 
 # --- Per-task build prompt --------------------------------------------------
@@ -539,7 +634,7 @@ EOF
 # independent auditor at max(opus-medium, builder tier) ONLY if sampled. 0 = pass (or not sampled),
 # 1 = audit FAIL (a failed attempt).
 audit_gate() {
-  local id="$1" layer wt count pm bi ai am ae rel spec="" diff out verdict arc rlpoll
+  local id="$1" layer wt count pm bi ai am ae rel spec="" diff out verdict arc rlpoll arl
   cur_verification="ci-only"
   layer="$(tj -r --arg id "$id" '.tasks[]|select(.id==$id)|.facets.layer // empty')"
   wt="$(tj -r --arg id "$id" '.tasks[]|select(.id==$id)|.facets.workType // empty')"
@@ -572,7 +667,10 @@ audit_gate() {
   rlpoll="${RL_POLL:-${RL_BACKOFF_MIN:-300}}"
   while :; do
     arc=0; set +e; run_claude "$am" "$ae" "$(audit_prompt "$id" "$spec" "$diff")" || arc=$?; set -e
-    [ "$arc" = 10 ] && { log "auditor rate-limited — waiting ${rlpoll}s (NOT an audit fail)"; sleep "$rlpoll"; continue; }
+    if [ "$arc" = 10 ]; then
+      arl="$(rl_reset_wait "$WORKLOG/.claude-out" || true)"; arl="${arl:-$rlpoll}"
+      rl_banner "$arl" "(this is the AUDIT step, not the build — NOT an audit fail)"; sleep "$arl"; continue
+    fi
     break
   done
   cp "$WORKLOG/.claude-out" "$out" 2>/dev/null || true
@@ -680,9 +778,15 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
     cold_reset
     rc=0; set +e; run_claude "$tmodel" "$teffort" "$(prompt "$task")" || rc=$?; set -e
     if [ "$rc" = 10 ]; then
-      log "Claude usage/rate limit hit — backing off ${rl_sleep}s, will RE-ATTEMPT the same task COLD (not a failure)."
-      sleep "$rl_sleep"
-      rl_sleep=$(( rl_sleep * 2 )); [ "$rl_sleep" -gt "$RL_BACKOFF_MAX" ] && rl_sleep="$RL_BACKOFF_MAX"
+      rl_wait="$(rl_reset_wait "$WORKLOG/.claude-out" || true)"
+      if [ -n "$rl_wait" ]; then
+        rl_banner "$rl_wait" "(that's the reported reset + a $(_hms "$RL_BUFFER") cushion)"
+        sleep "$rl_wait"
+      else
+        rl_banner "$rl_sleep" "No reset time in the notice — exponential backoff (cap $(_hms "$RL_EXP_MAX"))."
+        sleep "$rl_sleep"
+        rl_sleep=$(( rl_sleep * 2 )); [ "$rl_sleep" -gt "$RL_EXP_MAX" ] && rl_sleep="$RL_EXP_MAX"
+      fi
       continue
     fi
     break
