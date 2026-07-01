@@ -1800,7 +1800,7 @@
     {
       "id": "T069",
       "title": "Backfill-from-API button on the albums edit page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T066",
         "T067"
