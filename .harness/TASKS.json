@@ -1747,7 +1747,7 @@
     {
       "id": "T067",
       "title": "Accept metadata-backfill fields on all four review update APIs",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
