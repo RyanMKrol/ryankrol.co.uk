@@ -1725,7 +1725,7 @@
     {
       "id": "T066",
       "title": "Shared metadata-backfill lookup+confirm modal component",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
