@@ -140,7 +140,7 @@ export default function MetadataBackfillModal({
           padding: 1rem;
         }
         .mbm-card {
-          background: var(--color-background);
+          background: var(--color-bg);
           border: 1px solid var(--color-border, #333);
           border-radius: 6px;
           padding: 1.25rem;
