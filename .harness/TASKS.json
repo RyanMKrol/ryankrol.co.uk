@@ -1398,7 +1398,7 @@
     {
       "id": "T055",
       "title": "Variant 2 — vinyl pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T044"
       ],
