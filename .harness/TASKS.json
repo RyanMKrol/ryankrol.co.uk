@@ -1311,7 +1311,7 @@
     {
       "id": "T052",
       "title": "Variant 2 — reviews list/index pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T044"
       ],
