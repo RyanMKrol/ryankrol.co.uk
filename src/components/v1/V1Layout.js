@@ -5,6 +5,7 @@ export const V1_SECTIONS = [
   { label: 'TV', href: '/v1/reviews/tv', count: 0 },
   { label: 'Books', href: '/v1/reviews/books', count: 0 },
   { label: 'Albums', href: '/v1/reviews/albums', count: 0 },
+  { label: 'Perfumes', href: '/v1/reviews/perfumes', count: 0 },
   { label: 'Vinyl', href: '/v1/vinyl', count: 0 },
   { label: 'Workouts', href: '/v1/workouts', count: 0 },
   { label: 'Listening', href: '/v1/listening', count: 0 },
