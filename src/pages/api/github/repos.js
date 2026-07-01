@@ -19,27 +19,39 @@ export default async function handler(req, res) {
     const cacheKey = generateCacheKey('github-repos', { username: GITHUB_USERNAME });
     
     const repos = await withApiCache(cacheKey, async () => {
-      // Get user's repositories from GitHub API
-      const githubUrl = `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
-      
       const headers = {
         'Accept': 'application/vnd.github.v3+json',
         'User-Agent': 'ryankrol.co.uk'
       };
-      
+
       // Add authorization if token is available (for higher rate limits)
       if (GITHUB_TOKEN) {
         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
       }
 
-      const response = await fetch(githubUrl, { headers });
+      const PER_PAGE = 100;
+      let data = [];
+      let page = 1;
 
-      if (!response.ok) {
-        throw new Error(`GitHub API error: ${response.status}`);
+      // Page through GitHub's repos endpoint until a short/empty page ends the list
+      for (;;) {
+        const githubUrl = `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=${PER_PAGE}&page=${page}`;
+        const response = await fetch(githubUrl, { headers });
+
+        if (!response.ok) {
+          throw new Error(`GitHub API error: ${response.status}`);
+        }
+
+        const pageData = await response.json();
+        data = data.concat(pageData);
+
+        if (pageData.length < PER_PAGE) {
+          break;
+        }
+
+        page += 1;
       }
 
-      const data = await response.json();
-      
       // Filter and sort repositories by activity
       const activeRepos = data
         .filter(repo => {
@@ -52,7 +64,6 @@ export default async function handler(req, res) {
           // Sort by last push date (most recent first)
           return new Date(b.pushed_at) - new Date(a.pushed_at);
         })
-        .slice(0, 20) // Top 20 most active
         .map(repo => ({
           name: repo.name,
           fullName: repo.full_name,
