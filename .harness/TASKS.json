@@ -1572,7 +1572,7 @@
     {
       "id": "T061",
       "title": "Variant 3 — vinyl pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T045"
       ],
