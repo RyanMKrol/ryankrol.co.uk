@@ -1630,7 +1630,7 @@
     {
       "id": "T063",
       "title": "Variant 3 — listening + projects pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T045"
       ],
