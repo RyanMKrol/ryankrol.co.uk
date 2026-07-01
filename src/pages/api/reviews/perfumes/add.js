@@ -2,7 +2,13 @@ import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
-import { validatePerfumeRating, perfumeId } from '../../../../lib/perfumes';
+import {
+  validatePerfumeRating,
+  validateLongevity,
+  validateProjection,
+  validateSeasons,
+  perfumeId,
+} from '../../../../lib/perfumes';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -18,6 +24,9 @@ export default async function handler(req, res) {
     notes,
     considerTravelSize,
     considerFullBottle,
+    longevity,
+    projection,
+    seasons,
     password,
   } = req.body;
 
@@ -36,6 +45,18 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Rating must be an integer between 0 and 10' });
   }
 
+  if (longevity !== undefined && !validateLongevity(longevity)) {
+    return res.status(400).json({ message: 'Longevity must be an integer between 0 and 8' });
+  }
+
+  if (projection !== undefined && !validateProjection(projection)) {
+    return res.status(400).json({ message: 'Projection must be an integer between 1 and 4' });
+  }
+
+  if (seasons !== undefined && !validateSeasons(seasons)) {
+    return res.status(400).json({ message: 'Seasons must be an array of valid season values' });
+  }
+
   try {
     const now = new Date();
     const dateString = now.toLocaleDateString('en-GB').replace(/\//g, '-');
@@ -50,6 +71,9 @@ export default async function handler(req, res) {
       notes,
       considerTravelSize,
       considerFullBottle,
+      ...(longevity !== undefined && { longevity }),
+      ...(projection !== undefined && { projection }),
+      ...(seasons !== undefined && { seasons }),
       date: dateString,
     };
 
