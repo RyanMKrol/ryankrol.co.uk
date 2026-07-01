@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
 import StarRating from '../../../../components/StarRating';
+import MetadataBackfillModal from '../../../../components/MetadataBackfillModal';
 
 export default function EditAlbumReview() {
   const router = useRouter();
   const { id } = router.query;
-  
+
   const [formData, setFormData] = useState({
     title: '',
     artist: '',
@@ -14,6 +15,7 @@ export default function EditAlbumReview() {
     highlights: '',
     password: ''
   });
+  const [backfillThumbnail, setBackfillThumbnail] = useState('');
   const [originalData, setOriginalData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -49,6 +51,7 @@ export default function EditAlbumReview() {
           highlights: album.highlights || '',
           password: ''
         });
+        setBackfillThumbnail(album.thumbnail || '');
       } catch (err) {
         setMessage('Error loading album review');
         setMessageType('error');
@@ -72,6 +75,46 @@ export default function EditAlbumReview() {
       ...formData,
       rating
     });
+  };
+
+  const handleBackfillSearch = async () => {
+    const query = formData.title.trim() || formData.artist.trim();
+    const res = await fetch(`/api/lastfm/album-search?query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Search failed');
+    return data.results;
+  };
+
+  const handleBackfillConfirm = async (result) => {
+    try {
+      const url = result.mbid
+        ? `/api/lastfm/album-info?mbid=${encodeURIComponent(result.mbid)}`
+        : `/api/lastfm/album-info?artist=${encodeURIComponent(result.artist)}&album=${encodeURIComponent(result.title)}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to fetch album info');
+
+      const info = data.info;
+      setFormData(prev => ({
+        ...prev,
+        lastfm: {
+          mbid: info.mbid || '',
+          url: info.url || '',
+          listeners: info.listeners || 0,
+          playcount: info.playcount || 0,
+          tags: info.tags || [],
+          trackCount: info.trackCount || 0,
+          summary: info.summary || '',
+          releaseDate: info.releaseDate || '',
+          images: info.images || {},
+        },
+      }));
+      setBackfillThumbnail(info.image || '');
+    } catch (err) {
+      setMessage(err.message || 'Failed to fetch album info');
+      setMessageType('error');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -215,6 +258,35 @@ export default function EditAlbumReview() {
           </div>
 
           <div className="form-group">
+            <MetadataBackfillModal
+              buttonLabel="Backfill from Last.fm"
+              onSearch={handleBackfillSearch}
+              onConfirm={handleBackfillConfirm}
+              getResultKey={(result, i) => result.mbid ?? i}
+              renderResult={(result) => (
+                <>
+                  <strong>{result.title}</strong>
+                  {result.artist && <p>{result.artist}</p>}
+                </>
+              )}
+            />
+          </div>
+
+          {backfillThumbnail && (
+            <div className="form-group lastfm-cover-preview">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={backfillThumbnail}
+                alt={formData.title}
+                className="lastfm-preview-img"
+                width={80}
+                height={80}
+              />
+              <span className="lastfm-preview-label">Cover from Last.fm</span>
+            </div>
+          )}
+
+          <div className="form-group">
             <label className="form-label">Rating</label>
             <StarRating rating={formData.rating} onRatingChange={handleRatingChange} />
           </div>
@@ -265,6 +337,23 @@ export default function EditAlbumReview() {
           </div>
         </form>
       </div>
+
+      <style jsx>{`
+        .lastfm-cover-preview {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+        .lastfm-preview-img {
+          object-fit: cover;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+        .lastfm-preview-label {
+          font-size: 0.85rem;
+          opacity: 0.7;
+        }
+      `}</style>
     </div>
   );
 }
