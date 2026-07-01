@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../components/Header';
 import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes } from '../../../components/PerfumeCharacteristics';
@@ -23,7 +23,24 @@ export default function AddPerfumeReview() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [designerSuggestions, setDesignerSuggestions] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchDesigners = async () => {
+      try {
+        const response = await fetch('/api/reviews/perfumes');
+        const result = await response.json();
+        const reviews = Array.isArray(result) ? result : result.reviews || [];
+        const designers = [...new Set(reviews.map((review) => review.designer).filter(Boolean))];
+        setDesignerSuggestions(designers);
+      } catch (error) {
+        setDesignerSuggestions([]);
+      }
+    };
+
+    fetchDesigners();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -131,8 +148,15 @@ export default function AddPerfumeReview() {
               value={formData.designer}
               onChange={handleInputChange}
               className="form-input"
+              list="designer-suggestions"
+              autoComplete="off"
               required
             />
+            <datalist id="designer-suggestions">
+              {designerSuggestions.map((designer) => (
+                <option key={designer} value={designer} />
+              ))}
+            </datalist>
           </div>
 
           <div className="form-group">
