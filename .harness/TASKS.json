@@ -1930,7 +1930,7 @@
     {
       "id": "T074",
       "title": "Perfume Application notes field — backend",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
