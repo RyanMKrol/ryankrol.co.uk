@@ -36,12 +36,19 @@ export default function AddVinyl() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!lastfmMatch) {
+      setMessage('Search and select a Last.fm match before saving');
+      setMessageType('error');
+      return;
+    }
+
     setSaving(true);
     setMessage('');
 
     const body = {
       ...formData,
-      ...(lastfmMatch && { lastfm: lastfmMatch.lastfm }),
+      lastfm: lastfmMatch.lastfm,
     };
 
     try {
@@ -120,11 +127,16 @@ export default function AddVinyl() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Last.fm Match (optional)</label>
+              <label className="form-label">Last.fm Match *</label>
               <LastfmAlbumSearch
                 titleQuery={formData.title}
                 onSelect={handleLastfmSelect}
               />
+              {!lastfmMatch && (
+                <p className="form-hint">
+                  Search and select a Last.fm match before saving
+                </p>
+              )}
             </div>
 
             {lastfmMatch?.thumbnail && (
@@ -157,7 +169,7 @@ export default function AddVinyl() {
             <button
               type="submit"
               className="form-button"
-              disabled={saving}
+              disabled={saving || !lastfmMatch}
             >
               {saving ? 'Adding Record...' : 'Add Vinyl Record'}
             </button>
@@ -166,6 +178,11 @@ export default function AddVinyl() {
       </div>
 
       <style jsx>{`
+        .form-hint {
+          margin-top: 0.5rem;
+          font-size: 0.85rem;
+          opacity: 0.7;
+        }
         .lastfm-cover-preview {
           display: flex;
           align-items: center;

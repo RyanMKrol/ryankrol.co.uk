@@ -20,6 +20,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Title and Artist are required fields' });
   }
 
+  if (!lastfm) {
+    return res.status(400).json({ message: 'A confirmed Last.fm match is required' });
+  }
+
   try {
     const vinylData = {
       title,
