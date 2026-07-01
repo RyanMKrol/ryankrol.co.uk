@@ -1692,7 +1692,7 @@
     {
       "id": "T065",
       "title": "Promote the winning UI rewrite variant, delete the other two",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T064"
       ],
@@ -2094,6 +2094,280 @@
       "design": null,
       "verify": [],
       "spec": ".harness/tasks/T080.md"
+    },
+    {
+      "id": "T081",
+      "title": "Fix production crash: WorkoutCard assumes exercises always exists",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "bugfix"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "scope": [
+        "src/components/WorkoutCard.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T081.md"
+    },
+    {
+      "id": "T082",
+      "title": "Write script to backfill missing computed metrics onto incomplete Workouts records",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "scope": [
+        "src/scripts/backfillIncompleteWorkoutMetrics.js",
+        "package.json"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T082.md"
+    },
+    {
+      "id": "T083",
+      "title": "Run the incomplete-workout-metrics backfill against production",
+      "status": "pending",
+      "dependsOn": [
+        "T082"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "workouts"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T083.md"
+    },
+    {
+      "id": "T084",
+      "title": "Fix invisible rating stars on the Ocean theme (dark mode)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "theming",
+        "bugfix"
+      ],
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T084.md"
+    },
+    {
+      "id": "T085",
+      "title": "Require a confirmed TMDB match to add a movie review",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "required-match"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/reviews/movies/add.js",
+        "src/pages/api/reviews/movies/add.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T085.md"
+    },
+    {
+      "id": "T086",
+      "title": "Require a confirmed TMDB match to add a TV review",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "required-match"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/reviews/tv/add.js",
+        "src/pages/api/reviews/tv/add.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T086.md"
+    },
+    {
+      "id": "T087",
+      "title": "Require a confirmed Google Books match to add a book review",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "required-match"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/reviews/books/add.js",
+        "src/pages/api/reviews/books/add.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T087.md"
+    },
+    {
+      "id": "T088",
+      "title": "Require a confirmed Last.fm match to add an album review",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "required-match"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/reviews/albums/add.js",
+        "src/pages/api/reviews/albums/add.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T088.md"
+    },
+    {
+      "id": "T089",
+      "title": "Require a confirmed Last.fm match to add a vinyl entry",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "required-match"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/vinyl/add.js",
+        "src/pages/api/vinyl/add.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T089.md"
+    },
+    {
+      "id": "T090",
+      "title": "/projects: include archived repos, warn loudly when GITHUB_TOKEN is missing",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects"
+      ],
+      "facets": {
+        "layer": "api",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/api/github/repos.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T090.md"
+    },
+    {
+      "id": "T091",
+      "title": "Fix transparent background on the metadata backfill modal",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "scope": [
+        "src/components/MetadataBackfillModal.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T091.md"
     }
   ]
 }
