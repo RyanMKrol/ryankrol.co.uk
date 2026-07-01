@@ -701,8 +701,24 @@ trap 'release_lock' EXIT INT TERM
 # every attempt, which DISCARDS any uncommitted work in this checkout. If the tree is dirty at
 # startup, that's external work the loop must NOT destroy — refuse to run (commit/stash first).
 if [ -n "$(git -C "$ROOT" status --porcelain 2>/dev/null)" ]; then
-  log "REFUSING TO RUN: '$ROOT' has uncommitted changes. The in-place loop cold-resets (git reset --hard) and would discard them. Commit or stash first."
-  exit 3
+  if [ "${LOOP_AUTORESET:-0}" = 1 ]; then
+    # This checkout is OWNED by the loop. A dirty tree at startup is almost always ORPHANED partial
+    # work from a previous attempt killed mid-build (e.g. a usage-limit interrupt) — NOT human work —
+    # and left unhandled it BLOCKS every future unattended cycle (the loop refuses, supervise then
+    # parks a whole window for nothing). So (recoverably) STASH it with a timestamped label, then
+    # hard-reset to the remote tip, so the loop can always start. Recover with `git stash list`.
+    _stash="loop-autoreset-$(date '+%Y%m%d-%H%M%S')"
+    log "DIRTY TREE at startup + LOOP_AUTORESET=1 → stashing as '$_stash' (recoverable via: git -C '$ROOT' stash list), then hard-reset to origin/$MAIN_BRANCH."
+    git -C "$ROOT" stash push --include-untracked -m "$_stash" >/dev/null 2>&1 \
+      || log "WARN: git stash failed — proceeding to hard reset (orphaned work may be unrecoverable)."
+    git -C "$ROOT" fetch origin --quiet 2>/dev/null || true
+    git -C "$ROOT" reset --hard "origin/$MAIN_BRANCH" >/dev/null 2>&1 || true
+    git -C "$ROOT" clean -fd >/dev/null 2>&1 || true
+    log "tree reset to origin/$MAIN_BRANCH (orphaned work, if any, saved in stash '$_stash')."
+  else
+    log "REFUSING TO RUN: '$ROOT' has uncommitted changes. The in-place loop cold-resets (git reset --hard) and would discard them. Commit or stash first, or set LOOP_AUTORESET=1 to auto-stash+reset."
+    exit 3
+  fi
 fi
 
 cur_task=""; cur_attempts=0; cur_rung=0; cur_base=0; cur_verification="ci-only"
