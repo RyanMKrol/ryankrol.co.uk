@@ -1282,7 +1282,7 @@
     {
       "id": "T051",
       "title": "Variant 1 — listening + projects pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T043"
       ],
