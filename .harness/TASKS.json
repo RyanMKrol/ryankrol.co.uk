@@ -2297,7 +2297,7 @@
     {
       "id": "T089",
       "title": "Require a confirmed Last.fm match to add a vinyl entry",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
