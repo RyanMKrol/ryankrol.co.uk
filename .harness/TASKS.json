@@ -1427,7 +1427,7 @@
     {
       "id": "T056",
       "title": "Variant 2 — workouts + exercises pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T044"
       ],
