@@ -2057,7 +2057,7 @@
     {
       "id": "T079",
       "title": "Write migration script: re-fetch Open-Library books from Google Books",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
