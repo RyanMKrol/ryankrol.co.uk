@@ -27,15 +27,23 @@ export default async function handler(req, res) {
       // Add authorization if token is available (for higher rate limits)
       if (GITHUB_TOKEN) {
         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      } else {
+        console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
       }
 
       const PER_PAGE = 100;
       let data = [];
       let page = 1;
 
+      // /users/{username}/repos is public-repos-only by design, even when authenticated.
+      // /user/repos (authenticated user) is the only endpoint that returns private repos.
+      const baseUrl = GITHUB_TOKEN
+        ? `https://api.github.com/user/repos?affiliation=owner`
+        : `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
+
       // Page through GitHub's repos endpoint until a short/empty page ends the list
       for (;;) {
-        const githubUrl = `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=${PER_PAGE}&page=${page}`;
+        const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
         const response = await fetch(githubUrl, { headers });
 
         if (!response.ok) {
@@ -55,10 +63,8 @@ export default async function handler(req, res) {
       // Filter and sort repositories by activity
       const activeRepos = data
         .filter(repo => {
-          // Filter out forks and archived repos
-          return !repo.fork && 
-                 !repo.archived && 
-                 repo.pushed_at;
+          // Filter out forks; archived repos are included
+          return !repo.fork && repo.pushed_at;
         })
         .sort((a, b) => {
           // Sort by last push date (most recent first)
