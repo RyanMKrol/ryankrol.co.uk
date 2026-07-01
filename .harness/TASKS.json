@@ -2189,7 +2189,7 @@
     {
       "id": "T085",
       "title": "Require a confirmed TMDB match to add a movie review",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
