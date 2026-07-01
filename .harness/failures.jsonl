@@ -5,3 +5,4 @@
 {"id":"T031","ts":"2026-06-29T20:12:52Z","kind":"ci-red","rung":0,"attempt":1,"model":"claude-sonnet-5","effort":"low","facets":{"layer":"ui","workType":"component","risk":["cross-cutting"]},"detail":"CI checks failed on the pushed commit"}
 {"id":"T033","ts":"2026-06-29T20:23:27Z","kind":"ci-red","rung":0,"attempt":1,"model":"claude-sonnet-5","effort":"low","facets":{"layer":"page","workType":"feature","risk":["full-stack"]},"detail":"CI checks failed on the pushed commit"}
 {"id":"T036","ts":"2026-06-29T20:37:37Z","kind":"ci-red","rung":0,"attempt":1,"model":"claude-sonnet-5","effort":"low","facets":{"layer":"harness","workType":"feature","risk":[]},"detail":"CI checks failed on the pushed commit"}
+{"id":"T045","ts":"2026-07-01T18:51:10Z","kind":"audit-fail","rung":0,"attempt":1,"model":"claude-sonnet-5","effort":"low","facets":{"layer":"page","workType":"feature","risk":["cross-cutting"]},"detail":"verdict=FAIL; reasons in .harness/worklog/T045.audit.md"}

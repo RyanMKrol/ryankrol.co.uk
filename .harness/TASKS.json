@@ -1108,7 +1108,7 @@
     {
       "id": "T045",
       "title": "Variant 3 — shared layout/nav shell + home page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T042"
       ],
