@@ -1028,7 +1028,7 @@
     {
       "id": "T042",
       "title": "Author three distinct full-site UI/IA rewrite design briefs",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
