@@ -1772,7 +1772,7 @@
     {
       "id": "T068",
       "title": "Backfill-from-API button on the books edit page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T066",
         "T067"
