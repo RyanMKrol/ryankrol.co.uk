@@ -979,7 +979,7 @@
     {
       "id": "T040",
       "title": "Harness dashboard rework — bucket grouping + sort order (data layer)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
