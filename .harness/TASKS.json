@@ -2324,7 +2324,7 @@
     {
       "id": "T090",
       "title": "Fix /projects: wrong GitHub API endpoint, missing archived repos, silent token gap",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
