@@ -34,6 +34,7 @@ export default function V2ArticleForm({
   message,
   messageType,
   children,
+  secondaryAction,
 }) {
   return (
     <V2Layout>
@@ -49,9 +50,21 @@ export default function V2ArticleForm({
 
         <form onSubmit={onSubmit} className="v2-article-form">
           {children}
-          <button type="submit" className="v2-submit-button" disabled={loading}>
-            {loading ? 'Saving…' : submitLabel}
-          </button>
+          <div className="v2-form-actions">
+            <button type="submit" className="v2-submit-button" disabled={loading}>
+              {loading ? 'Saving…' : submitLabel}
+            </button>
+            {secondaryAction && (
+              <button
+                type="button"
+                className="v2-secondary-button"
+                onClick={secondaryAction.onClick}
+                disabled={secondaryAction.disabled}
+              >
+                {secondaryAction.pending ? secondaryAction.pendingLabel : secondaryAction.label}
+              </button>
+            )}
+          </div>
         </form>
       </div>
 
@@ -149,9 +162,31 @@ export default function V2ArticleForm({
           color: #8a8474;
         }
 
+        .v2-form-actions {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          margin-top: 8px;
+        }
+
+        .v2-secondary-button {
+          padding: 12px 28px;
+          font-family: Georgia, 'Times New Roman', serif;
+          font-size: 1.05rem;
+          background: transparent;
+          color: #8a3324;
+          border: 1px solid #8a3324;
+          cursor: pointer;
+        }
+
+        .v2-secondary-button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
         .v2-submit-button {
           align-self: flex-start;
-          margin-top: 8px;
+          margin-top: 0;
           padding: 12px 28px;
           font-family: Georgia, 'Times New Roman', serif;
           font-size: 1.05rem;
