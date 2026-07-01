@@ -45,12 +45,19 @@ export default function AddAlbumReview() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!lastfmMatch) {
+      setMessage('Search and select a Last.fm match before saving');
+      setMessageType('error');
+      return;
+    }
+
     setSaving(true);
     setMessage('');
 
     const body = {
       ...formData,
-      ...(lastfmMatch && { lastfm: lastfmMatch.lastfm }),
+      lastfm: lastfmMatch.lastfm,
     };
 
     try {
@@ -124,11 +131,16 @@ export default function AddAlbumReview() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Last.fm Match (optional)</label>
+            <label className="form-label">Last.fm Match</label>
             <LastfmAlbumSearch
               titleQuery={formData.title}
               onSelect={handleLastfmSelect}
             />
+            {!lastfmMatch && (
+              <p className="lastfm-required-hint">
+                Search and select a Last.fm match before saving
+              </p>
+            )}
           </div>
 
           {lastfmMatch?.thumbnail && (
@@ -179,7 +191,7 @@ export default function AddAlbumReview() {
           <button
             type="submit"
             className="form-button"
-            disabled={saving || formData.rating === 0}
+            disabled={saving || formData.rating === 0 || !lastfmMatch}
           >
             {saving ? 'Adding Review...' : 'Add Review'}
           </button>
@@ -200,6 +212,11 @@ export default function AddAlbumReview() {
         .lastfm-preview-label {
           font-size: 0.85rem;
           opacity: 0.7;
+        }
+        .lastfm-required-hint {
+          font-size: 0.85rem;
+          opacity: 0.8;
+          margin-top: 0.5rem;
         }
       `}</style>
     </div>
