@@ -1079,7 +1079,7 @@
     {
       "id": "T044",
       "title": "Variant 2 — shared layout/nav shell + home page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T042"
       ],
