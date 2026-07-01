@@ -1906,7 +1906,7 @@
     {
       "id": "T073",
       "title": "Designer typeahead/autocomplete on the perfume add form",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
