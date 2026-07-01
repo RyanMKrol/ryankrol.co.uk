@@ -3,6 +3,7 @@ import {
   validateLongevity,
   validateProjection,
   validateSeasons,
+  validateApplicationSpots,
   perfumeId,
 } from './perfumes';
 
@@ -58,5 +59,17 @@ describe('validateSeasons', () => {
   test('rejects an invalid season entry or a non-array', () => {
     expect(validateSeasons(['Winter', 'NotASeason'])).toBe(false);
     expect(validateSeasons('Winter')).toBe(false);
+  });
+});
+
+describe('validateApplicationSpots', () => {
+  test('accepts an empty array and a valid list of application spots', () => {
+    expect(validateApplicationSpots([])).toBe(true);
+    expect(validateApplicationSpots(['Wrists', 'Behind ears'])).toBe(true);
+  });
+
+  test('rejects an invalid application spot entry or a non-array', () => {
+    expect(validateApplicationSpots(['Wrists', 'NotASpot'])).toBe(false);
+    expect(validateApplicationSpots('Wrists')).toBe(false);
   });
 });

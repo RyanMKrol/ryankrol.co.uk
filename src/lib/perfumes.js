@@ -16,6 +16,19 @@ function validateSeasons(value) {
   return Array.isArray(value) && value.every((season) => VALID_SEASONS.includes(season));
 }
 
+const VALID_APPLICATION_SPOTS = [
+  'Wrists',
+  'Elbows',
+  'Clavicles',
+  'Beard',
+  'Back of neck',
+  'Behind ears',
+];
+
+function validateApplicationSpots(value) {
+  return Array.isArray(value) && value.every((spot) => VALID_APPLICATION_SPOTS.includes(spot));
+}
+
 function slugify(value) {
   return String(value)
     .trim()
@@ -33,5 +46,6 @@ export {
   validateLongevity,
   validateProjection,
   validateSeasons,
+  validateApplicationSpots,
   perfumeId,
 };

@@ -7,6 +7,7 @@ import {
   validateLongevity,
   validateProjection,
   validateSeasons,
+  validateApplicationSpots,
   perfumeId,
 } from '../../../../lib/perfumes';
 
@@ -27,6 +28,7 @@ export default async function handler(req, res) {
     longevity,
     projection,
     seasons,
+    applicationSpots,
     password,
   } = req.body;
 
@@ -57,6 +59,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Seasons must be an array of valid season values' });
   }
 
+  if (applicationSpots !== undefined && !validateApplicationSpots(applicationSpots)) {
+    return res
+      .status(400)
+      .json({ message: 'Application spots must be an array of valid application spot values' });
+  }
+
   try {
     const now = new Date();
     const dateString = now.toLocaleDateString('en-GB').replace(/\//g, '-');
@@ -74,6 +82,7 @@ export default async function handler(req, res) {
       ...(longevity !== undefined && { longevity }),
       ...(projection !== undefined && { projection }),
       ...(seasons !== undefined && { seasons }),
+      ...(applicationSpots !== undefined && { applicationSpots }),
       date: dateString,
     };
 
