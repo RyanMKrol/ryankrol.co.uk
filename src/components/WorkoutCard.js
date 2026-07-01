@@ -33,7 +33,7 @@ export default function WorkoutCard({ workout, isLast = false }) {
     }
   };
 
-  const getTotalVolume = (exercises) => {
+  const getTotalVolume = (exercises = []) => {
     let totalVolume = 0;
     exercises.forEach(exercise => {
       exercise.sets.forEach(set => {
@@ -45,7 +45,7 @@ export default function WorkoutCard({ workout, isLast = false }) {
     return totalVolume;
   };
 
-  const getTotalSets = (exercises) => {
+  const getTotalSets = (exercises = []) => {
     let totalSets = 0;
     exercises.forEach(exercise => {
       exercise.sets.forEach(set => {
@@ -58,6 +58,7 @@ export default function WorkoutCard({ workout, isLast = false }) {
   };
 
   const cardClass = `review-card workout-style-1 ${isLast ? '' : 'border-bottom'}`;
+  const exercises = workout.exercises || [];
 
   return (
     <div className={cardClass}>
@@ -75,19 +76,20 @@ export default function WorkoutCard({ workout, isLast = false }) {
             <strong>Duration:</strong> {getDuration(workout.start_time, workout.end_time)}
           </span>
           <span className="workout-stat">
-            <strong>Exercises:</strong> {workout.exercises.length}
+            <strong>Exercises:</strong> {exercises.length}
           </span>
           <span className="workout-stat">
-            <strong>Sets:</strong> {getTotalSets(workout.exercises)}
+            <strong>Sets:</strong> {getTotalSets(exercises)}
           </span>
           <span className="workout-stat">
-            <strong>Volume:</strong> {getTotalVolume(workout.exercises).toLocaleString()}kg
+            <strong>Volume:</strong> {getTotalVolume(exercises).toLocaleString()}kg
           </span>
         </div>
       </div>
 
+      {exercises.length > 0 && (
       <div className="workout-exercises">
-        {workout.exercises.map((exercise, index) => (
+        {exercises.map((exercise, index) => (
           <div key={index} className="exercise-item">
             <h4 className="exercise-title">
               <Link
@@ -170,6 +172,7 @@ export default function WorkoutCard({ workout, isLast = false }) {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }
