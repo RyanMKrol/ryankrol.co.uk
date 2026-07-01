@@ -2164,7 +2164,7 @@
     {
       "id": "T084",
       "title": "Fix invisible rating stars on the Ocean theme (dark mode)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
