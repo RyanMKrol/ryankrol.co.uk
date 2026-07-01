@@ -74,7 +74,7 @@
     {
       "id": "T004",
       "title": "Perfumes review API routes",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T003"
       ],
