@@ -7,20 +7,28 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
   const getAuthor = () => {
     if (type === 'book') return item.author;
     if (type === 'album') return item.artist;
+    if (type === 'perfume') return item.designer;
     return null;
   };
 
   const hasAuthor = () => {
-    return type === 'book' || type === 'album';
+    return type === 'book' || type === 'album' || type === 'perfume';
+  };
+
+  const getMaxRating = () => {
+    return type === 'perfume' ? 10 : 5; // Perfumes are rated on a 0-10 scale
   };
 
   const getRating = () => {
-    return item.rating || 0; // All types now use 5-point scale
+    return item.rating || 0;
   };
 
   const getThoughts = () => {
     if (type === 'album') {
       return item.highlights || '';
+    }
+    if (type === 'perfume') {
+      return item.description || '';
     }
     return item.review_text || '';
   };
@@ -47,16 +55,19 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
         {getTitle()}
       </h3>
       {hasAuthor() && (
-        <p className="review-author">by {getAuthor()}</p>
+        <p className="review-author">
+          by {getAuthor()}
+          {type === 'perfume' && item.type && ` (${item.type})`}
+        </p>
       )}
-      
+
       <div className="rating-container">
         <span className="rating-score">
-          {getRating()}/5
+          {getRating()}/{getMaxRating()}
         </span>
         <div className="stars">
-          {[...Array(5)].map((_, i) => (
-            <span 
+          {[...Array(getMaxRating())].map((_, i) => (
+            <span
               key={i}
               className={`star ${i < getRating() ? 'filled' : 'empty'}`}
             >

@@ -41,6 +41,11 @@ export default function Home() {
           <div className="home-grid-card-desc">Album reviews and ratings</div>
         </Link>
 
+        <Link href="/reviews/perfumes" className="home-grid-card magenta">
+          <div className="home-grid-card-path">~/perfumes</div>
+          <div className="home-grid-card-desc">Perfume reviews and ratings</div>
+        </Link>
+
         <Link href="/workouts" className="home-grid-card">
           <div className="home-grid-card-path">~/workouts</div>
           <div className="home-grid-card-desc">Gym sessions and progress</div>
