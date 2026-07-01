@@ -74,6 +74,18 @@ from `facets.json`'s controlled vocabulary (use the task's `scope` paths to pick
 gets no auto-tuning and the loop **pre-flight WARNs** about it. Background:
 `designs/difficulty-autotune.md`.
 
+## Marking a task FAILED (owner correction of a false success)
+
+When the owner judges a `done` task to have actually failed, that is recorded in the owner-owned
+`.harness/manual-fail.json` overlay — **never** by hand-editing it, and never by the loop. Use the
+`/mark-task-failed` command or `.harness/mark-failed.sh <TNNN> "<reason>"` (the dashboard's "Mark
+failed" button writes the same file). The loop READS this overlay to correct calibration — a false
+success is re-counted as a failure for difficulty tuning and dropped from its cell's audited-success
+count, so that `(layer × workType)` cell is built with a stronger model and audited more often. At
+pre-flight the loop ALSO reconciles it → `TASKS.json` `status=failed` (`reconcile_overlays`) — a
+terminal status the loop skips; it does NOT re-open/rebuild the task (the re-do is a separate
+follow-up). The loop still never WRITES the overlay file. Full design: `designs/manual-fail-signal.md`.
+
 ## `scope` is the rigour dial — pick its granularity deliberately
 
 A task's `scope` is a **hard boundary**: the loop's `structural_checks` fails any attempt whose diff
