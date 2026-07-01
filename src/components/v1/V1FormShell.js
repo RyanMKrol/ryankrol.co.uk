@@ -137,3 +137,47 @@ export function V1FormSubmit({ disabled, children }) {
     </Fragment>
   );
 }
+
+export function V1FormActions({ children }) {
+  return (
+    <Fragment>
+      <div className="v1-form-actions">{children}</div>
+
+      <style jsx>{`
+        .v1-form-actions {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+      `}</style>
+    </Fragment>
+  );
+}
+
+export function V1FormDanger({ disabled, onClick, children }) {
+  return (
+    <Fragment>
+      <button type="button" className="v1-form-danger" disabled={disabled} onClick={onClick}>
+        {children}
+      </button>
+
+      <style jsx>{`
+        .v1-form-danger {
+          margin-top: 12px;
+          background: #131618;
+          border: 1px solid #24292b;
+          color: #f87171;
+          font-family: inherit;
+          font-weight: 700;
+          padding: 6px 14px;
+          cursor: pointer;
+        }
+
+        .v1-form-danger:disabled {
+          opacity: 0.4;
+          cursor: default;
+        }
+      `}</style>
+    </Fragment>
+  );
+}
