@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, artist, rating, highlights, originalTitle, originalArtist, password } = req.body;
+  const { title, artist, rating, highlights, originalTitle, originalArtist, password, lastfm } = req.body;
 
   // Validate password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -27,20 +27,38 @@ export default async function handler(req, res) {
 
   try {
     // Update the item in DynamoDB
+    const updateExpressionParts = ['#rating = :rating', 'highlights = :highlights'];
+    const expressionAttributeNames = { '#rating': 'rating' };
+    const expressionAttributeValues = {
+      ':rating': Number(rating),
+      ':highlights': highlights
+    };
+
+    if (lastfm) {
+      updateExpressionParts.push('thumbnail = :thumbnail', 'lastfm = :lastfm');
+      expressionAttributeValues[':thumbnail'] = lastfm?.images?.[lastfm.images.length - 1]?.['#text'] || '';
+      expressionAttributeValues[':lastfm'] = {
+        mbid: lastfm.mbid || '',
+        url: lastfm.url || '',
+        listeners: lastfm.listeners || '',
+        playcount: lastfm.playcount || '',
+        tags: lastfm.tags || [],
+        trackCount: lastfm.trackCount || 0,
+        summary: lastfm.summary || '',
+        releaseDate: lastfm.releaseDate || '',
+        images: lastfm.images || []
+      };
+    }
+
     const updateParams = {
       TableName: DYNAMO_TABLES.ALBUM_RATINGS_TABLE,
       Key: {
         title: originalTitle,
         artist: originalArtist
       },
-      UpdateExpression: 'SET #rating = :rating, highlights = :highlights',
-      ExpressionAttributeNames: {
-        '#rating': 'rating'
-      },
-      ExpressionAttributeValues: {
-        ':rating': Number(rating),
-        ':highlights': highlights
-      },
+      UpdateExpression: `SET ${updateExpressionParts.join(', ')}`,
+      ExpressionAttributeNames: expressionAttributeNames,
+      ExpressionAttributeValues: expressionAttributeValues,
       ReturnValues: 'ALL_NEW'
     };
 

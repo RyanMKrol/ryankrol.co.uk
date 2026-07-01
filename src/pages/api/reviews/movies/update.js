@@ -8,7 +8,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, rating, gist, password, originalTitle } = req.body;
+  const {
+    title, rating, gist, password, originalTitle,
+    tmdbId, mediaType, posterPath, tmdbOverview, tmdbDate
+  } = req.body;
 
   // Verify password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -59,7 +62,12 @@ export default async function handler(req, res) {
       title,
       rating,
       review_text: gist,
-      date: preservedDate
+      date: preservedDate,
+      ...(tmdbId !== undefined && { tmdbId }),
+      ...(mediaType !== undefined && { mediaType }),
+      ...(posterPath !== undefined && { posterPath }),
+      ...(tmdbOverview !== undefined && { tmdbOverview }),
+      ...(tmdbDate !== undefined && { tmdbDate }),
     };
 
     const putParams = {
