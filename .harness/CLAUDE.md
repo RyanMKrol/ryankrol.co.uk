@@ -165,3 +165,20 @@ dated bullet when you defer something new.
   regardless of what the callee does to the option internally. *Verified* with an isolated scratch
   repro (same shape, not the real loop): the old `; rc=$?` form killed the calling shell before its
   `echo` ran; the new `|| rc=$?` form survived and captured `rc=10` correctly.
+- **2026-07-01 — FOUND + FIXED (also via `local-jobs`): `wait_ci_green` conflated a
+  cancelled/skipped CI run with a genuinely failed one, risking a revert of good work.**
+  *Symptom:* once a CI run was found, `gh run watch "$runid" --exit-status` returns nonzero for
+  BOTH a real failure AND a cancelled/skipped/stale run (e.g. a run superseded by a newer push,
+  cancelled by GitHub's own concurrency group) — both fell through to `return 1` (red), so the
+  loop could revert an already-integrated, actually-good commit just because its CI run got
+  cancelled rather than failing. *Fix:* `wait_ci_green` now ignores `watch`'s own exit status,
+  re-queries the run's real `status`/`conclusion` via `gh run view`, and classifies
+  `success`→green, `failure|timed_out|startup_failure|action_required`→red, anything else
+  (`cancelled|skipped|stale|neutral`/unknown)→**indeterminate**. The caller now branches three
+  ways instead of two: green integrates as before, red still reverts + retries as before, but
+  indeterminate leaves the commit on `main` untouched and soft-retries via a new `ci-indeterminate`
+  failure kind — never reverting on an inconclusive result. *Caught while porting this fix:* an
+  earlier draft of the caller rewrite used a bare `wait_ci_green; ci_rc=$?` — the SAME `set -e`
+  landmine as the entry above, just at a different call site (this function has no internal
+  `set -e` toggling, but a bare failing statement still trips `errexit` regardless). Corrected to
+  `wait_ci_green || ci_rc=$?` before landing.

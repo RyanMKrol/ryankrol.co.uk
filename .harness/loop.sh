@@ -148,7 +148,7 @@ record_outcome() {
 # cold_reset between attempts; flush_failures folds it into the committed FAILURES ledger at a
 # terminal event (mark_done / block_task). Best-effort — never fails the caller. kinds:
 #   scope-creep | empty-diff | test-missing | local-dod | audit-fail | push-fail | ci-red |
-#   agent-soft | agent-blocked | guard
+#   ci-indeterminate | agent-soft | agent-blocked | guard
 record_failure() {
   local id="$1" kind="$2" detail="${3:-}" line ts m e
   ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -345,8 +345,22 @@ wait_ci_green() {   # 0=green 1=red 2=indeterminate
     sleep "$WAIT_SECONDS"; waited=$((waited + WAIT_SECONDS))
   done
   [ -n "$runid" ] || { log "no '$CI_WORKFLOW' run appeared for $sha within ${CI_TIMEOUT}s"; return 2; }
-  if gh run watch "$runid" --exit-status >/dev/null 2>&1; then log "CI GREEN (run $runid)"; return 0; fi
-  log "CI RED (run $runid) — gh run view $runid --log-failed"; return 1
+  # Ignore `watch`'s own exit status — it's nonzero for both real failures AND
+  # cancelled/skipped runs, which we must NOT treat the same (a concurrency-cancelled run,
+  # superseded by a newer push, is not a red result and must not trigger a revert of good work).
+  gh run watch "$runid" >/dev/null 2>&1 || true
+  local status conclusion
+  read -r status conclusion <<<"$(gh run view "$runid" --json status,conclusion \
+    --jq '"\(.status) \(.conclusion)"' 2>/dev/null)"
+  case "$conclusion" in
+    success)
+      log "CI GREEN (run $runid)"; return 0 ;;
+    failure|timed_out|startup_failure|action_required)
+      log "CI RED (run $runid) — gh run view $runid --log-failed"; return 1 ;;
+    *)
+      log "CI INDETERMINATE (run $runid, status=${status:-?} conclusion=${conclusion:-none}) — not treating as red"
+      return 2 ;;
+  esac
 }
 
 # --- Claude invocation with rate-limit detection ----------------------------
@@ -703,19 +717,30 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
         bump "$task" "push-fail" "remote moved / network"; board; continue
       fi
       if [ "$REQUIRE_CI" = "1" ]; then
-        if wait_ci_green; then
-          mark_done "$task"; run_integrate_hook; log "integrated $task → $MAIN_BRANCH (CI green)"; cur_task=""; cur_attempts=0; cur_rung=0; cur_base=0
-        else
-          # NEVER halt the whole loop on one red CI: revert the pushed commit to restore main, then
-          # soft-retry. If it keeps failing, bump eventually BLOCKS it and the loop moves on.
-          log "CI RED for $task — reverting the pushed commit to restore $MAIN_BRANCH, then retrying."
-          if git -C "$ROOT" revert --no-edit HEAD 2>/dev/null && git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null; then
-            log "reverted $task; $MAIN_BRANCH is clean again."
-          else
-            log "WARN: auto-revert/push failed — main may need a manual: git revert HEAD && git push"
-          fi
-          bump "$task" "ci-red" "CI checks failed on the pushed commit"
-        fi
+        ci_rc=0; wait_ci_green || ci_rc=$?
+        case "$ci_rc" in
+          0)
+            mark_done "$task"; run_integrate_hook; log "integrated $task → $MAIN_BRANCH (CI green)"; cur_task=""; cur_attempts=0; cur_rung=0; cur_base=0
+            ;;
+          1)
+            # NEVER halt the whole loop on one red CI: revert the pushed commit to restore main, then
+            # soft-retry. If it keeps failing, bump eventually BLOCKS it and the loop moves on.
+            log "CI RED for $task — reverting the pushed commit to restore $MAIN_BRANCH, then retrying."
+            if git -C "$ROOT" revert --no-edit HEAD 2>/dev/null && git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null; then
+              log "reverted $task; $MAIN_BRANCH is clean again."
+            else
+              log "WARN: auto-revert/push failed — main may need a manual: git revert HEAD && git push"
+            fi
+            bump "$task" "ci-red" "CI checks failed on the pushed commit"
+            ;;
+          *)
+            # Indeterminate (cancelled/skipped/no-run) is NOT a red result: leave the commit on
+            # main (it may already be good, e.g. superseded-by-a-newer-push) and soft-retry the
+            # CI wait later rather than reverting already-integrated work.
+            log "CI INDETERMINATE for $task — leaving $MAIN_BRANCH as-is, soft-retrying."
+            bump "$task" "ci-indeterminate" "CI produced no definitive result (cancelled/skipped/no-run)"
+            ;;
+        esac
       else
         mark_done "$task"; run_integrate_hook; log "marked $task done (REQUIRE_CI=0; local DoD only)"; cur_task=""; cur_attempts=0; cur_rung=0; cur_base=0
       fi
