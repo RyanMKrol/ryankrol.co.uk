@@ -1884,7 +1884,7 @@
     {
       "id": "T072",
       "title": "Show the full repo list on /projects (remove the top-20 cap)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
