@@ -2243,7 +2243,7 @@
     {
       "id": "T087",
       "title": "Require a confirmed Google Books match to add a book review",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
