@@ -37,7 +37,7 @@ HUMAN_DONE="$HARNESS_DIR/human-done.json"          # owner overlay { "<id>": {do
 MANUAL_FAIL="$HARNESS_DIR/manual-fail.json"        # owner overlay (id → {failed,reason,at}); written ONLY by mark-failed.sh/dashboard, NEVER the loop. Read by calibration (manual_fail_ids) AND reconcile_overlays → TASKS.json status=failed (terminal). See designs/manual-fail-signal.md.
 FAILBUF="$WORKLOG/.failures.buf"                   # gitignored scratch buffer for the current task's failures: survives cold_reset (git clean -fd keeps ignored files), flushed into FAILURES at each terminal event
 NAME="$(basename "$ROOT")"
-MODEL="${MODEL:-claude-sonnet-4-6}"               # COLD-START FLOOR — cheapest tier; the policy tunes UP from here (pin the full id; the bare alias drifts)
+MODEL="${MODEL:-claude-sonnet-5}"                  # COLD-START FLOOR — cheapest tier; the policy tunes UP from here (pin the full id; the bare alias drifts)
 EFFORT="${EFFORT:-low}"                            # low|medium|high|xhigh|max — cheapest by default (bias-cheap; the ladder escalates on failure)
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-2}"                  # soft failures per rung before escalating (2: with the 4-tier ladder this caps a doomed task at 4×2=8 attempts before it BLOCKS to a human)
 MAX_ITERS="${MAX_ITERS:-100}"                      # global iteration backstop
