@@ -17,7 +17,8 @@
     "workout:migrate-data": "node src/scripts/migrateWorkoutData.js",
     "workout:audit": "node src/scripts/auditWorkouts.js",
     "workout:audit-backfill": "node src/scripts/auditWorkouts.js --backfill",
-    "perfume:create-table": "node src/scripts/createPerfumeTable.js"
+    "perfume:create-table": "node src/scripts/createPerfumeTable.js",
+    "books:migrate-openlibrary": "node src/scripts/migrateOpenLibraryBooksToGoogleBooks.js"
   },
   "keywords": [],
   "author": "",
