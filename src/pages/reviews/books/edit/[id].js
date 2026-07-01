@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
 import StarRating from '../../../../components/StarRating';
+import MetadataBackfillModal from '../../../../components/MetadataBackfillModal';
 
 export default function EditBookReview() {
   const router = useRouter();
@@ -71,6 +72,33 @@ export default function EditBookReview() {
     setFormData({
       ...formData,
       rating
+    });
+  };
+
+  const handleBackfillSearch = async () => {
+    const params = new URLSearchParams({
+      title: formData.title.trim(),
+      provider: 'googlebooks',
+    });
+    if (formData.author.trim()) params.set('author', formData.author.trim());
+    const res = await fetch(`/api/books/search?${params}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Search failed');
+    return data;
+  };
+
+  const handleBackfillConfirm = (result) => {
+    setFormData({
+      ...formData,
+      source: result.source,
+      coverUrl: result.coverUrl,
+      volumeId: result.volumeId,
+      bookAuthors: result.authors,
+      firstPublishedYear: result.firstPublishedYear,
+      isbn: result.isbn,
+      subjects: result.subjects,
+      pageCount: result.pageCount,
+      publisher: result.publisher,
     });
   };
 
@@ -211,6 +239,24 @@ export default function EditBookReview() {
               className="form-input"
               disabled
               required
+            />
+          </div>
+
+          <div className="form-group">
+            <MetadataBackfillModal
+              buttonLabel="Backfill from Google Books"
+              onSearch={handleBackfillSearch}
+              onConfirm={handleBackfillConfirm}
+              getResultKey={(result, i) => result.volumeId ?? i}
+              renderResult={(result) => (
+                <>
+                  <strong>{result.title}</strong>
+                  {result.firstPublishedYear && ` (${result.firstPublishedYear})`}
+                  {result.authors && result.authors.length > 0 && (
+                    <p>{result.authors.join(', ')}</p>
+                  )}
+                </>
+              )}
             />
           </div>
 
