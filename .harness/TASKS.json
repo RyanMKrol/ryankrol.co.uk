@@ -927,7 +927,7 @@
     {
       "id": "T038",
       "title": "Perfume longevity/projection/seasons fields — backend",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
