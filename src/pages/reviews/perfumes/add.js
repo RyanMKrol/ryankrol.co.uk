@@ -4,6 +4,7 @@ import Header from '../../../components/Header';
 import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes } from '../../../components/PerfumeCharacteristics';
 
 const PERFUME_TYPES = ['EDP', 'EDT', 'Parfum'];
+const APPLICATION_SPOTS = ['Wrists', 'Elbows', 'Clavicles', 'Beard', 'Back of neck', 'Behind ears'];
 
 export default function AddPerfumeReview() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function AddPerfumeReview() {
     longevity: 0,
     projection: 1,
     seasons: [],
+    applicationSpots: [],
     password: '',
   });
   const [loading, setLoading] = useState(false);
@@ -76,6 +78,15 @@ export default function AddPerfumeReview() {
     setFormData({
       ...formData,
       seasons,
+    });
+  };
+
+  const toggleApplicationSpot = (spot) => {
+    setFormData({
+      ...formData,
+      applicationSpots: formData.applicationSpots.includes(spot)
+        ? formData.applicationSpots.filter((s) => s !== spot)
+        : [...formData.applicationSpots, spot],
     });
   };
 
@@ -205,14 +216,31 @@ export default function AddPerfumeReview() {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="notes">Notes</label>
+            <span className="form-label">Application spots</span>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              {APPLICATION_SPOTS.map((spot) => (
+                <label className="form-label" key={spot}>
+                  <input
+                    type="checkbox"
+                    name="applicationSpots"
+                    checked={formData.applicationSpots.includes(spot)}
+                    onChange={() => toggleApplicationSpot(spot)}
+                  />
+                  {' '}{spot}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="notes">Application notes</label>
             <textarea
               id="notes"
               name="notes"
               value={formData.notes}
               onChange={handleInputChange}
               className="form-input form-textarea"
-              placeholder="Top/heart/base notes..."
+              placeholder="Any other notes about this wear..."
             />
           </div>
 

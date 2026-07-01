@@ -4,6 +4,7 @@ import Header from '../../../../components/Header';
 import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes } from '../../../../components/PerfumeCharacteristics';
 
 const PERFUME_TYPES = ['EDP', 'EDT', 'Parfum'];
+const APPLICATION_SPOTS = ['Wrists', 'Elbows', 'Clavicles', 'Beard', 'Back of neck', 'Behind ears'];
 
 export default function EditPerfumeReview() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function EditPerfumeReview() {
     longevity: 0,
     projection: 1,
     seasons: [],
+    applicationSpots: [],
     password: '',
   });
   const [originalData, setOriginalData] = useState(null);
@@ -59,6 +61,7 @@ export default function EditPerfumeReview() {
           longevity: perfume.longevity ?? 0,
           projection: perfume.projection ?? 1,
           seasons: perfume.seasons || [],
+          applicationSpots: perfume.applicationSpots || [],
           password: '',
         });
       } catch (err) {
@@ -106,6 +109,15 @@ export default function EditPerfumeReview() {
     setFormData({
       ...formData,
       seasons,
+    });
+  };
+
+  const toggleApplicationSpot = (spot) => {
+    setFormData({
+      ...formData,
+      applicationSpots: formData.applicationSpots.includes(spot)
+        ? formData.applicationSpots.filter((s) => s !== spot)
+        : [...formData.applicationSpots, spot],
     });
   };
 
@@ -291,13 +303,31 @@ export default function EditPerfumeReview() {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="notes">Notes</label>
+            <span className="form-label">Application spots</span>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              {APPLICATION_SPOTS.map((spot) => (
+                <label className="form-label" key={spot}>
+                  <input
+                    type="checkbox"
+                    name="applicationSpots"
+                    checked={formData.applicationSpots.includes(spot)}
+                    onChange={() => toggleApplicationSpot(spot)}
+                  />
+                  {' '}{spot}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="notes">Application notes</label>
             <textarea
               id="notes"
               name="notes"
               value={formData.notes}
               onChange={handleInputChange}
               className="form-input form-textarea"
+              placeholder="Any other notes about this wear..."
             />
           </div>
 
