@@ -15,10 +15,23 @@ excavation is the whole point of this flow.
 
 Process:
 
-0. **Read the inbox.** Read `.harness/IDEAS.md`'s `## Inbox`. Collect every bullet into a worklist.
-   If `$ARGUMENTS` names a specific idea, start with that one (but still continue through the rest
-   afterwards unless told otherwise). If the inbox is empty, say so and stop. If the owner is clearly
-   mid-build on something else, say so and offer to defer the whole sweep.
+0. **Read the inbox / build the worklist.**  Read `.harness/IDEAS.md`'s `## Inbox`. Collect every
+   bullet into a worklist. If `$ARGUMENTS` names a specific idea, start with that one (but still
+   continue through the rest afterwards unless told otherwise). If the inbox is empty, say so and stop.
+   If the owner is clearly mid-build on something else, say so and offer to defer the whole sweep.
+
+   **De-dup pass (run before converting anything).** Scan the full worklist for ideas that are the
+   **same idea or substantially overlap** — use SEMANTIC similarity, not just exact-text match (the
+   same idea often appears in different words). Group any suspected duplicates and **surface each
+   duplicate group to the owner via `AskUserQuestion`** — present the overlapping bullets, explain
+   why you think they're the same, and ask whether to merge them into one or drop one. Do NOT
+   auto-merge silently; the owner decides.
+
+   This is distinct from the **related-ideas → `dependsOn`** handling in Phase 2: two ideas that are
+   *related but distinct* (one a foundation the other builds on) become a `dependsOn` edge and are
+   NOT merged — the de-dup pass targets genuine **duplicates** (the same idea appearing twice). Only
+   merge/drop when the ideas describe the *same underlying change*; otherwise proceed to the normal
+   per-idea loop below.
 
 1. **Loop — for EACH idea in the worklist, one at a time:**
 
@@ -33,6 +46,19 @@ Process:
       scope, dependsOn, facets, spec MD) and append the schema-correct task(s) to `TASKS.json`. If
       two ideas are clearly related (e.g. one is a foundation the other builds on), encode that as a
       `dependsOn` edge rather than merging them.
+      - **Atomise — size every task to ONE cold builder attempt (sizing gate, non-negotiable).**
+        Before shaping, decompose the idea so each resulting task is completable by a single cold pass
+        in a reasonable time/context budget — and SPLIT anything that isn't. A task is too big when it
+        spans multiple layers (e.g. `db` + `api` + `ui`), carries broad/full-stack `risk` flags, or
+        has a multi-part `## Done when` with several independent acceptance criteria. **Empirical
+        tell:** an attempt that runs 25–30+ minutes or repeatedly fails the cold tier is almost always
+        under-atomised. Split such an idea into a **dependency chain** of the smallest self-contained,
+        separately verifiable units — typically **backend logic + its tests FIRST**, then a
+        **dependent UI-surfacing task**, then any cross-cutting follow-up — each with its own tight
+        `scope`, `facets`, and runnable `## Done when`. Prefer several small tasks over one big one:
+        the loop builds, verifies, and commits each independently, so smaller tasks finish faster,
+        fail more cheaply, and escalate more precisely. (Same decomposition discipline as
+        add-to-backlog §2.2 + the sizing pushback in §6 — enforce it here too, on every idea.)
 
    c. **Delete on convert.** Once this idea's task(s) land, REMOVE its bullet from `.harness/IDEAS.md`
       (the resulting TASKS.json task is now the record). Leave the rest of the inbox untouched, then
