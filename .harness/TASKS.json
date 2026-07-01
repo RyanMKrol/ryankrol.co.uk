@@ -1166,7 +1166,7 @@
     {
       "id": "T047",
       "title": "Variant 1 — reviews add forms",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T043"
       ],
