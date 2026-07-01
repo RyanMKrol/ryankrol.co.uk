@@ -951,7 +951,7 @@
     {
       "id": "T039",
       "title": "Perfume longevity/projection/seasons fields — form UI",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T038"
       ],
