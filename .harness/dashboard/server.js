@@ -203,7 +203,7 @@ function actions(t){
 function task(t){
   var sel='';
   if (t.bucket==='needs-human') sel='<input type="checkbox" class="sel-done" data-id="'+t.id+'" onclick="stop(event)" onchange="updateBulk()">';
-  else if (t.bucket==='done') sel='<input type="checkbox" class="sel-rev" data-id="'+t.id+'" data-reviewed="'+(t.reviewed?'true':'false')+'" onclick="stop(event)" onchange="updateBulk()">';
+  else if (t.bucket==='done' && !t.reviewed) sel='<input type="checkbox" class="sel-rev" data-id="'+t.id+'" data-reviewed="false" onclick="stop(event)" onchange="updateBulk()">';
   var rev = t.bucket==='done' ? (t.reviewed?'<span class="pill p-reviewed">reviewed</span>':'<span class="pill p-unreviewed">not reviewed</span>') : '';
   const deps = (t.dependsOn||[]).length ? (t.unmetDeps&&t.unmetDeps.length? 'needs '+t.unmetDeps.join(', ') : 'deps '+t.dependsOn.join(', ')) : 'no deps';
   const facets = t.facets ? (t.facets.layer+'/'+t.facets.workType+(t.facets.risk&&t.facets.risk.length?' · '+t.facets.risk.join(','):'')) : '—';
