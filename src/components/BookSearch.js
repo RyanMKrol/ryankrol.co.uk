@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { bookCoverUrl } from '../lib/openlibrary';
 
 /**
- * Multi-provider book search + confirm component for the book add flow.
+ * Google Books search + confirm component for the book add flow.
  *
  * Props:
  *   title    - the book title from the form (used as search param)
@@ -14,24 +14,17 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
   const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
-  const [currentProvider, setCurrentProvider] = useState(null);
 
-  const PROVIDERS = [
-    { key: 'openlibrary', label: 'Search Open Library' },
-    { key: 'googlebooks', label: 'Search Google Books' },
-  ];
-
-  const search = async (provider) => {
+  const search = async () => {
     if (!title.trim()) return;
     setSearching(true);
     setError('');
     setResults(null);
     setSelected(null);
-    setCurrentProvider(provider);
     if (onSelect) onSelect(null);
 
     try {
-      const params = new URLSearchParams({ title: title.trim(), provider });
+      const params = new URLSearchParams({ title: title.trim() });
       if (author.trim()) params.set('author', author.trim());
       const res = await fetch(`/api/books/search?${params}`);
       const data = await res.json();
@@ -66,11 +59,10 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
   const handleClear = () => {
     setSelected(null);
     setResults(null);
-    setCurrentProvider(null);
     if (onSelect) onSelect(null);
   };
 
-  const providerLabel = currentProvider === 'googlebooks' ? 'Google Books' : 'Open Library';
+  const providerLabel = 'Google Books';
 
   const getCoverSrc = (r) => {
     if (r.coverUrl) return r.coverUrl;
@@ -81,17 +73,14 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
   return (
     <div className="book-search">
       <div className="book-search-row">
-        {PROVIDERS.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            className="form-button book-search-btn"
-            onClick={() => search(key)}
-            disabled={searching || !title.trim()}
-          >
-            {searching && currentProvider === key ? 'Searching…' : label}
-          </button>
-        ))}
+        <button
+          type="button"
+          className="form-button book-search-btn"
+          onClick={search}
+          disabled={searching || !title.trim()}
+        >
+          {searching ? 'Searching…' : 'Search'}
+        </button>
       </div>
 
       {error && <p className="error-message">{error}</p>}
