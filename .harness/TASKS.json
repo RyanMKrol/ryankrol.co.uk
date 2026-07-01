@@ -99,7 +99,7 @@
     {
       "id": "T005",
       "title": "Perfumes review pages + nav link",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T004"
       ],
