@@ -152,3 +152,16 @@ dated bullet when you defer something new.
   in a scratch repo: the `mark done` commit now persists with `failures.jsonl` absent. **Do not recombine
   those `git add`s.** The interrupt-window race + `wait_ci_green`-indeterminate items above remain the
   only genuinely-deferred parts.
+- **2026-07-01 — FOUND + FIXED (via cross-reference with the `local-jobs` sibling harness):
+  `run_claude`'s internal `set -e` toggling could kill `loop.sh` outright on a usage-limit hit.**
+  *Symptom (never yet observed here, caught proactively):* `run_claude()` does `set +e` then `set -e`
+  internally before `return`ing its status code (0 ok / 10 rate-limited / other = fail). Because
+  `set -e` is a GLOBAL shell option, re-enabling it inside the callee re-arms `errexit` for the
+  *caller* — and both call sites used the vulnerable `set +e; run_claude ...; rc=$?; set -e` form
+  (a bare statement, not part of an AND-OR list), so a `return 10` (or any nonzero) could trip
+  `errexit` and kill the whole loop before `rc` was ever captured, before the backoff handler ever
+  ran. *Fix:* both call sites (builder + auditor) now use `rc=0; set +e; run_claude ... || rc=$?;
+  set -e` — the `||` form keeps the statement in an AND-OR list, which `set -e` never aborts on,
+  regardless of what the callee does to the option internally. *Verified* with an isolated scratch
+  repro (same shape, not the real loop): the old `; rc=$?` form killed the calling shell before its
+  `echo` ran; the new `|| rc=$?` form survived and captured `rc=10` correctly.

@@ -557,7 +557,7 @@ audit_gate() {
   out="$WORKLOG/$id.audit.md"
   rlpoll="${RL_POLL:-${RL_BACKOFF_MIN:-300}}"
   while :; do
-    set +e; run_claude "$am" "$ae" "$(audit_prompt "$id" "$spec" "$diff")"; arc=$?; set -e
+    arc=0; set +e; run_claude "$am" "$ae" "$(audit_prompt "$id" "$spec" "$diff")" || arc=$?; set -e
     [ "$arc" = 10 ] && { log "auditor rate-limited — waiting ${rlpoll}s (NOT an audit fail)"; sleep "$rlpoll"; continue; }
     break
   done
@@ -664,7 +664,7 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
   rl_sleep="$RL_BACKOFF_MIN"
   while :; do
     cold_reset
-    set +e; run_claude "$tmodel" "$teffort" "$(prompt "$task")"; rc=$?; set -e
+    rc=0; set +e; run_claude "$tmodel" "$teffort" "$(prompt "$task")" || rc=$?; set -e
     if [ "$rc" = 10 ]; then
       log "Claude usage/rate limit hit — backing off ${rl_sleep}s, will RE-ATTEMPT the same task COLD (not a failure)."
       sleep "$rl_sleep"
