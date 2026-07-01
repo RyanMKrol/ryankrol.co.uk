@@ -1369,7 +1369,7 @@
     {
       "id": "T054",
       "title": "Variant 2 — reviews edit pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T044"
       ],
