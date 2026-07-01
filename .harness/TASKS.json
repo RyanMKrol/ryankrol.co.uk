@@ -1659,7 +1659,7 @@
     {
       "id": "T064",
       "title": "Review the three complete UI rewrite variants and pick a winner",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T046",
         "T047",
@@ -2368,6 +2368,38 @@
       ],
       "expectsTest": false,
       "spec": ".harness/tasks/T091.md"
+    },
+    {
+      "id": "T092",
+      "title": "Delete all three UI rewrite variants (v1/v2/v3), promote none",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui-rewrite"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/v1/**",
+        "src/pages/v2/**",
+        "src/pages/v3/**",
+        "src/components/v1/**",
+        "src/components/v2/**",
+        "src/components/v3/**",
+        ".harness/designs/T042-ui-rewrite-briefs.md"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T092.md"
     }
   ]
 }
