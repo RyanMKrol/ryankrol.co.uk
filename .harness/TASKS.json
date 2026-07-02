@@ -3287,7 +3287,7 @@
     {
       "id": "T123",
       "title": "Albums update API: stamp a new editedDate field on every edit",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
