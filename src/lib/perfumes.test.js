@@ -4,6 +4,7 @@ import {
   validateProjection,
   validateSeasons,
   validateApplicationSpots,
+  validateFragranticaUrl,
   perfumeId,
 } from './perfumes';
 
@@ -82,5 +83,19 @@ describe('validateApplicationSpots', () => {
   test('rejects a sprays value of zero or negative', () => {
     expect(validateApplicationSpots([{ spot: 'Wrists', sprays: 0 }])).toBe(false);
     expect(validateApplicationSpots([{ spot: 'Wrists', sprays: -1 }])).toBe(false);
+  });
+});
+
+describe('validateFragranticaUrl', () => {
+  test('accepts well-formed http/https URLs', () => {
+    expect(validateFragranticaUrl('https://www.fragrantica.com/perfume/Some/Perfume-123.html')).toBe(true);
+    expect(validateFragranticaUrl('http://example.com')).toBe(true);
+  });
+
+  test('rejects missing, non-string, or malformed values', () => {
+    expect(validateFragranticaUrl(undefined)).toBe(false);
+    expect(validateFragranticaUrl('')).toBe(false);
+    expect(validateFragranticaUrl('not a url')).toBe(false);
+    expect(validateFragranticaUrl('ftp://example.com')).toBe(false);
   });
 });

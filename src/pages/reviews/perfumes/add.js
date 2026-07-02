@@ -18,6 +18,7 @@ export default function AddPerfumeReview() {
     projection: 1,
     seasons: [],
     applicationSpots: [],
+    fragranticaUrl: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
@@ -214,6 +215,20 @@ export default function AddPerfumeReview() {
           </div>
 
           <ApplicationSpotsSprayer value={formData.applicationSpots} onChange={handleApplicationSpotsChange} />
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="fragranticaUrl">Fragrantica URL</label>
+            <input
+              type="url"
+              id="fragranticaUrl"
+              name="fragranticaUrl"
+              value={formData.fragranticaUrl}
+              onChange={handleInputChange}
+              className="form-input"
+              placeholder="https://www.fragrantica.com/perfume/..."
+              required
+            />
+          </div>
 
           <div className="form-group">
             <label className="form-label">

@@ -8,6 +8,7 @@ import {
   validateProjection,
   validateSeasons,
   validateApplicationSpots,
+  validateFragranticaUrl,
   perfumeId,
 } from '../../../../lib/perfumes';
 
@@ -29,6 +30,7 @@ export default async function handler(req, res) {
     projection,
     seasons,
     applicationSpots,
+    fragranticaUrl,
     date,
     password,
   } = req.body;
@@ -39,8 +41,12 @@ export default async function handler(req, res) {
   }
 
   // Validate required fields
-  if (!title || !designer || !type || rating === undefined || !originalId) {
+  if (!title || !designer || !type || rating === undefined || !originalId || !fragranticaUrl) {
     return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  if (!validateFragranticaUrl(fragranticaUrl)) {
+    return res.status(400).json({ message: 'Fragrantica URL must be a valid URL' });
   }
 
   // Validate rating is an integer 0-10
@@ -89,6 +95,7 @@ export default async function handler(req, res) {
       rating,
       considerTravelSize,
       considerFullBottle,
+      fragranticaUrl,
       ...(longevity !== undefined && { longevity }),
       ...(projection !== undefined && { projection }),
       ...(seasons !== undefined && { seasons }),

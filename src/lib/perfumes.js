@@ -39,6 +39,22 @@ function validateApplicationSpots(value) {
   );
 }
 
+function validateFragranticaUrl(value) {
+  if (typeof value !== 'string' || value.trim() === '') {
+    return false;
+  }
+
+  if (!/^https?:\/\//.test(value)) {
+    return false;
+  }
+
+  try {
+    return Boolean(new URL(value));
+  } catch (error) {
+    return false;
+  }
+}
+
 function slugify(value) {
   return String(value)
     .trim()
@@ -57,5 +73,6 @@ export {
   validateProjection,
   validateSeasons,
   validateApplicationSpots,
+  validateFragranticaUrl,
   perfumeId,
 };

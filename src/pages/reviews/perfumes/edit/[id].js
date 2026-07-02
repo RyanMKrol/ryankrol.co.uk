@@ -21,6 +21,7 @@ export default function EditPerfumeReview() {
     projection: 1,
     seasons: [],
     applicationSpots: [],
+    fragranticaUrl: '',
     password: '',
   });
   const [originalData, setOriginalData] = useState(null);
@@ -59,6 +60,7 @@ export default function EditPerfumeReview() {
           projection: perfume.projection ?? 1,
           seasons: perfume.seasons || [],
           applicationSpots: perfume.applicationSpots || [],
+          fragranticaUrl: perfume.fragranticaUrl || '',
           password: '',
         });
       } catch (err) {
@@ -298,6 +300,20 @@ export default function EditPerfumeReview() {
           </div>
 
           <ApplicationSpotsSprayer value={formData.applicationSpots} onChange={handleApplicationSpotsChange} />
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="fragranticaUrl">Fragrantica URL</label>
+            <input
+              type="url"
+              id="fragranticaUrl"
+              name="fragranticaUrl"
+              value={formData.fragranticaUrl}
+              onChange={handleInputChange}
+              className="form-input"
+              placeholder="https://www.fragrantica.com/perfume/..."
+              required
+            />
+          </div>
 
           <div className="form-group">
             <label className="form-label">
