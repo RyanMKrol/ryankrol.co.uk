@@ -3060,7 +3060,7 @@
     {
       "id": "T115",
       "title": "Write AlbumRatingsV3 id-migration script (new table + backfill)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
