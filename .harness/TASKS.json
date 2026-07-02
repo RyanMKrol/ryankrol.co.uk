@@ -3019,7 +3019,7 @@
     {
       "id": "T114",
       "title": "Cut books review routes + edit page over to id-keyed BookRatingsV4",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T113"
       ],
