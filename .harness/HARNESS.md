@@ -122,6 +122,22 @@ counted, no escalation); it just keeps every measured pass a clean cold one.
 Backoff is exponential from `RL_BACKOFF_MIN` (5 min) capped at `RL_BACKOFF_MAX` (~5 h, the refresh
 window). `supervise.sh`'s ~5 h 15 m cadence is the outer backstop.
 
+## 7a. Push cooldown (pace pushes so a task burst can't trip Vercel's build rate limit)
+
+Every push to `origin/$MAIN_BRANCH` — from `mark_done`, `reconcile_overlays`, `block_task`, and the
+main per-task integration push — routes through one shared helper, `throttled_push()`. It enforces
+a minimum wall-clock gap (`PUSH_COOLDOWN_SECONDS`, default 5 min, `harness.env`) since the previous
+*successful* push, sleeping out the remainder if called too soon, rather than firing pushes (and
+therefore Vercel deploys) as fast as tasks complete. The timestamp is persisted to a gitignored
+state file (`.harness/worklog/.last-push-ts`), not an in-process variable, so the cooldown survives
+a `loop.sh`/`supervise.sh` restart landing mid-burst. The very first push of a fresh checkout (no
+prior timestamp) is never delayed, and a project completing one task every few hours never notices
+this — it only paces a rapid multi-task run. The CI-red auto-revert push is deliberately EXEMPT
+(restoring a broken `main` is more urgent than pacing, and reverts don't fire during a successful
+task burst in the first place). See `.harness/CLAUDE.md`'s 2026-07-02 dated incident for why this
+exists: a ~10-task-in-under-an-hour burst tripped Vercel's Hobby-tier build rate limit and silently
+stopped production from updating for ~10h with no alert anywhere in the pipeline.
+
 ## 8. TASKS.json schema (committed; shell-owned status)
 
 `.harness/TASKS.json` is the backlog and the source of truth for done/not-done + dependency order.

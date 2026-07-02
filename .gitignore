@@ -44,6 +44,7 @@ next-env.d.ts
 .harness/worklog/STATUS.md
 .harness/worklog/*.audit.md
 .harness/worklog/.failures.buf
+.harness/worklog/.last-push-ts
 # The ideas inbox is a PRIVATE, transient capture scratchpad (raw, unfleshed ideas). The mechanism
 # travels via .harness/CLAUDE.md; each repo grows its own private inbox.
 .harness/IDEAS.md

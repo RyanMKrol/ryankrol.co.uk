@@ -36,6 +36,7 @@ FAILURES="$HARNESS_DIR/failures.jsonl"             # append-only PER-ATTEMPT fai
 HUMAN_DONE="$HARNESS_DIR/human-done.json"          # owner overlay { "<id>": {done,at} } for needs-human tasks (written by mark-done.sh/dashboard, NEVER the loop). Read by task_done; reconcile_overlays promotes it → TASKS.json status=done.
 MANUAL_FAIL="$HARNESS_DIR/manual-fail.json"        # owner overlay (id → {failed,reason,at}); written ONLY by mark-failed.sh/dashboard, NEVER the loop. Read by calibration (manual_fail_ids) AND reconcile_overlays → TASKS.json status=failed (terminal). See designs/manual-fail-signal.md.
 FAILBUF="$WORKLOG/.failures.buf"                   # gitignored scratch buffer for the current task's failures: survives cold_reset (git clean -fd keeps ignored files), flushed into FAILURES at each terminal event
+LAST_PUSH_TS="$WORKLOG/.last-push-ts"              # gitignored: unix ts of the last successful push, read/written by throttled_push — survives cold_reset + loop/supervise restarts (same durability reasoning as FAILBUF)
 NAME="$(basename "$ROOT")"
 MODEL="${MODEL:-claude-sonnet-5}"                  # COLD-START FLOOR — cheapest tier; the policy tunes UP from here (pin the full id; the bare alias drifts)
 EFFORT="${EFFORT:-low}"                            # low|medium|high|xhigh|max — cheapest by default (bias-cheap; the ladder escalates on failure)
@@ -57,6 +58,7 @@ RL_BACKOFF_MIN="${RL_BACKOFF_MIN:-300}"            # exponential-fallback first 
 RL_EXP_MAX="${RL_EXP_MAX:-3600}"                   # exponential-fallback cap (1h; UNKNOWN-reset path only)
 RL_BACKOFF_MAX="${RL_BACKOFF_MAX:-18000}"          # cap for a PARSED reset wait (~5h — known reset can be hours away)
 RL_BUFFER="${RL_BUFFER:-300}"                      # resume this many secs AFTER a parsed reset (5-min cushion)
+PUSH_COOLDOWN_SECONDS="${PUSH_COOLDOWN_SECONDS:-300}"  # min wall-clock gap between successful pushes to main (throttled_push) — paces a fast task burst so it can't outrun Vercel's Hobby-tier build rate limit (see CLAUDE.md's 2026-07-02 incident log)
 FORCE_TASK="${1:-}"
 POSTFLIGHT="$HARNESS_DIR/postflight.sh"
 
@@ -198,6 +200,39 @@ flush_failures() {
   cat "$FAILBUF" >>"$FAILURES" && : >"$FAILBUF"
 }
 
+# throttled_push — the ONE place every push to origin/$MAIN_BRANCH goes through. Enforces a minimum
+# wall-clock gap ($PUSH_COOLDOWN_SECONDS) since the previous SUCCESSFUL push, sleeping out the
+# remainder if called too soon, so a burst of task completions can't fire pushes (and therefore
+# Vercel deploys) faster than Vercel's Hobby-tier build rate limit tolerates. The timestamp is
+# persisted to a gitignored file ($LAST_PUSH_TS, alongside FAILBUF) rather than an in-process shell
+# variable, so the cooldown survives a loop/supervise restart mid-burst — an in-memory-only clock
+# would silently reset on every restart and defeat the point. The FIRST push of a fresh checkout
+# (no prior timestamp on disk yet) is never delayed. Only a push that actually SUCCEEDS updates the
+# timestamp — a failed push (network/remote-moved) reaches no deploy, so it shouldn't consume cooldown
+# budget it never used. Exit-code contract matches the `git push` it replaces (0 success / nonzero
+# fail), so every call site's existing `if ! throttled_push; then …` / `throttled_push || …` keeps
+# working. Suppresses git's own push stderr internally (matching 4 of the 5 call sites this replaces)
+# — do NOT redirect THIS function's own stderr at a call site, or you'll also swallow its `log` line.
+throttled_push() {
+  local now last elapsed wait
+  mkdir -p "$WORKLOG"
+  if [ -f "$LAST_PUSH_TS" ]; then
+    last="$(cat "$LAST_PUSH_TS" 2>/dev/null || echo 0)"
+    now="$(date +%s)"
+    elapsed=$(( now - last ))
+    if [ "$elapsed" -lt "$PUSH_COOLDOWN_SECONDS" ]; then
+      wait=$(( PUSH_COOLDOWN_SECONDS - elapsed ))
+      log "throttled_push: cooling down ${wait}s (min ${PUSH_COOLDOWN_SECONDS}s between pushes) before pushing to $MAIN_BRANCH — paces the push rate so a task burst can't trip Vercel's build rate limit."
+      sleep "$wait"
+    fi
+  fi
+  if git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null; then
+    date +%s >"$LAST_PUSH_TS" 2>/dev/null || true
+    return 0
+  fi
+  return 1
+}
+
 # Shell owns task status: set it done, then commit+push the one-line change (no CI needed).
 mark_done() {
   local id="$1" tmp="$BACKLOG.tmp"   # same-dir temp → mv is an atomic rename (no cross-fs partial reads)
@@ -211,7 +246,7 @@ mark_done() {
   git -C "$ROOT" add "$BACKLOG" "$WORKLOG" "$OUTCOMES" 2>/dev/null || true
   if [ -f "$FAILURES" ]; then git -C "$ROOT" add "$FAILURES" 2>/dev/null || true; fi
   git -C "$ROOT" commit -q -m "$id: mark done [skip ci]" 2>/dev/null || true
-  git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null || log "WARN: couldn't push status update for $id"
+  throttled_push || log "WARN: couldn't push status update for $id"
 }
 
 # set_task_status <id> <status> — the loop is the SOLE writer of TASKS.json status; atomic temp+mv.
@@ -249,7 +284,7 @@ reconcile_overlays() {
   if [ "$changed" = 1 ]; then
     git -C "$ROOT" add "$BACKLOG" 2>/dev/null || true
     git -C "$ROOT" commit -q -m "reconcile: overlay verdicts → TASKS.json status [skip ci]" 2>/dev/null || true
-    git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null || log "WARN: couldn't push reconciled TASKS.json status"
+    throttled_push || log "WARN: couldn't push reconciled TASKS.json status"
   fi
 }
 
@@ -737,7 +772,7 @@ block_task() {
   git -C "$ROOT" add "$WORKLOG/$id.md" "$OUTCOMES" 2>/dev/null || true
   if [ -f "$FAILURES" ]; then git -C "$ROOT" add "$FAILURES" 2>/dev/null || true; fi
   git -C "$ROOT" commit -q -m "$id: blocked, needs human — skipping [skip ci]" 2>/dev/null || true
-  git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null || log "WARN: couldn't push block marker for $id"
+  throttled_push || log "WARN: couldn't push block marker for $id"
   log "BLOCKED $id ($reason) — recorded for a human; moving on to the next task."
   cur_task=""; cur_attempts=0; cur_rung=0; cur_base=0
 }
@@ -832,7 +867,7 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
         log "AUDIT FAILED for $task — discarding the commit (never pushed) + soft retry."
         cold_reset; bump "$task" "audit-fail" "$AUDIT_FAIL_DETAIL"; board; continue
       fi
-      if ! git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH"; then
+      if ! throttled_push; then
         log "push to $MAIN_BRANCH failed (remote moved / network) — soft retry."
         bump "$task" "push-fail" "remote moved / network"; board; continue
       fi
@@ -846,6 +881,10 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
             # NEVER halt the whole loop on one red CI: revert the pushed commit to restore main, then
             # soft-retry. If it keeps failing, bump eventually BLOCKS it and the loop moves on.
             log "CI RED for $task — reverting the pushed commit to restore $MAIN_BRANCH, then retrying."
+            # Deliberately exempt from throttled_push: this restores a BROKEN main to green, which
+            # is more urgent than pacing — and reverts only fire after a red CI (not during a
+            # successful-task burst), so they don't meaningfully add to the burst risk this helper
+            # guards against.
             if git -C "$ROOT" revert --no-edit HEAD 2>/dev/null && git -C "$ROOT" push origin "HEAD:$MAIN_BRANCH" 2>/dev/null; then
               log "reverted $task; $MAIN_BRANCH is clean again."
             else

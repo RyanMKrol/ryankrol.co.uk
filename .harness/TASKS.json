@@ -3535,7 +3535,7 @@
     {
       "id": "T133",
       "title": "Throttle/cooldown loop.sh's pushes to main to avoid tripping Vercel's Hobby-tier build rate limit (needs-human)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "needs-human",
       "tags": [
