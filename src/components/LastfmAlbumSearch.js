@@ -12,11 +12,14 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
   const [results, setResults] = useState(null); // null = not yet searched
   const [searching, setSearching] = useState(false);
   const [loadingInfo, setLoadingInfo] = useState(false);
+  const [cooldown, setCooldown] = useState(false);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
 
   const search = async () => {
     if (!titleQuery.trim()) return;
+    setCooldown(true);
+    setTimeout(() => setCooldown(false), 2000);
     setSearching(true);
     setError('');
     setResults(null);
@@ -87,7 +90,7 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
           type="button"
           className="form-button lastfm-search-btn"
           onClick={search}
-          disabled={searching || loadingInfo || !titleQuery.trim()}
+          disabled={searching || cooldown || loadingInfo || !titleQuery.trim()}
         >
           {searching ? 'Searching…' : 'Search Last.fm'}
         </button>

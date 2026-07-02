@@ -228,6 +228,11 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
   category labels. Use `toTimeSeries(rows, getDate, getValue)` from `src/lib/chartTime.js` to map
   rows, and spread `timeScaleOptions` into the `scales.x` block. Exception: aggregated bar charts
   (e.g. frequency-by-month with string labels) stay as category scale.
+- **Search-trigger buttons enforce a 2s client-side cooldown.** `TmdbSearch.js`, `BookSearch.js`,
+  and `LastfmAlbumSearch.js` each set a `cooldown` state true on click and clear it after 2s via
+  `setTimeout`, factored into the button's `disabled` alongside `searching` — this is on top of,
+  not instead of, the backend per-route rate limit (`src/lib/rateLimit.js`); keep both layers when
+  touching these components.
 
 ## Definition of Done & checks
 

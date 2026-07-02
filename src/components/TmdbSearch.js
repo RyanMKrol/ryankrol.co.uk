@@ -13,11 +13,14 @@ import { tmdbPosterUrl } from '../lib/tmdb';
 export default function TmdbSearch({ mediaType, query = '', onSelect }) {
   const [results, setResults] = useState(null); // null = not yet searched
   const [searching, setSearching] = useState(false);
+  const [cooldown, setCooldown] = useState(false);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
 
   const search = async () => {
     if (!query.trim()) return;
+    setCooldown(true);
+    setTimeout(() => setCooldown(false), 2000);
     setSearching(true);
     setError('');
     setResults(null);
@@ -64,7 +67,7 @@ export default function TmdbSearch({ mediaType, query = '', onSelect }) {
           type="button"
           className="form-button tmdb-search-btn"
           onClick={search}
-          disabled={searching || !query.trim()}
+          disabled={searching || cooldown || !query.trim()}
         >
           {searching ? 'Searching…' : 'Search TMDB'}
         </button>

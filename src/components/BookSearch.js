@@ -12,11 +12,14 @@ import { bookCoverUrl } from '../lib/openlibrary';
 export default function BookSearch({ title = '', author = '', onSelect }) {
   const [results, setResults] = useState(null); // null = not yet searched
   const [searching, setSearching] = useState(false);
+  const [cooldown, setCooldown] = useState(false);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
 
   const search = async () => {
     if (!title.trim()) return;
+    setCooldown(true);
+    setTimeout(() => setCooldown(false), 2000);
     setSearching(true);
     setError('');
     setResults(null);
@@ -77,7 +80,7 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
           type="button"
           className="form-button book-search-btn"
           onClick={search}
-          disabled={searching || !title.trim()}
+          disabled={searching || cooldown || !title.trim()}
         >
           {searching ? 'Searching…' : 'Search'}
         </button>
