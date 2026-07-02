@@ -3485,7 +3485,7 @@
     {
       "id": "T131",
       "title": "Only show inline TMDB-match error after a failed save attempt (movies add form)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
