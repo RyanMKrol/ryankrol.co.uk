@@ -86,6 +86,37 @@ pre-flight the loop ALSO reconciles it → `TASKS.json` `status=failed` (`reconc
 terminal status the loop skips; it does NOT re-open/rebuild the task (the re-do is a separate
 follow-up). The loop still never WRITES the overlay file. Full design: `designs/manual-fail-signal.md`.
 
+## Completing a `gate` / `needs-human` task interactively — NEVER route it through the loop afterward
+
+When the owner has you build a `gate` or `needs-human` task directly in an interactive session
+(not via `.harness/loop.sh`), **that interactive work IS the completion mechanism.** The whole point
+of those gate values is "the owner wants this done by directing a Claude session, not by the
+unattended loop" — so once you've built and verified it, close it out yourself; do NOT afterward run
+`.harness/loop.sh <TNNN>` to "make it official" or get it through CI-gating. The loop exists to
+*build* tasks cold from `origin/main`, not to bless work that's already there — forcing it at an
+already-complete task at best wastes a model call reproducing a worklog-only commit, and at worst
+(any `expectsTest:true` task) escalates forever: see the dated incident below for exactly how this
+goes wrong and why "just force-run it to close it out" is never the right move.
+
+Once you've actually verified the work against every `## Done when` criterion yourself (run the DoD
+commands, don't take a prior claim on faith):
+1. Write (or update) `.harness/worklog/TNNN.md` documenting what you built/verified and how.
+2. Hand-edit `TASKS.json` to set that task's `status` to `"done"`. This is the ONE sanctioned
+   exception to "the loop is the sole writer of status" — that rule exists to stop a *builder agent*
+   from skipping verification and faking success, not to block the owner's own directed session from
+   recording a real, DoD-verified completion. Do NOT fabricate an `outcomes.jsonl` calibration row —
+   this wasn't built via the loop's escalation ladder, so there's no real rung/model data to record
+   (mirrors how the `needs-human` `human-done.json` → `reconcile_overlays` path never writes one
+   either).
+3. Commit both files together (`git commit -m "TNNN: mark done [skip ci]"`, matching the loop's own
+   `mark_done()` message convention) and push.
+
+⚠️ **Also watch for `LOOP_AUTORESET=1`** (set in `harness.env`): if you DO ever run `loop.sh` with a
+dirty working tree — even by accident — it silently `git stash`es everything first rather than
+refusing, including work-in-progress that has nothing to do with whatever task you forced. If that
+happens, check `git stash list` immediately afterward and restore the right entry by timestamp
+(`git stash pop stash@{N}`) — don't guess, and don't let it sit lost in the stash.
+
 ## `scope` is the rigour dial — pick its granularity deliberately
 
 A task's `scope` is a **hard boundary**: the loop's `structural_checks` fails any attempt whose diff
@@ -207,3 +238,27 @@ dated bullet when you defer something new.
   landmine as the entry above, just at a different call site (this function has no internal
   `set -e` toggling, but a bare failing statement still trips `errexit` regardless). Corrected to
   `wait_ci_green || ci_rc=$?` before landing.
+- **2026-07-02 — Force-running `.harness/loop.sh TNNN` to "close out" a task already built
+  interactively caused a real failure loop + nearly lost unrelated uncommitted work.** *Symptom:*
+  T106 (`gate:"gate"`) was built, verified, committed, and pushed directly in an interactive
+  session — then, to get its `TASKS.json` status flipped from `pending` to `done` "the proper way,"
+  the loop was force-run against it (`.harness/loop.sh T106`). Two things went wrong at once: (1)
+  `LOOP_AUTORESET=1` found the working tree dirty (unrelated owner work-in-progress on 3 files) and
+  silently `git stash`ed it before resetting to `origin/main` — invisible unless you go looking; (2)
+  every iteration correctly found the code already on `main`, verified it, and made a worklog-only
+  commit — but the structural gate's `expectsTest:true` check has no carve-out for "the code was
+  already there, only a worklog changed," so it failed the SAME way every time and kept escalating
+  the model tier (low → medium → high) for 5 iterations before being manually killed. *Why this
+  happened:* a misunderstanding that `gate`/`needs-human` tasks built by hand still need to go
+  through the loop/CI-gate machinery to be "officially" done — they don't; see the new section above
+  this log. *Recovery:* killed the stray processes (`pkill -9 -f "loop.sh TNNN"`), confirmed the
+  real commit was untouched on `origin/main` (structural-check failures discard the LOCAL attempt
+  before push, so nothing bad reached the remote), popped the correct stash back
+  (`git stash pop stash@{0}`, identified by timestamp — did NOT touch an older, unrelated stash
+  sitting at `stash@{1}`), and hand-completed the task per the new section above instead. *Why
+  deferred:* the actual fix (the structural check tolerating a worklog-only commit when the task's
+  scope is independently confirmed unchanged-since-a-passing-DoD-run) hasn't been designed yet, and
+  the higher-leverage fix — "never force the loop at an already-done task" — is now written down
+  above where it'll actually be read before this repeats. *If it recurs anyway:* kill the stray
+  `loop.sh`/`claude` processes immediately (don't wait for it to self-resolve — it won't, it'll climb
+  every rung), then check `git stash list` before assuming the working tree is what you left it.
