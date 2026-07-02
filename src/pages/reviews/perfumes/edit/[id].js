@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
-import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes } from '../../../../components/PerfumeCharacteristics';
+import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes, ApplicationSpotsSprayer } from '../../../../components/PerfumeCharacteristics';
 
 const PERFUME_TYPES = ['EDP', 'EDT', 'Parfum'];
-const APPLICATION_SPOTS = ['Wrists', 'Elbows', 'Clavicles', 'Beard', 'Back of neck', 'Behind ears'];
 
 export default function EditPerfumeReview() {
   const router = useRouter();
@@ -112,12 +111,10 @@ export default function EditPerfumeReview() {
     });
   };
 
-  const toggleApplicationSpot = (spot) => {
+  const handleApplicationSpotsChange = (applicationSpots) => {
     setFormData({
       ...formData,
-      applicationSpots: formData.applicationSpots.includes(spot)
-        ? formData.applicationSpots.filter((s) => s !== spot)
-        : [...formData.applicationSpots, spot],
+      applicationSpots,
     });
   };
 
@@ -302,22 +299,7 @@ export default function EditPerfumeReview() {
             />
           </div>
 
-          <div className="form-group">
-            <span className="form-label">Application spots</span>
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              {APPLICATION_SPOTS.map((spot) => (
-                <label className="form-label" key={spot}>
-                  <input
-                    type="checkbox"
-                    name="applicationSpots"
-                    checked={formData.applicationSpots.includes(spot)}
-                    onChange={() => toggleApplicationSpot(spot)}
-                  />
-                  {' '}{spot}
-                </label>
-              ))}
-            </div>
-          </div>
+          <ApplicationSpotsSprayer value={formData.applicationSpots} onChange={handleApplicationSpotsChange} />
 
           <div className="form-group">
             <label className="form-label" htmlFor="notes">Application notes</label>
