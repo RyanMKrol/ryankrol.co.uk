@@ -2990,7 +2990,7 @@
     {
       "id": "T113",
       "title": "Write BookRatingsV4 id-migration script (new table + backfill)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
