@@ -88,6 +88,12 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
           Date: {item.date}
         </p>
       )}
+
+      {item.editedDate && (
+        <p className="review-date">
+          Edited: {item.editedDate}
+        </p>
+      )}
     </div>
   );
 }
