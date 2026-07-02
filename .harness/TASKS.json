@@ -3158,7 +3158,7 @@
     {
       "id": "T118",
       "title": "Cut vinyl routes over to id-keyed VinylCollectionV2 (no edit UI change — none exists)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T117"
       ],
