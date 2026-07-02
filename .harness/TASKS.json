@@ -2082,7 +2082,7 @@
     {
       "id": "T080",
       "title": "Run the Open-Library-to-Google-Books book migration against production",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T079"
       ],
