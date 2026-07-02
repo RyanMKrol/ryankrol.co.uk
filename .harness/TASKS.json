@@ -2769,7 +2769,7 @@
     {
       "id": "T106",
       "title": "Batch mark-done.sh / mark-reviewed.sh + their dashboard bulk endpoints into one commit per bulk action",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "gate",
       "tags": [
