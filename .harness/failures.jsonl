@@ -22,3 +22,4 @@
 {"id":"T108","ts":"2026-07-02T19:17:05Z","kind":"empty-diff","rung":2,"attempt":2,"model":"claude-sonnet-5","effort":"high","facets":{"layer":"api","workType":"bugfix","risk":[]},"detail":""}
 {"id":"T108","ts":"2026-07-02T19:19:47Z","kind":"empty-diff","rung":3,"attempt":1,"model":"claude-opus-4-8","effort":"high","facets":{"layer":"api","workType":"bugfix","risk":[]},"detail":""}
 {"id":"T108","ts":"2026-07-02T19:23:10Z","kind":"empty-diff","rung":3,"attempt":2,"model":"claude-opus-4-8","effort":"high","facets":{"layer":"api","workType":"bugfix","risk":[]},"detail":""}
+{"id":"T120","ts":"2026-07-02T21:15:45Z","kind":"audit-fail","rung":0,"attempt":1,"model":"claude-sonnet-5","effort":"low","facets":{"layer":"api","workType":"endpoint","risk":[]},"detail":"verdict=FAIL; reasons in .harness/worklog/T120.audit.md"}
