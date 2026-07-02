@@ -3454,7 +3454,7 @@
     {
       "id": "T130",
       "title": "Show poster/cover + description cards in the edit-page backfill modal (all 4 review types)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
