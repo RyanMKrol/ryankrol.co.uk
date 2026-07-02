@@ -141,7 +141,7 @@ src/lib (the data layer)
 | `src/pages/api/lastfm/album-info.js` | Last.fm `album.getInfo` proxy (`?artist=&album=` or `?mbid=`); returns `{ info: mapAlbumInfo }` |
 | `src/pages/api/dev/cache-bust.js` | Cache stats (GET) / flush-all (POST), gated off localhost |
 | `src/pages/api/tmdb/search.js` | TMDB search proxy (`?query=&type=movie\|tv`); authenticates with `TMDB_API_TOKEN` server-side; rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
-| `src/pages/api/books/search.js` | Book-search proxy supporting two providers via `?provider=openlibrary\|googlebooks` (default `openlibrary`); `?title=` required, `?author=` optional; returns normalised book list tagged with `source` via `withApiCache`. Open Library is keyless; Google Books appends `GOOGLE_BOOKS_API_KEY` server-side (falls back to keyless anonymous quota with a warning if unset) |
+| `src/pages/api/books/search.js` | Google Books search proxy (`?title=` required, `?author=` optional); appends `GOOGLE_BOOKS_API_KEY` server-side (falls back to keyless anonymous quota with a warning if unset); rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
 | `src/lib/lastfm.js` | `mapAlbumSearchResult(raw)` + `mapAlbumInfo(raw)` — pure normalisers for Last.fm album search/info responses |
 | `src/lib/openlibrary.js` | `mapBookResult(doc)` normaliser + `bookCoverUrl(coverId, size)` helper |
 | `src/lib/googlebooks.js` | `mapGoogleBooksResult(volume)` normaliser — maps Google Books `volumeInfo` to common shape with `source:'googlebooks'`, https `coverUrl`, ISBNs, year from `publishedDate` |
