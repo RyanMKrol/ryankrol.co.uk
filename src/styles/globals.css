@@ -1477,6 +1477,60 @@ a:hover {
   cursor: not-allowed;
 }
 
+/*
+ * Native range inputs center the thumb ON the value position, so at the
+ * minimum value it sits inset from the track's visual edge by half its own
+ * width. Removing the default appearance and sizing the track/thumb
+ * ourselves keeps the thumb flush with the track's true start/end.
+ */
+input[type='range'].form-input {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-base);
+  background-color: var(--color-surface-alt);
+  cursor: pointer;
+}
+
+input[type='range'].form-input:focus {
+  box-shadow: none;
+}
+
+input[type='range'].form-input::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border-radius: var(--radius-base);
+  background-color: var(--color-surface-alt);
+}
+
+input[type='range'].form-input::-moz-range-track {
+  height: 0.5rem;
+  border-radius: var(--radius-base);
+  background-color: var(--color-surface-alt);
+}
+
+input[type='range'].form-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.25rem;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  border: none;
+  cursor: pointer;
+}
+
+input[type='range'].form-input::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  border: none;
+  cursor: pointer;
+}
+
 .form-textarea {
   min-height: 120px;
   resize: vertical;
