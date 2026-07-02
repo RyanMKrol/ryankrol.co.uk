@@ -296,14 +296,15 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'POST' && MUTATIONS.includes(url)) {
     if (!isLoopback(req)) return sendJSON(res, 403, { ok: false, error: 'localhost only' });
     const body = await readBody(req);
-    // Bulk endpoints: loop the matching script over ids (each its own commit).
+    // Bulk endpoints: pass every id through to the script in ONE call, so it does its git add/
+    // commit/push exactly once for the whole batch instead of once per id.
     if (url === '/api/mark-done-bulk' || url === '/api/mark-reviewed-bulk') {
       const ids = Array.isArray(body.ids) ? body.ids : [];
       if (!ids.length) return sendJSON(res, 400, { ok: false, error: 'no ids' });
       const script = url === '/api/mark-done-bulk' ? 'mark-done.sh' : 'mark-reviewed.sh';
-      const results = [];
-      for (const id of ids) results.push({ id, ...(await runScript(script, [id])) });
-      return sendJSON(res, 200, { ok: results.every((r) => r.ok), results });
+      const outcome = await runScript(script, ids);
+      const results = ids.map((id) => ({ id, ...outcome }));
+      return sendJSON(res, 200, { ok: outcome.ok, results });
     }
     const id = body && body.id;
     if (!id) return sendJSON(res, 400, { ok: false, error: 'missing id' });

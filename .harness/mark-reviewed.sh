@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 #
-# mark-reviewed.sh — mark a task REVIEWED (the owner's "I've looked at this completed work" flag) via
-# the owner-owned overlay (.harness/reviews.json), or undo it. Portable CLI; the dashboard's
-# "Mark reviewed" buttons (single + bulk) shell out to it.
+# mark-reviewed.sh — mark one or more tasks REVIEWED (the owner's "I've looked at this completed
+# work" flag) via the owner-owned overlay (.harness/reviews.json), or undo it. Portable CLI; the
+# dashboard's "Mark reviewed" buttons (single + bulk) shell out to it.
 #
 # `reviewed` is a PURELY OWNER-FACING annotation — the loop NEVER reads or writes it (unlike
 # human-done.json / manual-fail.json, which steer the loop). It only helps you triage which finished
 # tasks you've actually checked. Any real task id is accepted.
 #
+# Multiple ids in one call perform ONE overlay write and ONE git commit/push, not one per id —
+# validation is fail-fast and atomic: if ANY id is invalid, NOTHING is written or committed.
+#
 # Usage:
-#   .harness/mark-reviewed.sh <TNNN>            # mark reviewed
-#   .harness/mark-reviewed.sh --undo <TNNN>     # clear
-#   NO_PUSH=1 .harness/mark-reviewed.sh <TNNN>  # write+commit but don't push
+#   .harness/mark-reviewed.sh <TNNN> [TNNN...]        # mark one or more tasks reviewed
+#   .harness/mark-reviewed.sh --undo <TNNN> [TNNN...] # clear
+#   NO_PUSH=1 .harness/mark-reviewed.sh <TNNN>        # write+commit but don't push
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -22,24 +25,35 @@ die() { echo "error: $*" >&2; exit 1; }
 
 undo=0
 if [ "${1:-}" = "--undo" ]; then undo=1; shift; fi
-id="${1:-}"
+ids=("$@")
 
-[ -n "$id" ] || die "usage: mark-reviewed.sh <TNNN>   |   mark-reviewed.sh --undo <TNNN>"
-[[ "$id" =~ ^T[0-9]+$ ]] || die "task id must look like T123 (got '$id')"
-tj -e --arg id "$id" '.tasks[]|select(.id==$id)' >/dev/null 2>&1 || die "$id is not a task in $BACKLOG"
+[ "${#ids[@]}" -gt 0 ] || die "usage: mark-reviewed.sh [--undo] <TNNN> [TNNN...]"
+
+# Fail-fast, atomic validation: check EVERY id before writing anything, so a bad id in a batch
+# never partially applies.
+for id in "${ids[@]}"; do
+  [[ "$id" =~ ^T[0-9]+$ ]] || die "task id must look like T123 (got '$id')"
+  tj -e --arg id "$id" '.tasks[]|select(.id==$id)' >/dev/null 2>&1 || die "$id is not a task in $BACKLOG"
+done
 
 [ -f "$REVIEWS" ] || printf '{}\n' >"$REVIEWS"
 ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 tmp="$REVIEWS.tmp"
+idsJson="$(printf '%s\n' "${ids[@]}" | jq -R . | jq -s .)"
+joined="$(IFS=', '; echo "${ids[*]}")"
 
 if [ "$undo" = 1 ]; then
-  jq --arg id "$id" 'del(.[$id])' "$REVIEWS" >"$tmp" && mv "$tmp" "$REVIEWS" || { rm -f "$tmp"; die "failed to update $REVIEWS"; }
-  msg="reviewed: clear $id [skip ci]"; echo "cleared reviewed for $id"
+  jq --argjson ids "$idsJson" 'reduce $ids[] as $id (.; del(.[$id]))' "$REVIEWS" >"$tmp" && mv "$tmp" "$REVIEWS" || { rm -f "$tmp"; die "failed to update $REVIEWS"; }
+  msg="reviewed: clear $joined [skip ci]"
+  for id in "${ids[@]}"; do echo "cleared reviewed for $id"; done
 else
-  jq --arg id "$id" --arg at "$ts" '.[$id] = {reviewed:true, at:$at}' "$REVIEWS" >"$tmp" && mv "$tmp" "$REVIEWS" || { rm -f "$tmp"; die "failed to update $REVIEWS"; }
-  msg="reviewed: $id [skip ci]"; echo "marked $id reviewed"
+  jq --argjson ids "$idsJson" --arg at "$ts" 'reduce $ids[] as $id (.; .[$id] = {reviewed:true, at:$at})' "$REVIEWS" >"$tmp" && mv "$tmp" "$REVIEWS" || { rm -f "$tmp"; die "failed to update $REVIEWS"; }
+  msg="reviewed: $joined [skip ci]"
+  for id in "${ids[@]}"; do echo "marked $id reviewed"; done
 fi
 
+# Commit + push the overlay under the loop's lock so we never race its git operations. Exactly ONE
+# commit + ONE push regardless of how many ids were passed above.
 rel="${REVIEWS#"$ROOT"/}"
 acquire_lock
 trap 'release_lock' EXIT INT TERM
