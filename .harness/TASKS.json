@@ -2741,7 +2741,7 @@
     {
       "id": "T105",
       "title": "Add a 2s client-side cooldown to the TMDB/Book/Last.fm search-trigger buttons",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
