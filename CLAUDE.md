@@ -135,7 +135,7 @@ src/lib (the data layer)
 | `src/pages/api/vinyl/{index,add}.js` | Vinyl read + gated add |
 | `src/pages/api/workouts.js`, `workouts/[id].js`, `workouts/[id]/exercises.js`, `workouts/stats.js`, `workouts/backfill.js` | Workout reads + Hevy backfill trigger |
 | `src/pages/api/exercises/[workoutId].js`, `exercises/history/[exerciseName].js` | Exercise reads |
-| `src/pages/api/github/repos.js` | GitHub repos proxy |
+| `src/pages/api/github/repos.js` | GitHub repos proxy; rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
 | `src/pages/api/lastfm/{now-playing,top-albums}.js` | Last.fm proxies; rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
 | `src/pages/api/lastfm/album-search.js` | Last.fm `album.search` proxy (`?query=`); returns `{ results: [mapAlbumSearchResult, ...] }`; rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
 | `src/pages/api/lastfm/album-info.js` | Last.fm `album.getInfo` proxy (`?artist=&album=` or `?mbid=`); returns `{ info: mapAlbumInfo }`; rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
