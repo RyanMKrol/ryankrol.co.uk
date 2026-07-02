@@ -3510,7 +3510,7 @@
     {
       "id": "T132",
       "title": "Only show inline TMDB-match error after a failed save attempt (TV add form)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
