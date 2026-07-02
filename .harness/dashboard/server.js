@@ -185,6 +185,30 @@ window.__openIds = new Set();
 // checkboxes come back pre-checked instead of losing state to the innerHTML replace.
 let selectedIds = new Set();
 window.toggleSelect=function(cb){ var id=cb.dataset.id; if(cb.checked) selectedIds.add(id); else selectedIds.delete(id); updateBulk(); };
+// Shift-click range-select: tracks the last checkbox clicked (by id + class, not DOM node — so it
+// survives the 5s auto-refresh re-rendering the whole task list). Shift-clicking a second checkbox
+// of the SAME class (sel-done or sel-rev — the two bulk-action groups are never mixed) selects every
+// checkbox in between to match the just-clicked box's new state. Replaces the old bare stop(event)
+// on these checkboxes (still stops the row's own expand/collapse onclick from firing).
+let lastClickedId = null;
+window.rangeSelect=function(e, cb){
+  e.stopPropagation();
+  var cls = cb.classList.contains('sel-done') ? 'sel-done' : 'sel-rev';
+  if (e.shiftKey && lastClickedId && lastClickedId.cls === cls) {
+    var boxes = [...document.querySelectorAll('.'+cls)];
+    var i1 = boxes.findIndex(c=>c.dataset.id===lastClickedId.id);
+    var i2 = boxes.indexOf(cb);
+    if (i1 !== -1 && i2 !== -1) {
+      var lo = Math.min(i1,i2), hi = Math.max(i1,i2), state = cb.checked;
+      for (var i=lo;i<=hi;i++){
+        boxes[i].checked = state;
+        if (state) selectedIds.add(boxes[i].dataset.id); else selectedIds.delete(boxes[i].dataset.id);
+      }
+      updateBulk();
+    }
+  }
+  lastClickedId = {cls: cls, id: cb.dataset.id};
+};
 window.toggle=function(id){
   var open = document.getElementById('task-'+id).classList.toggle('open');
   if (open) window.__openIds.add(id); else window.__openIds.delete(id);
@@ -234,8 +258,8 @@ function depLinks(ids){
 }
 function task(t){
   var sel='';
-  if (t.bucket==='needsHuman') sel='<input type="checkbox" class="sel-done" data-id="'+t.id+'" onclick="stop(event)" onchange="toggleSelect(this)"'+(selectedIds.has(t.id)?' checked':'')+'>';
-  else if (t.bucket==='done' && !t.reviewed) sel='<input type="checkbox" class="sel-rev" data-id="'+t.id+'" data-reviewed="false" onclick="stop(event)" onchange="toggleSelect(this)"'+(selectedIds.has(t.id)?' checked':'')+'>';
+  if (t.bucket==='needsHuman') sel='<input type="checkbox" class="sel-done" data-id="'+t.id+'" onclick="rangeSelect(event,this)" onchange="toggleSelect(this)"'+(selectedIds.has(t.id)?' checked':'')+'>';
+  else if (t.bucket==='done' && !t.reviewed) sel='<input type="checkbox" class="sel-rev" data-id="'+t.id+'" data-reviewed="false" onclick="rangeSelect(event,this)" onchange="toggleSelect(this)"'+(selectedIds.has(t.id)?' checked':'')+'>';
   var rev = t.bucket==='done' ? (t.reviewed?'<span class="pill p-reviewed">reviewed</span>':'<span class="pill p-unreviewed">not reviewed</span>') : '';
   var needsPill = (t.unmetDeps && t.unmetDeps.length) ? '<span class="pill p-waiting">needs: '+depLinks(t.unmetDeps)+'</span>' : '';
   const facets = t.facets ? (t.facets.layer+'/'+t.facets.workType+(t.facets.risk&&t.facets.risk.length?' · '+t.facets.risk.join(','):'')) : '—';
