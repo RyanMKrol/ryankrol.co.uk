@@ -3241,7 +3241,7 @@
     {
       "id": "T121",
       "title": "TV update API: stamp a new editedDate field on every edit",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
