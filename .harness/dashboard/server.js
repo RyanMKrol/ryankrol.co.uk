@@ -180,6 +180,11 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&
 function post(p,b){return fetch(p,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());}
 // Ids the user has expanded — reapplied after each 5s re-render so auto-refresh doesn't collapse them.
 window.__openIds = new Set();
+// Ids the user has bulk-selected — persisted independently of the polled task data (mirrors
+// local-jobs' page.tsx useState<Set<string>> pattern) so a re-render's freshly-generated
+// checkboxes come back pre-checked instead of losing state to the innerHTML replace.
+let selectedIds = new Set();
+window.toggleSelect=function(cb){ var id=cb.dataset.id; if(cb.checked) selectedIds.add(id); else selectedIds.delete(id); updateBulk(); };
 window.toggle=function(id){
   var open = document.getElementById('task-'+id).classList.toggle('open');
   if (open) window.__openIds.add(id); else window.__openIds.delete(id);
@@ -203,8 +208,8 @@ window.updateBulk=function(){
   var d=document.querySelectorAll('.sel-done:checked').length; var bd=document.getElementById('bulkDoneBtn'); if(bd){bd.textContent='Mark '+d+' done'; bd.disabled=d===0;}
   var r=document.querySelectorAll('.sel-rev:checked').length; var br=document.getElementById('bulkRevBtn'); if(br){br.textContent='Mark '+r+' reviewed'; br.disabled=r===0;}
 };
-window.toggleAllDone=function(cb){ document.querySelectorAll('.sel-done').forEach(c=>{c.checked=cb.checked;}); updateBulk(); };
-window.toggleAllRev=function(cb){ document.querySelectorAll('.sel-rev').forEach(c=>{ c.checked = cb.checked && c.dataset.reviewed!=='true'; }); updateBulk(); };
+window.toggleAllDone=function(cb){ document.querySelectorAll('.sel-done').forEach(c=>{c.checked=cb.checked; if(c.checked) selectedIds.add(c.dataset.id); else selectedIds.delete(c.dataset.id);}); updateBulk(); };
+window.toggleAllRev=function(cb){ document.querySelectorAll('.sel-rev').forEach(c=>{ c.checked = cb.checked && c.dataset.reviewed!=='true'; if(c.checked) selectedIds.add(c.dataset.id); else selectedIds.delete(c.dataset.id); }); updateBulk(); };
 window.markDoneBulk=function(){ var ids=[...document.querySelectorAll('.sel-done:checked')].map(c=>c.dataset.id); if(!ids.length)return;
   if(!confirm('Mark '+ids.length+' task(s) done? Writes human-done.json + commits.'))return;
   post('/api/mark-done-bulk',{ids}).then(r=>{ if(!r.ok){alert('Some failed:\\n'+(r.results||[]).filter(x=>!x.ok).map(x=>x.id+': '+x.error).join('\\n'));} refreshNow(); }).catch(x=>alert('Error: '+x)); };
@@ -229,8 +234,8 @@ function depLinks(ids){
 }
 function task(t){
   var sel='';
-  if (t.bucket==='needsHuman') sel='<input type="checkbox" class="sel-done" data-id="'+t.id+'" onclick="stop(event)" onchange="updateBulk()">';
-  else if (t.bucket==='done' && !t.reviewed) sel='<input type="checkbox" class="sel-rev" data-id="'+t.id+'" data-reviewed="false" onclick="stop(event)" onchange="updateBulk()">';
+  if (t.bucket==='needsHuman') sel='<input type="checkbox" class="sel-done" data-id="'+t.id+'" onclick="stop(event)" onchange="toggleSelect(this)"'+(selectedIds.has(t.id)?' checked':'')+'>';
+  else if (t.bucket==='done' && !t.reviewed) sel='<input type="checkbox" class="sel-rev" data-id="'+t.id+'" data-reviewed="false" onclick="stop(event)" onchange="toggleSelect(this)"'+(selectedIds.has(t.id)?' checked':'')+'>';
   var rev = t.bucket==='done' ? (t.reviewed?'<span class="pill p-reviewed">reviewed</span>':'<span class="pill p-unreviewed">not reviewed</span>') : '';
   var needsPill = (t.unmetDeps && t.unmetDeps.length) ? '<span class="pill p-waiting">needs: '+depLinks(t.unmetDeps)+'</span>' : '';
   const facets = t.facets ? (t.facets.layer+'/'+t.facets.workType+(t.facets.risk&&t.facets.risk.length?' · '+t.facets.risk.join(','):'')) : '—';
@@ -275,6 +280,7 @@ function render(d){
     var el = document.querySelector('.filt[onclick*="'+window.__doneFilter+'"]');
     filterDone(window.__doneFilter, el);
   }
+  updateBulk();
 }
 function refreshNow(){
   return fetch('/api/backlog').then(r=>r.json()).then(render).catch(e=>{ document.getElementById('main').textContent = 'Error loading backlog: '+e; });
