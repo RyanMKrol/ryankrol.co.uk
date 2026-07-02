@@ -61,15 +61,15 @@ export default function TV() {
     } else if (sortBy === 'date-desc') {
       // Sort by date (oldest first)
       filtered = filtered.sort((a, b) => {
-        const dateA = new Date(a.date.split('-').reverse().join('-'));
-        const dateB = new Date(b.date.split('-').reverse().join('-'));
+        const dateA = new Date((a.editedDate || a.date).split('-').reverse().join('-'));
+        const dateB = new Date((b.editedDate || b.date).split('-').reverse().join('-'));
         return dateA - dateB;
       });
     } else {
       // Sort by date (most recent first)
       filtered = filtered.sort((a, b) => {
-        const dateA = new Date(a.date.split('-').reverse().join('-'));
-        const dateB = new Date(b.date.split('-').reverse().join('-'));
+        const dateA = new Date((a.editedDate || a.date).split('-').reverse().join('-'));
+        const dateB = new Date((b.editedDate || b.date).split('-').reverse().join('-'));
         return dateB - dateA;
       });
     }
