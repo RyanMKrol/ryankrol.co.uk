@@ -2372,7 +2372,7 @@
     {
       "id": "T092",
       "title": "Delete all three UI rewrite variants (v1/v2/v3), promote none",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
