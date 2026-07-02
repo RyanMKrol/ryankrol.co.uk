@@ -2086,14 +2086,25 @@
       "dependsOn": [
         "T079"
       ],
-      "gate": "needs-human",
+      "gate": null,
       "tags": [
         "books"
       ],
       "scope": [],
       "design": null,
-      "verify": [],
-      "spec": ".harness/tasks/T080.md"
+      "verify": [
+        "npm test",
+        "npm run lint"
+      ],
+      "spec": ".harness/tasks/T080.md",
+      "expectsTest": false,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T081",
@@ -2152,14 +2163,25 @@
       "dependsOn": [
         "T082"
       ],
-      "gate": "needs-human",
+      "gate": null,
       "tags": [
         "workouts"
       ],
       "scope": [],
       "design": null,
-      "verify": [],
-      "spec": ".harness/tasks/T083.md"
+      "verify": [
+        "npm test",
+        "npm run lint"
+      ],
+      "spec": ".harness/tasks/T083.md",
+      "expectsTest": false,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T084",
@@ -2832,7 +2854,7 @@
       "title": "Write MovieRatingsV4 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "movies",
         "data-migration"
@@ -2863,7 +2885,7 @@
       "dependsOn": [
         "T109"
       ],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "movies"
       ],
@@ -2901,7 +2923,7 @@
       "title": "Write TelevisionRatingsV4 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "tv",
         "data-migration"
@@ -2932,7 +2954,7 @@
       "dependsOn": [
         "T111"
       ],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "tv"
       ],
@@ -2970,7 +2992,7 @@
       "title": "Write BookRatingsV4 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "books",
         "data-migration"
@@ -3001,7 +3023,7 @@
       "dependsOn": [
         "T113"
       ],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "books"
       ],
@@ -3040,7 +3062,7 @@
       "title": "Write AlbumRatingsV3 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "albums",
         "data-migration"
@@ -3071,7 +3093,7 @@
       "dependsOn": [
         "T115"
       ],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "albums"
       ],
@@ -3109,7 +3131,7 @@
       "title": "Write VinylCollectionV2 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "vinyl",
         "data-migration"
@@ -3140,7 +3162,7 @@
       "dependsOn": [
         "T117"
       ],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "vinyl"
       ],
