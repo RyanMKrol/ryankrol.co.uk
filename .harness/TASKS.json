@@ -2503,7 +2503,7 @@
     {
       "id": "T097",
       "title": "Remove the Application notes field from the perfume forms — UI",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T096"
       ],
