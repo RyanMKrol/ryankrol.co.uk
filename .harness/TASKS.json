@@ -3551,7 +3551,7 @@
     {
       "id": "T134",
       "title": "Self-heal incomplete Workouts records during the live Hevy backfill sync",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
