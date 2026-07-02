@@ -42,6 +42,7 @@ export default async function handler(req, res) {
 
     // If no original date found, use current date (shouldn't happen for updates)
     const preservedDate = originalDate || new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+    const editedDate = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
 
     // Update the item in place, keyed by the stable id
     const reviewData = {
@@ -50,6 +51,7 @@ export default async function handler(req, res) {
       rating,
       review_text: gist,
       date: preservedDate,
+      editedDate,
       ...(tmdbId !== undefined && { tmdbId }),
       ...(mediaType !== undefined && { mediaType }),
       ...(posterPath !== undefined && { posterPath }),
