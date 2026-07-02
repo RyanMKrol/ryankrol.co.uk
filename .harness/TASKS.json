@@ -2530,7 +2530,7 @@
     {
       "id": "T098",
       "title": "Required Fragrantica URL field on the perfume add + edit forms",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
