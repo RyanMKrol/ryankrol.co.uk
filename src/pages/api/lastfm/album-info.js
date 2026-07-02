@@ -1,9 +1,16 @@
 import { withApiCache, generateCacheKey } from '../../../lib/apiCache';
 import { mapAlbumInfo } from '../../../lib/lastfm';
+import { checkRateLimit, getClientIp } from '../../../lib/rateLimit';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  const { allowed, retryAfterSeconds } = checkRateLimit(`lastfm-album-info:${getClientIp(req)}`, { windowMs: 60_000, max: 20 });
+  if (!allowed) {
+    res.setHeader('Retry-After', String(retryAfterSeconds));
+    return res.status(429).json({ message: 'Too many requests — please wait a moment and try again.' });
   }
 
   const { artist, album, mbid } = req.query;

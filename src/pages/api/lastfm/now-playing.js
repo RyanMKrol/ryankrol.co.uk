@@ -1,4 +1,5 @@
 import { withApiCache, generateCacheKey } from '../../../lib/apiCache';
+import { checkRateLimit, getClientIp } from '../../../lib/rateLimit';
 
 // 5 minute cache for Last.fm data
 const FIVE_MINUTES = 5 * 60;
@@ -6,6 +7,12 @@ const FIVE_MINUTES = 5 * 60;
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  const { allowed, retryAfterSeconds } = checkRateLimit(`lastfm-now-playing:${getClientIp(req)}`, { windowMs: 60_000, max: 20 });
+  if (!allowed) {
+    res.setHeader('Retry-After', String(retryAfterSeconds));
+    return res.status(429).json({ message: 'Too many requests — please wait a moment and try again.' });
   }
 
   try {
