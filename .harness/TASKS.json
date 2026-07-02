@@ -2452,7 +2452,7 @@
     {
       "id": "T095",
       "title": "Per-spot spray count UI — make it joyful",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T094"
       ],
