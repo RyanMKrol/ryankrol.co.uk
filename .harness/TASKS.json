@@ -2832,11 +2832,10 @@
       "title": "Write MovieRatingsV4 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "needs-human",
+      "gate": "gate",
       "tags": [
         "movies",
-        "data-migration",
-        "needs-human"
+        "data-migration"
       ],
       "scope": [
         "src/scripts/migrateMoviesToIdTable.js",
@@ -2848,7 +2847,14 @@
         "npm run lint"
       ],
       "spec": ".harness/tasks/T109.md",
-      "expectsTest": true
+      "expectsTest": true,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T110",
@@ -2895,11 +2901,10 @@
       "title": "Write TelevisionRatingsV4 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "needs-human",
+      "gate": "gate",
       "tags": [
         "tv",
-        "data-migration",
-        "needs-human"
+        "data-migration"
       ],
       "scope": [
         "src/scripts/migrateTvToIdTable.js",
@@ -2911,7 +2916,14 @@
         "npm run lint"
       ],
       "spec": ".harness/tasks/T111.md",
-      "expectsTest": true
+      "expectsTest": true,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T112",
@@ -2958,11 +2970,10 @@
       "title": "Write BookRatingsV4 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "needs-human",
+      "gate": "gate",
       "tags": [
         "books",
-        "data-migration",
-        "needs-human"
+        "data-migration"
       ],
       "scope": [
         "src/scripts/migrateBooksToIdTable.js",
@@ -2974,7 +2985,14 @@
         "npm run lint"
       ],
       "spec": ".harness/tasks/T113.md",
-      "expectsTest": true
+      "expectsTest": true,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T114",
@@ -3022,11 +3040,10 @@
       "title": "Write AlbumRatingsV3 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "needs-human",
+      "gate": "gate",
       "tags": [
         "albums",
-        "data-migration",
-        "needs-human"
+        "data-migration"
       ],
       "scope": [
         "src/scripts/migrateAlbumsToIdTable.js",
@@ -3038,7 +3055,14 @@
         "npm run lint"
       ],
       "spec": ".harness/tasks/T115.md",
-      "expectsTest": true
+      "expectsTest": true,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T116",
@@ -3085,11 +3109,10 @@
       "title": "Write VinylCollectionV2 id-migration script (new table + backfill)",
       "status": "pending",
       "dependsOn": [],
-      "gate": "needs-human",
+      "gate": "gate",
       "tags": [
         "vinyl",
-        "data-migration",
-        "needs-human"
+        "data-migration"
       ],
       "scope": [
         "src/scripts/migrateVinylToIdTable.js",
@@ -3101,7 +3124,14 @@
         "npm run lint"
       ],
       "spec": ".harness/tasks/T117.md",
-      "expectsTest": true
+      "expectsTest": true,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T118",
