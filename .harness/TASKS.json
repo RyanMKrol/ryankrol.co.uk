@@ -3410,7 +3410,7 @@
     {
       "id": "T128",
       "title": "De-dupe near-identical Last.fm album search results server-side",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
