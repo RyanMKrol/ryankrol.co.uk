@@ -15,7 +15,6 @@ export default function EditPerfumeReview() {
     type: PERFUME_TYPES[0],
     rating: 0,
     description: '',
-    notes: '',
     considerTravelSize: false,
     considerFullBottle: false,
     longevity: 0,
@@ -54,7 +53,6 @@ export default function EditPerfumeReview() {
           type: perfume.type || PERFUME_TYPES[0],
           rating: perfume.rating || 0,
           description: perfume.description || '',
-          notes: perfume.notes || '',
           considerTravelSize: !!perfume.considerTravelSize,
           considerFullBottle: !!perfume.considerFullBottle,
           longevity: perfume.longevity ?? 0,
@@ -300,18 +298,6 @@ export default function EditPerfumeReview() {
           </div>
 
           <ApplicationSpotsSprayer value={formData.applicationSpots} onChange={handleApplicationSpotsChange} />
-
-          <div className="form-group">
-            <label className="form-label" htmlFor="notes">Application notes</label>
-            <textarea
-              id="notes"
-              name="notes"
-              value={formData.notes}
-              onChange={handleInputChange}
-              className="form-input form-textarea"
-              placeholder="Any other notes about this wear..."
-            />
-          </div>
 
           <div className="form-group">
             <label className="form-label">
