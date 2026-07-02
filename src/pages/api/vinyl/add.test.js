@@ -70,6 +70,9 @@ describe('vinyl add API', () => {
     expect(res.status).toHaveBeenCalledWith(201);
     const putCall = docClient.send.mock.calls.find(([cmd]) => cmd.input?.Item);
     expect(putCall[0].input.Item).toMatchObject({ lastfm: { mbid: 'abc-123' } });
+    expect(putCall[0].input.Item.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
+    );
     expect(clearApiCache).toHaveBeenCalledWith('api-vinyl-collection');
   });
 });

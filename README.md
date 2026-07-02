@@ -195,16 +195,20 @@ Album reviews with optional Last.fm enrichment.
 }
 ```
 
-#### VinylCollection Table
-Vinyl records with optional Last.fm enrichment.
+#### VinylCollectionV2 Table
+Vinyl records with optional Last.fm enrichment. Keyed by a generated `id` (not `title`+`artist`),
+matching the id-keyed pattern used by the review tables. `id` is a random UUID assigned once on
+create and never regenerated. The old title+artist-keyed `VinylCollection` is left at rest,
+unused, for rollback.
 
-**Primary Key:** `title` (String) + `artist` (String)
+**Primary Key:** `id` (String)
 
 **Schema:**
 ```javascript
 {
-  title: "OK Computer",              // Partition key
-  artist: "Radiohead",               // Sort key
+  id: "b3f1c2...",                   // Partition key — random UUID
+  title: "OK Computer",
+  artist: "Radiohead",
   thumbnail: "https://...",          // Last.fm cover URL ('' if not supplied)
   lastfm: {                          // Optional — omitted if no search was done
     mbid: "...",
