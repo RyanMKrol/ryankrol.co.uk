@@ -63,13 +63,24 @@ describe('validateSeasons', () => {
 });
 
 describe('validateApplicationSpots', () => {
-  test('accepts an empty array and a valid list of application spots', () => {
+  test('accepts an empty array and a valid list of {spot, sprays} objects', () => {
     expect(validateApplicationSpots([])).toBe(true);
-    expect(validateApplicationSpots(['Wrists', 'Behind ears'])).toBe(true);
+    expect(
+      validateApplicationSpots([
+        { spot: 'Wrists', sprays: 2 },
+        { spot: 'Behind ears', sprays: 1 },
+      ]),
+    ).toBe(true);
   });
 
-  test('rejects an invalid application spot entry or a non-array', () => {
-    expect(validateApplicationSpots(['Wrists', 'NotASpot'])).toBe(false);
+  test('rejects an unrecognised spot, a non-array, or the old flat-string shape', () => {
+    expect(validateApplicationSpots([{ spot: 'NotASpot', sprays: 1 }])).toBe(false);
     expect(validateApplicationSpots('Wrists')).toBe(false);
+    expect(validateApplicationSpots(['Wrists'])).toBe(false);
+  });
+
+  test('rejects a sprays value of zero or negative', () => {
+    expect(validateApplicationSpots([{ spot: 'Wrists', sprays: 0 }])).toBe(false);
+    expect(validateApplicationSpots([{ spot: 'Wrists', sprays: -1 }])).toBe(false);
   });
 });

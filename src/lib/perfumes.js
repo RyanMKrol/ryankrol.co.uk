@@ -26,7 +26,17 @@ const VALID_APPLICATION_SPOTS = [
 ];
 
 function validateApplicationSpots(value) {
-  return Array.isArray(value) && value.every((spot) => VALID_APPLICATION_SPOTS.includes(spot));
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (entry) =>
+        entry !== null &&
+        typeof entry === 'object' &&
+        VALID_APPLICATION_SPOTS.includes(entry.spot) &&
+        Number.isInteger(entry.sprays) &&
+        entry.sprays > 0,
+    )
+  );
 }
 
 function slugify(value) {
