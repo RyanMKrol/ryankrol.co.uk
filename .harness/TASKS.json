@@ -2804,7 +2804,7 @@
     {
       "id": "T107",
       "title": "Shrink perfume spray-spot buttons and make the whole card tappable",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
