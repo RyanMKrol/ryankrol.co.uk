@@ -114,6 +114,34 @@ Unit tests run on **Jest** (via `next/jest`) and are co-located next to source a
 
 ### DynamoDB Tables
 
+#### MovieRatingsV4 Table
+Movie reviews with optional TMDB enrichment. Keyed by a generated `id` (not `title`), so
+edits/deletes are stable even if the title is changed. `id` is a random UUID assigned once on
+create and never regenerated.
+
+**Primary Key:** `id` (String)
+
+**Schema:**
+```javascript
+{
+  id: "b3f1c2e0-...",                // Partition key — random UUID, assigned once
+  title: "Dune",
+  rating: 4,                         // 0–5
+  review_text: "...",                // Review text (from `gist` form field)
+  date: "15-01-2024",                // DD-MM-YYYY
+
+  // Optional — only present when a TMDB search match was selected
+  tmdbId: 438631,
+  mediaType: "movie",
+  posterPath: "/poster.jpg",
+  tmdbOverview: "A sci-fi epic",
+  tmdbDate: "2021-10-22"
+}
+```
+
+The `TelevisionRatingsV3` table (unchanged by this migration) has the same shape but is still
+keyed by `title`.
+
 #### AlbumRatingsV2 Table
 Album reviews with optional Last.fm enrichment.
 

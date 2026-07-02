@@ -31,11 +31,11 @@ export default function EditMovieReview() {
         if (!response.ok) throw new Error('Failed to fetch movies');
         const movies = await response.json();
         
-        // Decode the ID to get title
-        const decodedTitle = decodeURIComponent(id);
-        
-        // Find the movie by title
-        const movie = movies.find(m => m.title === decodedTitle);
+        // Decode the ID
+        const decodedId = decodeURIComponent(id);
+
+        // Find the movie by id
+        const movie = movies.find(m => m.id === decodedId);
         
         if (!movie) {
           throw new Error('Movie not found');
@@ -113,7 +113,7 @@ export default function EditMovieReview() {
         },
         body: JSON.stringify({
           ...formData,
-          originalTitle: originalData.title
+          originalId: originalData.id
         }),
       });
 
@@ -160,7 +160,7 @@ export default function EditMovieReview() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: originalData.title,
+          id: originalData.id,
           password: formData.password
         }),
       });

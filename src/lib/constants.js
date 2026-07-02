@@ -1,5 +1,5 @@
 const DYNAMO_TABLES = {
-  MOVIE_RATINGS_TABLE: 'MovieRatingsV3',
+  MOVIE_RATINGS_TABLE: 'MovieRatingsV4',
   BOOK_RATINGS_TABLE: 'BookRatingsV3',
   ALBUM_RATINGS_TABLE: 'AlbumRatingsV2',
   TV_RATINGS_TABLE: 'TelevisionRatingsV3',

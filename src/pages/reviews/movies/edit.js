@@ -62,15 +62,15 @@ export default function EditMovies() {
       
       <div className="reviews-wrapper">
         {movies.map((movie, index) => (
-          <div key={`${movie.title}-${index}`} className="review-card-with-edit">
-            <ReviewCard 
+          <div key={movie.id} className="review-card-with-edit">
+            <ReviewCard
               item={movie}
               type="movie"
               isLast={false}
               styleVariant={2}
             />
-            <Link 
-              href={`/reviews/movies/edit/${encodeURIComponent(movie.title)}`}
+            <Link
+              href={`/reviews/movies/edit/${encodeURIComponent(movie.id)}`}
               className="edit-button-overlay"
             >
               Edit
