@@ -2583,6 +2583,968 @@
       ],
       "expectsTest": false,
       "spec": ".harness/tasks/T099.md"
+    },
+    {
+      "id": "T100",
+      "title": "Add shared in-memory per-instance rate-limit helper (src/lib/rateLimit.js)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "backend",
+        "rate-limiting"
+      ],
+      "scope": [
+        "src/lib/rateLimit.js",
+        "src/lib/rateLimit.test.js",
+        "CLAUDE.md"
+      ],
+      "design": "Deliberately zero-new-infra: a fixed-window counter in a module-level Map, same spirit as the existing src/lib/apiCache.js NodeCache pattern but a separate concern (rate limiting, not response caching). This is a per-serverless-instance limiter — on Vercel each instance has its own Map, so it does NOT coordinate across instances (same gotcha as apiCache.js's per-instance NodeCache, documented in root CLAUDE.md's Architecture section). A true cross-instance guarantee would need a shared store (e.g. Upstash Redis via the Vercel Marketplace, or a DynamoDB counter table) — root CLAUDE.md says 'no new infra ... unless explicitly asked', so this task deliberately ships the weaker zero-infra version as a pragmatic first cut: it still stops a single client hammering a single instance, which is the common case for a low-traffic personal site.",
+      "verify": [],
+      "spec": ".harness/tasks/T100.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T101",
+      "title": "Rate-limit the TMDB search API route",
+      "status": "pending",
+      "dependsOn": [
+        "T100"
+      ],
+      "gate": null,
+      "tags": [
+        "backend",
+        "rate-limiting"
+      ],
+      "scope": [
+        "src/pages/api/tmdb/search.js",
+        "src/pages/api/tmdb/search.test.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T101.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T102",
+      "title": "Rate-limit the book search API route",
+      "status": "pending",
+      "dependsOn": [
+        "T100"
+      ],
+      "gate": null,
+      "tags": [
+        "backend",
+        "rate-limiting"
+      ],
+      "scope": [
+        "src/pages/api/books/search.js",
+        "src/pages/api/books/search.test.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T102.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T103",
+      "title": "Rate-limit the Last.fm API routes (now-playing, top-albums, album-search, album-info)",
+      "status": "pending",
+      "dependsOn": [
+        "T100"
+      ],
+      "gate": null,
+      "tags": [
+        "backend",
+        "rate-limiting"
+      ],
+      "scope": [
+        "src/pages/api/lastfm/**",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T103.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T104",
+      "title": "Rate-limit the GitHub repos API route",
+      "status": "pending",
+      "dependsOn": [
+        "T100"
+      ],
+      "gate": null,
+      "tags": [
+        "backend",
+        "rate-limiting"
+      ],
+      "scope": [
+        "src/pages/api/github/repos.js",
+        "src/pages/api/github/repos.test.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T104.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T105",
+      "title": "Add a 2s client-side cooldown to the TMDB/Book/Last.fm search-trigger buttons",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "frontend",
+        "rate-limiting"
+      ],
+      "scope": [
+        "src/components/TmdbSearch.js",
+        "src/components/BookSearch.js",
+        "src/components/LastfmAlbumSearch.js",
+        "CLAUDE.md"
+      ],
+      "design": "These three shared components are each mounted from multiple add forms (TmdbSearch by both src/pages/reviews/movies/add.js and reviews/tv/add.js via the `mediaType` prop; BookSearch by reviews/books/add.js; LastfmAlbumSearch by reviews/albums/add.js AND vinyl/add.js), so fixing the shared components covers every add form in one task — no need to touch the `add.js` pages themselves.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T105.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T106",
+      "title": "Batch mark-done.sh / mark-reviewed.sh + their dashboard bulk endpoints into one commit per bulk action",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "gate",
+      "tags": [
+        "harness",
+        "bugfix"
+      ],
+      "scope": [
+        ".harness/mark-done.sh",
+        ".harness/mark-reviewed.sh",
+        ".harness/dashboard/server.js",
+        ".harness/README.md"
+      ],
+      "design": "Extend the two CLI scripts to accept MULTIPLE ids and do their git plumbing (add/commit/push) exactly ONCE regardless of how many ids are passed, then make the dashboard's bulk HTTP handlers call the script once with the full id list instead of looping per id.",
+      "verify": [
+        "Build a HERMETIC scratch-repo test (own temp dir, `git init`, NOT this checkout) that copies the real `.harness/mark-done.sh` + `.harness/loop.sh` in, seeds a minimal TASKS.json fixture with 2+ needs-human tasks, runs `NO_PUSH=1 .harness/mark-done.sh T1 T2` (fixture ids) once, and asserts exactly ONE new commit was created touching human-done.json, and that both ids ended up `done:true` in it.",
+        "Same hermetic pattern for mark-reviewed.sh against a reviews.json fixture.",
+        "Assert the existing single-id call form (`mark-done.sh T123`, `mark-done.sh --undo T123`) still works unchanged against the same fixture.",
+        "Assert an invalid id in a batch (nonexistent task id, or — for mark-done.sh only — a task whose gate isn't needs-human) aborts BEFORE any file write or commit: the overlay file content and `git log` HEAD are unchanged after the failed call.",
+        "`grep -n \"runScript(\" .harness/dashboard/server.js` shows the bulk handler calling `runScript` exactly once per POST, not inside a `for`/`.forEach` over `ids`.",
+        "npm run lint / npm test / npm run build all pass."
+      ],
+      "spec": ".harness/tasks/T106.md",
+      "facets": {
+        "layer": "harness",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T107",
+      "title": "Shrink perfume spray-spot buttons and make the whole card tappable",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "bugfix"
+      ],
+      "scope": [
+        "src/components/PerfumeCharacteristics.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T107.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T108",
+      "title": "Exclude private repos from GET /api/github/repos response",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects",
+        "github"
+      ],
+      "scope": [
+        "src/pages/api/github/repos.js"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T108.md",
+      "facets": {
+        "layer": "api",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T109",
+      "title": "Write MovieRatingsV4 id-migration script (new table + backfill)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "movies",
+        "data-migration",
+        "needs-human"
+      ],
+      "scope": [
+        "src/scripts/migrateMoviesToIdTable.js",
+        "src/scripts/migrateMoviesToIdTable.test.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm test",
+        "npm run lint"
+      ],
+      "spec": ".harness/tasks/T109.md",
+      "expectsTest": true
+    },
+    {
+      "id": "T110",
+      "title": "Cut movies review routes + edit page over to id-keyed MovieRatingsV4",
+      "status": "pending",
+      "dependsOn": [
+        "T109"
+      ],
+      "gate": "gate",
+      "tags": [
+        "movies"
+      ],
+      "scope": [
+        "src/lib/constants.js",
+        "src/pages/api/reviews/movies/add.js",
+        "src/pages/api/reviews/movies/update.js",
+        "src/pages/api/reviews/movies/delete.js",
+        "src/pages/api/reviews/movies/index.js",
+        "src/pages/api/reviews/movies/add.test.js",
+        "src/pages/reviews/movies/edit.js",
+        "src/pages/reviews/movies/edit/[id].js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T110.md",
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": [
+          "touches-data",
+          "full-stack"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T111",
+      "title": "Write TelevisionRatingsV4 id-migration script (new table + backfill)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "tv",
+        "data-migration",
+        "needs-human"
+      ],
+      "scope": [
+        "src/scripts/migrateTvToIdTable.js",
+        "src/scripts/migrateTvToIdTable.test.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm test",
+        "npm run lint"
+      ],
+      "spec": ".harness/tasks/T111.md",
+      "expectsTest": true
+    },
+    {
+      "id": "T112",
+      "title": "Cut tv review routes + edit page over to id-keyed TelevisionRatingsV4",
+      "status": "pending",
+      "dependsOn": [
+        "T111"
+      ],
+      "gate": "gate",
+      "tags": [
+        "tv"
+      ],
+      "scope": [
+        "src/lib/constants.js",
+        "src/pages/api/reviews/tv/add.js",
+        "src/pages/api/reviews/tv/update.js",
+        "src/pages/api/reviews/tv/delete.js",
+        "src/pages/api/reviews/tv/index.js",
+        "src/pages/api/reviews/tv/add.test.js",
+        "src/pages/reviews/tv/edit.js",
+        "src/pages/reviews/tv/edit/[id].js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T112.md",
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": [
+          "touches-data",
+          "full-stack"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T113",
+      "title": "Write BookRatingsV4 id-migration script (new table + backfill)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "books",
+        "data-migration",
+        "needs-human"
+      ],
+      "scope": [
+        "src/scripts/migrateBooksToIdTable.js",
+        "src/scripts/migrateBooksToIdTable.test.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm test",
+        "npm run lint"
+      ],
+      "spec": ".harness/tasks/T113.md",
+      "expectsTest": true
+    },
+    {
+      "id": "T114",
+      "title": "Cut books review routes + edit page over to id-keyed BookRatingsV4",
+      "status": "pending",
+      "dependsOn": [
+        "T113"
+      ],
+      "gate": "gate",
+      "tags": [
+        "books"
+      ],
+      "scope": [
+        "src/lib/constants.js",
+        "src/pages/api/reviews/books/add.js",
+        "src/pages/api/reviews/books/update.js",
+        "src/pages/api/reviews/books/delete.js",
+        "src/pages/api/reviews/books/index.js",
+        "src/pages/api/reviews/books/add.test.js",
+        "src/pages/api/reviews/books/update.test.js",
+        "src/pages/reviews/books/edit.js",
+        "src/pages/reviews/books/edit/[id].js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T114.md",
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": [
+          "touches-data",
+          "full-stack"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T115",
+      "title": "Write AlbumRatingsV3 id-migration script (new table + backfill)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "albums",
+        "data-migration",
+        "needs-human"
+      ],
+      "scope": [
+        "src/scripts/migrateAlbumsToIdTable.js",
+        "src/scripts/migrateAlbumsToIdTable.test.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm test",
+        "npm run lint"
+      ],
+      "spec": ".harness/tasks/T115.md",
+      "expectsTest": true
+    },
+    {
+      "id": "T116",
+      "title": "Cut albums review routes + edit page over to id-keyed AlbumRatingsV3",
+      "status": "pending",
+      "dependsOn": [
+        "T115"
+      ],
+      "gate": "gate",
+      "tags": [
+        "albums"
+      ],
+      "scope": [
+        "src/lib/constants.js",
+        "src/pages/api/reviews/albums/add.js",
+        "src/pages/api/reviews/albums/update.js",
+        "src/pages/api/reviews/albums/delete.js",
+        "src/pages/api/reviews/albums/index.js",
+        "src/pages/api/reviews/albums/add.test.js",
+        "src/pages/reviews/albums/edit.js",
+        "src/pages/reviews/albums/edit/[id].js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T116.md",
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": [
+          "touches-data",
+          "full-stack"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T117",
+      "title": "Write VinylCollectionV2 id-migration script (new table + backfill)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "vinyl",
+        "data-migration",
+        "needs-human"
+      ],
+      "scope": [
+        "src/scripts/migrateVinylToIdTable.js",
+        "src/scripts/migrateVinylToIdTable.test.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm test",
+        "npm run lint"
+      ],
+      "spec": ".harness/tasks/T117.md",
+      "expectsTest": true
+    },
+    {
+      "id": "T118",
+      "title": "Cut vinyl routes over to id-keyed VinylCollectionV2 (no edit UI change — none exists)",
+      "status": "pending",
+      "dependsOn": [
+        "T117"
+      ],
+      "gate": "gate",
+      "tags": [
+        "vinyl"
+      ],
+      "scope": [
+        "src/lib/constants.js",
+        "src/pages/api/vinyl/add.js",
+        "src/pages/api/vinyl/index.js",
+        "src/pages/api/vinyl/add.test.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T118.md",
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T119",
+      "title": "ReviewCard: show a second 'edited' date line when an item has been edited",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "feature"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js"
+      ],
+      "design": "Add a new optional field `editedDate` (a `DD-MM-YYYY` string, same format/convention as the existing `date` field) that review items may carry. In the JSX block at lines 86-90 (`{item.date && (<p className=\"review-date\">Date: {item.date}</p>)}`), keep that line unchanged, and immediately after it add a second conditional line that only renders when `item.editedDate` is truthy: `{item.editedDate && (<p className=\"review-date\">Edited: {item.editedDate}</p>)}`. Do not change behavior when `editedDate` is absent — only the single existing `Date:` line renders, exactly as today.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T119.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T120",
+      "title": "Movies update API: stamp a new editedDate field on every edit",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "api",
+        "feature"
+      ],
+      "scope": [
+        "src/pages/api/reviews/movies/update.js"
+      ],
+      "design": "Keep the existing `originalDate`/`preservedDate` logic (lines 32-44) exactly as-is — the original `date` field must still be preserved untouched. In addition, compute `const editedDate = new Date().toLocaleDateString('en-GB').replace(/\\//g, '-');` (same convention already used in `add.js`'s `dateString`) and add `editedDate` to the `reviewData` object built at lines 61-71, alongside the existing `date: preservedDate` line. Every successful call to this route represents an edit, so `editedDate` should be set unconditionally on every update (not just when other fields changed).",
+      "verify": [],
+      "spec": ".harness/tasks/T120.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T121",
+      "title": "TV update API: stamp a new editedDate field on every edit",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "api",
+        "feature"
+      ],
+      "scope": [
+        "src/pages/api/reviews/tv/update.js"
+      ],
+      "design": "Identical fix to the movies update route, applied to the TV update route: keep the existing `originalDate`/`preservedDate` logic (lines 32-44) unchanged, compute `editedDate` via `new Date().toLocaleDateString('en-GB').replace(/\\//g, '-')`, and add it to the `reviewData` object built at lines 61-71 alongside `date: preservedDate`.",
+      "verify": [],
+      "spec": ".harness/tasks/T121.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T122",
+      "title": "Books update API: stamp a new editedDate field on every edit",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "api",
+        "feature"
+      ],
+      "scope": [
+        "src/pages/api/reviews/books/update.js"
+      ],
+      "design": "Keep the existing `originalDate`/`preservedDate` logic (lines 33-46) unchanged, compute `editedDate` via `new Date().toLocaleDateString('en-GB').replace(/\\//g, '-')`, and add it to the `reviewData` object built at lines 66-83 alongside `date: preservedDate`.",
+      "verify": [],
+      "spec": ".harness/tasks/T122.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T123",
+      "title": "Albums update API: stamp a new editedDate field on every edit",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "api",
+        "feature"
+      ],
+      "scope": [
+        "src/pages/api/reviews/albums/update.js"
+      ],
+      "design": "Add `#editedDate = :editedDate` (or similar) to the `updateExpressionParts` array (line 30) alongside the existing `#rating = :rating` and `highlights = :highlights` parts, add the corresponding entry to `expressionAttributeNames` and `expressionAttributeValues` (computed via `new Date().toLocaleDateString('en-GB').replace(/\\//g, '-')`), so every album edit stamps `editedDate` via the existing `UpdateCommand`.",
+      "verify": [],
+      "spec": ".harness/tasks/T123.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T124",
+      "title": "Movies list: sort by editedDate when present, else date",
+      "status": "pending",
+      "dependsOn": [
+        "T120"
+      ],
+      "gate": null,
+      "tags": [
+        "page",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/index.js"
+      ],
+      "design": "In both the `date-desc` branch (lines 61-67) and the default 'most recent first' branch (lines 68-75), replace the raw `a.date`/`b.date` reads with `(a.editedDate || a.date)`/`(b.editedDate || b.date)` before the `.split('-').reverse().join('-')` parsing, so sorting prefers the edited date when a review has been edited and falls back to the original date otherwise.",
+      "verify": [],
+      "spec": ".harness/tasks/T124.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T125",
+      "title": "TV list: sort by editedDate when present, else date",
+      "status": "pending",
+      "dependsOn": [
+        "T121"
+      ],
+      "gate": null,
+      "tags": [
+        "page",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/tv/index.js"
+      ],
+      "design": "In both the `date-desc` branch (lines 60-66) and the default 'most recent first' branch (lines 67-74), replace the raw `a.date`/`b.date` reads with `(a.editedDate || a.date)`/`(b.editedDate || b.date)` before the `.split('-').reverse().join('-')` parsing, so sorting prefers the edited date when a review has been edited and falls back to the original date otherwise.",
+      "verify": [],
+      "spec": ".harness/tasks/T125.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T126",
+      "title": "Books list: sort by editedDate when present, else date",
+      "status": "pending",
+      "dependsOn": [
+        "T122"
+      ],
+      "gate": null,
+      "tags": [
+        "page",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/books/index.js"
+      ],
+      "design": "In both the `date-desc` branch (around lines 62-68) and the default 'most recent first' branch (around lines 69-76), replace the raw `a.date`/`b.date` reads with `(a.editedDate || a.date)`/`(b.editedDate || b.date)` before the `.split('-').reverse().join('-')` parsing, so sorting prefers the edited date when a review has been edited and falls back to the original date otherwise.",
+      "verify": [],
+      "spec": ".harness/tasks/T126.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T127",
+      "title": "Albums list: sort by editedDate when present, else date",
+      "status": "pending",
+      "dependsOn": [
+        "T123"
+      ],
+      "gate": null,
+      "tags": [
+        "page",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/albums/index.js"
+      ],
+      "design": "In both the `date-desc` branch (around lines 74-80) and the default 'most recent first' branch (around lines 81-88), replace the raw `a.date`/`b.date` reads with `(a.editedDate || a.date)`/`(b.editedDate || b.date)` before the `.split('-').reverse().join('-')` parsing, so sorting prefers the edited date when a review has been edited and falls back to the original date otherwise.",
+      "verify": [],
+      "spec": ".harness/tasks/T127.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T128",
+      "title": "De-dupe near-identical Last.fm album search results server-side",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "lastfm",
+        "dedup",
+        "search"
+      ],
+      "scope": [
+        "src/lib/lastfm.js",
+        "src/lib/lastfm.test.js",
+        "src/pages/api/lastfm/album-search.js"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T128.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T129",
+      "title": "Decide whether TMDB / Google Books search need result re-ranking beyond what they already do",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "tmdb",
+        "googlebooks",
+        "decision",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T129.md",
+      "expectsTest": false
+    },
+    {
+      "id": "T130",
+      "title": "Show poster/cover + description cards in the edit-page backfill modal (all 4 review types)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "modal",
+        "backfill"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/edit/[id].js",
+        "src/pages/reviews/tv/edit/[id].js",
+        "src/pages/reviews/books/edit/[id].js",
+        "src/pages/reviews/albums/edit/[id].js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T130.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T131",
+      "title": "Only show inline TMDB-match error after a failed save attempt (movies add form)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "ui"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/add.js"
+      ],
+      "design": "Add a `hasAttemptedSubmit` boolean state flag, set true as the first statement inside `handleSubmit`, and gate the inline error paragraph on `hasAttemptedSubmit && !tmdbMatch` instead of just `!tmdbMatch`. Leave the top-of-form `message`/`messageType` banner and the existing `handleSubmit`-time `setMessage(...)` call untouched.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T131.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T132",
+      "title": "Only show inline TMDB-match error after a failed save attempt (TV add form)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "ui"
+      ],
+      "scope": [
+        "src/pages/reviews/tv/add.js"
+      ],
+      "design": "Identical fix to the movies add form, applied to the TV add form: add a `hasAttemptedSubmit` boolean state flag, set true as the first statement inside `handleSubmit`, and gate the inline error paragraph on `hasAttemptedSubmit && !tmdbMatch` instead of just `!tmdbMatch`.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T132.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T133",
+      "title": "Throttle/cooldown loop.sh's pushes to main to avoid tripping Vercel's Hobby-tier build rate limit (needs-human)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "harness",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T133.md",
+      "expectsTest": false
+    },
+    {
+      "id": "T134",
+      "title": "Self-heal incomplete Workouts records during the live Hevy backfill sync",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "bugfix"
+      ],
+      "scope": [
+        "src/lib/workoutBackfill.js"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T134.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "bugfix",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T135",
+      "title": "WorkoutCard: always link through to the workout detail page, independent of exercises data",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "bugfix"
+      ],
+      "scope": [
+        "src/components/WorkoutCard.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T135.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
     }
   ]
 }
