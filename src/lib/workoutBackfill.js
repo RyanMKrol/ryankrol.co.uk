@@ -1,4 +1,4 @@
-import { PutCommand } from '@aws-sdk/lib-dynamodb';
+import { PutCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from './dynamo';
 import { DYNAMO_TABLES } from './constants';
 import { clearApiCache } from './apiCache';
@@ -42,53 +42,99 @@ async function storeWorkoutInDynamoDB(workout) {
 
     console.log(`✅ [BACKFILL] Stored workout in ${workoutStoreTime}ms: ${workout.title}`);
 
-    // Store exercises
-    console.log(`🗄️  [BACKFILL] Storing ${workout.exercises.length} exercises for workout ${workout.id}`);
-
-    for (let j = 0; j < workout.exercises.length; j++) {
-      const exercise = workout.exercises[j];
-      const exerciseMetrics = calculateExerciseMetrics(exercise);
-      const workoutDate = new Date(workout.start_time).toISOString().split('T')[0];
-
-      const exerciseItem = {
-        exercise_id: `${workout.id}_${j}`,
-        workout_id: workout.id,
-        exercise_name: exercise.title,
-        workout_date: workoutDate,
-        workout_title: workout.title || 'Untitled Workout',
-        start_time: workout.start_time,
-        end_time: workout.end_time,
-        sets: exercise.sets,
-        exercise_index: j,
-        ...exerciseMetrics,
-        created_at: new Date().toISOString(),
-        data_source: 'hevy_api',
-        backfilled_at: new Date().toISOString()
-      };
-
-      const exerciseParams = {
-        TableName: DYNAMO_TABLES.EXERCISES_TABLE,
-        Item: exerciseItem,
-        ConditionExpression: 'attribute_not_exists(exercise_id)'
-      };
-
-      const exerciseStartTime = Date.now();
-      await docClient.send(new PutCommand(exerciseParams));
-      const exerciseStoreTime = Date.now() - exerciseStartTime;
-
-      console.log(`   📝 [BACKFILL] Stored exercise ${j + 1}/${workout.exercises.length}: ${exercise.title} (${exerciseStoreTime}ms)`);
-    }
+    await storeExercises(workout);
 
     console.log(`✅ [BACKFILL] Successfully stored workout and all exercises for ${workout.id}`);
     return true;
 
   } catch (error) {
     if (error.name === 'ConditionalCheckFailedException') {
-      console.log(`⚠️  [BACKFILL] Workout ${workout.id} already exists, skipping`);
-      return false; // Signal that workout was not stored (already exists)
+      const existing = await docClient.send(new GetCommand({
+        TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
+        Key: { id: workout.id }
+      }));
+      const existingItem = existing.Item;
+
+      if (existingItem && existingItem.exercises) {
+        console.log(`⚠️  [BACKFILL] Workout ${workout.id} already exists, skipping`);
+        return false; // Signal that workout was not stored (already exists)
+      }
+
+      console.log(`🩹 [BACKFILL] Workout ${workout.id} exists but is incomplete (missing exercises), healing...`);
+      await docClient.send(new UpdateCommand({
+        TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
+        Key: { id: workout.id },
+        UpdateExpression: 'SET exercises = :exercises, totalVolume = :totalVolume, ' +
+          'totalWarmupSets = :totalWarmupSets, totalWorkingSets = :totalWorkingSets, ' +
+          'uniqueExercises = :uniqueExercises, durationMinutes = :durationMinutes, ' +
+          'workoutType = :workoutType',
+        ExpressionAttributeValues: {
+          ':exercises': workout.exercises,
+          ':totalVolume': metrics.totalVolume,
+          ':totalWarmupSets': metrics.totalWarmupSets,
+          ':totalWorkingSets': metrics.totalWorkingSets,
+          ':uniqueExercises': metrics.uniqueExercises,
+          ':durationMinutes': metrics.durationMinutes,
+          ':workoutType': metrics.workoutType,
+        },
+      }));
+      console.log(`✅ [BACKFILL] Healed incomplete workout ${workout.id}`);
+
+      await storeExercises(workout);
+
+      return true;
     } else {
       console.error(`❌ [BACKFILL] Error storing workout ${workout.id}:`, error);
       throw error;
+    }
+  }
+}
+
+/**
+ * Store all exercises for a workout, tolerating exercises that already exist
+ */
+async function storeExercises(workout) {
+  console.log(`🗄️  [BACKFILL] Storing ${workout.exercises.length} exercises for workout ${workout.id}`);
+
+  for (let j = 0; j < workout.exercises.length; j++) {
+    const exercise = workout.exercises[j];
+    const exerciseMetrics = calculateExerciseMetrics(exercise);
+    const workoutDate = new Date(workout.start_time).toISOString().split('T')[0];
+
+    const exerciseItem = {
+      exercise_id: `${workout.id}_${j}`,
+      workout_id: workout.id,
+      exercise_name: exercise.title,
+      workout_date: workoutDate,
+      workout_title: workout.title || 'Untitled Workout',
+      start_time: workout.start_time,
+      end_time: workout.end_time,
+      sets: exercise.sets,
+      exercise_index: j,
+      ...exerciseMetrics,
+      created_at: new Date().toISOString(),
+      data_source: 'hevy_api',
+      backfilled_at: new Date().toISOString()
+    };
+
+    const exerciseParams = {
+      TableName: DYNAMO_TABLES.EXERCISES_TABLE,
+      Item: exerciseItem,
+      ConditionExpression: 'attribute_not_exists(exercise_id)'
+    };
+
+    try {
+      const exerciseStartTime = Date.now();
+      await docClient.send(new PutCommand(exerciseParams));
+      const exerciseStoreTime = Date.now() - exerciseStartTime;
+
+      console.log(`   📝 [BACKFILL] Stored exercise ${j + 1}/${workout.exercises.length}: ${exercise.title} (${exerciseStoreTime}ms)`);
+    } catch (error) {
+      if (error.name === 'ConditionalCheckFailedException') {
+        console.log(`   ⏭️  [BACKFILL] Exercise ${exerciseItem.exercise_id} already exists, skipping`);
+      } else {
+        throw error;
+      }
     }
   }
 }
