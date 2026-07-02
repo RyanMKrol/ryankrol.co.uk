@@ -15,6 +15,7 @@ export default function AddMovieReview() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const router = useRouter();
 
   const handleInputChange = (e) => {
@@ -33,6 +34,7 @@ export default function AddMovieReview() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setHasAttemptedSubmit(true);
 
     if (!tmdbMatch) {
       setMessage('Search and select a TMDB match before saving');
@@ -114,7 +116,7 @@ export default function AddMovieReview() {
               query={formData.title}
               onSelect={setTmdbMatch}
             />
-            {!tmdbMatch && (
+            {hasAttemptedSubmit && !tmdbMatch && (
               <p className="error-message">
                 Search and select a TMDB match before saving
               </p>
