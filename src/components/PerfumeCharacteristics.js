@@ -85,33 +85,34 @@ function SpraySpotCounter({ spot, count, onChange }) {
   };
 
   return (
-    <div
+    <button
+      type="button"
+      onClick={spray}
+      onContextMenu={unspray}
+      title="Tap to add a spray, right-click to remove one"
       style={{
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '0.4rem',
-        padding: '0.75rem 0.5rem',
+        gap: '0.3rem',
+        padding: '0.5rem 0.4rem',
         border: `1px solid ${count > 0 ? 'var(--color-accent)' : 'var(--color-border-strong)'}`,
         borderRadius: 'var(--radius-base)',
         background: count > 0 ? 'var(--color-surface-alt)' : 'transparent',
         transition: 'border-color 0.2s, background-color 0.2s',
-        minWidth: '6.5rem',
+        minWidth: '5rem',
+        font: 'inherit',
+        textAlign: 'center',
+        cursor: 'pointer',
       }}
     >
-      <button
-        type="button"
-        onClick={spray}
-        onContextMenu={unspray}
-        title="Tap to add a spray, right-click to remove one"
+      <span
         style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: '1.75rem',
+          position: 'relative',
+          display: 'inline-block',
+          fontSize: '1.2rem',
           lineHeight: 1,
-          padding: 0,
           transformOrigin: 'bottom center',
           animation: poofs.length ? 'spray-squeeze 0.25s ease' : 'none',
         }}
@@ -133,7 +134,7 @@ function SpraySpotCounter({ spot, count, onChange }) {
             💦
           </span>
         ))}
-      </button>
+      </span>
       <span className="form-label" style={{ margin: 0, textAlign: 'center' }}>{spot}</span>
       <span
         style={{
@@ -155,7 +156,7 @@ function SpraySpotCounter({ spot, count, onChange }) {
           100% { transform: scale(1); }
         }
       `}</style>
-    </div>
+    </button>
   );
 }
 
