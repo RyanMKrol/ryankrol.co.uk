@@ -2480,7 +2480,7 @@
     {
       "id": "T096",
       "title": "Remove the Application notes field from the perfume schema — backend",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
