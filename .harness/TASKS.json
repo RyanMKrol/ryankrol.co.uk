@@ -3129,7 +3129,7 @@
     {
       "id": "T117",
       "title": "Write VinylCollectionV2 id-migration script (new table + backfill)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
