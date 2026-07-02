@@ -231,10 +231,31 @@ export default function EditTVReview() {
               onConfirm={handleBackfillConfirm}
               getResultKey={(result, i) => result.tmdbId ?? i}
               renderResult={(result) => (
-                <>
-                  <strong>{result.title}</strong>
-                  {result.date && ` (${result.date})`}
-                </>
+                <div className="mbm-card-row">
+                  {tmdbPosterUrl(result.posterPath) ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={tmdbPosterUrl(result.posterPath)}
+                      alt={result.title}
+                      className="mbm-thumb"
+                      width={60}
+                      height={90}
+                    />
+                  ) : (
+                    <div className="mbm-thumb mbm-thumb-placeholder" />
+                  )}
+                  <div className="mbm-card-info">
+                    <p className="mbm-card-title">
+                      <strong>{result.title}</strong>
+                      {result.date && <span className="mbm-card-year"> ({result.date.slice(0, 4)})</span>}
+                    </p>
+                    {result.overview && (
+                      <p className="mbm-card-secondary">
+                        {result.overview.slice(0, 160)}{result.overview.length > 160 ? '…' : ''}
+                      </p>
+                    )}
+                  </div>
+                </div>
               )}
             />
             {formData.posterPath && (
@@ -297,6 +318,44 @@ export default function EditTVReview() {
           </div>
         </form>
       </div>
+
+      <style jsx>{`
+        .mbm-card-row {
+          display: flex;
+          gap: 0.75rem;
+          align-items: flex-start;
+        }
+        .mbm-thumb {
+          object-fit: cover;
+          border-radius: 3px;
+          flex-shrink: 0;
+        }
+        .mbm-thumb-placeholder {
+          width: 60px;
+          height: 90px;
+          background: var(--color-border, #333);
+          border-radius: 3px;
+          flex-shrink: 0;
+        }
+        .mbm-card-info {
+          flex: 1;
+          min-width: 0;
+        }
+        .mbm-card-title {
+          font-size: 0.9rem;
+          margin: 0 0 0.25rem;
+        }
+        .mbm-card-year {
+          font-weight: 400;
+          opacity: 0.7;
+        }
+        .mbm-card-secondary {
+          font-size: 0.8rem;
+          opacity: 0.8;
+          margin: 0;
+          line-height: 1.4;
+        }
+      `}</style>
     </div>
   );
 }

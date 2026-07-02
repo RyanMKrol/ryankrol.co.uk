@@ -261,10 +261,24 @@ export default function EditAlbumReview() {
               onConfirm={handleBackfillConfirm}
               getResultKey={(result, i) => result.mbid ?? i}
               renderResult={(result) => (
-                <>
-                  <strong>{result.title}</strong>
-                  {result.artist && <p>{result.artist}</p>}
-                </>
+                <div className="mbm-card-row">
+                  {result.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={result.image}
+                      alt={result.title}
+                      className="mbm-thumb"
+                      width={50}
+                      height={50}
+                    />
+                  ) : (
+                    <div className="mbm-thumb mbm-thumb-placeholder" />
+                  )}
+                  <div className="mbm-card-info">
+                    <p className="mbm-card-title"><strong>{result.title}</strong></p>
+                    {result.artist && <p className="mbm-card-secondary">{result.artist}</p>}
+                  </div>
+                </div>
               )}
             />
           </div>
@@ -349,6 +363,37 @@ export default function EditAlbumReview() {
         .lastfm-preview-label {
           font-size: 0.85rem;
           opacity: 0.7;
+        }
+        .mbm-card-row {
+          display: flex;
+          gap: 0.75rem;
+          align-items: flex-start;
+        }
+        .mbm-thumb {
+          object-fit: cover;
+          border-radius: 3px;
+          flex-shrink: 0;
+        }
+        .mbm-thumb-placeholder {
+          width: 50px;
+          height: 50px;
+          background: var(--color-border, #333);
+          border-radius: 3px;
+          flex-shrink: 0;
+        }
+        .mbm-card-info {
+          flex: 1;
+          min-width: 0;
+        }
+        .mbm-card-title {
+          font-size: 0.9rem;
+          margin: 0 0 0.25rem;
+        }
+        .mbm-card-secondary {
+          font-size: 0.8rem;
+          opacity: 0.8;
+          margin: 0;
+          line-height: 1.4;
         }
       `}</style>
     </div>

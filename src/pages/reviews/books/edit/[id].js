@@ -245,13 +245,31 @@ export default function EditBookReview() {
               onConfirm={handleBackfillConfirm}
               getResultKey={(result, i) => result.volumeId ?? i}
               renderResult={(result) => (
-                <>
-                  <strong>{result.title}</strong>
-                  {result.firstPublishedYear && ` (${result.firstPublishedYear})`}
-                  {result.authors && result.authors.length > 0 && (
-                    <p>{result.authors.join(', ')}</p>
+                <div className="mbm-card-row">
+                  {result.coverUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={result.coverUrl}
+                      alt={result.title}
+                      className="mbm-thumb"
+                      width={40}
+                      height={60}
+                    />
+                  ) : (
+                    <div className="mbm-thumb mbm-thumb-placeholder" />
                   )}
-                </>
+                  <div className="mbm-card-info">
+                    <p className="mbm-card-title">
+                      <strong>{result.title}</strong>
+                      {result.firstPublishedYear && (
+                        <span className="mbm-card-year"> ({result.firstPublishedYear})</span>
+                      )}
+                    </p>
+                    {result.authors && result.authors.length > 0 && (
+                      <p className="mbm-card-secondary">{result.authors.join(', ')}</p>
+                    )}
+                  </div>
+                </div>
               )}
             />
           </div>
@@ -307,6 +325,44 @@ export default function EditBookReview() {
           </div>
         </form>
       </div>
+
+      <style jsx>{`
+        .mbm-card-row {
+          display: flex;
+          gap: 0.75rem;
+          align-items: flex-start;
+        }
+        .mbm-thumb {
+          object-fit: cover;
+          border-radius: 3px;
+          flex-shrink: 0;
+        }
+        .mbm-thumb-placeholder {
+          width: 40px;
+          height: 60px;
+          background: var(--color-border, #333);
+          border-radius: 3px;
+          flex-shrink: 0;
+        }
+        .mbm-card-info {
+          flex: 1;
+          min-width: 0;
+        }
+        .mbm-card-title {
+          font-size: 0.9rem;
+          margin: 0 0 0.25rem;
+        }
+        .mbm-card-year {
+          font-weight: 400;
+          opacity: 0.7;
+        }
+        .mbm-card-secondary {
+          font-size: 0.8rem;
+          opacity: 0.8;
+          margin: 0;
+          line-height: 1.4;
+        }
+      `}</style>
     </div>
   );
 }
