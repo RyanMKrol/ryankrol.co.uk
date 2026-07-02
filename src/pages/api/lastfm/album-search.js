@@ -1,5 +1,5 @@
 import { withApiCache, generateCacheKey } from '../../../lib/apiCache';
-import { mapAlbumSearchResult } from '../../../lib/lastfm';
+import { mapAlbumSearchResult, dedupeAlbumResults } from '../../../lib/lastfm';
 import { checkRateLimit, getClientIp } from '../../../lib/rateLimit';
 
 export default async function handler(req, res) {
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       const albums = data.results?.albummatches?.album;
       if (!albums) return [];
       const raw = Array.isArray(albums) ? albums : [albums];
-      return raw.map(mapAlbumSearchResult);
+      return dedupeAlbumResults(raw.map(mapAlbumSearchResult));
     });
 
     return res.status(200).json({ results });

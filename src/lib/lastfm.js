@@ -30,6 +30,75 @@ export function mapAlbumSearchResult(raw) {
 }
 
 /**
+ * Normalise a string for fuzzy grouping: lowercase, strip punctuation, fold
+ * '&'/'and' to the same token, collapse whitespace.
+ * @param {string} str
+ * @returns {string}
+ */
+function normalizeForGrouping(str) {
+  return str
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[.,']/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Build a normalized grouping key for a mapped album search result, used to
+ * collapse near-duplicate Last.fm entries (e.g. "808s and Heartbreaks" vs
+ * "Kanye West 808s And Heartbreaks (feat. Kid Cudi)").
+ * @param {{ title: string, artist: string }} result
+ * @returns {string}
+ */
+function albumGroupKey(result) {
+  const artist = normalizeForGrouping(result.artist ?? '');
+  let title = normalizeForGrouping(result.title ?? '');
+
+  // strip a leading artist-name prefix, e.g. "Kanye West 808s..." -> "808s..."
+  if (artist && title.startsWith(artist)) {
+    title = title.slice(artist.length).trim();
+  }
+
+  // strip trailing/parenthetical feat/ft qualifiers
+  title = title
+    .replace(/\(feat\.?[^)]*\)/g, '')
+    .replace(/\bfeat\.?\s.*$/g, '')
+    .replace(/\bft\.?\s.*$/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    // fold trivial singular/plural variants (e.g. "Heartbreaks" vs "Heartbreak")
+    .replace(/s$/, '');
+
+  return `${artist}::${title}`;
+}
+
+/**
+ * Collapse near-duplicate album search results (Last.fm's crowd-tagged
+ * database frequently surfaces the same album under several near-identical
+ * titles). Keeps one representative per normalized group, preferring an
+ * mbid-bearing entry, and preserves first-appearance order.
+ * @param {Array<{ title, artist, mbid, url, image }>} results
+ * @returns {Array<{ title, artist, mbid, url, image }>}
+ */
+export function dedupeAlbumResults(results) {
+  const order = [];
+  const groups = new Map();
+
+  for (const result of results) {
+    const key = albumGroupKey(result);
+    if (!groups.has(key)) {
+      groups.set(key, result);
+      order.push(key);
+    } else if (!groups.get(key).mbid && result.mbid) {
+      groups.set(key, result);
+    }
+  }
+
+  return order.map(key => groups.get(key));
+}
+
+/**
  * Normalise a Last.fm album.getInfo result. Deliberately over-stores metadata.
  * Be defensive — Last.fm fields are frequently missing.
  * @param {Object} raw - Raw album object from album.getInfo response

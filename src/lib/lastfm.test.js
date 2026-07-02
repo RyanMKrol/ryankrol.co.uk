@@ -1,4 +1,4 @@
-import { mapAlbumSearchResult, mapAlbumInfo } from './lastfm';
+import { mapAlbumSearchResult, mapAlbumInfo, dedupeAlbumResults } from './lastfm';
 
 const SEARCH_ITEM = {
   name: 'Rumours',
@@ -137,5 +137,59 @@ describe('mapAlbumInfo', () => {
   it('counts a single track (not array) as trackCount 1', () => {
     const result = mapAlbumInfo({ tracks: { track: { name: 'Go Your Own Way' } } });
     expect(result.trackCount).toBe(1);
+  });
+});
+
+describe('dedupeAlbumResults', () => {
+  const heartbreakFamily = [
+    { title: '808s and Heartbreaks', artist: 'Kanye West', mbid: null, url: 'a', image: null },
+    { title: 'Kanye West 808s And Heartbreaks', artist: 'Kanye West', mbid: null, url: 'b', image: null },
+    { title: '808s And Heartbreaks (feat. Kid Cudi)', artist: 'Kanye West', mbid: null, url: 'c', image: null },
+    { title: '808s and Heartbreaks ft Lil Wayne', artist: 'Kanye West', mbid: null, url: 'd', image: null },
+    { title: '808s & Heartbreak', artist: 'Kanye West', mbid: null, url: 'e', image: null },
+  ];
+
+  it('collapses the "808s and Heartbreaks" near-duplicate family to one result', () => {
+    const result = dedupeAlbumResults(heartbreakFamily);
+    expect(result).toHaveLength(1);
+    expect(result[0].url).toBe('a');
+  });
+
+  it('prefers an mbid-bearing duplicate over one without an mbid in the same group', () => {
+    const results = [
+      { title: '808s and Heartbreaks', artist: 'Kanye West', mbid: null, url: 'a', image: null },
+      { title: '808s And Heartbreaks (feat. Kid Cudi)', artist: 'Kanye West', mbid: 'mbid-123', url: 'b', image: null },
+    ];
+    const result = dedupeAlbumResults(results);
+    expect(result).toHaveLength(1);
+    expect(result[0].mbid).toBe('mbid-123');
+    expect(result[0].url).toBe('b');
+  });
+
+  it('leaves genuinely distinct albums/artists unaffected', () => {
+    const results = [
+      { title: 'Rumours', artist: 'Fleetwood Mac', mbid: null, url: 'a', image: null },
+      { title: 'Tusk', artist: 'Fleetwood Mac', mbid: null, url: 'b', image: null },
+      { title: 'Rumours', artist: 'Tribute Band', mbid: null, url: 'c', image: null },
+    ];
+    const result = dedupeAlbumResults(results);
+    expect(result).toHaveLength(3);
+  });
+
+  it('preserves first-appearance order of surviving representatives', () => {
+    const results = [
+      { title: 'Rumours', artist: 'Fleetwood Mac', mbid: null, url: 'first', image: null },
+      { title: 'Tusk', artist: 'Fleetwood Mac', mbid: null, url: 'second', image: null },
+      { title: 'Rumours', artist: 'Fleetwood Mac', mbid: null, url: 'dup-of-first', image: null },
+    ];
+    const result = dedupeAlbumResults(results);
+    expect(result.map(r => r.url)).toEqual(['first', 'second']);
+  });
+
+  it('does not mutate the input array', () => {
+    const input = [...heartbreakFamily];
+    const copy = [...input];
+    dedupeAlbumResults(input);
+    expect(input).toEqual(copy);
   });
 });
