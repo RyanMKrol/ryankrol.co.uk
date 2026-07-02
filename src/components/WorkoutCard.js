@@ -63,7 +63,9 @@ export default function WorkoutCard({ workout, isLast = false }) {
   return (
     <div className={cardClass}>
       <h3 className="review-title">
-        {workout.title || 'Untitled Workout'}
+        <Link href={`/workouts/${workout.id}`} className="workout-detail-link">
+          {workout.title || 'Untitled Workout'}
+        </Link>
       </h3>
 
       <div className="workout-meta">
