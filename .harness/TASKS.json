@@ -2560,7 +2560,7 @@
     {
       "id": "T099",
       "title": "Fix perfume slider thumbs not sitting flush at track start",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
