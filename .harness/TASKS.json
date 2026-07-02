@@ -3193,7 +3193,7 @@
     {
       "id": "T119",
       "title": "ReviewCard: show a second 'edited' date line when an item has been edited",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
