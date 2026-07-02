@@ -2404,7 +2404,7 @@
     {
       "id": "T093",
       "title": "Fix dashboard auto-refresh wiping checkbox selections",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
