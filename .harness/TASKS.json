@@ -3089,7 +3089,7 @@
     {
       "id": "T116",
       "title": "Cut albums review routes + edit page over to id-keyed AlbumRatingsV3",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T115"
       ],
