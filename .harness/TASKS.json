@@ -3576,7 +3576,7 @@
     {
       "id": "T135",
       "title": "WorkoutCard: always link through to the workout detail page, independent of exercises data",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
