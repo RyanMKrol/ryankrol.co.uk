@@ -48,6 +48,16 @@ next-env.d.ts
 # The ideas inbox is a PRIVATE, transient capture scratchpad (raw, unfleshed ideas). The mechanism
 # travels via .harness/CLAUDE.md; each repo grows its own private inbox.
 .harness/IDEAS.md
+# /convert-ideas scratch: a per-unit agent writes its decided task(s) to its own uniquely-named
+# file here (zero lock contention during interview/shaping); the Stage 3 consolidation pass reads,
+# allocates ids, and deletes them. Never committed — see .harness/CLAUDE.md and
+# .claude/commands/convert-ideas.md.
+.harness/.pending-tasks/
+# /convert-ideas scratch: a per-unit agent blocked on a genuine open question (it has no
+# AskUserQuestion — that's main-thread-only) writes its questions here durably BEFORE ending its
+# turn, so the question survives even if the coordinating session ends before relaying it to the
+# owner. Deleted once the unit is unblocked and finishes shaping. Never committed.
+.harness/.pending-questions/
 # Private seed data pasted alongside an idea (e.g. spreadsheet dumps) — same privacy as the inbox.
 .harness/perfume-seed-data.tsv
 # atomic-write temps for the owner-owned overlays + TASKS.json.

@@ -34,36 +34,80 @@ private jobs — stay local and never hit the public repo. The *mechanism* trave
 this committed doc; each project grows its own private inbox. This is distinct from the committed
 `TASKS.json` backlog — the inbox is transient working state, the backlog is the durable record.
 
-### Step 2 — convert: a per-idea TWO-PHASE interview, looped over the whole inbox (`/convert-ideas`)
+### Step 2 — convert: parallel per-idea agents + one locked consolidation pass (`/convert-ideas`)
 
 Conversion is its OWN process — it **leans on `ralph-loop-add-to-backlog` but is NOT the bare skill**.
-`/convert-ideas` sweeps the **whole inbox** in one invocation, but converts the ideas **one at a
-time**: each idea gets its own full excavation before any shaping. The batch is purely an ergonomic
-loop — it never lets you shape several half-formed ideas at once. For each idea, a probing front-end
-runs first:
-- **Phase 1 — idea excavation.** Treat the idea as one vague sentence. Probe the owner FIRST: what's
-  the underlying itch/problem, what are they actually after, rough shape, why it matters — *before*
-  any task-shaping. Default to MORE questions here; assume nothing is fleshed out. (This phase is
-  exactly what the standard add-to-backlog interview lacks — it expects an already-formed feature.)
-- **Phase 2 — task shaping.** Feed the now-understood idea into the **`ralph-loop-add-to-backlog`**
-  interview (DoD, scope, dependsOn, facets, spec MD) → a schema-correct task. Related ideas (one a
-  foundation the other builds on) become a `dependsOn` edge, not a merge.
-- **Discipline:** finish one idea completely (excavate → shape → delete) before starting the next, and
-  ideally don't run the sweep while mid-build on something else — that context-juggling is the root
-  problem this whole flow solves.
-- **Delete on convert.** As each idea's task lands, remove that idea's bullet from `.harness/IDEAS.md`.
-  The resulting `TASKS.json` task (+ its spec MD) is the record; the inbox stays a clean, transient
-  surface. (No "converted" archive — the inbox is gitignored, so there'd be no history of it anyway.)
+`/convert-ideas` sweeps the **whole inbox** in one invocation, converting ideas **in parallel, not one
+at a time**: every idea (or tightly-related cluster of ideas — see the skill for the grouping rule)
+gets its own agent that owns explore → interview → shape end-to-end, and every independent unit
+launches together in one wave — there is no serial queue and no artificial batch-size cap. What used
+to make this unsafe to parallelize (every agent racing the shared repo lock to allocate a task id and
+commit directly) is now avoided by construction: each per-idea agent writes ONLY to its own
+uniquely-named scratch file under `.harness/.pending-tasks/` (no shared resource touched at all during
+interview/shaping), and a **single consolidation pass** — `.harness/consolidate-ideas.sh` /
+`.mjs`, run once after every agent reports back — allocates every task id, resolves cross-idea
+`dependsOn` links, writes `TASKS.json` + spec files, commits, pushes, and cleans up `IDEAS.md` — all in
+one locked step instead of one per idea. Full mechanics (the pending-file schema, the consolidation
+script, the recovery check for an interrupted prior sweep) live in the skill itself,
+`.claude/commands/convert-ideas.md` — this section is just the model summary.
+
+**Agents can't ask the owner directly.** `AskUserQuestion` is main-thread/interactive-only, so a
+background per-unit agent can't block on a live prompt itself. A genuine open question is relayed
+THROUGH the coordinator: the agent writes it durably to `.harness/.pending-questions/<slug>.json` (so
+it survives even if the coordinating session ends before relaying it — don't rely on conversation
+memory alone for anything that must survive an interruption), the coordinator batches every open
+question across every unit into `AskUserQuestion` calls to the owner, then resumes each blocked unit
+via `SendMessage` with its answers — possibly more than one round, if an answer opens a new question.
+An agent that can make a confident, low-risk judgment call instead of blocking should just do that
+(documented in its `report`) rather than manufacturing a question.
+
+Other key points, in brief (full detail in the skill):
+- **De-dup pass (before launching any agents).** Scan the full inbox for ideas that are the same or
+  substantially overlap (semantic similarity, not exact-text match) and surface suspected duplicate
+  groups to the owner to merge or drop — do NOT auto-merge.
+- **Grouping by shared answer-space, not just `dependsOn`.** Cluster ideas onto the SAME agent when
+  answering one idea's interview question would plausibly change what you'd ask/how you'd shape
+  another; a hard dependency with no shared answer-space still gets separate agents in the same wave
+  (a tempId scheme resolves the real link at consolidation time).
+- **Shape → write to a scratch file, not `TASKS.json` directly.** Once an agent is satisfied, it writes
+  its decided task(s) (title, scope, facets, spec content, everything except a real id) to its own
+  `.harness/.pending-tasks/<slug>.json` and stops. No lock, no git, no `IDEAS.md` edit at this stage.
+- **Consolidate once, at the end.** After every launched agent reports back,
+  `.harness/consolidate-ideas.sh` (a permanent, tested script — see `.harness/consolidate-ideas.mjs`
+  for the id-allocation/spec-write/merge logic) reads all pending files, allocates ids, resolves
+  temp-id `dependsOn` references, writes `tasks/TNNN.md` specs, updates `TASKS.json`, commits +
+  pushes, removes every converted idea's bullet from `.harness/IDEAS.md` (by FUZZY text match —
+  normalized/reflowed comparison, re-read fresh under the lock, since a pending file's recorded
+  bullet text won't byte-match the hand-wrapped markdown), and deletes the consumed pending files.
+  This runs under `loop.sh`'s own shared lock (`LOOP_SOURCE_ONLY=1 source loop.sh` — the same pattern
+  `mark-done.sh`/`mark-failed.sh` use), not a standalone lock file — this repo has no separate daemon
+  process that would need to coordinate on the mutex from outside `loop.sh`, so it exits immediately
+  (no queueing) if the loop is currently running. This is the ONLY step that ever touches the repo
+  lock in a sweep.
+- **Recovery check, before anything else.** A sweep starts by checking for leftover
+  `.harness/.pending-tasks/*.json` files (fully-shaped units never consolidated — consolidate those
+  first) AND leftover `.harness/.pending-questions/*.json` files (units blocked on an owner answer
+  that never arrived — relay their recorded questions, then launch a fresh agent per unit to finish,
+  seeded with what's on disk) from a prior interrupted run, before touching the current inbox; and
+  for `IDEAS.md` bullets that plausibly already became a task in a recent commit (confirm with the
+  owner rather than re-interviewing from scratch).
+- **Delete on convert.** As each idea's task lands (or resolves to "no action needed"), its bullet is
+  removed from `.harness/IDEAS.md` — during the consolidation pass, never earlier. The resulting
+  `TASKS.json` task (+ its spec MD) is the record; the inbox stays a clean, transient surface. (No
+  "converted" archive — the inbox is gitignored, so there'd be no history of it anyway.)
 
 **Worked example.** Inbox bullet: *"The workouts page could show each exercise's best-ever lift."* →
-**Phase 1** surfaces: a badge or a small chart? is the best-1RM already on the exercise record (it
-is — `bestEstimated1RM`), or does `/api/exercises/...` need a new field? what's the itch — seeing PRs
-at a glance? → once understood, **Phase 2** runs add-to-backlog and produces a `page`/`feature` task
-scoped to `src/pages/exercises/[exerciseName].js` (+ any `api` task if a new field is needed), each
-with a real `## Done when`. Then the bullet is deleted from `IDEAS.md`.
+a per-unit agent explores (a badge or a small chart? is the best-1RM already on the exercise record —
+it is, `bestEstimated1RM` — or does `/api/exercises/...` need a new field? what's the itch — seeing
+PRs at a glance?), settles what it can itself, shapes a `page`/`feature` task scoped to
+`src/pages/exercises/[exerciseName].js` (+ any `api` task if a new field is needed) with a real
+`## Done when`, and writes it to its own `.harness/.pending-tasks/best-ever-lift.json`. Once every
+launched agent has reported back, the consolidation pass lands the real task(s) and deletes the
+bullet from `IDEAS.md`.
 
-> Distribution: the `/idea`, `/convert-ideas`, and `/loop-recover` commands are project-local
-> (`.claude/commands/`). They were ported into this repo alongside the rest of the harness.
+> Distribution: the `/idea`, `/convert-ideas`, `/pre-loop-checkin`, and `/loop-recover` commands are
+> project-local (`.claude/commands/`). They were ported into this repo alongside the rest of the
+> harness.
 
 ## The floor (holds even on a direct edit)
 
