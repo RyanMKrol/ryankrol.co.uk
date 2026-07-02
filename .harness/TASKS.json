@@ -2428,7 +2428,7 @@
     {
       "id": "T094",
       "title": "Per-spot spray count for Application spots — backend",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
