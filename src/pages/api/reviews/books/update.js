@@ -1,4 +1,4 @@
-import { GetCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
+import { GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
 
   const {
-    title, author, rating, overview, password, originalTitle, originalAuthor,
+    title, author, rating, overview, password, originalId,
     source, olid, coverId, coverUrl, volumeId,
     bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher
   } = req.body;
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   }
 
   // Validate required fields
-  if (!title || !author || rating === undefined || !overview || !originalTitle || !originalAuthor) {
+  if (!title || !author || rating === undefined || !overview || !originalId) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -34,8 +34,7 @@ export default async function handler(req, res) {
     const getParams = {
       TableName: DYNAMO_TABLES.BOOK_RATINGS_TABLE,
       Key: {
-        title: originalTitle,
-        author: originalAuthor
+        id: originalId
       }
     };
 
@@ -45,25 +44,9 @@ export default async function handler(req, res) {
     // If no original date found, use current date (shouldn't happen for updates)
     const preservedDate = originalDate || new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
 
-    // If title or author changed, we need to delete the old item and create a new one
-    // If only other fields changed, we can update in place
-    const titleChanged = title !== originalTitle;
-    const authorChanged = author !== originalAuthor;
-
-    if (titleChanged || authorChanged) {
-      // Delete the old item
-      const deleteParams = {
-        TableName: DYNAMO_TABLES.BOOK_RATINGS_TABLE,
-        Key: {
-          title: originalTitle,
-          author: originalAuthor
-        }
-      };
-      await docClient.send(new DeleteCommand(deleteParams));
-    }
-
-    // Create/update the item with preserved original date
+    // Update the item in place with preserved original date and id
     const reviewData = {
+      id: originalId,
       title,
       author,
       rating,

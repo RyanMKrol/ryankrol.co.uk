@@ -35,8 +35,7 @@ describe('books update API', () => {
         rating: 5,
         overview: 'Great book',
         password,
-        originalTitle: 'Dune',
-        originalAuthor: 'Frank Herbert',
+        originalId: 'book-123',
         source: 'googlebooks',
         volumeId: 'abc123',
         isbn: '9780441013593',
@@ -50,6 +49,7 @@ describe('books update API', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     const putCall = docClient.send.mock.calls.find(([cmd]) => cmd.input?.Item);
     expect(putCall[0].input.Item).toMatchObject({
+      id: 'book-123',
       source: 'googlebooks',
       volumeId: 'abc123',
       isbn: '9780441013593',
@@ -67,8 +67,7 @@ describe('books update API', () => {
         rating: 5,
         overview: 'Great book',
         password,
-        originalTitle: 'Dune',
-        originalAuthor: 'Frank Herbert'
+        originalId: 'book-123'
       }
     };
     const res = mockRes();

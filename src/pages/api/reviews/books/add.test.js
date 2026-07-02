@@ -63,6 +63,8 @@ describe('books add API', () => {
     await handler(req, res);
 
     expect(res.status).toHaveBeenCalledWith(201);
+    const putCall = docClient.send.mock.calls.find(([cmd]) => cmd.input?.Item);
+    expect(putCall[0].input.Item.id).toEqual(expect.any(String));
     expect(clearApiCache).toHaveBeenCalledWith('api-books');
   });
 });

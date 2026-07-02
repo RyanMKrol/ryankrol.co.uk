@@ -61,16 +61,16 @@ export default function EditBooks() {
       <h1 className="page-title">📚 Edit Book Reviews</h1>
       
       <div className="reviews-wrapper">
-        {books.map((book, index) => (
-          <div key={`${book.title}-${book.author}-${index}`} className="review-card-with-edit">
-            <ReviewCard 
+        {books.map((book) => (
+          <div key={book.id} className="review-card-with-edit">
+            <ReviewCard
               item={book}
               type="book"
               isLast={false}
               styleVariant={2}
             />
-            <Link 
-              href={`/reviews/books/edit/${encodeURIComponent(book.title + '|' + book.author)}`}
+            <Link
+              href={`/reviews/books/edit/${encodeURIComponent(book.id)}`}
               className="edit-button-overlay"
             >
               Edit

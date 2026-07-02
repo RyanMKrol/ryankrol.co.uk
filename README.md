@@ -219,16 +219,20 @@ Vinyl records with optional Last.fm enrichment.
 }
 ```
 
-#### BookRatingsV3 Table
-Book reviews with optional provider-search enrichment.
+#### BookRatingsV4 Table
+Book reviews with optional provider-search enrichment. Keyed by a generated `id` (not
+`title`+`author`), so edits/deletes are stable even if the title or author changes. `id` is a
+random UUID assigned once on create and never regenerated. The old title+author-keyed
+`BookRatingsV3` is left at rest, unused, for rollback.
 
-**Primary Key:** `title` (String) + `author` (String)
+**Primary Key:** `id` (String)
 
 **Schema:**
 ```javascript
 {
-  title: "Dune",                      // Partition key
-  author: "Frank Herbert",            // Sort key
+  id: "b3f1c2e0-...",                // Partition key — random UUID, assigned once
+  title: "Dune",
+  author: "Frank Herbert",
   rating: 4,                         // 0–5
   review_text: "...",                // Review text (from `overview` form field)
   date: "15-01-2024",                // DD-MM-YYYY

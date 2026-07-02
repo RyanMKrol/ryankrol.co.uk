@@ -31,12 +31,10 @@ export default function EditBookReview() {
         if (!response.ok) throw new Error('Failed to fetch books');
         const books = await response.json();
         
-        // Decode the ID to get title and author
         const decodedId = decodeURIComponent(id);
-        const [title, author] = decodedId.split('|');
-        
-        // Find the book by title and author
-        const book = books.find(b => b.title === title && b.author === author);
+
+        // Find the book by id
+        const book = books.find(b => b.id === decodedId);
         
         if (!book) {
           throw new Error('Book not found');
@@ -115,8 +113,7 @@ export default function EditBookReview() {
         },
         body: JSON.stringify({
           ...formData,
-          originalTitle: originalData.title,
-          originalAuthor: originalData.author
+          originalId: originalData.id
         }),
       });
 
@@ -163,8 +160,7 @@ export default function EditBookReview() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: originalData.title,
-          author: originalData.author,
+          id: originalData.id,
           password: formData.password
         }),
       });
