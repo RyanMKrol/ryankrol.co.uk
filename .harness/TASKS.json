@@ -3385,7 +3385,7 @@
     {
       "id": "T127",
       "title": "Albums list: sort by editedDate when present, else date",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T123"
       ],
