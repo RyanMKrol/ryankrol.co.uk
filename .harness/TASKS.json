@@ -3335,7 +3335,7 @@
     {
       "id": "T125",
       "title": "TV list: sort by editedDate when present, else date",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T121"
       ],
