@@ -2852,7 +2852,7 @@
     {
       "id": "T109",
       "title": "Write MovieRatingsV4 id-migration script (new table + backfill)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
