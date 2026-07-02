@@ -70,8 +70,8 @@ export default async function handler(req, res) {
       // Filter and sort repositories by activity
       const activeRepos = data
         .filter(repo => {
-          // Filter out forks; archived repos are included
-          return !repo.fork && repo.pushed_at;
+          // Filter out forks and private repos; archived repos are included
+          return !repo.fork && repo.pushed_at && !repo.private;
         })
         .sort((a, b) => {
           // Sort by last push date (most recent first)
