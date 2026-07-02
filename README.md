@@ -139,8 +139,32 @@ create and never regenerated.
 }
 ```
 
-The `TelevisionRatingsV3` table (unchanged by this migration) has the same shape but is still
-keyed by `title`.
+The `TelevisionRatingsV3` table is left at rest, unused, for rollback.
+
+#### TelevisionRatingsV4 Table
+TV show reviews with optional TMDB enrichment. Keyed by a generated `id` (not `title`), so
+edits/deletes are stable even if the title is changed. `id` is a random UUID assigned once on
+create and never regenerated.
+
+**Primary Key:** `id` (String)
+
+**Schema:**
+```javascript
+{
+  id: "b3f1c2e0-...",                // Partition key — random UUID, assigned once
+  title: "Severance",
+  rating: 5,                         // 0–5
+  review_text: "...",                // Review text (from `gist` form field)
+  date: "15-01-2024",                // DD-MM-YYYY
+
+  // Optional — only present when a TMDB search match was selected
+  tmdbId: 95396,
+  mediaType: "tv",
+  posterPath: "/poster.jpg",
+  tmdbOverview: "A workplace thriller",
+  tmdbDate: "2022-02-18"
+}
+```
 
 #### AlbumRatingsV2 Table
 Album reviews with optional Last.fm enrichment.

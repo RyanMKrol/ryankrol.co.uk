@@ -171,7 +171,7 @@ Full workout/exercise schemas are in `README.md`; summary:
 | Table | Key(s) | Notes |
 |---|---|---|
 | `MovieRatingsV4` | `id` (random UUID, assigned once, never regenerated) | `{ id, title, rating(0–5), review_text, date 'DD-MM-YYYY', tmdbId?, mediaType?, posterPath?, tmdbOverview?, tmdbDate? }` — replaces the old title-keyed `MovieRatingsV3` (left at rest, unused, for rollback) |
-| `TelevisionRatingsV3` | `title` | same shape as movies (still title-keyed; not yet migrated to an id key) |
+| `TelevisionRatingsV4` | `id` (random UUID, assigned once, never regenerated) | same shape as movies — replaces the old title-keyed `TelevisionRatingsV3` (left at rest, unused, for rollback) |
 | `BookRatingsV3` | `title` + `author` | adds `author`; `review_text` comes from form field `overview`; optional search fields: `source` (`'openlibrary'`\|`'googlebooks'`), `coverUrl` (Google Books full URL), `volumeId` (Google Books), `olid`/`coverId` (Open Library), `bookAuthors`, `firstPublishedYear`, `isbn`, `subjects`, `pageCount`, `publisher` |
 | `AlbumRatingsV2` | `title` + `artist` | `{ title, artist, rating, highlights, date, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` |
 | `VinylCollection` | `title` + `artist` | `{ title, artist, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` |

@@ -61,16 +61,16 @@ export default function EditTVShows() {
       <h1 className="page-title">📺 Edit TV Show Reviews</h1>
       
       <div className="reviews-wrapper">
-        {tvShows.map((tvShow, index) => (
-          <div key={`${tvShow.title}-${index}`} className="review-card-with-edit">
-            <ReviewCard 
+        {tvShows.map((tvShow) => (
+          <div key={tvShow.id} className="review-card-with-edit">
+            <ReviewCard
               item={tvShow}
               type="tv"
               isLast={false}
               styleVariant={2}
             />
-            <Link 
-              href={`/reviews/tv/edit/${encodeURIComponent(tvShow.title)}`}
+            <Link
+              href={`/reviews/tv/edit/${encodeURIComponent(tvShow.id)}`}
               className="edit-button-overlay"
             >
               Edit

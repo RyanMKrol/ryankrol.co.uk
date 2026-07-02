@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
@@ -30,6 +31,7 @@ export default async function handler(req, res) {
     const dateString = now.toLocaleDateString('en-GB').replace(/\//g, '-');
 
     const reviewData = {
+      id: randomUUID(),
       title,
       rating,
       review_text: gist,

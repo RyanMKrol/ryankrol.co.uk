@@ -31,11 +31,11 @@ export default function EditTVReview() {
         if (!response.ok) throw new Error('Failed to fetch TV shows');
         const tvShows = await response.json();
         
-        // Decode the ID to get title
-        const decodedTitle = decodeURIComponent(id);
-        
-        // Find the TV show by title
-        const tvShow = tvShows.find(t => t.title === decodedTitle);
+        // Decode the ID
+        const decodedId = decodeURIComponent(id);
+
+        // Find the TV show by id
+        const tvShow = tvShows.find(t => t.id === decodedId);
         
         if (!tvShow) {
           throw new Error('TV show not found');
@@ -113,7 +113,7 @@ export default function EditTVReview() {
         },
         body: JSON.stringify({
           ...formData,
-          originalTitle: originalData.title
+          originalId: originalData.id
         }),
       });
 
@@ -160,7 +160,7 @@ export default function EditTVReview() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: originalData.title,
+          id: originalData.id,
           password: formData.password
         }),
       });

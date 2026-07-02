@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, password } = req.body;
+  const { id, password } = req.body;
 
   // Verify password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -16,15 +16,15 @@ export default async function handler(req, res) {
   }
 
   // Validate required fields
-  if (!title) {
-    return res.status(400).json({ message: 'Missing required field (title)' });
+  if (!id) {
+    return res.status(400).json({ message: 'Missing required field (id)' });
   }
 
   try {
     const params = {
       TableName: DYNAMO_TABLES.TV_RATINGS_TABLE,
       Key: {
-        title
+        id
       }
     };
 
