@@ -27,11 +27,12 @@ export default async function handler(req, res) {
 
   try {
     // Update the item in DynamoDB
-    const updateExpressionParts = ['#rating = :rating', 'highlights = :highlights'];
+    const updateExpressionParts = ['#rating = :rating', 'highlights = :highlights', 'editedDate = :editedDate'];
     const expressionAttributeNames = { '#rating': 'rating' };
     const expressionAttributeValues = {
       ':rating': Number(rating),
-      ':highlights': highlights
+      ':highlights': highlights,
+      ':editedDate': new Date().toLocaleDateString('en-GB').replace(/\//g, '-')
     };
 
     if (lastfm) {
