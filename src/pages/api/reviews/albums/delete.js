@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, artist, password } = req.body;
+  const { id, password } = req.body;
 
   // Verify password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -16,16 +16,15 @@ export default async function handler(req, res) {
   }
 
   // Validate required fields
-  if (!title || !artist) {
-    return res.status(400).json({ message: 'Missing required fields (title and artist)' });
+  if (!id) {
+    return res.status(400).json({ message: 'Missing required field (id)' });
   }
 
   try {
     const params = {
       TableName: DYNAMO_TABLES.ALBUM_RATINGS_TABLE,
       Key: {
-        title,
-        artist
+        id
       }
     };
 

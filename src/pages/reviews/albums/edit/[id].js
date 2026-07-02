@@ -32,12 +32,11 @@ export default function EditAlbumReview() {
         if (!response.ok) throw new Error('Failed to fetch albums');
         const albums = await response.json();
         
-        // Decode the ID to get title and artist
+        // Decode the ID
         const decodedId = decodeURIComponent(id);
-        const [title, artist] = decodedId.split('|');
-        
-        // Find the album by title and artist
-        const album = albums.find(a => a.title === title && a.artist === artist);
+
+        // Find the album by id
+        const album = albums.find(a => a.id === decodedId);
         
         if (!album) {
           throw new Error('Album not found');
@@ -130,8 +129,7 @@ export default function EditAlbumReview() {
         },
         body: JSON.stringify({
           ...formData,
-          originalTitle: originalData.title,
-          originalArtist: originalData.artist
+          originalId: originalData.id
         }),
       });
 
@@ -178,8 +176,7 @@ export default function EditAlbumReview() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: originalData.title,
-          artist: originalData.artist,
+          id: originalData.id,
           password: formData.password
         }),
       });

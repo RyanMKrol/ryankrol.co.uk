@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
@@ -22,6 +23,7 @@ export default async function handler(req, res) {
 
   try {
     const albumData = {
+      id: randomUUID(),
       title,
       artist,
       rating: Number(rating),

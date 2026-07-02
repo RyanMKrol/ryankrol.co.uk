@@ -61,16 +61,16 @@ export default function EditAlbums() {
       <h1 className="page-title">🎵 Edit Album Reviews</h1>
       
       <div className="reviews-wrapper">
-        {albums.map((album, index) => (
-          <div key={`${album.title}-${album.artist}-${index}`} className="review-card-with-edit">
-            <ReviewCard 
+        {albums.map((album) => (
+          <div key={album.id} className="review-card-with-edit">
+            <ReviewCard
               item={album}
               type="album"
               isLast={false}
               styleVariant={2}
             />
-            <Link 
-              href={`/reviews/albums/edit/${encodeURIComponent(album.title + '|' + album.artist)}`}
+            <Link
+              href={`/reviews/albums/edit/${encodeURIComponent(album.id)}`}
               className="edit-button-overlay"
             >
               Edit

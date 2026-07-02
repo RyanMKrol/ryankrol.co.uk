@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, artist, rating, highlights, originalTitle, originalArtist, password, lastfm } = req.body;
+  const { title, artist, rating, highlights, originalId, password, lastfm } = req.body;
 
   // Validate password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -20,9 +20,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
-  // Validate originalTitle and originalArtist for finding the record
-  if (!originalTitle || !originalArtist) {
-    return res.status(400).json({ message: 'Original title and artist are required' });
+  // Validate originalId for finding the record
+  if (!originalId) {
+    return res.status(400).json({ message: 'Original id is required' });
   }
 
   try {
@@ -53,8 +53,7 @@ export default async function handler(req, res) {
     const updateParams = {
       TableName: DYNAMO_TABLES.ALBUM_RATINGS_TABLE,
       Key: {
-        title: originalTitle,
-        artist: originalArtist
+        id: originalId
       },
       UpdateExpression: `SET ${updateExpressionParts.join(', ')}`,
       ExpressionAttributeNames: expressionAttributeNames,

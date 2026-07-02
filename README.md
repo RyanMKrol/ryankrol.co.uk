@@ -166,16 +166,17 @@ create and never regenerated.
 }
 ```
 
-#### AlbumRatingsV2 Table
+#### AlbumRatingsV3 Table
 Album reviews with optional Last.fm enrichment.
 
-**Primary Key:** `title` (String) + `artist` (String)
+**Primary Key:** `id` (String, random UUID, assigned once, never regenerated)
 
 **Schema:**
 ```javascript
 {
-  title: "OK Computer",              // Partition key
-  artist: "Radiohead",               // Sort key
+  id: "b3f1c2a4-...",                // Partition key
+  title: "OK Computer",
+  artist: "Radiohead",
   rating: 4,                         // 0–5
   highlights: "...",                 // Review text
   date: "15-01-2024",                // DD-MM-YYYY
