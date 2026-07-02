@@ -2348,7 +2348,7 @@
     {
       "id": "T091",
       "title": "Fix transparent background on the metadata backfill modal",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
