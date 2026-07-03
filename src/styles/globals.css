@@ -1586,3 +1586,73 @@ body::before {
   background-color: var(--color-surface-alt);
 }
 
+/* ===== Collection primitives (T143): Pill, PillGroup, SearchInput, Badge ===== */
+
+.collection-pill-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.collection-pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: transparent;
+  color: var(--color-ink);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  padding: 0.5rem 1.25rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.collection-pill.active {
+  background-color: var(--color-ink);
+  color: #FFFFFF;
+}
+
+.collection-search-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-card);
+  padding: 0.5rem 1.25rem;
+}
+
+.collection-search-icon {
+  color: var(--color-ink-mute);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.collection-search-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-ink);
+}
+
+.collection-search-input input::placeholder {
+  color: var(--color-ink-mute);
+}
+
+.collection-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
