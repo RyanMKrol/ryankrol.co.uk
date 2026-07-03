@@ -4728,7 +4728,7 @@
     {
       "id": "T169",
       "title": "Visual audit: cross-cutting design-system consistency pass + Matrix-mode regression check",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T162",
         "T163",
