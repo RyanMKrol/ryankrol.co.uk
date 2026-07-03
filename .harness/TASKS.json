@@ -3947,7 +3947,7 @@
     {
       "id": "T148",
       "title": "Build shared StatBlock component",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T142"
       ],
