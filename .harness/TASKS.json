@@ -4875,7 +4875,7 @@
     {
       "id": "T174",
       "title": "Harden .projects-grid against CSS Grid track blowout so repo cards can't overflow their container",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T173"
       ],
