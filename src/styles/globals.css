@@ -1787,6 +1787,73 @@ input[type='range'].form-input::-moz-range-thumb {
   gap: 1rem;
 }
 
+.vinyl-letter-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.vinyl-letter-header-letter {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  color: var(--accent-vinyl);
+  flex: 0 0 auto;
+}
+
+.vinyl-letter-header-rule {
+  flex: 1 1 auto;
+  height: var(--border-width);
+  background-color: var(--color-border);
+}
+
+.vinyl-letter-header-count {
+  flex: 0 0 auto;
+  color: var(--color-ink-mute);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.vinyl-cover-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 700px) {
+  .vinyl-cover-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+.vinyl-list-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: var(--border-width) solid var(--color-border);
+  font-family: var(--font-body);
+}
+
+.vinyl-list-row:last-child {
+  border-bottom: none;
+}
+
+.vinyl-list-row-title {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.vinyl-list-row-artist {
+  color: var(--color-ink-mute);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
 /* Chart card */
 .chart-card {
   background-color: var(--color-surface);

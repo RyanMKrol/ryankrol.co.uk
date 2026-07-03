@@ -1,11 +1,40 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Header from '../../components/Header';
+import SearchInput from '../../components/SearchInput';
+import PillGroup from '../../components/PillGroup';
+import CoverTile from '../../components/CoverTile';
+
+const VIEW_OPTIONS = [
+  { value: 'covers', label: 'covers' },
+  { value: 'list', label: 'list' },
+];
+
+function getArtistForSorting(artist) {
+  if (!artist) return '';
+  return artist.replace(/^The\s+/i, '').trim();
+}
+
+function groupByLetter(items) {
+  const grouped = {};
+  items.forEach(item => {
+    const sortingArtist = getArtistForSorting(item.artist);
+    const firstLetter = sortingArtist.charAt(0).toUpperCase() || '#';
+
+    if (!grouped[firstLetter]) {
+      grouped[firstLetter] = [];
+    }
+    grouped[firstLetter].push(item);
+  });
+  return grouped;
+}
 
 export default function VinylPage() {
   const [vinyl, setVinyl] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [view, setView] = useState('covers');
 
   useEffect(() => {
     async function fetchVinyl() {
@@ -27,40 +56,12 @@ export default function VinylPage() {
     fetchVinyl();
   }, []);
 
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
-    } catch {
-      return dateString;
-    }
-  };
+  const filteredVinyl = vinyl.filter(item =>
+    (item.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.artist || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const groupByLetter = (items) => {
-    const grouped = {};
-    items.forEach(item => {
-      const getArtistForSorting = (artist) => {
-        if (!artist) return '';
-        return artist.replace(/^The\s+/i, '').trim();
-      };
-
-      const sortingArtist = getArtistForSorting(item.artist);
-      const firstLetter = sortingArtist.charAt(0).toUpperCase() || '#';
-
-      if (!grouped[firstLetter]) {
-        grouped[firstLetter] = [];
-      }
-      grouped[firstLetter].push(item);
-    });
-    return grouped;
-  };
-
-  const groupedVinyl = groupByLetter(vinyl);
+  const groupedVinyl = groupByLetter(filteredVinyl);
   const sortedLetters = Object.keys(groupedVinyl).sort();
 
   return (
@@ -72,11 +73,33 @@ export default function VinylPage() {
       <div className="container">
         <Header />
 
-        <h1 className="page-title">vinyl</h1>
+        <div className="collection-review-header">
+          <div className="collection-review-title-group">
+            <h1 className="page-title">vinyl</h1>
+            <p className="collection-review-meta">
+              {vinyl.length} records on the shelf · sorted by artist
+            </p>
+          </div>
+        </div>
 
-        <p className="page-subtitle">
-          {vinyl.length > 0 ? `${vinyl.length} records in my collection` : 'Loading collection...'}
-        </p>
+        <div className="search-container">
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="search vinyl by title or artist..."
+          />
+          <PillGroup
+            options={VIEW_OPTIONS}
+            value={view}
+            onChange={setView}
+            accentColor="var(--accent-vinyl)"
+          />
+          {searchTerm && (
+            <div className="search-results-count">
+              Found {filteredVinyl.length} record{filteredVinyl.length !== 1 ? 's' : ''}
+            </div>
+          )}
+        </div>
 
         {loading && (
           <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -90,92 +113,49 @@ export default function VinylPage() {
           </div>
         )}
 
-        {!loading && !error && vinyl.length === 0 && (
+        {!loading && !error && filteredVinyl.length === 0 && (
           <div style={{ textAlign: 'center', padding: '2rem' }}>
             No vinyl records found.
           </div>
         )}
 
-        {!loading && !error && vinyl.length > 0 && (
+        {!loading && !error && filteredVinyl.length > 0 && (
           <div>
             {sortedLetters.map((letter, letterIndex) => (
               <div key={letter} style={{ marginBottom: letterIndex === sortedLetters.length - 1 ? '0' : '2rem' }}>
-                <h2 className="vinyl-section-header">
-                  {letter}
-                </h2>
-
-                <div style={{ display: 'grid', gap: '1rem' }}>
-                  {groupedVinyl[letter].map((record, index) => (
-                    <div
-                      key={`${record.artist}-${record.title}-${index}`}
-                      className="vinyl-record"
-                      style={{
-                        borderBottom: index === groupedVinyl[letter].length - 1 ? 'none' : '1px solid var(--color-border)'
-                      }}
-                    >
-                      <div style={{ flex: 1 }}>
-                        <h3 style={{
-                          fontSize: '1.1rem',
-                          fontWeight: 'bold',
-                          marginBottom: '0.25rem'
-                        }}>
-                          {record.title || 'Unknown Title'}
-                        </h3>
-
-                        <p className="text-muted" style={{
-                          fontSize: '0.95rem',
-                          marginBottom: '0.5rem'
-                        }}>
-                          by {record.artist || 'Unknown Artist'}
-                        </p>
-
-                        <div className="text-muted" style={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          gap: '1rem',
-                          fontSize: '0.85rem'
-                        }}>
-                          {record.year && (
-                            <span>Year: {record.year}</span>
-                          )}
-                          {record.format && (
-                            <span>Format: {record.format}</span>
-                          )}
-                          {record.label && (
-                            <span>Label: {record.label}</span>
-                          )}
-                          {record.date_added && (
-                            <span>Added: {formatDate(record.date_added)}</span>
-                          )}
-                          {record.condition && (
-                            <span>Condition: {record.condition}</span>
-                          )}
-                        </div>
-
-                        {record.notes && (
-                          <p className="text-muted" style={{
-                            marginTop: '0.5rem',
-                            fontSize: '0.9rem',
-                            fontStyle: 'italic'
-                          }}>
-                            &quot;{record.notes}&quot;
-                          </p>
-                        )}
-                      </div>
-
-                      {record.price && (
-                        <div style={{
-                          fontSize: '0.9rem',
-                          fontWeight: 'bold',
-                          color: 'var(--color-accent)',
-                          textAlign: 'right'
-                        }}>
-                          ${record.price}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                <div className="vinyl-letter-header">
+                  <span className="vinyl-letter-header-letter">{letter}</span>
+                  <span className="vinyl-letter-header-rule" />
+                  <span className="vinyl-letter-header-count">
+                    {groupedVinyl[letter].length} record{groupedVinyl[letter].length !== 1 ? 's' : ''}
+                  </span>
                 </div>
+
+                {view === 'covers' ? (
+                  <div className="vinyl-cover-grid">
+                    {groupedVinyl[letter].map((record, index) => (
+                      <CoverTile
+                        key={`${record.id || record.artist}-${record.title}-${index}`}
+                        id={record.id || `${record.artist}-${record.title}`}
+                        title={record.title || 'Unknown Title'}
+                        subtitle={record.artist || 'Unknown Artist'}
+                        imageUrl={record.thumbnail || undefined}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div>
+                    {groupedVinyl[letter].map((record, index) => (
+                      <div
+                        key={`${record.id || record.artist}-${record.title}-${index}`}
+                        className="vinyl-list-row"
+                      >
+                        <span className="vinyl-list-row-title">{record.title || 'Unknown Title'}</span>
+                        <span className="vinyl-list-row-artist">{record.artist || 'Unknown Artist'}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
