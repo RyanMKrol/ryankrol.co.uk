@@ -5383,6 +5383,40 @@
         "risk": []
       },
       "expectsTest": false
+    },
+    {
+      "id": "T193",
+      "title": "Deploy the idea-conversion sweep fixes to production",
+      "status": "pending",
+      "dependsOn": [
+        "T172",
+        "T173",
+        "T174",
+        "T175",
+        "T177",
+        "T178",
+        "T179",
+        "T189",
+        "T190",
+        "T191",
+        "T192"
+      ],
+      "gate": null,
+      "tags": [
+        "deploy"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T193.md",
+      "facets": {
+        "layer": "harness",
+        "workType": "config",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
     }
   ]
 }
