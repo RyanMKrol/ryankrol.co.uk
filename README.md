@@ -1,12 +1,12 @@
 # ryankrol.co.uk
 
-A personal website built with Next.js featuring reviews for books, movies, TV shows, albums, and workout tracking via the Hevy API.
+A personal website built with Next.js featuring reviews for books, movies, TV shows, albums, and perfumes, a vinyl collection, and workout tracking via the Hevy API.
 
 ## Tech Stack
 
 - **Framework**: Next.js 15.5.0 with React 19
 - **Database**: AWS DynamoDB
-- **Styling**: CSS with custom design system
+- **Styling**: "Collection" design system — CSS custom properties for a light, cream/paper palette, with a green-on-black Matrix terminal easter egg override
 - **Font**: JetBrains Mono (Google Fonts)
 - **API Integration**: Hevy API for workout data
 - **Deployment**: Vercel
@@ -255,6 +255,34 @@ random UUID assigned once on create and never regenerated. The old title+author-
   subjects: ["Science Fiction"],
   pageCount: 412,
   publisher: "Chilton Books"
+}
+```
+
+#### PerfumeRatings Table
+Perfume reviews. Validation for the fields below lives in `src/lib/perfumes.js`.
+
+**Primary Key:** `id` (String, random UUID)
+
+**Schema:**
+```javascript
+{
+  id: "b3f1c2e0-...",                // Partition key — random UUID
+  title: "Aventus",
+  designer: "Creed",
+  type: "Eau de Parfum",
+  description: "...",
+  rating: 8,                         // Integer 0–10 (perfumes use a wider scale than other reviews)
+  considerTravelSize: true,
+  considerFullBottle: false,
+  longevity: 6,                      // Integer 0–8
+  projection: 3,                     // Integer 1–4
+  seasons: ["Autumn", "Night"],      // Subset of Winter/Spring/Summer/Autumn/Day/Night
+  applicationSpots: [                // { spot, sprays }, spot from a fixed list
+    { spot: "Wrists", sprays: 2 },
+    { spot: "Clothes", sprays: 1 }
+  ],
+  fragranticaUrl: "https://www.fragrantica.com/...",  // Required
+  date: "15-01-2024"                 // DD-MM-YYYY
 }
 ```
 

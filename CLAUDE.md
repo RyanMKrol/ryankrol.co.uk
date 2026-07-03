@@ -65,10 +65,13 @@ Before any commit: `git status` and confirm no `.env*`, no credentials are stage
 
 ## What this project is
 
-A personal website with five content areas, all served from the Next.js **pages router**:
+A personal website with six content areas, all served from the Next.js **pages router**:
 
-- **Reviews** — `movies`, `tv`, `books`, `albums`: rated 0–5 with written thoughts, stored in
-  DynamoDB. Each type has a public list view + a password-gated add/edit/delete flow.
+- **Reviews** — `movies`, `tv`, `books`, `albums`, `perfumes`: rated with written thoughts,
+  stored in DynamoDB. Each type has a public list view + a password-gated add/edit/delete flow.
+  Perfumes carry extra fields (designer, longevity/projection/seasons, application spots,
+  Fragrantica URL) validated in `src/lib/perfumes.js` and rated 0–10; the other four types are
+  rated 0–5.
 - **Vinyl** — a collection list (title/artist), password-gated add.
 - **Workouts / exercises** — workout history + per-exercise progress charts, sourced from the
   **Hevy API** and mirrored into DynamoDB (`Workouts` + `Exercises` tables) with computed
@@ -76,8 +79,11 @@ A personal website with five content areas, all served from the Next.js **pages 
 - **Listening** — Last.fm top albums (3-month) + a live "now playing" widget.
 - **Projects** — GitHub repos for the owner, fetched live.
 
-There's also a **Matrix terminal theme** easter egg (Konami code ↑↑↓↓←→←→BA) layered over the
-default theme via CSS custom properties.
+The default look is the **"Collection" design system** — a light, cream/paper aesthetic
+(`--color-bg: #FBF7EF`) with warm ink text, defined entirely as CSS custom properties in
+`globals.css`. There's also a **Matrix terminal theme** easter egg (Konami code ↑↑↓↓←→←→BA) that
+swaps the same custom properties for a green-on-black CRT look via the `matrix-active` class —
+it doesn't touch markup or components, only the token values.
 
 Keep it **simple**. This is a personal site, not a platform — no new infra (auth providers,
 state libraries, ORMs, server frameworks) unless explicitly asked.
@@ -127,6 +133,7 @@ src/lib (the data layer)
 | `src/pages/reviews/<type>/add.js` | Gated add form → POST add API |
 | `src/pages/reviews/<type>/edit.js` | List of reviews with edit links |
 | `src/pages/reviews/<type>/edit/[id].js` | Edit detail form → update/delete API (`[id]` = URL-encoded title) |
+| `src/pages/api/reviews/perfumes/{index,add,update,delete}.js` | Perfume review CRUD; extra validation (rating/longevity/projection/seasons/application spots/Fragrantica URL) via `src/lib/perfumes.js` |
 | `src/pages/workouts/index.js` | Paginated workout list with All/Push/Pull/Legs filter |
 | `src/pages/workouts/[id].js` | Single workout detail |
 | `src/pages/exercises/[exerciseName].js` | Per-exercise stats + progress charts |
@@ -153,15 +160,25 @@ src/lib (the data layer)
 | `src/lib/workoutQueries.js` | All workout/exercise DynamoDB reads |
 | `src/lib/workoutMetrics.js` | Pure metric math (`calculateEstimated1RM`, `calculate{Exercise,Workout}Metrics`) |
 | `src/lib/workoutBackfill.js` | Background fetch of missing workouts from Hevy → DynamoDB (on cache miss) |
+| `src/lib/pagination.js` | Pure pagination math (page slicing/bounds) shared by `Pagination` and the paginated pages |
+| `src/lib/perfumes.js` | Validators (`validatePerfumeRating`, `validateLongevity`, `validateProjection`, `validateSeasons`, `validateApplicationSpots`, `validateFragranticaUrl`) + `perfumeId` — shared by the perfume API routes |
 | `src/components/*` | Presentational components (see below) |
 | `src/hooks/*` | `useChartTheme`, `useKonamiCode`, `useMatrixActive` |
 | `src/styles/globals.css` | CSS custom properties: `:root` = Collection design tokens (the single site palette) + `html.matrix-active` override |
 | `src/scripts/*` | One-shot ops scripts (table creation, data migration, audits) — run via npm |
 
-**Components:** `Header`, `NowPlaying` (Last.fm poll every 60s), `MarqueeText`, `ReviewCard`,
-`StarRating`, `WorkoutCard`, `ExerciseProgressCharts` / `CardioProgressCharts` (chart.js),
-`MatrixLayout` / `MatrixRain` / `CRTOverlay` (the easter egg — `MatrixLayout` just switches these
-on/off via the `active` prop, no other chrome).
+**Components:** `Header` (top nav across all sections + `NowPlaying`), `Footer` (social links),
+`NowPlaying` (Last.fm poll every 60s), `MarqueeText`, `ReviewCard` (variant system —
+`spine-cover`/`square-cover`/`poster-banner`/`perfume-card` — picked per review type via a
+`styleVariant` prop), `Pill` / `PillGroup` (tag/filter chips), `SearchInput`, `Badge` (small
+status/accent labels, e.g. `variant="soft"`), `StarRating` (interactive or `readOnly` display
+mode), `PipMeter` (discrete-step meter, used for perfume longevity/projection), `CoverTile`
+(square artwork tile), `StatBlock` (labelled stat callout), `Pagination` (page controls backed by
+`src/lib/pagination.js`), `SortButtons`, `DateRangeFilter`, `MetadataBackfillModal`,
+`PerfumeCharacteristics`, `WorkoutCard`, `ExerciseProgressCharts` / `CardioProgressCharts` /
+`ProgrammeOverviewCharts` (chart.js), `TmdbSearch` / `BookSearch` / `LastfmAlbumSearch` (search
+widgets, see the cooldown convention below), `MatrixLayout` / `MatrixRain` / `CRTOverlay` (the
+easter egg — `MatrixLayout` just switches these on/off via the `active` prop, no other chrome).
 
 ## Data model (DynamoDB)
 
@@ -175,6 +192,7 @@ Full workout/exercise schemas are in `README.md`; summary:
 | `BookRatingsV4` | `id` (random UUID, assigned once, never regenerated) | `{ id, title, author, rating(0–5), review_text, date 'DD-MM-YYYY' }` plus optional search fields: `source` (`'openlibrary'`\|`'googlebooks'`), `coverUrl` (Google Books full URL), `volumeId` (Google Books), `olid`/`coverId` (Open Library), `bookAuthors`, `firstPublishedYear`, `isbn`, `subjects`, `pageCount`, `publisher`, `editedDate` (`'DD-MM-YYYY'`, set on every edit) — replaces the old title+author-keyed `BookRatingsV3` (left at rest, unused, for rollback) |
 | `AlbumRatingsV3` | `id` (random UUID, assigned once, never regenerated) | `{ id, title, artist, rating, highlights, date, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` — replaces the old title+artist-keyed `AlbumRatingsV2` (left at rest, unused, for rollback) |
 | `VinylCollectionV2` | `id` (random UUID, assigned once, never regenerated) | `{ id, title, artist, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` — replaces the old title+artist-keyed `VinylCollection` (left at rest, unused, for rollback) |
+| `PerfumeRatings` | `id` (random UUID) | `{ id, title, designer, type, description, rating(0–10), considerTravelSize, considerFullBottle, longevity(0–8), projection(1–4), seasons[], applicationSpots[{spot,sprays}], fragranticaUrl, date }` |
 | `Workouts` | `id` | GSI `start_time-index`; computed metrics (volume, type, duration) |
 | `Exercises` | `exercise_id` | GSIs `workout_id-index`, `exercise_name-workout_date-index` |
 
@@ -222,11 +240,9 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
   Matrix easter egg. There is no runtime theme-switching mechanism (a prior multi-theme
   AppearancePicker system was built and later fully retired — do not reintroduce one). **Charts must
   read theme via `useChartTheme()`** — never hardcode colours in a chart component; the hook reads
-  the CSS vars and re-reads on `class` changes (i.e. Matrix toggling).
-  ⚠️ **Mid-redesign note:** the site is transitioning to Collection page-by-page (see the harness
-  backlog's `collection-redesign` tag). A page/component not yet migrated by its own task may still
-  reference pre-redesign class names and will render unstyled until that task lands — this is
-  expected, not a bug, during the transition.
+  the CSS vars and re-reads on `class` changes (i.e. Matrix toggling). The Collection redesign
+  (tracked as the harness backlog's `collection-redesign` tag, T141–T169) is complete — every page
+  now uses the Collection tokens; there is no pre-redesign styling left to expect.
 - **Respect `prefers-reduced-motion`.** The Matrix rain stops after one frame and CSS flicker is
   disabled under it — keep any new animation guarded the same way.
 - **Be generous with `console.log` in API routes / lib.** The codebase logs cache hits/misses and
