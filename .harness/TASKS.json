@@ -4102,7 +4102,7 @@
     {
       "id": "T153",
       "title": "Build the 2-col square-cover ReviewCard variant and rebuild the albums list page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
