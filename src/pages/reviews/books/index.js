@@ -3,12 +3,16 @@ import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
+import Pagination from '../../../components/Pagination';
+import { paginate } from '../../../lib/pagination';
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'date ↓' },
   { value: 'title', label: 'title' },
   { value: 'score', label: 'score' },
 ];
+
+const PAGE_SIZE = 12;
 
 export function summarizeBooks(books) {
   const rated = books.length;
@@ -31,6 +35,7 @@ export default function Books() {
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -78,6 +83,10 @@ export default function Books() {
     setFilteredBooks(filtered);
   }, [searchTerm, books, sortBy]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, sortBy]);
+
   if (loading) {
     return (
       <div className="review-container">
@@ -100,6 +109,7 @@ export default function Books() {
   }
 
   const { rated, avgRating, thisYear } = summarizeBooks(books);
+  const { items: pagedBooks, page, pageCount } = paginate(filteredBooks, currentPage, PAGE_SIZE);
 
   return (
     <div className="review-container">
@@ -129,16 +139,23 @@ export default function Books() {
       </div>
 
       <div className="spine-cover-list">
-        {filteredBooks.map((book, index) => (
+        {pagedBooks.map((book, index) => (
           <ReviewCard
             key={`${book.title}-${book.author}-${index}`}
             item={book}
             type="book"
-            isLast={index === filteredBooks.length - 1}
+            isLast={index === pagedBooks.length - 1}
             styleVariant="spine-cover"
           />
         ))}
       </div>
+
+      <Pagination
+        currentPage={page}
+        totalPages={pageCount}
+        onPageChange={setCurrentPage}
+        accentColor="var(--accent-books)"
+      />
     </div>
   );
 }

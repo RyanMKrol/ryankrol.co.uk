@@ -3,12 +3,16 @@ import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
+import Pagination from '../../../components/Pagination';
+import { paginate } from '../../../lib/pagination';
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'date ↓' },
   { value: 'title', label: 'title' },
   { value: 'score', label: 'score' },
 ];
+
+const PAGE_SIZE = 9;
 
 export function summarizeTvShows(tvShows) {
   const rated = tvShows.length;
@@ -31,6 +35,7 @@ export default function TV() {
   const [filteredTvShows, setFilteredTvShows] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -76,6 +81,10 @@ export default function TV() {
     setFilteredTvShows(filtered);
   }, [searchTerm, tvShows, sortBy]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, sortBy]);
+
   if (loading) {
     return (
       <div className="review-container">
@@ -98,6 +107,7 @@ export default function TV() {
   }
 
   const { rated, avgRating, thisYear } = summarizeTvShows(tvShows);
+  const { items: pagedTvShows, page, pageCount } = paginate(filteredTvShows, currentPage, PAGE_SIZE);
 
   return (
     <div className="review-container">
@@ -127,7 +137,7 @@ export default function TV() {
       </div>
 
       <div className="poster-banner-grid">
-        {filteredTvShows.map((tvShow, index) => (
+        {pagedTvShows.map((tvShow, index) => (
           <ReviewCard
             key={`${tvShow.title}-${index}`}
             item={tvShow}
@@ -136,6 +146,13 @@ export default function TV() {
           />
         ))}
       </div>
+
+      <Pagination
+        currentPage={page}
+        totalPages={pageCount}
+        onPageChange={setCurrentPage}
+        accentColor="var(--accent-tv)"
+      />
     </div>
   );
 }
