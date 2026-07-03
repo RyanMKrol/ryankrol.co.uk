@@ -4814,6 +4814,575 @@
           "cross-cutting"
         ]
       }
+    },
+    {
+      "id": "T172",
+      "title": "Make the home page collection wall a random, click-through mosaic across 5 content types",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "page",
+        "home",
+        "collection-wall"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T172.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T173",
+      "title": "Widen shared .container/.review-container page wrappers from 800px to the Collection 1400px full-bleed layout (root cause, site-wide)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "style",
+        "container",
+        "layout",
+        "cross-cutting"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T173.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T174",
+      "title": "Harden .projects-grid against CSS Grid track blowout so repo cards can't overflow their container",
+      "status": "pending",
+      "dependsOn": [
+        "T173"
+      ],
+      "gate": null,
+      "tags": [
+        "style",
+        "projects",
+        "grid"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T174.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T175",
+      "title": "Give the books spine-cover review list actual per-item cards (border/background/radius), matching the design brief",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "style",
+        "books",
+        "review-card"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T175.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T176",
+      "title": "Fix dashboard build-log <details> collapsing on 5s auto-refresh",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "harness",
+        "dashboard"
+      ],
+      "scope": [
+        ".harness/dashboard/server.js"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T176.md",
+      "facets": {
+        "layer": "harness",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T177",
+      "title": "Fix gym-panel sparkline: recent-activity data source collapses to 1-2 bars, and bars render as a single flat colour",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "page",
+        "home"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css",
+        "src/lib/workoutQueries.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T177.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T178",
+      "title": "Make the desktop nav pill row horizontally scrollable with a visible fade affordance instead of wrapping",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "nav"
+      ],
+      "scope": [
+        "src/components/Header.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T178.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T179",
+      "title": "Fix idle-state now-playing chip dot/label vertical misalignment (stale legacy CSS)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "now-playing",
+        "header"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T179.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T180",
+      "title": "Perfume card variant 1 — Stat Block (data-dense)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant1StatBlock.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T180.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T181",
+      "title": "Perfume card variant 2 — Editorial (magazine-style)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant2Editorial.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T181.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T182",
+      "title": "Perfume card variant 3 — Bottle Shelf (visual tile grid)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant3ShelfTile.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T182.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T183",
+      "title": "Perfume card variant 4 — Season & Occasion Planner",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant4SeasonPlanner.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T183.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T184",
+      "title": "Perfume card variant 5 — Minimal Table Row",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant5TableRow.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T184.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T185",
+      "title": "Perfume card variants — side-by-side preview page for owner review",
+      "status": "pending",
+      "dependsOn": [
+        "T180",
+        "T181",
+        "T182",
+        "T183",
+        "T184"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants"
+      ],
+      "scope": [
+        "src/pages/dev/perfume-variants.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T185.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T186",
+      "title": "Review the five perfume card variants and pick a winner",
+      "status": "pending",
+      "dependsOn": [
+        "T180",
+        "T181",
+        "T182",
+        "T183",
+        "T184",
+        "T185"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "perfumes",
+        "perfume-variants",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T186.md",
+      "expectsTest": false
+    },
+    {
+      "id": "T187",
+      "title": "Promote the winning perfume card variant to the live perfumes list, delete the rest",
+      "status": "pending",
+      "dependsOn": [
+        "T186"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js",
+        "src/components/ReviewCard.js",
+        "src/components/perfumeVariants/**",
+        "src/pages/dev/perfume-variants.js",
+        "src/styles/globals.css",
+        "CLAUDE.md",
+        "README.md",
+        ".harness/designs/perfume-card-variants-decision.md"
+      ],
+      "design": ".harness/designs/perfume-card-variants-decision.md",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T187.md",
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T188",
+      "title": "Deploy the perfume card redesign to production",
+      "status": "pending",
+      "dependsOn": [
+        "T187"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants",
+        "deploy"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T188.md",
+      "facets": {
+        "layer": "harness",
+        "workType": "config",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T189",
+      "title": "Remove the perfume scale-explainer chip and empty-state slot from the live perfumes page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "bugfix",
+        "cleanup"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T189.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T190",
+      "title": "Fix cramped spacing between the search box and sort pills on the perfumes page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "bugfix",
+        "layout"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T190.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T191",
+      "title": "Make the home page vinyl shelf a linked, random, refreshable 5-record sample",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "page",
+        "vinyl",
+        "home"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T191.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T192",
+      "title": "Show a per-card exercise-name preview on the workouts list",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "workouts"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T192.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
     }
   ]
 }
