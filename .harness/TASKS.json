@@ -6005,6 +6005,51 @@
         ]
       },
       "expectsTest": false
+    },
+    {
+      "id": "T216",
+      "title": "Deploy pending site changes to production",
+      "status": "pending",
+      "dependsOn": [
+        "T194",
+        "T195",
+        "T196",
+        "T197",
+        "T198",
+        "T199",
+        "T200",
+        "T201",
+        "T202",
+        "T203",
+        "T204",
+        "T205",
+        "T206",
+        "T207",
+        "T208",
+        "T209",
+        "T210",
+        "T211",
+        "T212",
+        "T213",
+        "T214",
+        "T215"
+      ],
+      "gate": null,
+      "tags": [
+        "deploy"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T216.md",
+      "facets": {
+        "layer": "harness",
+        "workType": "config",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
     }
   ]
 }
