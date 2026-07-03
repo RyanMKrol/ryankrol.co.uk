@@ -5308,7 +5308,7 @@
     {
       "id": "T191",
       "title": "Make the home page vinyl shelf a linked, random, refreshable 5-record sample",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
