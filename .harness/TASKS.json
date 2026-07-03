@@ -3704,7 +3704,7 @@
     {
       "id": "T140",
       "title": "Put perfume 'Type' label and dropdown on the same line (add + edit forms)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
