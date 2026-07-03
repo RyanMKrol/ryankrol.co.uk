@@ -5361,7 +5361,7 @@
     {
       "id": "T193",
       "title": "Deploy pending site changes to production",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T172",
         "T173",
