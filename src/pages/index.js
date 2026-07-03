@@ -66,55 +66,6 @@ export default function Home() {
           <div className="home-grid-card-desc">Vinyl record collection</div>
         </Link>
       </div>
-
-      <div style={{marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid var(--color-border)', textAlign: 'center', paddingBottom: '2rem'}}>
-        <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.9rem'}}>
-          <a
-            href="https://instagram.com/_ryankrol"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="home-social-link"
-          >
-            instagram
-          </a>
-          <span className="text-muted">/</span>
-          <a
-            href="https://facebook.com/krol.ryan"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="home-social-link"
-          >
-            facebook
-          </a>
-          <span className="text-muted">/</span>
-          <a
-            href="https://github.com/RyanMKrol"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="home-social-link"
-          >
-            github
-          </a>
-          <span className="text-muted">/</span>
-          <a
-            href="https://linkedin.com/in/ryan-krol-265308a2/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="home-social-link"
-          >
-            linkedin
-          </a>
-          <span className="text-muted">/</span>
-          <a
-            href="https://last.fm/user/somethingmeaty"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="home-social-link"
-          >
-            last.fm
-          </a>
-        </div>
-      </div>
     </div>
   )
 }

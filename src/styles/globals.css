@@ -1298,17 +1298,44 @@ input[type='range'].form-input::-moz-range-thumb {
   margin-bottom: 0.75rem;
 }
 
-/* Home page social links */
-.home-social-link {
+/* Site-wide footer */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  margin-top: 2rem;
+  padding: 1.5rem var(--gutter-mobile);
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-social-link {
   text-decoration: none;
-  color: var(--color-text);
-  font-size: 1rem;
+  color: var(--color-ink-soft, var(--color-text-muted));
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
   transition: color 0.2s, text-shadow 0.2s;
 }
 
-.home-social-link:hover {
+.footer-social-link:hover {
   color: var(--color-accent);
   text-shadow: var(--matrix-glow);
+}
+
+.footer-copyright {
+  color: var(--color-ink-soft, var(--color-text-muted));
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
 }
 
 /* Stat panels (exercises, workouts detail) */
