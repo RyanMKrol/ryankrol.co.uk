@@ -23,6 +23,7 @@ const VALID_APPLICATION_SPOTS = [
   'Beard',
   'Back of neck',
   'Behind ears',
+  'Clothes',
 ];
 
 function validateApplicationSpots(value) {

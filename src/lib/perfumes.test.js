@@ -74,6 +74,10 @@ describe('validateApplicationSpots', () => {
     ).toBe(true);
   });
 
+  test('accepts the Clothes application spot', () => {
+    expect(validateApplicationSpots([{ spot: 'Clothes', sprays: 1 }])).toBe(true);
+  });
+
   test('rejects an unrecognised spot, a non-array, or the old flat-string shape', () => {
     expect(validateApplicationSpots([{ spot: 'NotASpot', sprays: 1 }])).toBe(false);
     expect(validateApplicationSpots('Wrists')).toBe(false);
