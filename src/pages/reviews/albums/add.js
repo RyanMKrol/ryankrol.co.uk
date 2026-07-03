@@ -17,6 +17,7 @@ export default function AddAlbumReview() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -45,6 +46,7 @@ export default function AddAlbumReview() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setHasAttemptedSubmit(true);
 
     if (!lastfmMatch) {
       setMessage('Search and select a Last.fm match before saving');
@@ -94,57 +96,57 @@ export default function AddAlbumReview() {
       <Header />
       <h1 className="page-title">🎵 Add Album Review</h1>
 
-      <div className="form-container">
+      <div className="collection-form-card">
         {message && (
-          <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+          <div className={`collection-form-message ${messageType === 'success' ? 'collection-form-message-success' : 'collection-form-message-error'}`}>
             {message}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="title">Title</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="title">Title</label>
             <input
               type="text"
               id="title"
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               placeholder="Album title..."
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="artist">Artist</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="artist">Artist</label>
             <input
               type="text"
               id="artist"
               name="artist"
               value={formData.artist}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               placeholder="Artist name..."
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Last.fm Match</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label">Last.fm Match</label>
             <LastfmAlbumSearch
               titleQuery={formData.title}
               onSelect={handleLastfmSelect}
             />
-            {!lastfmMatch && (
-              <p className="lastfm-required-hint">
+            {hasAttemptedSubmit && !lastfmMatch && (
+              <p className="collection-form-message collection-form-message-error">
                 Search and select a Last.fm match before saving
               </p>
             )}
           </div>
 
           {lastfmMatch?.thumbnail && (
-            <div className="form-group lastfm-cover-preview">
+            <div className="collection-form-group lastfm-cover-preview">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={lastfmMatch.thumbnail}
@@ -157,40 +159,40 @@ export default function AddAlbumReview() {
             </div>
           )}
 
-          <div className="form-group">
-            <label className="form-label">Rating</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label">Rating</label>
             <StarRating rating={formData.rating} onRatingChange={handleRatingChange} />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="highlights">Highlights</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="highlights">Highlights</label>
             <textarea
               id="highlights"
               name="highlights"
               value={formData.highlights}
               onChange={handleInputChange}
-              className="form-input form-textarea"
+              className="collection-form-textarea"
               placeholder="Share your favorite tracks from this album..."
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="form-button"
+            className="collection-form-button"
             disabled={saving || formData.rating === 0 || !lastfmMatch}
           >
             {saving ? 'Adding Review...' : 'Add Review'}
@@ -206,17 +208,14 @@ export default function AddAlbumReview() {
         }
         .lastfm-preview-img {
           object-fit: cover;
-          border-radius: 4px;
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .lastfm-preview-label {
           font-size: 0.85rem;
           opacity: 0.7;
-        }
-        .lastfm-required-hint {
-          font-size: 0.85rem;
-          opacity: 0.8;
-          margin-top: 0.5rem;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
       `}</style>
     </div>

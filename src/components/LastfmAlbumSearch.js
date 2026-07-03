@@ -88,7 +88,7 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
       <div className="lastfm-search-row">
         <button
           type="button"
-          className="form-button lastfm-search-btn"
+          className="collection-form-button lastfm-search-btn"
           onClick={search}
           disabled={searching || cooldown || loadingInfo || !titleQuery.trim()}
         >
@@ -96,7 +96,7 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
         </button>
       </div>
 
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="collection-form-message collection-form-message-error">{error}</p>}
 
       {loadingInfo && <p className="lastfm-loading">Loading album info…</p>}
 
@@ -146,7 +146,7 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
                 </div>
                 <button
                   type="button"
-                  className="form-button lastfm-select-btn"
+                  className="collection-form-button lastfm-select-btn"
                   onClick={() => handleSelect(r)}
                   disabled={loadingInfo}
                 >
@@ -177,12 +177,14 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
           font-size: 0.9rem;
           opacity: 0.7;
           margin: 0.5rem 0 0;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
         .lastfm-confirmed {
           margin-top: 0.6rem;
           padding: 0.5rem 0.75rem;
-          border: 1px solid var(--color-accent);
-          border-radius: 4px;
+          border: var(--border-width) solid var(--accent-albums);
+          border-radius: var(--radius-stat);
           font-size: 0.9rem;
           display: flex;
           align-items: center;
@@ -191,12 +193,12 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
         }
         .lastfm-confirmed-cover {
           object-fit: cover;
-          border-radius: 3px;
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .lastfm-confirmed-label {
-          color: var(--color-accent);
-          font-weight: 600;
+          color: var(--accent-albums);
+          font-weight: 700;
         }
         .lastfm-confirmed-artist {
           opacity: 0.7;
@@ -204,17 +206,17 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
         .lastfm-clear-btn {
           margin-left: auto;
           background: none;
-          border: 1px solid var(--color-text);
-          color: var(--color-text);
+          border: var(--border-width) solid var(--color-ink);
+          color: var(--color-ink);
           padding: 0.2rem 0.6rem;
-          border-radius: 3px;
+          border-radius: var(--radius-pill);
           cursor: pointer;
           font-size: 0.8rem;
           font-family: inherit;
         }
         .lastfm-clear-btn:hover {
-          border-color: var(--color-accent);
-          color: var(--color-accent);
+          border-color: var(--accent-albums);
+          color: var(--accent-albums);
         }
         .lastfm-results {
           margin-top: 0.75rem;
@@ -228,25 +230,27 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
           font-size: 0.9rem;
           opacity: 0.7;
           margin: 0;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
         .lastfm-result-item {
           display: flex;
           gap: 0.75rem;
           align-items: center;
           padding: 0.5rem;
-          border: 1px solid var(--color-border, #333);
-          border-radius: 4px;
+          border: var(--border-width) solid var(--color-hairline-strong);
+          border-radius: var(--radius-cover);
         }
         .lastfm-cover {
           object-fit: cover;
-          border-radius: 3px;
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .lastfm-cover-placeholder {
           width: 50px;
           height: 50px;
-          background: var(--color-border, #333);
-          border-radius: 3px;
+          background: var(--color-hairline);
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .lastfm-result-info {
@@ -257,11 +261,15 @@ export default function LastfmAlbumSearch({ titleQuery = '', onSelect }) {
           font-weight: 600;
           font-size: 0.9rem;
           margin: 0 0 0.25rem;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
         .lastfm-result-artist {
           font-size: 0.8rem;
           opacity: 0.8;
           margin: 0;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
       `}</style>
     </div>

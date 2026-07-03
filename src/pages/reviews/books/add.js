@@ -16,6 +16,7 @@ export default function AddBookReview() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const router = useRouter();
 
   const handleInputChange = (e) => {
@@ -34,6 +35,7 @@ export default function AddBookReview() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setHasAttemptedSubmit(true);
 
     if (!bookMatch) {
       setMessage('Search and select a Google Books match before saving');
@@ -92,89 +94,89 @@ export default function AddBookReview() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">📚 Add Book Review</h1>
-      
-      <div className="form-container">
+
+      <div className="collection-form-card">
         {message && (
-          <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+          <div className={`collection-form-message ${messageType === 'success' ? 'collection-form-message-success' : 'collection-form-message-error'}`}>
             {message}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="title">Title</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="title">Title</label>
             <input
               type="text"
               id="title"
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="author">Author</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="author">Author</label>
             <input
               type="text"
               id="author"
               name="author"
               value={formData.author}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Book Match</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label">Book Match</label>
             <BookSearch
               title={formData.title}
               author={formData.author}
               onSelect={setBookMatch}
             />
-            {!bookMatch && (
-              <p className="error-message">
+            {hasAttemptedSubmit && !bookMatch && (
+              <p className="collection-form-message collection-form-message-error">
                 Search and select a Google Books match before saving
               </p>
             )}
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Rating</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label">Rating</label>
             <StarRating rating={formData.rating} onRatingChange={handleRatingChange} />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="overview">Review</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="overview">Review</label>
             <textarea
               id="overview"
               name="overview"
               value={formData.overview}
               onChange={handleInputChange}
-              className="form-input form-textarea"
+              className="collection-form-textarea"
               placeholder="Share your thoughts about this book..."
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="form-button"
+            className="collection-form-button"
             disabled={loading || formData.rating === 0 || !bookMatch}
           >
             {loading ? 'Adding Review...' : 'Add Review'}

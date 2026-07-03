@@ -25,23 +25,23 @@ export default function EditAlbumReview() {
 
   useEffect(() => {
     if (!id) return;
-    
+
     async function fetchAlbumReview() {
       try {
         const response = await fetch('/api/reviews/albums');
         if (!response.ok) throw new Error('Failed to fetch albums');
         const albums = await response.json();
-        
+
         // Decode the ID
         const decodedId = decodeURIComponent(id);
 
         // Find the album by id
         const album = albums.find(a => a.id === decodedId);
-        
+
         if (!album) {
           throw new Error('Album not found');
         }
-        
+
         setOriginalData(album);
         setFormData({
           title: album.title,
@@ -155,7 +155,7 @@ export default function EditAlbumReview() {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    
+
     if (!confirm('Are you sure you want to delete this review? This action cannot be undone.')) {
       return;
     }
@@ -217,44 +217,44 @@ export default function EditAlbumReview() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">🎵 Edit Album Review</h1>
-      
-      <div className="form-container">
+
+      <div className="collection-form-card">
         {message && (
-          <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+          <div className={`collection-form-message ${messageType === 'success' ? 'collection-form-message-success' : 'collection-form-message-error'}`}>
             {message}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="title">Title</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="title">Title</label>
             <input
               type="text"
               id="title"
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               disabled
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="artist">Artist</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="artist">Artist</label>
             <input
               type="text"
               id="artist"
               name="artist"
               value={formData.artist}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               disabled
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="collection-form-group">
             <MetadataBackfillModal
               buttonLabel="Backfill from Last.fm"
               onSearch={handleBackfillSearch}
@@ -284,7 +284,7 @@ export default function EditAlbumReview() {
           </div>
 
           {backfillThumbnail && (
-            <div className="form-group lastfm-cover-preview">
+            <div className="collection-form-group lastfm-cover-preview">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={backfillThumbnail}
@@ -297,51 +297,51 @@ export default function EditAlbumReview() {
             </div>
           )}
 
-          <div className="form-group">
-            <label className="form-label">Rating</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label">Rating</label>
             <StarRating rating={formData.rating} onRatingChange={handleRatingChange} />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="highlights">Highlights</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="highlights">Highlights</label>
             <textarea
               id="highlights"
               name="highlights"
               value={formData.highlights}
               onChange={handleInputChange}
-              className="form-input form-textarea"
+              className="collection-form-textarea"
               placeholder="Share your favorite tracks from this album..."
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="collection-form-actions">
             <button
               type="submit"
-              className="form-button"
+              className="collection-form-button"
               disabled={saving || deleting || formData.rating === 0}
             >
               {saving ? 'Updating Review...' : 'Update Review'}
             </button>
-            
+
             <button
               type="button"
               onClick={handleDelete}
               disabled={saving || deleting || !formData.password}
-              className="btn-danger"
+              className="collection-form-button collection-form-button-danger"
             >
               {deleting ? 'Deleting Review...' : 'Delete Review'}
             </button>
@@ -357,12 +357,14 @@ export default function EditAlbumReview() {
         }
         .lastfm-preview-img {
           object-fit: cover;
-          border-radius: 4px;
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .lastfm-preview-label {
           font-size: 0.85rem;
           opacity: 0.7;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
         .mbm-card-row {
           display: flex;
@@ -371,14 +373,14 @@ export default function EditAlbumReview() {
         }
         .mbm-thumb {
           object-fit: cover;
-          border-radius: 3px;
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .mbm-thumb-placeholder {
           width: 50px;
           height: 50px;
-          background: var(--color-border, #333);
-          border-radius: 3px;
+          background: var(--color-hairline);
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .mbm-card-info {
@@ -388,12 +390,16 @@ export default function EditAlbumReview() {
         .mbm-card-title {
           font-size: 0.9rem;
           margin: 0 0 0.25rem;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
         .mbm-card-secondary {
           font-size: 0.8rem;
           opacity: 0.8;
           margin: 0;
           line-height: 1.4;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
       `}</style>
     </div>
