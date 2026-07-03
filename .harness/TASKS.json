@@ -4477,7 +4477,7 @@
     {
       "id": "T163",
       "title": "Restyle books + albums add/edit forms to Collection tokens and shared components",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
