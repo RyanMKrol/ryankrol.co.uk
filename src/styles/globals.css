@@ -940,8 +940,21 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
+}
+
+.collection-nav-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.collection-nav-pills > a {
+  flex-shrink: 0;
 }
 
 .nav-menu-toggle {
