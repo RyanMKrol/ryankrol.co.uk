@@ -5255,7 +5255,7 @@
     {
       "id": "T189",
       "title": "Remove the perfume scale-explainer chip and empty-state slot from the live perfumes page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
