@@ -5392,6 +5392,619 @@
           "cross-cutting"
         ]
       }
+    },
+    {
+      "id": "T194",
+      "title": "Strip emoji + lowercase the h1 title on all 6 /add pages",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "copy",
+        "add-pages",
+        "consistency"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/add.js",
+        "src/pages/reviews/tv/add.js",
+        "src/pages/reviews/books/add.js",
+        "src/pages/reviews/albums/add.js",
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/vinyl/add.js"
+      ],
+      "design": "Exact before -> after text for the `<h1 className=\"page-title\">` in each of the 6 files (verified current text/line directly, 2026-07-03 - line numbers may drift slightly, match by the emoji+text content not the line number): `src/pages/reviews/movies/add.js:89` `🎬 Add Movie Review` -> `add movie review`. `src/pages/reviews/tv/add.js:89` `📺 Add TV Show Review` -> `add tv show review` (lowercase 'tv', not 'TV' - matches the existing precedent already on `src/pages/reviews/tv/index.js` which renders the bare lowercase string `tv`). `src/pages/reviews/books/add.js:96` `📚 Add Book Review` -> `add book review`. `src/pages/reviews/albums/add.js:97` `🎵 Add Album Review` -> `add album review`. `src/pages/reviews/perfumes/add.js:127` `👃 Add Perfume Review` -> `add perfume review`. `src/pages/vinyl/add.js:91` `💿 Add Vinyl Record` -> `add vinyl record`. In every case: delete the leading emoji character and the single space that follows it, then lowercase every letter in the remaining text (no other punctuation/wording changes, no change to any other string in these files e.g. button labels, success messages, form labels, the `<Head><title>` in vinyl/add.js stays as-is since it wasn't mentioned and isn't a `page-title` h1).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T194.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T195",
+      "title": "Add margin-top to .collection-form-card to fix add/edit page title gap",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "style",
+        "bugfix"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T195.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T196",
+      "title": "Lay the books review list out as a 2-column grid of spine-cover cards",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "books"
+      ],
+      "scope": [
+        "src/styles/globals.css",
+        "src/components/ReviewCard.js",
+        "src/pages/reviews/books/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T196.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T197",
+      "title": "Show artist/author subtitle on collection wall tiles",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "home",
+        "collection-wall"
+      ],
+      "scope": [
+        "src/pages/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T197.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T198",
+      "title": "Carry clicked wall tile's title as a search query param to its destination page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "home",
+        "collection-wall"
+      ],
+      "scope": [
+        "src/pages/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T198.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T199",
+      "title": "Pre-fill review/vinyl search boxes from an incoming ?q= param",
+      "status": "pending",
+      "dependsOn": [
+        "T198"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "home",
+        "collection-wall"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/index.js",
+        "src/pages/reviews/tv/index.js",
+        "src/pages/reviews/books/index.js",
+        "src/pages/reviews/albums/index.js",
+        "src/pages/vinyl/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T199.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T200",
+      "title": "Add SVG favicon matching the nav wordmark's red-circle \"r\" mark",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "favicon",
+        "branding"
+      ],
+      "scope": [
+        "public/**",
+        "src/pages/_document.js"
+      ],
+      "design": "Hand-authored SVG (no image-generation tooling available to a builder agent) — a circle + a text glyph, deliberately simple rather than an exact font trace. Colour is `#FF5C39` (the `--accent-movies` CSS var's resolved value, `src/styles/globals.css:26` — hardcode the literal hex in the SVG since a static public/ asset has no access to CSS custom properties). Do NOT reference the Bricolage Grotesque webfont inside the SVG: it's loaded via a `<link>` in `_document.js`'s `<Head>` for the PAGE's own DOM, but a favicon is fetched and rendered by the browser chrome as a wholly separate document with no access to that stylesheet — an unavailable font-family silently falls back anyway, but naming a system default directly (`Arial, Helvetica, sans-serif`) is more honest about what will actually render. `font-weight:700` is preserved since that's independent of which font resolves. SVG favicons (`<link rel=\"icon\" type=\"image/svg+xml\">`) are supported by all current evergreen browsers (Chrome, Firefox, Safari 9+, Edge); a `.ico`/`.png` fallback is explicitly OUT OF SCOPE for this task (no rasterization tooling available in a typical builder agent's environment) — note this as a known gap rather than attempting it.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T200.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T201",
+      "title": "Add list-aware gradient assignment helper to CoverTile/ReviewCard",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "gradient",
+        "cover-tile",
+        "review-card"
+      ],
+      "scope": [
+        "src/components/CoverTile.js",
+        "src/components/ReviewCard.js"
+      ],
+      "design": "Resolved architecture decision: keep `gradientForKey`'s pure per-item hash as the PREFERRED/default colour (this preserves the existing 'same item always renders the same colour everywhere' invariant in the common case, since most items in a rendered list won't collide with their own recent history). Add a NEW pure function, `assignGradients(keys)`, exported alongside `gradientForKey`/`GRADIENT_PAIRS` from `src/components/CoverTile.js`. It takes an ORDERED array of keys (strings) — one per item that will actually render a gradient fallback, in the exact order those items will be rendered on the page — and returns a same-length, same-order array of gradient CSS strings (`linear-gradient(135deg, <from>, <to>)`, matching `gradientForKey`'s existing output format). Algorithm: walk the keys in order, maintaining a sliding window of the last (up to) 4 chosen `GRADIENT_PAIRS` indices. For each key: compute `preferred = hashString(key) % GRADIENT_PAIRS.length` (reuse the existing internal `hashString`). If `preferred` is not in the trailing window, use it (this is the common case — preserves the pure per-item hash colour). If it collides, deterministically probe `preferred+1, preferred+2, ...` (mod length), skipping any index already in the trailing window, and use the first non-colliding candidate — this is always guaranteed to succeed since `GRADIENT_PAIRS` has 9 entries and the window holds at most 4, so at least 5 candidates are always free; do not add error-handling for the 'no candidate' case beyond a defensive fallback to `preferred` (unreachable in practice, but keep the function total). Push the chosen index onto the window, trimming it to the most recent 4. This is a page-agnostic, framework-agnostic pure function — it knows nothing about React, items, or images; callers (task 2) are responsible for (a) filtering their item list down to just the keys of items that will actually show a gradient (i.e. excluding items with real artwork, where the variant supports real artwork at all) BEFORE calling it, in render order, and (b) zipping the returned array back onto their items by array index (not by key — key collisions/duplicates are the caller's problem to avoid, so keep the contract array-in/array-out, not a Map).\n\nSecond part of this task: give `CoverTile` and `ReviewCard` a way to receive a caller-computed colour instead of always computing their own via `gradientForKey`, WITHOUT breaking any existing caller that hasn't been updated yet (task 2 does all the call-site wiring; this task only adds the capability + keeps default behaviour identical). Add an optional `gradient` prop to the `CoverTile` component: when present (a non-empty string), use it directly as the tile's `background`; when absent/falsy, fall back to the current `gradientForKey(id || title || '')` computation exactly as today. Add an optional `gradient` prop to `ReviewCard` and thread it to all three variants that currently call `gradientForKey` themselves or render a gradient tile: `SpineCoverCard` (books) and the inline `poster-banner` branch (movies/tv) should use the passed `gradient` prop if provided, else fall back to `gradientForKey(item.id || getTitle())` exactly as today; `SquareCoverCard` (albums) should forward the `gradient` prop straight through as the `gradient` prop on its internal `<CoverTile ... />` call (which itself now supports the override per the CoverTile change above) — do not have `SquareCoverCard` call `gradientForKey` directly, keep relying on `CoverTile`'s own fallback when `gradient` is absent. Do not change `gradientForKey`'s existing signature, export, or behaviour — it remains the single source of the 'preferred' per-item colour and is still exported for any caller that only wants a single-item colour.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T201.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T202",
+      "title": "Wire every list-rendering page to use list-aware gradient assignment",
+      "status": "pending",
+      "dependsOn": [
+        "T201"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "gradient",
+        "cover-tile",
+        "review-card"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/pages/listening/index.js",
+        "src/pages/vinyl/index.js",
+        "src/pages/reviews/movies/index.js",
+        "src/pages/reviews/tv/index.js",
+        "src/pages/reviews/albums/index.js",
+        "src/pages/reviews/books/index.js"
+      ],
+      "design": "This task consumes the `assignGradients(keys)` helper + the `gradient` override props added to `CoverTile`/`ReviewCard` in the dependency task, and rewires every call site on the site that currently calls `gradientForKey` (directly or via `CoverTile`'s/`ReviewCard`'s own internal fallback) to instead compute a list-aware colour assignment ONCE per rendered list and thread the result in. General pattern at each call site: (1) determine, in render order, the ordered array of items that will actually show a gradient fallback (for variants/components that never support real artwork — `spine-cover` for books, `poster-banner` for movies/tv, which as of this codebase render a gradient unconditionally with no `imageUrl`-bearing path — this is every item on the current page/list; for variants that DO support real artwork — `CoverTile` directly, and `square-cover` for albums, both of which accept `imageUrl`/`thumbnail` — filter OUT items that have real art first, since those never render a gradient and shouldn't consume a slot in the no-repeat window); (2) map that filtered, ordered list to its keys (same key each site already uses for `id`/`gradientForKey`, e.g. `item.id || title`); (3) call `assignGradients(keys)` once; (4) zip the returned array back onto the original full item list by index (only the filtered subset gets a computed colour; items with real art get none/are unaffected); (5) pass the zipped-back colour into the `gradient` prop at render time instead of leaving the child component to call `gradientForKey` itself.\n\nSeven call sites, by file:\n- `src/pages/index.js`: TWO separate lists need this — (a) the 'collection wall' (`wallItems`, a mixed movies/tv/books/albums/vinyl sample rendered via `<CoverTile>`) — filter to items lacking `imageUrl`, assign in `wallItems`' render order, pass via `CoverTile`'s new `gradient` prop; (b) 'Latest takes' (`latestTakes`, a mixed movie/tv/book/album list currently calling `gradientForKey` inline for its thumbnail div) — filter to items lacking a real thumbnail/poster, assign in `latestTakes`' render order, use the assigned colour directly as the inline style instead of calling `gradientForKey`.\n- `src/pages/listening/index.js`: the top-albums ranked list currently calls `gradientForKey` inline per row — filter to albums lacking `album.image`, assign in the rendered `albums` array order, use the assigned colour instead of calling `gradientForKey`.\n- `src/pages/vinyl/index.js`: the 'covers' view groups vinyl by first-letter-of-artist into separate `<div>` sections, but they render as one continuous visually-adjacent grid down the page — compute the assignment across the FULL filtered/sorted vinyl list in its overall top-to-bottom render order (i.e. concatenate `sortedLetters` in order) BEFORE splitting into per-letter groups for render, so adjacency across a letter-group boundary is still covered by the no-repeat window, then zip each letter group's slice back for its own `.map()`. Filter out items with a real `thumbnail` first (only items falling back to `CoverTile`'s internal gradient need an assignment).\n- `src/pages/reviews/movies/index.js` and `src/pages/reviews/tv/index.js`: `poster-banner` variant — since it renders a gradient unconditionally (no real-image path exists in this variant today), assign across the FULL current page's items (no filtering needed) in render order, pass via `ReviewCard`'s new `gradient` prop.\n- `src/pages/reviews/books/index.js`: `spine-cover` variant — same as movies/tv (unconditional gradient, no filtering needed), assign across the full current page in render order, pass via `ReviewCard`'s `gradient` prop.\n- `src/pages/reviews/albums/index.js`: `square-cover` variant DOES support real art (`item.thumbnail`/`item.coverUrl` via its internal `CoverTile`) — filter to items on the current page lacking both, assign in render order, pass via `ReviewCard`'s `gradient` prop.\n\n`src/pages/reviews/perfumes/index.js` is explicitly OUT of scope — perfumes render `perfumeVariants/Variant6Hybrid` directly (bypassing `ReviewCard`/`CoverTile`/`gradientForKey` entirely), confirmed by grep — there is nothing to wire there.\n\nNote each review-list page paginates (`PAGE_SIZE = 12` for books, similar for others) — the no-repeat window is intentionally scoped to the CURRENT PAGE's rendered order, not the full underlying dataset, matching 'within any given rendered list' from the idea.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T202.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T203",
+      "title": "Fix header nav right-edge fade showing when there's nothing left to scroll to",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "header",
+        "nav",
+        "bugfix"
+      ],
+      "scope": [
+        "src/components/Header.js",
+        "src/styles/globals.css",
+        "src/lib/scrollFade.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T203.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T204",
+      "title": "Append \"each\" to 1-spray application-spot lines for anatomically paired spots",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "copy",
+        "ui-polish"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js"
+      ],
+      "design": "Colocate a small pure helper in Variant6Hybrid.js: an exported `PAIRED_APPLICATION_SPOTS` array (the decided classification, see below) plus an exported pure function, e.g. `formatApplicationSpotLine({ spot, sprays })`, returning the exact display string. The render at lines 76-78 calls this helper instead of the inline ternary. Keeping the helper as a named export (separate from the default React component export) lets it be unit-tested with plain Jest/next-jest without any component-rendering setup, consistent with this repo's 'no component tests yet, pure-logic unit tests only' convention.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T204.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T205",
+      "title": "Redesign the perfume application-spots spray-tapper as fixed-size circles with classed CSS",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "ui-polish",
+        "style"
+      ],
+      "scope": [
+        "src/components/PerfumeCharacteristics.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Root cause (already traced, verbatim in the idea): each spot button is content-sized (only `minWidth`, no fixed width/height) with a full-pill `border-radius`, so short labels (\"Wrists\") render near-circular while long ones (\"Back of neck\") stretch into ovals - there's no consistent circle at all. Fix: give every spot button an EQUAL fixed footprint (4.5rem x 4.5rem, `border-radius:50%`) regardless of label length, and move the text label OUT of the circle to a line underneath it (rather than trying to fit/truncate long labels inside a small circle) - this keeps the \"tap the bottle to spray\" interaction concept intact while guaranteeing every circle is visually identical. Folded the inline-style-to-CSS-class migration INTO this same task (not a separate follow-up): since the whole point is restyling this widget for polish/consistency, doing the sizing fix as ANOTHER inline style object would just be a different flavor of the same problem the owner is reacting to (\"hastily\" thrown-together UI) - a half-inline-half-class result after two passes would be worse than fixing it once, properly, now. New CSS classes follow the site's existing `.collection-*` primitive naming convention (see `PillGroup`/`Badge`) but are namespaced `.perfume-spray-spot*` since they're perfume-specific (not a new shared primitive - no other page has a tap-to-increment circular counter). Active/filled state uses `var(--accent-perfumes)` (the perfume section's own grape accent, `#7A5AF8`, already used by the pip meter and type chip elsewhere on this same page) instead of the previous generic `var(--color-accent)` (an ink alias) - this is a small additional polish improvement in the same spirit as the ask, making the active spray state read as perfume-branded rather than generic-ink. The verbose \"no sprays\"/\"N sprays\" caption is dropped in favor of a compact numeric count inside the circle, since the count now has much less room (a 4.5rem circle, not a content-sized pill) and the spot label underneath already gives context.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T205.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T206",
+      "title": "Shrink the poster-banner gradient area so its top gap matches the bottom padding",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "movies",
+        "tv",
+        "bugfix",
+        "css"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T206.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T207",
+      "title": "Highlight the workouts nav pill when on /programmes",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "nav",
+        "bugfix"
+      ],
+      "scope": [
+        "src/components/Header.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T207.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T208",
+      "title": "Add an 'all' aggregation mode to aggregateProgramme",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "programmes",
+        "lib"
+      ],
+      "scope": [
+        "src/lib/programmeStats.js",
+        "src/lib/programmeStats.test.js"
+      ],
+      "design": "Add a combined-totals branch rather than a second function, so the page's single call site (aggregateProgramme(filteredWorkouts, selected)) keeps working unchanged once selected can be 'all'.",
+      "verify": [],
+      "spec": ".harness/tasks/T208.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T209",
+      "title": "Add an explicit 'All' filter pill to the Programmes page",
+      "status": "pending",
+      "dependsOn": [
+        "T208"
+      ],
+      "gate": null,
+      "tags": [
+        "programmes",
+        "ui"
+      ],
+      "scope": [
+        "src/pages/programmes/index.js"
+      ],
+      "design": "Explicit 4th pill labelled 'All', not a deselect-current-to-reveal-all interaction — see rationale in the task's report/owner-facing notes: an explicit pill is discoverable at a glance (no invisible affordance requiring the viewer to already know clicking an active filter again deselects it), matches the existing mutually-exclusive single-select pattern the other three buttons already use with zero new interaction model to learn, and is a minimal, low-risk change (one extra array entry + one new branch already added in programmes-total-filter-1) versus reworking onClick into toggle logic for uncertain UX benefit.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T209.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T210",
+      "title": "Switch .projects-grid from a row-stretching CSS grid to a CSS multi-column masonry layout",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects",
+        "layout"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T210.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T211",
+      "title": "Add title/description search and multi-select tag filtering to the Projects page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects",
+        "search",
+        "ui"
+      ],
+      "scope": [
+        "src/pages/projects/index.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T211.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T212",
+      "title": "Stop `.container`/`.review-container` painting a white page background site-wide",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "collection-redesign"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T212.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T213",
+      "title": "Redesign workout session cards: vertical exercise list + volume placement, fix horizontal overflow",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "bugfix",
+        "ui"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T213.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T214",
+      "title": "Change workouts session card volume display from tonnes to kg",
+      "status": "pending",
+      "dependsOn": [
+        "T213"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T214.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T215",
+      "title": "Wire SortButtons into movies/tv/books/albums review lists for direction toggle",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "reviews",
+        "sort"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/index.js",
+        "src/pages/reviews/tv/index.js",
+        "src/pages/reviews/books/index.js",
+        "src/pages/reviews/albums/index.js"
+      ],
+      "design": "Field mapping for SortButtons (defaultValue/flippedValue/arrows), identical across all four pages:\n- date:  defaultValue 'date'   (newest first, unchanged initial state) / flippedValue 'date-asc'   (oldest first)\n- title: defaultValue 'title'  (A→Z, unchanged) / flippedValue 'title-desc' (Z→A)\n- score: defaultValue 'score'  (highest first, unchanged) / flippedValue 'score-asc'  (lowest first)\nUse '↓' as defaultArrow and '↑' as flippedArrow for all three fields (keeps the existing 'date ↓' visual convention). sortBy state's initial value stays 'date' so the page's default landing sort is unchanged. SortButtons.handleClick already implements the flip logic correctly (confirmed by reading src/components/SortButtons.js in full) — do not modify SortButtons.js or PillGroup.js, only the four page files.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T215.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
     }
   ]
 }
