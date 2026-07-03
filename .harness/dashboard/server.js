@@ -180,6 +180,11 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&
 function post(p,b){return fetch(p,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());}
 // Ids the user has expanded — reapplied after each 5s re-render so auto-refresh doesn't collapse them.
 window.__openIds = new Set();
+// Ids of nested <details class="buildlog"> elements the user has expanded — reapplied after each
+// 5s re-render the same way __openIds is, but tracking the native `open` attribute instead of a CSS
+// class, since that's what actually controls build-log/audit visibility.
+window.__openLogIds = new Set();
+window.onLogToggle=function(el){ if(el.open) window.__openLogIds.add(el.id); else window.__openLogIds.delete(el.id); };
 // Ids the user has bulk-selected — persisted independently of the polled task data (mirrors
 // local-jobs' page.tsx useState<Set<string>> pattern) so a re-render's freshly-generated
 // checkboxes come back pre-checked instead of losing state to the innerHTML replace.
@@ -276,8 +281,8 @@ function task(t){
     + ((t.dependsOn||[]).length ? '<div class="kv">depends on: '+depLinks(t.dependsOn)+'</div>' : '<div class="kv">no deps</div>')
     + '<div class="kv"><b>scope</b> '+esc((t.scope||[]).join('  '))+'</div>'
     + (t.specContent? '<pre>'+esc(t.specContent)+'</pre>' : '<div class="kv">(no spec file)</div>')
-    + (t.worklogContent? '<details class="buildlog"><summary>Build log</summary><pre>'+esc(t.worklogContent)+'</pre></details>' : '')
-    + (t.auditContent? '<details class="buildlog"><summary>Audit</summary><pre>'+esc(t.auditContent)+'</pre></details>' : '')
+    + (t.worklogContent? '<details class="buildlog" id="log-'+t.id+'-build" ontoggle="onLogToggle(this)"><summary>Build log</summary><pre>'+esc(t.worklogContent)+'</pre></details>' : '')
+    + (t.auditContent? '<details class="buildlog" id="log-'+t.id+'-audit" ontoggle="onLogToggle(this)"><summary>Audit</summary><pre>'+esc(t.auditContent)+'</pre></details>' : '')
     + '</div></div>';
 }
 function render(d){
@@ -302,6 +307,7 @@ function render(d){
     return '<section><h2>'+l+' ('+list.length+')</h2>'+rows+'</section>';
   }).join('');
   window.__openIds.forEach(id=>{ var el=document.getElementById('task-'+id); if(el) el.classList.add('open'); });
+  window.__openLogIds.forEach(id=>{ var el=document.getElementById(id); if(el) el.open = true; });
   if (window.__doneFilter && window.__doneFilter !== 'all') {
     var el = document.querySelector('.filt[onclick*="'+window.__doneFilter+'"]');
     filterDone(window.__doneFilter, el);
