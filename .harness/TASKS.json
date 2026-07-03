@@ -5507,7 +5507,7 @@
     {
       "id": "T198",
       "title": "Carry clicked wall tile's title as a search query param to its destination page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
