@@ -3903,7 +3903,7 @@
     {
       "id": "T147",
       "title": "Build shared Footer component",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T142"
       ],
