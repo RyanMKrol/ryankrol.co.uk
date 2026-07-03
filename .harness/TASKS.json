@@ -5008,7 +5008,7 @@
     {
       "id": "T179",
       "title": "Fix idle-state now-playing chip dot/label vertical misalignment (stale legacy CSS)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
