@@ -5219,7 +5219,7 @@
     {
       "id": "T187",
       "title": "Promote the winning perfume card variant to the live perfumes list, delete the rest",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T186"
       ],
