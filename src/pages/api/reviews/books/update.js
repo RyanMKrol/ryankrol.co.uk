@@ -43,6 +43,7 @@ export default async function handler(req, res) {
 
     // If no original date found, use current date (shouldn't happen for updates)
     const preservedDate = originalDate || new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+    const editedDate = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
 
     // Update the item in place with preserved original date and id
     const reviewData = {
@@ -52,6 +53,7 @@ export default async function handler(req, res) {
       rating,
       review_text: overview,
       date: preservedDate,
+      editedDate,
       ...(source !== undefined && { source }),
       ...(olid !== undefined && { olid }),
       ...(coverId !== undefined && { coverId }),

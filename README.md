@@ -241,6 +241,7 @@ random UUID assigned once on create and never regenerated. The old title+author-
   rating: 4,                         // 0–5
   review_text: "...",                // Review text (from `overview` form field)
   date: "15-01-2024",                // DD-MM-YYYY
+  editedDate: "20-02-2024",          // DD-MM-YYYY — set on every edit
 
   // Optional — only present when a search match was selected
   source: "googlebooks",             // 'openlibrary' | 'googlebooks'
