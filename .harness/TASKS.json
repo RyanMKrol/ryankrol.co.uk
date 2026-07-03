@@ -4355,7 +4355,7 @@
     {
       "id": "T160",
       "title": "Rebuild the workout detail page (stat chips, per-exercise set cards, warmup/working rows)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
