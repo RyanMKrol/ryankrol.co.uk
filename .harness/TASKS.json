@@ -2134,7 +2134,7 @@
     {
       "id": "T082",
       "title": "Write script to backfill missing computed metrics onto incomplete Workouts records",
-      "status": "done",
+      "status": "failed",
       "dependsOn": [],
       "gate": null,
       "tags": [
