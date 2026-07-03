@@ -33,16 +33,18 @@ export default function NowPlaying() {
 
   if (loading) {
     return (
-      <div className="now-playing loading">
-        <span className="now-playing-label">♪ Loading...</span>
+      <div className="now-playing-chip loading">
+        <span className="now-playing-dot" aria-hidden="true" />
+        <span className="now-playing-label">Loading...</span>
       </div>
     );
   }
 
   if (error || !track || !track.isPlaying) {
     return (
-      <div className="now-playing offline">
-        <span className="now-playing-label">♪ I&apos;m Not listening to anything :)</span>
+      <div className="now-playing-chip offline">
+        <span className="now-playing-dot" aria-hidden="true" />
+        <span className="now-playing-label">not listening rn :)</span>
       </div>
     );
   }
@@ -50,13 +52,13 @@ export default function NowPlaying() {
   const trackText = `${track.track.name} by ${track.track.artist}`;
 
   return (
-    <div className="now-playing">
+    <div className="now-playing-chip">
+      <span className="now-playing-dot playing" aria-hidden="true" />
       <div className="now-playing-split">
-        <span className="now-playing-label-inline">♪ I&apos;m listening to:</span>
         {track.track.lastFmUrl ? (
-          <a 
-            href={track.track.lastFmUrl} 
-            target="_blank" 
+          <a
+            href={track.track.lastFmUrl}
+            target="_blank"
             rel="noopener noreferrer"
             className="track-link-single"
           >
