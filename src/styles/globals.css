@@ -3293,3 +3293,71 @@ body::before {
   align-self: flex-start;
 }
 
+.perfume-v2-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+}
+
+.perfume-v2-type {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+}
+
+.perfume-v2-title {
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+.perfume-v2-byline {
+  margin: 0;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-ink-mute);
+}
+
+.perfume-v2-pullquote {
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--accent-perfumes);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+}
+
+.perfume-v2-seasons {
+  margin: 0;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-ink-mute);
+}
+
+.perfume-v2-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.perfume-v2-rating {
+  font-size: 0.8rem;
+  color: var(--color-ink-mute);
+}
+
+.perfume-v2-fragrantica-link {
+  font-size: 0.8rem;
+  color: var(--accent-perfumes);
+  text-decoration: none;
+  font-style: italic;
+}
+
