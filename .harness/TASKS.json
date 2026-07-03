@@ -4982,7 +4982,7 @@
     {
       "id": "T178",
       "title": "Make the desktop nav pill row horizontally scrollable with a visible fade affordance instead of wrapping",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
