@@ -5429,7 +5429,7 @@
     {
       "id": "T195",
       "title": "Add margin-top to .collection-form-card to fix add/edit page title gap",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
