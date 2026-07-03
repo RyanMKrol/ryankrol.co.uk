@@ -3884,7 +3884,7 @@
     {
       "id": "T146",
       "title": "Rebuild Header.js into the persistent Collection nav (desktop pills + mobile hamburger)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T142",
         "T143"
