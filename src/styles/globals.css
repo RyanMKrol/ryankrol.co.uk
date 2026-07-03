@@ -460,33 +460,6 @@
   }
 }
 
-.perfume-empty-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100%;
-  border: var(--border-width) dashed var(--accent-perfumes);
-  border-radius: var(--radius-card);
-  padding: 1rem;
-  color: var(--accent-perfumes);
-  font-weight: 700;
-  text-align: center;
-}
-
-.perfume-scale-chip {
-  display: inline-flex;
-  align-items: center;
-  border-radius: var(--radius-card);
-  padding: 0.75rem 1.25rem;
-  background: var(--accent-perfumes);
-  color: #FFFFFF;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.9rem;
-  max-width: 320px;
-  line-height: 1.4;
-}
-
 /* ===== Collection Review Header (T150) ===== */
 
 .collection-review-header {

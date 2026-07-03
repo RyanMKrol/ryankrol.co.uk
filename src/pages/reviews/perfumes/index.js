@@ -88,11 +88,6 @@ export default function Perfumes() {
             rated out of 10 · a new &amp; growing shelf
           </p>
         </div>
-
-        <p className="perfume-scale-chip">
-          perfumes use a 0-10 scale — shown as a pip meter, not stars, so it never gets confused
-          with the /5 reviews.
-        </p>
       </div>
 
       <div className="search-container">
@@ -123,7 +118,6 @@ export default function Perfumes() {
             styleVariant="perfume-card"
           />
         ))}
-        <div className="perfume-empty-card">+ your next review lands here</div>
       </div>
     </div>
   );
