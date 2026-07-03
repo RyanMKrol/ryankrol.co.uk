@@ -3597,6 +3597,134 @@
         "risk": []
       },
       "expectsTest": false
+    },
+    {
+      "id": "T136",
+      "title": "Add 'Clothes' to the server-side application-spot allow-list",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "feature"
+      ],
+      "scope": [
+        "src/lib/perfumes.js",
+        "src/lib/perfumes.test.js"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T136.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T137",
+      "title": "Add 'Clothes' spot to the sprayer UI and fit all 7 spot cards on one row",
+      "status": "pending",
+      "dependsOn": [
+        "T136"
+      ],
+      "gate": null,
+      "tags": [
+        "component",
+        "style"
+      ],
+      "scope": [
+        "src/components/PerfumeCharacteristics.js",
+        "src/components/PerfumeCharacteristics.test.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T137.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T138",
+      "title": "Swap 🧴 lotion-bottle emoji for 👃 nose emoji across perfume pages",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit.js",
+        "src/pages/reviews/perfumes/edit/[id].js",
+        "src/components/PerfumeCharacteristics.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T138.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T139",
+      "title": "ReviewCard: rename 'Edited' label to 'Updated'",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "ui"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T139.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T140",
+      "title": "Put perfume 'Type' label and dropdown on the same line (add + edit forms)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T140.md",
+      "facets": {
+        "layer": "page",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
     }
   ]
 }
