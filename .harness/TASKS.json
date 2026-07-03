@@ -5396,7 +5396,7 @@
     {
       "id": "T194",
       "title": "Strip emoji + lowercase the h1 title on all 6 /add pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
