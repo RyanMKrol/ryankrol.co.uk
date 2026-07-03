@@ -4818,7 +4818,7 @@
     {
       "id": "T172",
       "title": "Make the home page collection wall a random, click-through mosaic across 5 content types",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
