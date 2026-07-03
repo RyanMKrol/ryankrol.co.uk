@@ -181,7 +181,7 @@ function post(p,b){return fetch(p,{method:'POST',headers:{'content-type':'applic
 // Ids the user has expanded — reapplied after each 5s re-render so auto-refresh doesn't collapse them.
 window.__openIds = new Set();
 // Ids of nested <details class="buildlog"> elements the user has expanded — reapplied after each
-// 5s re-render the same way __openIds is, but tracking the native `open` attribute instead of a CSS
+// 5s re-render the same way __openIds is, but tracking the native 'open' attribute instead of a CSS
 // class, since that's what actually controls build-log/audit visibility.
 window.__openLogIds = new Set();
 window.onLogToggle=function(el){ if(el.open) window.__openLogIds.add(el.id); else window.__openLogIds.delete(el.id); };
