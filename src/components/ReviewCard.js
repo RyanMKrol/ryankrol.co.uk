@@ -1,6 +1,35 @@
 import { gradientForKey } from './CoverTile';
 import StarRating from './StarRating';
 
+function SpineCoverCard({ item, getTitle, getRating, getThoughts }) {
+  const metaParts = [
+    item.author,
+    item.pageCount ? `${item.pageCount}pp` : null,
+    item.firstPublishedYear || null,
+  ].filter(Boolean);
+
+  return (
+    <div className="spine-cover-card">
+      <div
+        className="spine-cover-tile"
+        style={{ background: gradientForKey(item.id || getTitle()) }}
+      />
+      <div className="spine-cover-body">
+        <div className="spine-cover-heading">
+          <h3 className="spine-cover-title">{getTitle()}</h3>
+          <StarRating rating={getRating()} readOnly />
+        </div>
+        {metaParts.length > 0 && (
+          <p className="spine-cover-meta">{metaParts.join(' · ')}</p>
+        )}
+        {getThoughts() && (
+          <p className="spine-cover-snippet">{getThoughts()}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function ReviewCard({ item, type, isLast = false, styleVariant }) {
   const getTitle = () => {
     if (type === 'movie' || type === 'tv') return item.title;
@@ -51,6 +80,17 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
     }
     return classes;
   };
+
+  if (styleVariant === 'spine-cover') {
+    return (
+      <SpineCoverCard
+        item={item}
+        getTitle={getTitle}
+        getRating={getRating}
+        getThoughts={getThoughts}
+      />
+    );
+  }
 
   if (styleVariant === 'poster-banner') {
     return (

@@ -170,6 +170,65 @@
   }
 }
 
+/* ===== Spine Cover Review Card (T152) ===== */
+
+.spine-cover-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: var(--border-width) solid var(--color-ink);
+}
+
+.spine-cover-tile {
+  flex: 0 0 auto;
+  width: 88px;
+  aspect-ratio: 88 / 128;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-cover);
+}
+
+.spine-cover-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.spine-cover-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.spine-cover-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.spine-cover-meta {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--color-ink-mute);
+  font-size: 0.85rem;
+}
+
+.spine-cover-snippet {
+  margin: 0;
+  font-style: italic;
+  color: var(--color-ink-soft);
+  line-height: var(--line-height-body);
+}
+
+.spine-cover-list {
+  display: flex;
+  flex-direction: column;
+}
+
 /* ===== Collection Review Header (T150) ===== */
 
 .collection-review-header {
