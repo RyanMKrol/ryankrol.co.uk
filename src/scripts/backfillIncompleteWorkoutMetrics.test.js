@@ -21,7 +21,19 @@ describe('isIncomplete', () => {
 });
 
 describe('reshapeExerciseRows', () => {
-  it('sorts by exercise_index and maps Exercises-table rows to workout.exercises shape', () => {
+  it('sorts by index and maps Exercises-table rows to workout.exercises shape', () => {
+    const rows = [
+      { index: 1, title: 'Bench Press', sets: [set({ weight: 100, reps: 5 })] },
+      { index: 0, title: 'Squat', sets: [set({ weight: 120, reps: 5 })] },
+    ];
+
+    expect(reshapeExerciseRows(rows)).toEqual([
+      { title: 'Squat', sets: rows[1].sets },
+      { title: 'Bench Press', sets: rows[0].sets },
+    ]);
+  });
+
+  it('falls back to the older exercise_name/exercise_index fields for rows predating the schema change', () => {
     const rows = [
       { exercise_index: 1, exercise_name: 'Bench Press', sets: [set({ weight: 100, reps: 5 })] },
       { exercise_index: 0, exercise_name: 'Squat', sets: [set({ weight: 120, reps: 5 })] },
@@ -30,6 +42,18 @@ describe('reshapeExerciseRows', () => {
     expect(reshapeExerciseRows(rows)).toEqual([
       { title: 'Squat', sets: rows[1].sets },
       { title: 'Bench Press', sets: rows[0].sets },
+    ]);
+  });
+
+  it('handles a workout with a mix of old-shape and new-shape exercise rows', () => {
+    const rows = [
+      { index: 0, title: 'Hack Squat', sets: [set({ weight: 100, reps: 5 })] },
+      { exercise_index: 1, exercise_name: 'Curl', sets: [set({ weight: 10, reps: 12 })] },
+    ];
+
+    expect(reshapeExerciseRows(rows)).toEqual([
+      { title: 'Hack Squat', sets: rows[0].sets },
+      { title: 'Curl', sets: rows[1].sets },
     ]);
   });
 });
@@ -44,8 +68,8 @@ describe('buildMetricsUpdate', () => {
 
   const exerciseRows = [
     {
-      exercise_index: 0,
-      exercise_name: 'Bench Press',
+      index: 0,
+      title: 'Bench Press',
       sets: [
         set({ type: 'warmup', weight: 40, reps: 10 }),
         set({ weight: 100, reps: 5 }),
@@ -53,8 +77,8 @@ describe('buildMetricsUpdate', () => {
       ],
     },
     {
-      exercise_index: 1,
-      exercise_name: 'Overhead Press',
+      index: 1,
+      title: 'Overhead Press',
       sets: [
         set({ weight: 50, reps: 8 }),
       ],

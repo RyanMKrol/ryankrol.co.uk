@@ -44,13 +44,19 @@ function isIncomplete(workoutItem) {
 
 /**
  * Reshape Exercises-table rows (workout_id-index query results) into the
- * `workout.exercises` shape that calculateWorkoutMetrics expects
+ * `workout.exercises` shape that calculateWorkoutMetrics expects. The current
+ * row shape uses `title`/`index` (confirmed against an already-complete
+ * Workouts item's `exercises[]`, written directly from these fields), but
+ * some older rows in this table (pre-dating a schema change, or written by
+ * an external process) use `exercise_name`/`exercise_index` instead - fall
+ * back to those when the current-shape field is absent, so a mixed-schema
+ * workout (some rows old shape, some new) reshapes correctly either way.
  */
 function reshapeExerciseRows(exerciseRows) {
   return [...exerciseRows]
-    .sort((a, b) => a.exercise_index - b.exercise_index)
+    .sort((a, b) => (a.index ?? a.exercise_index) - (b.index ?? b.exercise_index))
     .map(row => ({
-      title: row.exercise_name,
+      title: row.title ?? row.exercise_name,
       sets: row.sets,
     }));
 }
