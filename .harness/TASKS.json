@@ -3247,7 +3247,7 @@
     {
       "id": "T122",
       "title": "Books update API: stamp a new editedDate field on every edit",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
