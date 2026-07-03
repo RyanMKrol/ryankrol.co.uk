@@ -163,14 +163,16 @@ src/lib (the data layer)
 | `src/lib/pagination.js` | Pure pagination math (page slicing/bounds) shared by `Pagination` and the paginated pages |
 | `src/lib/perfumes.js` | Validators (`validatePerfumeRating`, `validateLongevity`, `validateProjection`, `validateSeasons`, `validateApplicationSpots`, `validateFragranticaUrl`) + `perfumeId` — shared by the perfume API routes |
 | `src/components/*` | Presentational components (see below) |
+| `src/components/perfumeVariants/Variant6Hybrid.js` | The perfume review card, used directly by `src/pages/reviews/perfumes/index.js` (bypasses `ReviewCard`) |
 | `src/hooks/*` | `useChartTheme`, `useKonamiCode`, `useMatrixActive` |
 | `src/styles/globals.css` | CSS custom properties: `:root` = Collection design tokens (the single site palette) + `html.matrix-active` override |
 | `src/scripts/*` | One-shot ops scripts (table creation, data migration, audits) — run via npm |
 
 **Components:** `Header` (top nav across all sections + `NowPlaying`), `Footer` (social links),
 `NowPlaying` (Last.fm poll every 60s), `MarqueeText`, `ReviewCard` (variant system —
-`spine-cover`/`square-cover`/`poster-banner`/`perfume-card` — picked per review type via a
-`styleVariant` prop), `Pill` / `PillGroup` (tag/filter chips), `SearchInput`, `Badge` (small
+`spine-cover`/`square-cover`/`poster-banner` — picked per review type via a `styleVariant` prop;
+perfumes render `perfumeVariants/Variant6Hybrid` directly instead of going through `ReviewCard`),
+`Pill` / `PillGroup` (tag/filter chips), `SearchInput`, `Badge` (small
 status/accent labels, e.g. `variant="soft"`), `StarRating` (interactive or `readOnly` display
 mode), `PipMeter` (discrete-step meter, used for perfume longevity/projection), `CoverTile`
 (square artwork tile), `StatBlock` (labelled stat callout), `Pagination` (page controls backed by

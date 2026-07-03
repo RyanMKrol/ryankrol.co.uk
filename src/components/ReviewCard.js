@@ -1,7 +1,5 @@
 import CoverTile, { gradientForKey } from './CoverTile';
 import StarRating from './StarRating';
-import PipMeter from './PipMeter';
-import Badge from './Badge';
 
 function splitHighlights(highlights) {
   if (!highlights) return [];
@@ -64,40 +62,6 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts }) {
         )}
         {getThoughts() && (
           <p className="spine-cover-snippet">{getThoughts()}</p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function PerfumeCard({ item, getTitle, getThoughts }) {
-  return (
-    <div className="perfume-card">
-      <CoverTile
-        title={null}
-        imageUrl={item.thumbnail || item.coverUrl}
-        id={item.id || getTitle()}
-        aspectRatio="3 / 4"
-      />
-      <div className="perfume-card-body">
-        <h3 className="perfume-card-title">{getTitle()}</h3>
-        <p className="perfume-card-meta">
-          {item.designer}
-          {item.type && (
-            <>
-              {' · '}
-              <Badge accentColor="var(--accent-perfumes)" variant="soft">
-                {item.type}
-              </Badge>
-            </>
-          )}
-        </p>
-        <div className="perfume-card-score-row">
-          <span className="perfume-card-score">{Number(item.rating || 0).toFixed(1)}</span>
-          <PipMeter value={item.rating || 0} readOnly />
-        </div>
-        {getThoughts() && (
-          <p className="perfume-card-snippet">{getThoughts()}</p>
         )}
       </div>
     </div>
@@ -175,12 +139,6 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
         getRating={getRating}
         getThoughts={getThoughts}
       />
-    );
-  }
-
-  if (styleVariant === 'perfume-card') {
-    return (
-      <PerfumeCard item={item} getTitle={getTitle} getThoughts={getThoughts} />
     );
   }
 

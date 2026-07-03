@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ReviewCard from '../../../components/ReviewCard';
+import Variant6Hybrid from '../../../components/perfumeVariants/Variant6Hybrid';
 import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
@@ -111,13 +111,7 @@ export default function Perfumes() {
 
       <div className="perfume-card-grid">
         {filteredPerfumes.map((perfume, index) => (
-          <ReviewCard
-            key={`${perfume.id}-${index}`}
-            item={perfume}
-            type="perfume"
-            isLast={index === filteredPerfumes.length - 1}
-            styleVariant="perfume-card"
-          />
+          <Variant6Hybrid key={`${perfume.id}-${index}`} item={perfume} />
         ))}
       </div>
     </div>
