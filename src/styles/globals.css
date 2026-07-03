@@ -2158,28 +2158,136 @@ body::before {
   }
 }
 
-/* ===== Listening Page ===== */
+/* ===== Listening Page (T157) ===== */
 
-.listening-item-wrapper {
-  position: relative;
+.listening-ranked-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.popularity-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #00fff5, #ff00ff);
-  opacity: 0.4;
-  transition: opacity 0.2s;
+.listening-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s;
 }
 
-.listening-item-wrapper:hover .popularity-bar {
-  opacity: 0.7;
+.listening-row:hover {
+  transform: translateY(-1px);
 }
 
-.listening-rank.top-3 {
-  color: var(--color-accent);
+.listening-row-top {
+  background: var(--accent-listening);
+  border-color: var(--accent-listening);
+  color: #FFFFFF;
+}
+
+.listening-rank {
+  min-width: 1.75rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  text-align: center;
+  color: var(--color-ink-mute);
+}
+
+.listening-row-top .listening-rank {
+  color: #FFFFFF;
+}
+
+.listening-cover-thumb {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--radius-cover);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.listening-cover-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.listening-row-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.listening-row-title {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listening-row-artist {
+  font-size: 0.85rem;
+  color: var(--color-ink-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listening-row-top .listening-row-artist {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.listening-bar-track {
+  flex: 2;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-hairline-strong);
+  overflow: hidden;
+}
+
+.listening-row-top .listening-bar-track {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.listening-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--accent-listening);
+}
+
+.listening-row-top .listening-bar-fill {
+  background: #FFFFFF;
+}
+
+.listening-playcount {
+  min-width: 2.5rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-ink-mute);
+}
+
+.listening-row-top .listening-playcount {
+  color: #FFFFFF;
+}
+
+@media (max-width: 600px) {
+  .listening-row {
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+  }
+
+  .listening-bar-track {
+    order: 3;
+    flex-basis: 100%;
+    margin-top: 0.25rem;
+  }
 }
 
 /* Vinyl hover */

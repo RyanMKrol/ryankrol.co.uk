@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Header from '../../components/Header';
+import { gradientForKey } from '../../components/CoverTile';
 
 export default function ListeningPage() {
   const [albums, setAlbums] = useState([]);
@@ -40,11 +41,14 @@ export default function ListeningPage() {
       <div className="container">
         <Header />
 
-        <h1 className="page-title">listening</h1>
-
-        <p className="page-subtitle">
-          My most played albums from the last 3 months, via Last.fm
-        </p>
+        <div className="collection-review-header">
+          <div className="collection-review-title-group">
+            <h1 className="page-title">listening</h1>
+            <p className="collection-review-meta">
+              top 50 albums · last 90 days · via last.fm
+            </p>
+          </div>
+        </div>
 
         {loading && (
           <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -65,66 +69,54 @@ export default function ListeningPage() {
         )}
 
         {!loading && !error && albums.length > 0 && (
-          <div style={{ display: 'grid', gap: '0' }}>
+          <div className="listening-ranked-list">
             {albums.map((album, index) => {
               const barWidth = ((Number(album.playcount) || 0) / maxPlaycount) * 100;
-              return (
+              const isTop = index === 0;
+              const content = (
+                <>
+                  <div className="listening-rank">{index + 1}</div>
+
+                  <div
+                    className="listening-cover-thumb"
+                    style={!album.image ? { background: gradientForKey(`${album.artist}-${album.name}`) } : undefined}
+                  >
+                    {album.image && (
+                      <img src={album.image} alt="" />
+                    )}
+                  </div>
+
+                  <div className="listening-row-info">
+                    <div className="listening-row-title">{album.name}</div>
+                    <div className="listening-row-artist">{album.artist}</div>
+                  </div>
+
+                  <div className="listening-bar-track">
+                    <div className="listening-bar-fill" style={{ width: `${barWidth}%` }} />
+                  </div>
+
+                  <div className="listening-playcount">{album.playcount}</div>
+                </>
+              );
+
+              const rowClassName = `listening-row${isTop ? ' listening-row-top' : ''}`;
+
+              return album.url ? (
+                <a
+                  key={`${album.artist}-${album.name}`}
+                  href={album.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={rowClassName}
+                >
+                  {content}
+                </a>
+              ) : (
                 <div
                   key={`${album.artist}-${album.name}`}
-                  className="listening-item-wrapper"
+                  className={rowClassName}
                 >
-                  <div className="listening-item">
-                    <div className={`text-muted listening-rank${index < 3 ? ' top-3' : ''}`} style={{
-                      fontSize: '1.25rem',
-                      fontWeight: 'bold',
-                      minWidth: '2rem',
-                      textAlign: 'right'
-                    }}>
-                      {index + 1}
-                    </div>
-
-                    <div style={{ flex: 1 }}>
-                      {album.url ? (
-                        <a
-                          href={album.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            textDecoration: 'none',
-                            color: 'inherit',
-                            display: 'block'
-                          }}
-                        >
-                          <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
-                            {album.name}
-                          </div>
-                          <div className="text-muted" style={{ fontSize: '0.9rem' }}>
-                            by {album.artist}
-                          </div>
-                        </a>
-                      ) : (
-                        <>
-                          <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
-                            {album.name}
-                          </div>
-                          <div className="text-muted" style={{ fontSize: '0.9rem' }}>
-                            by {album.artist}
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    <div className="text-muted" style={{
-                      fontSize: '0.9rem',
-                      textAlign: 'right'
-                    }}>
-                      {album.playcount} play{album.playcount !== 1 ? 's' : ''}
-                    </div>
-                  </div>
-                  <div
-                    className="popularity-bar"
-                    style={{ width: `${barWidth}%` }}
-                  />
+                  {content}
                 </div>
               );
             })}
