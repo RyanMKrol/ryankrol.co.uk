@@ -3935,6 +3935,7 @@
       "scope": [
         "src/components/Footer.js",
         "src/pages/_app.js",
+        "src/pages/index.js",
         "src/styles/globals.css"
       ],
       "design": null,
