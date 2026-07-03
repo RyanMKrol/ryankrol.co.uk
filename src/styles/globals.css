@@ -1860,7 +1860,7 @@ input[type='range'].form-input::-moz-range-thumb {
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
   margin-bottom: 2rem;
 }
@@ -1874,6 +1874,7 @@ input[type='range'].form-input::-moz-range-thumb {
 .project-card {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   gap: 0.75rem;
   padding: 1.5rem;
   border: var(--border-width) solid var(--color-ink);
@@ -1894,6 +1895,7 @@ input[type='range'].form-input::-moz-range-thumb {
   font-size: 1.125rem;
   color: var(--color-ink);
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .project-card-name:hover {
