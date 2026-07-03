@@ -4688,7 +4688,7 @@
     {
       "id": "T168",
       "title": "Visual audit & tweak: workouts list, workout detail, exercise detail vs the design renders",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T159",
         "T160",
