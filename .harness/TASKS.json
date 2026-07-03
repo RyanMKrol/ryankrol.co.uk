@@ -3961,7 +3961,7 @@
     {
       "id": "T149",
       "title": "Rebuild the home page to the Collection design",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
