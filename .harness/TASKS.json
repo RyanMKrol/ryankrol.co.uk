@@ -3827,7 +3827,7 @@
     {
       "id": "T144",
       "title": "Re-skin StarRating to Collection tokens and build a new PipMeter component",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T142"
       ],
