@@ -182,15 +182,13 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
     ]
   };
 
-  const ChartCard = ({ title, children, color = chartCoral }) => (
+  const ChartCard = ({ title, children }) => (
     <div className="chart-card">
       <h3 style={{
         fontSize: '1.1rem',
         fontWeight: 'bold',
         marginBottom: '1rem',
-        color: color,
-        display: 'flex',
-        alignItems: 'center'
+        color: 'var(--color-ink)'
       }}>
         {title}
       </h3>
@@ -202,24 +200,20 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
 
   return (
     <div>
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
-        📈 Progress Charts
-      </h2>
-
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
         gap: '1.5rem'
       }}>
-        <ChartCard title="🎯 Estimated 1RM Progress" color={chartCoral}>
+        <ChartCard title="Estimated 1RM progress">
           <Line data={oneRMChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="📊 Session Volume" color={chartIndigo}>
+        <ChartCard title="Session volume">
           <Bar data={volumeChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="💪 Max Weight Progress" color={chartMarigold}>
+        <ChartCard title="Max weight progress">
           <Line data={maxWeightChartData} options={chartOptions} />
         </ChartCard>
       </div>

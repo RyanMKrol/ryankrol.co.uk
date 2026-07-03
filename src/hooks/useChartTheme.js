@@ -21,7 +21,7 @@ function readTheme() {
       chartCoralBg: 'rgba(255, 92, 57, 0.15)',
       chartIndigo: '#4B4DED',
       chartIndigoBg: 'rgba(75, 77, 237, 0.15)',
-      chartGrape: '#93328E',
+      chartGrape: '#7A5AF8',
       chartMarigold: '#F4A72C',
       chartMarigoldBg: 'rgba(244, 167, 44, 0.15)'
     };
@@ -49,7 +49,7 @@ function readTheme() {
     chartCoralBg: get('--color-chart-coral-bg', 'rgba(255, 92, 57, 0.15)'),
     chartIndigo: get('--color-chart-indigo', '#4B4DED'),
     chartIndigoBg: get('--color-chart-indigo-bg', 'rgba(75, 77, 237, 0.15)'),
-    chartGrape: get('--color-chart-grape', '#93328E'),
+    chartGrape: get('--color-chart-grape', '#7A5AF8'),
     chartMarigold: get('--color-chart-marigold', '#F4A72C'),
     chartMarigoldBg: get('--color-chart-marigold-bg', 'rgba(244, 167, 44, 0.15)')
   };

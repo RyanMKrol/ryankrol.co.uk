@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Header from '../../components/Header';
 import Badge from '../../components/Badge';
-import StatBlock from '../../components/StatBlock';
 import PillGroup from '../../components/PillGroup';
 import Pagination from '../../components/Pagination';
 import { paginate } from '../../lib/pagination';
@@ -58,6 +57,10 @@ function getTotalVolume(exercises = []) {
         : setTotal
     ), 0)
   ), 0);
+}
+
+function formatVolumeTonnes(volumeKg) {
+  return (volumeKg / 1000).toFixed(1);
 }
 
 export default function Workouts() {
@@ -173,8 +176,16 @@ export default function Workouts() {
                   </p>
 
                   <div className="workout-session-stats">
-                    <StatBlock value={exercises.length} label="exercises" />
-                    <StatBlock value={getTotalVolume(exercises).toLocaleString()} unit="kg" label="volume" />
+                    <span className="workout-session-stat">
+                      <span className="workout-session-stat-value">{exercises.length}</span>
+                      <span className="workout-session-stat-label">exercises</span>
+                    </span>
+                    <span className="workout-session-stat">
+                      <span className="workout-session-stat-value">
+                        {formatVolumeTonnes(getTotalVolume(exercises))}t
+                      </span>
+                      <span className="workout-session-stat-label">volume</span>
+                    </span>
                   </div>
                 </Link>
               );

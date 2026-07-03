@@ -68,12 +68,9 @@ export default function WorkoutDetailPage() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    return date
+      .toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+      .replace(/\//g, '-');
   };
 
   const formatTime = (dateString) => {
@@ -222,7 +219,11 @@ export default function WorkoutDetailPage() {
         </div>
 
         <div className="workout-detail-stats">
-          <StatBlock value={formatDate(workout.start_time)} label="date" />
+          <StatBlock
+            value={formatDate(workout.start_time)}
+            label="date"
+            accentColor="var(--accent-workouts)"
+          />
           <StatBlock value={getDuration(workout.start_time, workout.end_time)} label="duration" />
           <StatBlock
             value={workout.totalVolume ? workout.totalVolume.toLocaleString() : '0'}

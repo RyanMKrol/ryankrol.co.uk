@@ -31,7 +31,6 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
     chartPrimary, chartPrimaryBg,
     chartSecondary, chartSecondaryBg,
     chartTertiary, chartTertiaryBg,
-    chartCardDefault,
     tooltipBg, tooltipTitle, tooltipBody, tooltipBorder
   } = useChartTheme();
 
@@ -170,15 +169,13 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
     ]
   };
 
-  const ChartCard = ({ title, children, color = chartCardDefault }) => (
+  const ChartCard = ({ title, children }) => (
     <div className="chart-card">
       <h3 style={{
         fontSize: '1.1rem',
         fontWeight: 'bold',
         marginBottom: '1rem',
-        color: color,
-        display: 'flex',
-        alignItems: 'center'
+        color: 'var(--color-ink)'
       }}>
         {title}
       </h3>
@@ -193,25 +190,21 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
 
   return (
     <div>
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
-        📈 Progress Charts
-      </h2>
-
       <div style={{
         display: 'grid',
         gridTemplateColumns: hasPaceData ? 'repeat(auto-fit, minmax(400px, 1fr))' : 'repeat(auto-fit, minmax(500px, 1fr))',
         gap: '1.5rem'
       }}>
-        <ChartCard title="📏 Distance Progress" color={chartPrimary}>
+        <ChartCard title="Distance progress">
           <Line data={distanceChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="⏱️ Duration Progress" color={chartSecondary}>
+        <ChartCard title="Duration progress">
           <Line data={durationChartData} options={chartOptions} />
         </ChartCard>
 
         {hasPaceData && (
-          <ChartCard title="🏃 Pace Progress" color={chartTertiary}>
+          <ChartCard title="Pace progress">
             <Line data={paceChartData} options={chartOptions} />
           </ChartCard>
         )}
