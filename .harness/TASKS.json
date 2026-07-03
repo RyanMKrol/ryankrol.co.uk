@@ -4929,7 +4929,7 @@
     {
       "id": "T176",
       "title": "Fix dashboard build-log <details> collapsing on 5s auto-refresh",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
