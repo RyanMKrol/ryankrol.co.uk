@@ -65,7 +65,7 @@ export default function TmdbSearch({ mediaType, query = '', onSelect }) {
       <div className="tmdb-search-row">
         <button
           type="button"
-          className="form-button tmdb-search-btn"
+          className="collection-form-button tmdb-search-btn"
           onClick={search}
           disabled={searching || cooldown || !query.trim()}
         >
@@ -73,7 +73,7 @@ export default function TmdbSearch({ mediaType, query = '', onSelect }) {
         </button>
       </div>
 
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="collection-form-message collection-form-message-error">{error}</p>}
 
       {selected && (
         <div className="tmdb-confirmed">
@@ -116,7 +116,7 @@ export default function TmdbSearch({ mediaType, query = '', onSelect }) {
                 </div>
                 <button
                   type="button"
-                  className="form-button tmdb-select-btn"
+                  className="collection-form-button tmdb-select-btn"
                   onClick={() => handleSelect(r)}
                 >
                   Select
@@ -145,8 +145,8 @@ export default function TmdbSearch({ mediaType, query = '', onSelect }) {
         .tmdb-confirmed {
           margin-top: 0.6rem;
           padding: 0.5rem 0.75rem;
-          border: 1px solid var(--color-accent);
-          border-radius: 4px;
+          border: var(--border-width) solid var(--accent-movies);
+          border-radius: var(--radius-stat);
           font-size: 0.9rem;
           display: flex;
           align-items: center;
@@ -154,8 +154,8 @@ export default function TmdbSearch({ mediaType, query = '', onSelect }) {
           flex-wrap: wrap;
         }
         .tmdb-confirmed-label {
-          color: var(--color-accent);
-          font-weight: 600;
+          color: var(--accent-movies);
+          font-weight: 700;
         }
         .tmdb-confirmed-date {
           opacity: 0.7;
@@ -163,17 +163,17 @@ export default function TmdbSearch({ mediaType, query = '', onSelect }) {
         .tmdb-clear-btn {
           margin-left: auto;
           background: none;
-          border: 1px solid var(--color-text);
-          color: var(--color-text);
+          border: var(--border-width) solid var(--color-ink);
+          color: var(--color-ink);
           padding: 0.2rem 0.6rem;
-          border-radius: 3px;
+          border-radius: var(--radius-pill);
           cursor: pointer;
           font-size: 0.8rem;
           font-family: inherit;
         }
         .tmdb-clear-btn:hover {
-          border-color: var(--color-accent);
-          color: var(--color-accent);
+          border-color: var(--accent-movies);
+          color: var(--accent-movies);
         }
         .tmdb-results {
           margin-top: 0.75rem;
@@ -193,19 +193,19 @@ export default function TmdbSearch({ mediaType, query = '', onSelect }) {
           gap: 0.75rem;
           align-items: flex-start;
           padding: 0.5rem;
-          border: 1px solid var(--color-border, #333);
-          border-radius: 4px;
+          border: var(--border-width) solid var(--color-hairline-strong);
+          border-radius: var(--radius-cover);
         }
         .tmdb-poster {
           object-fit: cover;
-          border-radius: 3px;
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .tmdb-poster-placeholder {
           width: 60px;
           height: 90px;
-          background: var(--color-border, #333);
-          border-radius: 3px;
+          background: var(--color-hairline);
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .tmdb-result-info {

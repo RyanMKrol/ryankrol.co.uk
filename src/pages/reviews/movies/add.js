@@ -88,75 +88,75 @@ export default function AddMovieReview() {
       <Header />
       <h1 className="page-title">🎬 Add Movie Review</h1>
 
-      <div className="form-container">
+      <div className="collection-form-card">
         {message && (
-          <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+          <div className={`collection-form-message ${messageType === 'success' ? 'collection-form-message-success' : 'collection-form-message-error'}`}>
             {message}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="title">Title</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="title">Title</label>
             <input
               type="text"
               id="title"
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">TMDB Match</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label">TMDB Match</label>
             <TmdbSearch
               mediaType="movie"
               query={formData.title}
               onSelect={setTmdbMatch}
             />
             {hasAttemptedSubmit && !tmdbMatch && (
-              <p className="error-message">
+              <p className="collection-form-message collection-form-message-error">
                 Search and select a TMDB match before saving
               </p>
             )}
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Rating</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label">Rating</label>
             <StarRating rating={formData.rating} onRatingChange={handleRatingChange} />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="gist">Review</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="gist">Review</label>
             <textarea
               id="gist"
               name="gist"
               value={formData.gist}
               onChange={handleInputChange}
-              className="form-input form-textarea"
+              className="collection-form-textarea"
               placeholder="Share your thoughts about this movie..."
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="form-button"
+            className="collection-form-button"
             disabled={loading || formData.rating === 0 || !tmdbMatch}
           >
             {loading ? 'Adding Review...' : 'Add Review'}

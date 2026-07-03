@@ -201,30 +201,30 @@ export default function EditTVReview() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">📺 Edit TV Show Review</h1>
-      
-      <div className="form-container">
+
+      <div className="collection-form-card">
         {message && (
-          <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+          <div className={`collection-form-message ${messageType === 'success' ? 'collection-form-message-success' : 'collection-form-message-error'}`}>
             {message}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="title">Title</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="title">Title</label>
             <input
               type="text"
               id="title"
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               disabled
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="collection-form-group">
             <MetadataBackfillModal
               buttonLabel="Backfill from TMDB"
               onSearch={handleBackfillSearch}
@@ -262,56 +262,56 @@ export default function EditTVReview() {
               <img
                 src={tmdbPosterUrl(formData.posterPath)}
                 alt={`${formData.title} poster`}
-                style={{ maxWidth: '150px', marginTop: '0.75rem', borderRadius: '4px' }}
+                style={{ maxWidth: '150px', marginTop: '0.75rem', borderRadius: 'var(--radius-cover)' }}
               />
             )}
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Rating</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label">Rating</label>
             <StarRating rating={formData.rating} onRatingChange={handleRatingChange} />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="gist">Review</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="gist">Review</label>
             <textarea
               id="gist"
               name="gist"
               value={formData.gist}
               onChange={handleInputChange}
-              className="form-input form-textarea"
+              className="collection-form-textarea"
               placeholder="Share your thoughts about this TV show..."
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="collection-form-actions">
             <button
               type="submit"
-              className="form-button"
+              className="collection-form-button"
               disabled={saving || deleting || formData.rating === 0}
             >
               {saving ? 'Updating Review...' : 'Update Review'}
             </button>
-            
+
             <button
               type="button"
               onClick={handleDelete}
               disabled={saving || deleting || !formData.password}
-              className="btn-danger"
+              className="collection-form-button collection-form-button-danger"
             >
               {deleting ? 'Deleting Review...' : 'Delete Review'}
             </button>
@@ -327,14 +327,14 @@ export default function EditTVReview() {
         }
         .mbm-thumb {
           object-fit: cover;
-          border-radius: 3px;
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .mbm-thumb-placeholder {
           width: 60px;
           height: 90px;
-          background: var(--color-border, #333);
-          border-radius: 3px;
+          background: var(--color-hairline);
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
         .mbm-card-info {
@@ -344,6 +344,8 @@ export default function EditTVReview() {
         .mbm-card-title {
           font-size: 0.9rem;
           margin: 0 0 0.25rem;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
         .mbm-card-year {
           font-weight: 400;
@@ -354,6 +356,8 @@ export default function EditTVReview() {
           opacity: 0.8;
           margin: 0;
           line-height: 1.4;
+          font-family: var(--font-body);
+          color: var(--color-ink);
         }
       `}</style>
     </div>

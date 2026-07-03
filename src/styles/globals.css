@@ -2567,6 +2567,134 @@ body::before {
   text-transform: uppercase;
 }
 
+/* ===== Collection review forms (T162): movies/tv add + edit ===== */
+
+.collection-form-card {
+  max-width: 640px;
+  margin: 0 auto;
+  background-color: var(--color-card);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  padding: 2rem;
+}
+
+.collection-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.collection-form-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+  margin-bottom: 0.5rem;
+}
+
+.collection-form-input,
+.collection-form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  border: var(--border-width) solid var(--color-hairline-strong);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  caret-color: var(--color-ink);
+  transition: border-color 0.2s;
+}
+
+.collection-form-textarea {
+  border-radius: var(--radius-stat);
+  min-height: 120px;
+  resize: vertical;
+}
+
+.collection-form-input:focus,
+.collection-form-textarea:focus {
+  outline: none;
+  border-color: var(--color-ink);
+}
+
+.collection-form-input:disabled {
+  background-color: var(--color-hairline);
+  color: var(--color-ink-mute);
+  cursor: not-allowed;
+}
+
+.collection-form-button {
+  display: inline-block;
+  background-color: var(--color-ink);
+  color: #FFFFFF;
+  border: var(--border-width) solid var(--color-ink);
+  padding: 0.75rem 1.75rem;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.collection-form-button:hover {
+  opacity: 0.85;
+}
+
+.collection-form-button:disabled {
+  background-color: transparent;
+  color: var(--color-ink-mute);
+  border-color: var(--color-hairline-strong);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.collection-form-button-danger {
+  background-color: transparent;
+  color: var(--accent-movies);
+  border-color: var(--accent-movies);
+}
+
+.collection-form-button-danger:hover {
+  background-color: rgba(255, 92, 57, 0.08);
+  opacity: 1;
+}
+
+.collection-form-button-danger:disabled {
+  background-color: transparent;
+  color: var(--color-ink-mute);
+  border-color: var(--color-hairline-strong);
+}
+
+.collection-form-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.collection-form-message {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-stat);
+  margin-bottom: 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  border: var(--border-width) solid;
+}
+
+.collection-form-message-success {
+  background-color: rgba(47, 169, 107, 0.1);
+  border-color: var(--accent-projects);
+  color: var(--accent-projects);
+}
+
+.collection-form-message-error {
+  background-color: rgba(255, 92, 57, 0.08);
+  border-color: var(--accent-movies);
+  color: var(--accent-movies);
+}
+
 .collection-stat-block {
   display: flex;
   flex-direction: column;
