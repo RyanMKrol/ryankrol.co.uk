@@ -3058,6 +3058,14 @@ body::before {
   padding: 1.25rem;
 }
 
+.home-shelf-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
+}
+
 .home-shelf-panel-title {
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -3066,6 +3074,34 @@ body::before {
   color: var(--color-ink);
   opacity: 0.75;
   margin: 0 0 0.75rem;
+}
+
+.home-shelf-panel-title.home-shelf-panel-link {
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.home-shelf-panel-title.home-shelf-panel-link:hover {
+  text-decoration: underline;
+}
+
+.home-shelf-refresh {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-ink);
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.home-shelf-refresh:hover {
+  opacity: 0.75;
+  border-color: var(--color-ink);
 }
 
 .home-shelf-item {

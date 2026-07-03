@@ -49,6 +49,7 @@ export default function Home() {
   const [albums, setAlbums] = useState([])
   const [vinyl, setVinyl] = useState([])
   const [workoutStats, setWorkoutStats] = useState(null)
+  const [shelfItems, setShelfItems] = useState([])
 
   useEffect(() => {
     async function fetchJson(url) {
@@ -72,6 +73,7 @@ export default function Home() {
       setBooks(booksData || [])
       setAlbums(albumsData || [])
       setVinyl(vinylData || [])
+      setShelfItems(pickRandomSample(vinylData || [], 5))
       setWorkoutStats(statsData)
     }
 
@@ -107,7 +109,9 @@ export default function Home() {
   const maxVolume = chronological.reduce((max, w) => Math.max(max, w.totalVolume || 0), 0)
   const bestSessionVolume = maxVolume ? Math.round(maxVolume) : null
 
-  const shelfItems = vinyl.slice(0, 4)
+  const handleShelfRefresh = () => {
+    setShelfItems(pickRandomSample(vinyl, 5))
+  }
 
   return (
     <>
@@ -224,7 +228,19 @@ export default function Home() {
             </div>
 
             <div className="home-shelf-panel">
-              <p className="home-shelf-panel-title">On the shelf &middot; {vinyl.length} records</p>
+              <div className="home-shelf-panel-header">
+                <Link href="/vinyl" className="home-shelf-panel-title home-shelf-panel-link">
+                  On the shelf &middot; {vinyl.length} records
+                </Link>
+                <button
+                  type="button"
+                  className="home-shelf-refresh"
+                  onClick={handleShelfRefresh}
+                  aria-label="Skim through my collection — show a different random 5 records"
+                >
+                  &#8635; Skim the shelf
+                </button>
+              </div>
               {shelfItems.map((record, i) => (
                 <div key={record.id || i} className="home-shelf-item">
                   <span>{record.title}</span>
