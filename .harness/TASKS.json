@@ -4846,7 +4846,7 @@
     {
       "id": "T173",
       "title": "Widen shared .container/.review-container page wrappers from 800px to the Collection 1400px full-bleed layout (root cause, site-wide)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
