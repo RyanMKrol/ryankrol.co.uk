@@ -4767,7 +4767,7 @@
     {
       "id": "T170",
       "title": "Final docs sync for the Collection redesign",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T169"
       ],
