@@ -3856,7 +3856,7 @@
     {
       "id": "T145",
       "title": "Build shared CoverTile component (gradient placeholder + real-image slot)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T142"
       ],
