@@ -3,6 +3,24 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import Header from '../../components/Header';
+import Badge from '../../components/Badge';
+import StatBlock from '../../components/StatBlock';
+
+const SPLIT_COLORS = {
+  push: 'var(--split-push)',
+  pull: 'var(--split-pull)',
+  legs: 'var(--split-legs)',
+};
+
+function splitForTitle(title) {
+  const lower = (title || '').toLowerCase();
+  return Object.keys(SPLIT_COLORS).find((key) => lower.includes(key));
+}
+
+function splitColorForTitle(title) {
+  const split = splitForTitle(title);
+  return split ? SPLIT_COLORS[split] : 'var(--color-ink-mute)';
+}
 
 export default function WorkoutDetailPage() {
   const router = useRouter();
@@ -190,117 +208,64 @@ export default function WorkoutDetailPage() {
       <div className="container">
         <Header />
 
-        <div style={{ marginBottom: '2rem' }}>
-          <button
-            onClick={() => router.back()}
-            className="btn-back"
-          >
-            ← Back
-          </button>
+        <Link href="/workouts" className="collection-back-link">
+          ← back to workouts
+        </Link>
 
-          <h1 className="page-title">🏋️ {workout.title || 'Untitled Workout'}</h1>
-
-          <div className="stat-panel" style={{ marginBottom: '2rem' }}>
-            <div className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-              {formatDate(workout.start_time)}
-            </div>
-            <div className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>
-              {formatTime(workout.start_time)} - {formatTime(workout.end_time)} • Duration: {getDuration(workout.start_time, workout.end_time)}
-            </div>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-              gap: '1rem'
-            }}>
-              <div>
-                <div className="stat-label">EXERCISES</div>
-                <div className="stat-value-small">{exercises.length}</div>
-              </div>
-              <div>
-                <div className="stat-label">TOTAL VOLUME</div>
-                <div className="stat-value-small">
-                  {workout.totalVolume ? `${workout.totalVolume.toLocaleString()}kg` : '-'}
-                </div>
-              </div>
-              <div>
-                <div className="stat-label">WORKING SETS</div>
-                <div className="stat-value-small">
-                  {workout.totalWorkingSets || '-'}
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="collection-review-title-group" style={{ marginBottom: '1.5rem' }}>
+          <h1 className="page-title" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem' }}>
+            {workout.title || 'Untitled Workout'}
+            <Badge accentColor={splitColorForTitle(workout.title)} variant="solid">
+              {splitForTitle(workout.title) || 'workout'}
+            </Badge>
+          </h1>
         </div>
 
-        <div style={{ marginTop: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
-            💪 Exercises
-          </h2>
+        <div className="workout-detail-stats">
+          <StatBlock value={formatDate(workout.start_time)} label="date" />
+          <StatBlock value={getDuration(workout.start_time, workout.end_time)} label="duration" />
+          <StatBlock
+            value={workout.totalVolume ? workout.totalVolume.toLocaleString() : '0'}
+            unit="kg"
+            label="volume"
+          />
+          <StatBlock value={exercises.length} label="exercises" />
+        </div>
 
-          {exercises.map((exercise, exerciseIndex) => (
-            <div
-              key={exercise.exercise_id}
-              className="workout-exercise-card"
-            >
-              <div style={{ marginBottom: '1rem' }}>
-                <h3 style={{
-                  fontSize: '1.2rem',
-                  fontWeight: 'bold',
-                  marginBottom: '0.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem'
-                }}>
-                  <Link
-                    href={`/exercises/${encodeURIComponent(exercise.exercise_name)}`}
-                    className="exercise-link"
-                  >
-                    {exercise.exercise_name}
-                  </Link>
-                  <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>📊</span>
-                </h3>
+        <div className="workout-exercise-grid">
+          {exercises.map((exercise) => (
+            <div key={exercise.exercise_id} className="workout-exercise-card">
+              <h3 className="workout-exercise-card-title">
+                <Link
+                  href={`/exercises/${encodeURIComponent(exercise.exercise_name)}`}
+                  className="exercise-link"
+                >
+                  {exercise.exercise_name}
+                </Link>
+              </h3>
 
-                {exercise.sessionVolume > 0 && (
-                  <div className="text-muted" style={{ fontSize: '0.9rem' }}>
-                    Session Volume: {exercise.sessionVolume}kg
-                    {exercise.bestEstimated1RM > 0 && ` • Best 1RM: ${exercise.bestEstimated1RM}kg`}
-                  </div>
-                )}
-              </div>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '0.75rem'
-              }}>
+              <div className="workout-set-rows">
                 {exercise.sets && exercise.sets.map((set, setIndex) => {
                   const isWarmup = set.type === 'warmup';
                   const warmupSets = exercise.sets.filter(s => s.type === 'warmup');
                   const workingSets = exercise.sets.filter(s => s.type !== 'warmup');
 
-                  let setNumber, setLabel;
+                  let setLabel;
                   if (isWarmup) {
                     const warmupIndex = warmupSets.findIndex(s => s === set);
-                    setNumber = warmupIndex + 1;
-                    setLabel = `Warmup ${setNumber}`;
+                    setLabel = warmupSets.length > 1 ? `warmup ${warmupIndex + 1}` : 'warmup';
                   } else {
                     const workingIndex = workingSets.findIndex(s => s === set);
-                    setNumber = workingIndex + 1;
-                    setLabel = `Set ${setNumber}`;
+                    setLabel = `set ${workingIndex + 1}`;
                   }
 
                   return (
                     <div
                       key={setIndex}
-                      className={`set-card ${isWarmup ? 'warmup' : ''}`}
+                      className={`workout-set-row ${isWarmup ? 'warmup' : ''}`}
                     >
-                      <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
-                        {setLabel}
-                      </div>
-                      <div className="text-secondary">
-                        {formatSetDisplay(set)}
-                      </div>
+                      <span className="workout-set-row-label">{setLabel}</span>
+                      <span className="workout-set-row-value">{formatSetDisplay(set)}</span>
                     </div>
                   );
                 })}

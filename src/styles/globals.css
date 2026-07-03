@@ -2047,27 +2047,84 @@ input[type='range'].form-input::-moz-range-thumb {
   margin-bottom: 2rem;
 }
 
-/* Workout detail exercise card */
-.workout-exercise-card {
-  background-color: var(--color-surface);
-  padding: 1.5rem;
-  border-radius: var(--radius-large);
-  border: 1px solid var(--color-border);
+/* Workout detail (T160): back link, stat-block row, exercise cards + set rows */
+.collection-back-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-ink-mute);
+  text-decoration: none;
   margin-bottom: 1.5rem;
 }
 
-/* Set display in workout detail */
-.set-card {
-  padding: 0.75rem;
-  border-radius: var(--radius-base);
-  border: 1px solid var(--color-border-strong);
-  font-size: 0.9rem;
-  background-color: var(--color-surface-alt);
+.collection-back-link:hover {
+  color: var(--color-ink);
 }
 
-.set-card.warmup {
+.workout-detail-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 700px) {
+  .workout-detail-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.workout-exercise-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .workout-exercise-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.workout-exercise-card {
+  padding: 1.5rem;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  background-color: var(--color-card);
+}
+
+.workout-exercise-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-ink);
+  margin-bottom: 1rem;
+}
+
+.workout-set-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.workout-set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-base);
+  background-color: var(--color-set-row-bg);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.workout-set-row.warmup {
   background-color: var(--color-warmup-bg);
-  border-color: var(--color-warmup-border);
+  color: var(--color-warmup-text);
+}
+
+.workout-set-row-label {
+  text-transform: lowercase;
 }
 
 /* Session history container */
