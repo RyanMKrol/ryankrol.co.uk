@@ -4570,7 +4570,7 @@
     {
       "id": "T165",
       "title": "Visual audit & tweak: home page, nav, footer, shared components vs the design renders",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T149"
       ],
