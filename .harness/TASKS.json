@@ -4139,7 +4139,7 @@
     {
       "id": "T154",
       "title": "Rebuild the perfumes list page (0-10 pip meter, scale-explainer chip, empty-review slot)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
