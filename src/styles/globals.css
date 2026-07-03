@@ -70,6 +70,69 @@
   --color-chart-grape: #7A5AF8;
   --color-chart-marigold: #F4A72C;
   --color-chart-marigold-bg: rgba(244, 167, 44, 0.15);
+
+  /* Legacy multi-theme variable names (T169) — a handful of not-yet-migrated
+     selectors (form controls, pagination/filter states, now-playing, scrollbar)
+     still reference the pre-Collection theme's variable names. Those names were
+     previously defined ONLY inside the html.matrix-active override, so outside
+     Matrix mode they resolved to nothing and those selectors silently lost their
+     styling. Alias them to the Collection tokens here so every page renders
+     consistently; html.matrix-active continues to override these for the
+     terminal look. */
+  --font-heading: var(--font-display);
+  --spacing-container-padding: var(--gutter-desktop);
+  --color-surface: var(--color-card);
+  --color-surface-alt: var(--color-hairline);
+  --color-text: var(--color-ink);
+  --color-text-secondary: var(--color-ink-soft);
+  --color-text-muted: var(--color-ink-mute);
+  --color-text-faint: var(--color-ink-mute);
+  --color-border: var(--color-hairline);
+  --color-border-strong: var(--color-hairline-strong);
+  --color-accent: var(--color-ink);
+  --color-accent-hover: var(--color-ink-soft);
+  --color-accent-secondary: var(--accent-books);
+  --color-link: var(--accent-listening);
+  --color-danger: var(--accent-movies);
+  --color-danger-hover: var(--accent-movies);
+  --color-success-bg: rgba(47, 169, 107, 0.1);
+  --color-success-border: var(--accent-projects);
+  --color-success-text: var(--accent-projects);
+  --color-error-bg: rgba(255, 92, 57, 0.08);
+  --color-error-border: var(--accent-movies);
+  --color-error-text: var(--accent-movies);
+  --radius-base: var(--radius-pill);
+  --radius-large: var(--radius-card);
+  --shadow-card: var(--shadow-cover);
+  --btn-bg: var(--color-ink);
+  --btn-color: #FFFFFF;
+  --btn-hover-bg: var(--color-ink-soft);
+  --btn-secondary-bg: transparent;
+  --btn-secondary-color: var(--color-ink);
+  --btn-secondary-hover-bg: var(--color-hairline);
+  --btn-danger-bg: transparent;
+  --input-bg: var(--color-bg);
+  --input-focus-shadow: none;
+  --color-pagination-hover-bg: var(--color-hairline);
+  --color-pagination-active-bg: var(--color-ink);
+  --color-pagination-active-hover-bg: var(--color-ink-soft);
+  --color-filter-hover-bg: var(--color-hairline);
+  --color-filter-active-bg: var(--color-ink);
+  --color-filter-active-hover-bg: var(--color-ink-soft);
+  --color-now-playing-start: var(--accent-listening);
+  --color-now-playing-end: var(--color-ink);
+  --color-now-playing-text: #FFFFFF;
+  --color-now-playing-inactive: var(--color-hairline);
+  --color-now-playing-inactive-text: var(--color-ink-mute);
+  --color-pagination-active-text: #FFFFFF;
+  --color-filter-active-text: #FFFFFF;
+  --color-warmup-border: var(--color-warmup-text);
+  --scrollbar-track: var(--color-bg);
+  --scrollbar-thumb: var(--color-hairline-strong);
+  --scrollbar-thumb-hover: var(--color-ink-mute);
+  --selection-bg: var(--color-ink);
+  --selection-color: #FFFFFF;
+  --top-bar-gradient: linear-gradient(90deg, var(--accent-listening), var(--accent-books));
 }
 
 /* ===== Cover Tile (T145) ===== */
@@ -538,6 +601,9 @@ html.matrix-active {
   /* Now playing inactive */
   --color-now-playing-inactive: rgba(0, 8, 0, 0.6);
   --color-now-playing-inactive-text: #008811;
+  --color-now-playing-text: #00ff41;
+  --color-pagination-active-text: #00ff41;
+  --color-filter-active-text: #00ff41;
 
   /* Matrix glow */
   --matrix-glow: 0 0 5px rgba(0, 255, 65, 0.4);
@@ -1331,7 +1397,7 @@ input[type='range'].form-input::-moz-range-thumb {
 
 .pagination-page.active {
   background-color: var(--color-pagination-active-bg);
-  color: var(--color-text);
+  color: var(--color-pagination-active-text);
   border-color: var(--color-accent);
 }
 
@@ -1447,7 +1513,7 @@ input[type='range'].form-input::-moz-range-thumb {
 
 .filter-button.active {
   background-color: var(--color-filter-active-bg);
-  color: var(--color-text);
+  color: var(--color-filter-active-text);
   border-color: var(--color-accent);
 }
 
@@ -1458,7 +1524,7 @@ input[type='range'].form-input::-moz-range-thumb {
 /* Now Playing Component - Last.fm */
 .now-playing {
   background: linear-gradient(135deg, var(--color-now-playing-start) 0%, var(--color-now-playing-end) 100%);
-  color: var(--color-text);
+  color: var(--color-now-playing-text);
   padding: 0.75rem 1rem;
   border-radius: var(--radius-large);
   margin-bottom: 1rem;

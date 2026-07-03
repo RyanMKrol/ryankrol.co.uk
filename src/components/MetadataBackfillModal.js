@@ -140,9 +140,9 @@ export default function MetadataBackfillModal({
           padding: 1rem;
         }
         .mbm-card {
-          background: var(--color-bg);
-          border: 1px solid var(--color-border, #333);
-          border-radius: 6px;
+          background: var(--color-card);
+          border: var(--border-width) solid var(--color-ink);
+          border-radius: var(--radius-card);
           padding: 1.25rem;
           max-width: 480px;
           width: 100%;
@@ -157,22 +157,24 @@ export default function MetadataBackfillModal({
         }
         .mbm-title {
           margin: 0;
+          font-family: var(--font-display);
           font-size: 1.1rem;
+          color: var(--color-ink);
         }
         .mbm-close {
           background: none;
           border: none;
-          color: var(--color-text);
+          color: var(--color-ink);
           font-size: 1.5rem;
           line-height: 1;
           cursor: pointer;
         }
         .mbm-close:hover {
-          color: var(--color-accent);
+          color: var(--color-ink-soft);
         }
         .mbm-status {
           font-size: 0.9rem;
-          opacity: 0.7;
+          color: var(--color-ink-mute);
         }
         .mbm-results {
           display: flex;
@@ -185,12 +187,12 @@ export default function MetadataBackfillModal({
           gap: 0.6rem;
           align-items: flex-start;
           padding: 0.5rem;
-          border: 1px solid var(--color-border, #333);
-          border-radius: 4px;
+          border: var(--border-width) solid var(--color-hairline-strong);
+          border-radius: var(--radius-stat);
           cursor: pointer;
         }
         .mbm-result-item:hover {
-          border-color: var(--color-accent);
+          border-color: var(--color-ink);
         }
         .mbm-result-content {
           flex: 1;
@@ -203,7 +205,7 @@ export default function MetadataBackfillModal({
         }
         .mbm-cancel-btn {
           background: none;
-          border: 1px solid var(--color-text);
+          border: var(--border-width) solid var(--color-ink);
         }
       `}</style>
     </>
