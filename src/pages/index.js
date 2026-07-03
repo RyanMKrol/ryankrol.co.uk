@@ -155,7 +155,7 @@ export default function Home() {
           <h2 className="home-section-title">The collection wall</h2>
           <div className="home-wall-grid">
             {wallItems.map((item) => (
-              <Link key={item.key} href={item.href} className="home-wall-tile-link">
+              <Link key={item.key} href={{ pathname: item.href, query: { q: item.title } }} className="home-wall-tile-link">
                 <CoverTile title={item.title} imageUrl={item.imageUrl} id={item.key} subtitle={item.subtitle} />
               </Link>
             ))}
