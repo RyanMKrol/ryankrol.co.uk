@@ -131,7 +131,6 @@ export default function Movies() {
             options={SORT_OPTIONS}
             value={sortBy}
             onChange={setSortBy}
-            accentColor="var(--accent-movies)"
           />
         </div>
       </div>
@@ -151,7 +150,6 @@ export default function Movies() {
         currentPage={page}
         totalPages={pageCount}
         onPageChange={setCurrentPage}
-        accentColor="var(--accent-movies)"
       />
     </div>
   );

@@ -131,7 +131,6 @@ export default function TV() {
             options={SORT_OPTIONS}
             value={sortBy}
             onChange={setSortBy}
-            accentColor="var(--accent-tv)"
           />
         </div>
       </div>
@@ -151,7 +150,6 @@ export default function TV() {
         currentPage={page}
         totalPages={pageCount}
         onPageChange={setCurrentPage}
-        accentColor="var(--accent-tv)"
       />
     </div>
   );

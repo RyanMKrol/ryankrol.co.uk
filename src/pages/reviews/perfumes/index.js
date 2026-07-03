@@ -105,7 +105,6 @@ export default function Perfumes() {
           options={SORT_OPTIONS}
           value={sortBy}
           onChange={setSortBy}
-          accentColor="var(--accent-perfumes)"
         />
         {searchTerm && (
           <div className="search-results-count">

@@ -133,7 +133,6 @@ export default function Albums() {
             options={SORT_OPTIONS}
             value={sortBy}
             onChange={setSortBy}
-            accentColor="var(--accent-albums)"
           />
         </div>
       </div>
@@ -153,7 +152,6 @@ export default function Albums() {
         currentPage={page}
         totalPages={pageCount}
         onPageChange={setCurrentPage}
-        accentColor="var(--accent-albums)"
       />
     </div>
   );

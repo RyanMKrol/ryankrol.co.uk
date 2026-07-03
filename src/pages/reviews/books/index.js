@@ -133,7 +133,6 @@ export default function Books() {
             options={SORT_OPTIONS}
             value={sortBy}
             onChange={setSortBy}
-            accentColor="var(--accent-books)"
           />
         </div>
       </div>
@@ -154,7 +153,6 @@ export default function Books() {
         currentPage={page}
         totalPages={pageCount}
         onPageChange={setCurrentPage}
-        accentColor="var(--accent-books)"
       />
     </div>
   );
