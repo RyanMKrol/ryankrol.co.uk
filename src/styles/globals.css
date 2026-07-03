@@ -1914,6 +1914,15 @@ input[type='range'].form-input::-moz-range-thumb {
   color: var(--color-ink-mute);
 }
 
+.workout-session-exercise-preview {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-ink-mute);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .workout-session-stats {
   display: flex;
   align-items: baseline;

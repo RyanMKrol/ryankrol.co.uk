@@ -49,6 +49,14 @@ function getDuration(startTime, endTime) {
   return `${Math.floor(diffMins / 60)}h ${diffMins % 60}m`;
 }
 
+function getExercisePreview(exercises = [], maxShown = 3) {
+  const names = exercises.map((exercise) => exercise.title).filter(Boolean);
+  if (names.length === 0) return null;
+  const shown = names.slice(0, maxShown);
+  const remaining = names.length - shown.length;
+  return remaining > 0 ? `${shown.join(' · ')} · +${remaining} more` : shown.join(' · ');
+}
+
 function getTotalVolume(exercises = []) {
   return exercises.reduce((total, exercise) => (
     total + exercise.sets.reduce((setTotal, set) => (
@@ -174,6 +182,12 @@ export default function Workouts() {
                     {formatDate(workout.start_time)} · {formatTime(workout.start_time)} -{' '}
                     {formatTime(workout.end_time)} · {getDuration(workout.start_time, workout.end_time)}
                   </p>
+
+                  {getExercisePreview(exercises) && (
+                    <p className="workout-session-exercise-preview">
+                      {getExercisePreview(exercises)}
+                    </p>
+                  )}
 
                   <div className="workout-session-stats">
                     <span className="workout-session-stat">
