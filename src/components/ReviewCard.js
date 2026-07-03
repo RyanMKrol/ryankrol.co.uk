@@ -1,5 +1,43 @@
-import { gradientForKey } from './CoverTile';
+import CoverTile, { gradientForKey } from './CoverTile';
 import StarRating from './StarRating';
+
+function splitHighlights(highlights) {
+  if (!highlights) return [];
+  return highlights
+    .split(/[\n,.;]+/)
+    .map((fragment) => fragment.trim())
+    .filter(Boolean)
+    .slice(0, 4);
+}
+
+function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts }) {
+  const tracks = splitHighlights(getThoughts());
+
+  return (
+    <div className="square-cover-card">
+      <CoverTile
+        title={null}
+        imageUrl={item.thumbnail || item.coverUrl}
+        id={item.id || getTitle()}
+        aspectRatio="1 / 1"
+      />
+      <div className="square-cover-body">
+        <div className="square-cover-heading">
+          <h3 className="square-cover-title">{getTitle()}</h3>
+          <StarRating rating={getRating()} readOnly />
+        </div>
+        {getAuthor() && <p className="square-cover-artist">{getAuthor()}</p>}
+        {tracks.length > 0 && (
+          <p className="square-cover-highlights">
+            <span className="square-cover-highlights-label">HIGHLIGHTS</span>
+            {' · '}
+            {tracks.join(' · ')}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function SpineCoverCard({ item, getTitle, getRating, getThoughts }) {
   const metaParts = [
@@ -86,6 +124,18 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
       <SpineCoverCard
         item={item}
         getTitle={getTitle}
+        getRating={getRating}
+        getThoughts={getThoughts}
+      />
+    );
+  }
+
+  if (styleVariant === 'square-cover') {
+    return (
+      <SquareCoverCard
+        item={item}
+        getTitle={getTitle}
+        getAuthor={getAuthor}
         getRating={getRating}
         getThoughts={getThoughts}
       />

@@ -229,6 +229,77 @@
   flex-direction: column;
 }
 
+/* ===== Square Cover Review Card (T153) ===== */
+
+.square-cover-card {
+  display: flex;
+  gap: 1rem;
+  background: var(--color-card);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  box-shadow: var(--shadow-cover);
+}
+
+.square-cover-card .cover-tile-wrap {
+  flex: 0 0 auto;
+  width: 100px;
+}
+
+.square-cover-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  justify-content: center;
+}
+
+.square-cover-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.square-cover-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.square-cover-artist {
+  margin: 0;
+  color: var(--color-ink-mute);
+  font-size: 0.9rem;
+}
+
+.square-cover-highlights {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--color-ink-soft);
+  font-size: 0.85rem;
+  line-height: var(--line-height-body);
+}
+
+.square-cover-highlights-label {
+  color: var(--accent-albums);
+  font-weight: 700;
+}
+
+.square-cover-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 700px) {
+  .square-cover-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===== Collection Review Header (T150) ===== */
 
 .collection-review-header {
