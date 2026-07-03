@@ -4610,7 +4610,7 @@
     {
       "id": "T166",
       "title": "Visual audit & tweak: reviews list pages vs the design renders",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T150",
         "T151",
