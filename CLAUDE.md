@@ -304,8 +304,12 @@ vercel --prod      # deploys the current local working tree directly, no Git int
 **Convention — any session that changes what ships (`src/`, `public/`, etc.) is responsible for
 triggering a deploy when that body of work is actually done, whether or not it went through the
 harness:**
-- **Inside the autonomous harness**: see `.harness/CLAUDE.md`'s backlog-authoring convention — every
-  task sequence that touches the site ends with an ordinary **buildable** deploy task (`gate: null`,
+- **Inside the autonomous harness**: see `.harness/CLAUDE.md`'s backlog-authoring convention —
+  **exactly one** deploy task exists in `TASKS.json` with `status: pending` at any time (never one
+  per idea/sweep/feature — that was tried once, produced two competing pending deploy tasks
+  side-by-side, and had to be caught and merged by hand). New site-touching tasks get added to that
+  ONE pending deploy task's `dependsOn`; a fresh one is only authored once the previous one has
+  actually flipped to `done` (i.e. really shipped). It's an ordinary **buildable** task (`gate: null`,
   runs `vercel --prod` and verifies it via exit code + a `curl` check — no human click-through), so a
   `supervise.sh` run naturally culminates in shipping what it built, not leaving it stranded on
   `main`.

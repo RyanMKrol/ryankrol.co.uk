@@ -5253,32 +5253,6 @@
       "expectsTest": false
     },
     {
-      "id": "T188",
-      "title": "Deploy the perfume card redesign to production",
-      "status": "pending",
-      "dependsOn": [
-        "T187"
-      ],
-      "gate": null,
-      "tags": [
-        "perfumes",
-        "perfume-variants",
-        "deploy"
-      ],
-      "scope": [],
-      "design": null,
-      "verify": [],
-      "spec": ".harness/tasks/T188.md",
-      "facets": {
-        "layer": "harness",
-        "workType": "config",
-        "risk": [
-          "cross-cutting"
-        ]
-      },
-      "expectsTest": false
-    },
-    {
       "id": "T189",
       "title": "Remove the perfume scale-explainer chip and empty-state slot from the live perfumes page",
       "status": "pending",
@@ -5386,7 +5360,7 @@
     },
     {
       "id": "T193",
-      "title": "Deploy the idea-conversion sweep fixes to production",
+      "title": "Deploy pending site changes to production",
       "status": "pending",
       "dependsOn": [
         "T172",
@@ -5396,6 +5370,7 @@
         "T177",
         "T178",
         "T179",
+        "T187",
         "T189",
         "T190",
         "T191",

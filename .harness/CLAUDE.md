@@ -12,27 +12,42 @@ source of authoring logic**: it assigns the task's **facets** (difficulty auto-t
 chooser task with a review task, runs the **poor-fit / layer-evolution gate**, and writes a
 schema-correct task object + its `tasks/TNNN.md` spec. Prefer it over hand-editing `TASKS.json`.
 
-**Every backlog sequence that touches `src/`, `public/`, or anything else that ships to the live
-site MUST end with a deploy task (see root `CLAUDE.md`'s "Deploying" section for why — Vercel's Git
-integration is disconnected, so nothing ships automatically anymore).** When authoring or extending
-a backlog whose tasks change the site, the LAST task in dependency order (i.e. every other new task,
-directly or transitively, `dependsOn` it, or it's simply appended after everything else with no
-downstream dependents) must be a **buildable** task (`"gate": null`, real `facets` — do NOT make it
-`needs-human`; running `vercel --prod` and checking its own exit code + a `curl` of the resulting URL
-is entirely something the loop's own builder can do unattended, the same way T083 ran a production
-DynamoDB backfill autonomously using credentials already available in the checkout) titled along the
-lines of "Deploy `<the feature/phase>` to production", `scope: []` (it makes no code changes — see
-T171 for the template), whose spec instructs it to: confirm `main` is current, run `vercel whoami`
-and record `failed:blocked` if that fails (the one genuine human-only prerequisite — someone has to
-`vercel login` once), otherwise run `vercel --prod --yes` non-interactively, and verify the deploy
-objectively (the CLI's own exit code, a `curl` HTTP-200 check on the returned URL, and a `curl | grep`
-for a couple of content markers that only exist post-change — never "look at it and confirm it looks
-right," that's not something an unattended agent can do). Do not add a second one if a prior,
-still-pending deploy task already sits at the end of the backlog for the same body of work — extend
-its `dependsOn` instead of duplicating it. A pure-docs/harness-only task sequence (nothing under
-`src/`/`public/`) does not need one. `layer`/`workType` won't map cleanly onto any existing
-`facets.json` value for a task like this (no code diff at all) — that's expected, pick the closest
-per the poor-fit protocol below and log it to `facet-misfits.jsonl` rather than inventing a value.
+**There must be AT MOST ONE deploy task in `TASKS.json` with `status: pending` at any time, full
+stop — never one per idea, sweep, cluster, "body of work", or feature.** (See root `CLAUDE.md`'s
+"Deploying" section for why a deploy task needs to exist at all — Vercel's Git integration is
+disconnected, so nothing ships automatically anymore.) This was violated once already: a full
+Collection-redesign sweep authored `T171` (deploy), then two LATER, entirely separate authoring
+passes — an idea-conversion sweep and a perfume-card-variants chooser cluster, run independently —
+each independently added their OWN new deploy task (`T193` and `T188`) because each pass reasoned
+"my body of work needs its own deploy checkpoint," not noticing the other had just done the same
+thing. Result: two pending deploy tasks sitting in the backlog side by side, silently double-booking
+a real `vercel --prod` deploy. Caught by the owner, not by any authoring-time check — don't let it
+recur.
+
+**The actual rule, mechanically: before authoring ANY new task whose work changes the live site,
+check for a pending deploy task first** (`jq -r '.tasks[]|select(.status=="pending" and (.title|test("^Deploy pending site changes to production$")))|.id' .harness/TASKS.json`
+— note the exact canonical title, not a fuzzy "contains deploy" check, since a stray title match on
+an unrelated task would misfire):
+- **A pending one exists** → do NOT author a new deploy task. Add every new site-touching task's id
+  to the EXISTING pending deploy task's `dependsOn` (merge, don't replace — union the ids). This
+  applies regardless of whether your new tasks are thematically related to whatever's already in that
+  `dependsOn` list — one deploy task accumulates dependencies from however many unrelated efforts
+  land between deploys, that's the whole point of batching.
+- **None is pending** (the most recent one already flipped to `status: done` — meaning it actually
+  ran `vercel --prod` and shipped) → author a fresh one now, generically titled exactly **"Deploy
+  pending site changes to production"** (not "Deploy `<feature>` to production" — the whole point of
+  the generic title is that it's the one stable thing to `jq`-match against later; see `T193`'s
+  current title for the corrected template, and its spec for the full worked example: `scope: []`,
+  `"gate": null`, real `facets`, depends on every site-touching task since the last deploy).
+  `vercel --prod` + checking its own exit code + a `curl` HTTP-200/content-marker check is entirely
+  something the loop's own builder can do unattended (same as T083's autonomous production DynamoDB
+  backfill) — never `needs-human`.
+
+A pure-docs/harness-only task sequence (nothing under `src/`/`public/`) never needs to touch this at
+all — it doesn't add to the deploy task's `dependsOn` and doesn't trigger creating one.
+`layer`/`workType` won't map cleanly onto any existing `facets.json` value for the deploy task itself
+(no code diff at all) — that's expected, pick the closest per the poor-fit protocol below and log it
+to `facet-misfits.jsonl` rather than inventing a value.
 
 ## Ideas inbox & the two-step flow (ideas → tasks)
 
