@@ -3763,7 +3763,7 @@
     {
       "id": "T142",
       "title": "Install Collection design tokens (fonts + CSS custom properties) as the site's single palette",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141"
       ],

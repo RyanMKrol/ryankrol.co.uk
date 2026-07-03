@@ -155,13 +155,13 @@ src/lib (the data layer)
 | `src/lib/workoutBackfill.js` | Background fetch of missing workouts from Hevy → DynamoDB (on cache miss) |
 | `src/components/*` | Presentational components (see below) |
 | `src/hooks/*` | `useChartTheme`, `useKonamiCode`, `useMatrixActive` |
-| `src/styles/globals.css` | CSS custom properties: `:root` default + `html.matrix-active` override |
+| `src/styles/globals.css` | CSS custom properties: `:root` = Collection design tokens (the single site palette) + `html.matrix-active` override |
 | `src/scripts/*` | One-shot ops scripts (table creation, data migration, audits) — run via npm |
 
 **Components:** `Header`, `NowPlaying` (Last.fm poll every 60s), `MarqueeText`, `ReviewCard`,
 `StarRating`, `WorkoutCard`, `ExerciseProgressCharts` / `CardioProgressCharts` (chart.js),
-`MatrixLayout` / `MatrixRain` / `CRTOverlay` (the easter egg). `MatrixLayout` also owns the
-global fixed 🎨 appearance trigger + `AppearancePicker` modal (present on every page, incl. home).
+`MatrixLayout` / `MatrixRain` / `CRTOverlay` (the easter egg — `MatrixLayout` just switches these
+on/off via the `active` prop, no other chrome).
 
 ## Data model (DynamoDB)
 
@@ -216,9 +216,17 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
   (exact key, or an `'api-<type>*'` wildcard for parameterised keys). Keep the cleared key in sync
   with the read key — a mismatch silently leaves stale data (see Gotchas).
 - **Writes are password-gated** on `RYANKROL_SITE_KEY`. Non-GET methods that don't gate are a bug.
-- **Theming is CSS-custom-property driven.** Colours/fonts come from `:root` in `globals.css`,
-  overridden by `html.matrix-active`. **Charts must read theme via `useChartTheme()`** — never
-  hardcode colours in a chart component; the hook reads the CSS vars and re-reads on theme change.
+- **Theming is CSS-custom-property driven — one palette ("Collection"), no theme picker.**
+  Colours/fonts/shape come from `:root` in `globals.css` (`--color-*`, `--accent-*`, `--font-*`,
+  `--radius-*`, etc. — the Collection design tokens), overridden by `html.matrix-active` for the
+  Matrix easter egg. There is no runtime theme-switching mechanism (a prior multi-theme
+  AppearancePicker system was built and later fully retired — do not reintroduce one). **Charts must
+  read theme via `useChartTheme()`** — never hardcode colours in a chart component; the hook reads
+  the CSS vars and re-reads on `class` changes (i.e. Matrix toggling).
+  ⚠️ **Mid-redesign note:** the site is transitioning to Collection page-by-page (see the harness
+  backlog's `collection-redesign` tag). A page/component not yet migrated by its own task may still
+  reference pre-redesign class names and will render unstyled until that task lands — this is
+  expected, not a bug, during the transition.
 - **Respect `prefers-reduced-motion`.** The Matrix rain stops after one frame and CSS flicker is
   disabled under it — keep any new animation guarded the same way.
 - **Be generous with `console.log` in API routes / lib.** The codebase logs cache hits/misses and

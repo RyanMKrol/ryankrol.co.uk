@@ -1,129 +1,69 @@
-/* ===== Default Theme ===== */
+/* ===== Collection Design Tokens (T142) =====
+   The single site palette — warm/paper, replacing the retired multi-theme system (T141).
+   ============================================================================ */
 
 :root {
   /* Typography */
-  --font-body: 'Share Tech Mono', monospace;
-  --font-heading: 'Share Tech Mono', monospace;
-  --font-mono: 'Share Tech Mono', monospace;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+  --font-mono: 'Space Mono', monospace;
   --line-height-body: 1.6;
-  --font-size-base: 0.8em;
+  --font-size-base: 1em;
 
-  /* Backgrounds */
-  --color-bg: #0a0a1a;
-  --color-surface: #0f0f2a;
-  --color-surface-alt: #141430;
+  /* Color */
+  --color-bg: #FBF7EF;
+  --color-ink: #1A1714;
+  --color-ink-soft: #5A544C;
+  --color-ink-mute: #8A837A;
+  --color-card: #FFFFFF;
+  --color-hairline: #F0EADF;
+  --color-hairline-strong: #E7E0D4;
+  --color-star-gold: #F4A72C;
+  --color-star-empty: #D8D2C8;
 
-  /* Text */
-  --color-text: #e0e0ff;
-  --color-text-secondary: #a0a0cc;
-  --color-text-muted: #6a6a99;
-  --color-text-faint: #404066;
+  /* Section accents — one per content type */
+  --accent-movies: #FF5C39;
+  --accent-tv: #4B4DED;
+  --accent-books: #159A8C;
+  --accent-albums: #F4A72C;
+  --accent-vinyl: #F25CA2;
+  --accent-workouts: #1A1714;
+  --accent-listening: #7A5AF8;
+  --accent-perfumes: #7A5AF8;
+  --accent-projects: #2FA96B;
 
-  /* Borders */
-  --color-border: rgba(0, 255, 245, 0.1);
-  --color-border-strong: rgba(0, 255, 245, 0.2);
+  /* Perfume pip meter */
+  --pip-filled: #7A5AF8;
+  --pip-empty: #E1D9F5;
 
-  /* Accents */
-  --color-accent: #00fff5;
-  --color-accent-hover: #33fff7;
-  --color-accent-secondary: #ff00ff;
-  --color-accent-secondary-hover: #ff33ff;
-  --color-link: #00fff5;
+  /* Workout set rows */
+  --color-warmup-bg: #FDF4E3;
+  --color-warmup-text: #B7791F;
+  --color-set-row-bg: #F4F0E8;
 
-  /* Semantic */
-  --color-success-bg: rgba(0, 40, 30, 0.8);
-  --color-success-border: rgba(0, 255, 245, 0.3);
-  --color-success-text: #00fff5;
-  --color-error-bg: rgba(40, 0, 20, 0.8);
-  --color-error-border: rgba(255, 0, 255, 0.3);
-  --color-error-text: #ff6699;
-  --color-danger: #ff3366;
-  --color-danger-hover: #ff6688;
+  /* Shape & elevation */
+  --radius-card: 18px;
+  --radius-pill: 999px;
+  --radius-cover: 10px;
+  --radius-stat: 16px;
+  --border-width: 2px;
+  --border-color: var(--color-ink);
+  --shadow-cover: 0 6px 16px rgba(0, 0, 0, .14);
 
-  /* Components */
-  --color-star-filled: #ff00ff;
-  --color-star-empty: #2a2a4a;
-  --color-now-playing-start: #0f0f2a;
-  --color-now-playing-end: #141430;
-
-  /* Spacing & Shape */
-  --spacing-container-padding: 1.5rem 2rem 3rem 2rem;
-  --radius-base: 0.375rem;
-  --radius-large: 0.5rem;
-  --shadow-card: 0 0 15px rgba(0, 255, 245, 0.05);
-
-  /* Charts */
-  --color-chart-grid: rgba(0, 255, 245, 0.08);
-  --color-chart-text: #6a6a99;
-  --color-chart-primary: #00fff5;
-  --color-chart-primary-bg: rgba(0, 255, 245, 0.1);
-  --color-chart-secondary: #ff00ff;
-  --color-chart-secondary-bg: rgba(255, 0, 255, 0.1);
-  --color-chart-tertiary: #a855f7;
-  --color-chart-tertiary-bg: rgba(168, 85, 247, 0.1);
-  --color-chart-card-default: #a0a0cc;
-
-  /* Tooltips */
-  --color-tooltip-bg: rgba(15, 15, 42, 0.95);
-  --color-tooltip-title: #e0e0ff;
-  --color-tooltip-body: #a0a0cc;
-  --color-tooltip-border: rgba(0, 255, 245, 0.2);
-
-  /* Warmup sets */
-  --color-warmup-bg: rgba(251, 191, 36, 0.1);
-  --color-warmup-text: #fbbf24;
-  --color-warmup-border: rgba(251, 191, 36, 0.3);
-
-  /* Progress colors */
-  --color-progress-positive: #00fff5;
-  --color-progress-negative: #ff3366;
-
-  /* Now playing inactive */
-  --color-now-playing-inactive: #0f0f2a;
-  --color-now-playing-inactive-text: #404066;
-
-  /* Cyberpunk glow */
-  --matrix-glow: 0 0 5px rgba(0, 255, 245, 0.3);
-  --matrix-glow-strong: 0 0 10px rgba(0, 255, 245, 0.4), 0 0 20px rgba(0, 255, 245, 0.2);
-
-  /* Buttons */
-  --btn-bg: rgba(0, 255, 245, 0.1);
-  --btn-color: #00fff5;
-  --btn-hover-bg: rgba(0, 255, 245, 0.2);
-  --btn-secondary-bg: rgba(255, 0, 255, 0.1);
-  --btn-secondary-color: #ff00ff;
-  --btn-secondary-hover-bg: rgba(255, 0, 255, 0.2);
-  --btn-danger-bg: rgba(255, 51, 102, 0.1);
-
-  /* Inputs */
-  --input-bg: #0a0a1a;
-  --input-focus-shadow: 0 0 8px rgba(0, 255, 245, 0.3);
-
-  /* Project tags */
-  --color-tag-bg: rgba(0, 255, 245, 0.08);
-
-  /* Pagination */
-  --color-pagination-hover-bg: rgba(0, 255, 245, 0.05);
-  --color-pagination-active-bg: rgba(0, 255, 245, 0.1);
-  --color-pagination-active-hover-bg: rgba(0, 255, 245, 0.15);
-
-  /* Filter buttons */
-  --color-filter-hover-bg: rgba(0, 255, 245, 0.05);
-  --color-filter-active-bg: rgba(0, 255, 245, 0.1);
-  --color-filter-active-hover-bg: rgba(0, 255, 245, 0.15);
-
-  /* Scrollbar / selection / top-bar (overrideable per theme) */
-  --scrollbar-track: #0a0a1a;
-  --scrollbar-thumb: rgba(0, 255, 245, 0.2);
-  --scrollbar-thumb-hover: rgba(0, 255, 245, 0.4);
-  --selection-bg: rgba(0, 255, 245, 0.2);
-  --selection-color: #e0e0ff;
-  --top-bar-gradient: linear-gradient(90deg, #00fff5, #ff00ff, #00fff5);
+  /* Spacing */
+  --gutter-desktop: 40px;
+  --gutter-mobile: 18px;
 }
 
 /* ===== Matrix Theme Override ===== */
 
 html.matrix-active {
+  /* Typography — Collection's Nunito/Space Mono would otherwise leak in via :root inheritance;
+     keep the terminal feel with a monospace font regardless of the base theme's fonts. */
+  --font-display: 'JetBrains Mono', monospace;
+  --font-body: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
+
   /* Backgrounds */
   --color-bg: transparent;
   --color-surface: rgba(0, 8, 0, 0.75);
