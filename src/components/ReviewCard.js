@@ -91,7 +91,7 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
 
       {item.editedDate && (
         <p className="review-date">
-          Edited: {item.editedDate}
+          Updated: {item.editedDate}
         </p>
       )}
     </div>
