@@ -246,25 +246,29 @@ export async function getWorkoutStats() {
       workoutTypes[type] = (workoutTypes[type] || 0) + 1;
     });
 
-    // Get recent activity (last 30 days)
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
-
-    const recentActivity = workouts
-      .filter(w => w.workoutDate >= thirtyDaysAgoStr)
-      .sort((a, b) => new Date(b.workoutDate) - new Date(a.workoutDate));
-
     return {
       totalWorkouts: workouts.length,
       totalVolume: Math.round(totalVolume),
       averageDuration: Math.round(averageDuration),
       workoutTypes,
-      recentActivity: recentActivity.slice(0, 10) // Last 10 workouts
+      recentActivity: selectRecentActivity(workouts, 10)
     };
 
   } catch (error) {
     console.error('Error fetching workout statistics:', error);
     throw error;
   }
+}
+
+/**
+ * Select the most recently logged workouts, regardless of calendar recency.
+ * @param {Array} workouts - workouts with a `workoutDate` field ('YYYY-MM-DD')
+ * @param {number} limit - max number of workouts to return
+ * @returns {Array} up to `limit` workouts, most-recent-first
+ */
+export function selectRecentActivity(workouts, limit = 10) {
+  return [...workouts]
+    .filter(w => w.workoutDate)
+    .sort((a, b) => new Date(b.workoutDate) - new Date(a.workoutDate))
+    .slice(0, limit);
 }

@@ -3098,10 +3098,21 @@ body::before {
 
 .home-sparkline-bar {
   flex: 1;
+  max-width: 32px;
   background: var(--accent-albums);
   border-radius: 3px;
   min-height: 8%;
 }
+
+.home-sparkline-bar:nth-child(2)  { background: color-mix(in srgb, var(--accent-albums) 89%, var(--color-chart-coral) 11%); }
+.home-sparkline-bar:nth-child(3)  { background: color-mix(in srgb, var(--accent-albums) 78%, var(--color-chart-coral) 22%); }
+.home-sparkline-bar:nth-child(4)  { background: color-mix(in srgb, var(--accent-albums) 67%, var(--color-chart-coral) 33%); }
+.home-sparkline-bar:nth-child(5)  { background: color-mix(in srgb, var(--accent-albums) 56%, var(--color-chart-coral) 44%); }
+.home-sparkline-bar:nth-child(6)  { background: color-mix(in srgb, var(--accent-albums) 44%, var(--color-chart-coral) 56%); }
+.home-sparkline-bar:nth-child(7)  { background: color-mix(in srgb, var(--accent-albums) 33%, var(--color-chart-coral) 67%); }
+.home-sparkline-bar:nth-child(8)  { background: color-mix(in srgb, var(--accent-albums) 22%, var(--color-chart-coral) 78%); }
+.home-sparkline-bar:nth-child(9)  { background: color-mix(in srgb, var(--accent-albums) 11%, var(--color-chart-coral) 89%); }
+.home-sparkline-bar:nth-child(10) { background: var(--color-chart-coral); }
 
 .home-shelf-panel {
   background: var(--accent-albums);
