@@ -5454,7 +5454,7 @@
     {
       "id": "T196",
       "title": "Lay the books review list out as a 2-column grid of spine-cover cards",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
