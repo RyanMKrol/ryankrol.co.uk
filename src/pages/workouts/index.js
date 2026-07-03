@@ -1,10 +1,64 @@
 import { useState, useEffect } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import Header from '../../components/Header';
-import WorkoutCard from '../../components/WorkoutCard';
-import { filterWorkouts, paginateWorkouts } from '../../lib/workoutPagination';
+import Badge from '../../components/Badge';
+import StatBlock from '../../components/StatBlock';
+import PillGroup from '../../components/PillGroup';
+import Pagination from '../../components/Pagination';
+import { paginate } from '../../lib/pagination';
+import { filterWorkouts } from '../../lib/workoutPagination';
 
 const PAGE_SIZE = 10;
+
+const FILTER_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: 'push', label: 'Push' },
+  { value: 'pull', label: 'Pull' },
+  { value: 'legs', label: 'Legs' },
+];
+
+const SPLIT_COLORS = {
+  push: 'var(--split-push)',
+  pull: 'var(--split-pull)',
+  legs: 'var(--split-legs)',
+};
+
+function splitForTitle(title) {
+  const lower = (title || '').toLowerCase();
+  return Object.keys(SPLIT_COLORS).find((key) => lower.includes(key));
+}
+
+function splitColorForTitle(title) {
+  const split = splitForTitle(title);
+  return split ? SPLIT_COLORS[split] : 'var(--color-ink-mute)';
+}
+
+function formatDate(dateString) {
+  return new Date(dateString)
+    .toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    .replace(/\//g, '-');
+}
+
+function formatTime(dateString) {
+  return new Date(dateString).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+function getDuration(startTime, endTime) {
+  const diffMins = Math.round((new Date(endTime) - new Date(startTime)) / (1000 * 60));
+  if (diffMins < 60) return `${diffMins}m`;
+  return `${Math.floor(diffMins / 60)}h ${diffMins % 60}m`;
+}
+
+function getTotalVolume(exercises = []) {
+  return exercises.reduce((total, exercise) => (
+    total + exercise.sets.reduce((setTotal, set) => (
+      set.type !== 'warmup' && set.weight_kg && set.reps
+        ? setTotal + set.weight_kg * set.reps
+        : setTotal
+    ), 0)
+  ), 0);
+}
 
 export default function Workouts() {
   const [allWorkouts, setAllWorkouts] = useState([]);
@@ -35,15 +89,11 @@ export default function Workouts() {
   }, []);
 
   const filtered = filterWorkouts(allWorkouts, activeFilter);
-  const { items: pageWorkouts, page, pageCount } = paginateWorkouts(filtered, currentPage, PAGE_SIZE);
+  const { items: pageWorkouts, page, pageCount } = paginate(filtered, currentPage, PAGE_SIZE);
 
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
-    setCurrentPage(1); // always reset to page 1 on filter change
-  };
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+    setCurrentPage(1);
   };
 
   if (loading) {
@@ -71,118 +121,74 @@ export default function Workouts() {
   }
 
   return (
-    <div className="review-container">
-      <Header />
-      <h1 className="page-title">workouts</h1>
+    <>
+      <Head>
+        <title>Workouts - ryankrol.co.uk</title>
+      </Head>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <Link href="/programmes" style={{ fontSize: '0.9rem' }}>
-          View programme stats →
-        </Link>
-      </div>
+      <div className="container">
+        <Header />
 
-      <div className="search-container">
-        <div className="workout-filters">
-          <span className="filter-label">Filter by type:</span>
-          <div className="filter-buttons">
-            {['all', 'push', 'pull', 'legs'].map(f => (
-              <button
-                key={f}
-                onClick={() => handleFilterChange(f)}
-                className={`filter-button ${activeFilter === f ? 'active' : ''}`}
-              >
-                {f.charAt(0).toUpperCase() + f.slice(1)}
-              </button>
-            ))}
+        <div className="collection-review-header">
+          <div className="collection-review-title-group">
+            <h1 className="page-title">workouts</h1>
+            <p className="collection-review-meta">
+              {allWorkouts.length} sessions logged · via Hevy ·{' '}
+              <Link href="/programmes">view programme stats →</Link>
+            </p>
           </div>
-        </div>
 
-        {activeFilter !== 'all' && (
-          <div className="search-results-count">
-            Showing {filtered.length} {activeFilter} workout{filtered.length !== 1 ? 's' : ''}
-          </div>
-        )}
-      </div>
-
-      <div className="pagination-info">
-        <p>Page {page} of {pageCount} ({filtered.length} workout{filtered.length !== 1 ? 's' : ''})</p>
-      </div>
-
-      <div className="reviews-wrapper">
-        {pageWorkouts.length === 0 ? (
-          <p>No workouts found matching your search.</p>
-        ) : (
-          pageWorkouts.map((workout, index) => (
-            <WorkoutCard
-              key={workout.id || index}
-              workout={workout}
-              isLast={index === pageWorkouts.length - 1}
+          <div className="collection-review-controls">
+            <PillGroup
+              options={FILTER_OPTIONS}
+              value={activeFilter}
+              onChange={handleFilterChange}
+              accentColor="var(--accent-workouts)"
             />
-          ))
-        )}
-      </div>
-
-      {pageCount > 1 && (
-        <div className="pagination">
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page <= 1}
-            className="pagination-button"
-          >
-            ← Previous
-          </button>
-
-          <div className="pagination-pages">
-            {(() => {
-              const pages = [];
-              const startPage = Math.max(1, page - 3);
-              const endPage = Math.min(pageCount, page + 3);
-
-              if (page > 4) {
-                pages.push(
-                  <button key={1} onClick={() => handlePageChange(1)} className="pagination-page">1</button>
-                );
-                if (page > 5) {
-                  pages.push(<span key="start-ellipsis" className="pagination-ellipsis">...</span>);
-                }
-              }
-
-              for (let i = startPage; i <= endPage; i++) {
-                pages.push(
-                  <button
-                    key={i}
-                    onClick={() => handlePageChange(i)}
-                    className={`pagination-page ${i === page ? 'active' : ''}`}
-                  >
-                    {i}
-                  </button>
-                );
-              }
-
-              if (page < pageCount - 3) {
-                if (page < pageCount - 4) {
-                  pages.push(<span key="end-ellipsis" className="pagination-ellipsis">...</span>);
-                }
-                pages.push(
-                  <button key={pageCount} onClick={() => handlePageChange(pageCount)} className="pagination-page">
-                    {pageCount}
-                  </button>
-                );
-              }
-
-              return pages;
-            })()}
           </div>
-
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page >= pageCount}
-            className="pagination-button"
-          >
-            Next →
-          </button>
         </div>
-      )}
-    </div>
+
+        {pageWorkouts.length === 0 ? (
+          <p>No workouts found matching your filter.</p>
+        ) : (
+          <div className="workout-session-grid">
+            {pageWorkouts.map((workout, index) => {
+              const exercises = workout.exercises || [];
+              return (
+                <Link
+                  key={workout.id || index}
+                  href={`/workouts/${workout.id}`}
+                  className="workout-session-card"
+                >
+                  <div className="workout-session-card-top">
+                    <h3 className="workout-session-title">{workout.title || 'Untitled Workout'}</h3>
+                    <Badge accentColor={splitColorForTitle(workout.title)} variant="solid">
+                      {splitForTitle(workout.title) || 'workout'}
+                    </Badge>
+                  </div>
+
+                  <p className="workout-session-datetime">
+                    {formatDate(workout.start_time)} · {formatTime(workout.start_time)} -{' '}
+                    {formatTime(workout.end_time)} · {getDuration(workout.start_time, workout.end_time)}
+                  </p>
+
+                  <div className="workout-session-stats">
+                    <StatBlock value={exercises.length} label="exercises" />
+                    <StatBlock value={getTotalVolume(exercises).toLocaleString()} unit="kg" label="volume" />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        <Pagination
+          currentPage={page}
+          totalPages={pageCount}
+          onPageChange={setCurrentPage}
+          accentColor="var(--accent-workouts)"
+        />
+      </div>
+    </>
   );
 }
