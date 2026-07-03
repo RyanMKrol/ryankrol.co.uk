@@ -3729,7 +3729,7 @@
     {
       "id": "T141",
       "title": "Retire the legacy multi-theme AppearancePicker system (keep Matrix easter egg intact)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
@@ -3744,13 +3744,14 @@
         ]
       },
       "scope": [
-        "src/styles/globals.css",
         "src/components/AppearancePicker.js",
+        "src/components/MatrixLayout.js",
         "src/hooks/useTheme.js",
         "src/lib/appearance.js",
         "src/lib/appearance.test.js",
-        "src/components/MatrixLayout.js",
-        "src/pages/_document.js"
+        "src/pages/_app.js",
+        "src/pages/_document.js",
+        "src/styles/globals.css"
       ],
       "design": null,
       "verify": [
