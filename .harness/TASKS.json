@@ -3345,7 +3345,7 @@
     {
       "id": "T126",
       "title": "Books list: sort by editedDate when present, else date",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T122"
       ],
