@@ -90,85 +90,85 @@ export default function AddVinyl() {
         <Header />
         <h1 className="page-title">💿 Add Vinyl Record</h1>
 
-        <div className="form-container">
+        <div className="collection-form-card">
           {message && (
-            <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+            <div className={`collection-form-message ${messageType === 'success' ? 'collection-form-message-success' : 'collection-form-message-error'}`}>
               {message}
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label" htmlFor="title">Title *</label>
+            <div className="collection-form-group">
+              <label className="collection-form-label" htmlFor="title">Title *</label>
               <input
                 type="text"
                 id="title"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                className="form-input"
+                className="collection-form-input"
                 placeholder="Album/Record title..."
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="artist">Artist *</label>
+            <div className="collection-form-group">
+              <label className="collection-form-label" htmlFor="artist">Artist *</label>
               <input
                 type="text"
                 id="artist"
                 name="artist"
                 value={formData.artist}
                 onChange={handleInputChange}
-                className="form-input"
+                className="collection-form-input"
                 placeholder="Artist name..."
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Last.fm Match *</label>
+            <div className="collection-form-group">
+              <label className="collection-form-label">Last.fm Match *</label>
               <LastfmAlbumSearch
                 titleQuery={formData.title}
                 onSelect={handleLastfmSelect}
               />
               {!lastfmMatch && (
-                <p className="form-hint">
+                <p className="vinyl-form-hint">
                   Search and select a Last.fm match before saving
                 </p>
               )}
             </div>
 
             {lastfmMatch?.thumbnail && (
-              <div className="form-group lastfm-cover-preview">
+              <div className="collection-form-group vinyl-lastfm-cover-preview">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={lastfmMatch.thumbnail}
                   alt={formData.title}
-                  className="lastfm-preview-img"
+                  className="vinyl-lastfm-preview-img"
                   width={80}
                   height={80}
                 />
-                <span className="lastfm-preview-label">Cover from Last.fm</span>
+                <span className="vinyl-lastfm-preview-label">Cover from Last.fm</span>
               </div>
             )}
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="password">Password *</label>
+            <div className="collection-form-group">
+              <label className="collection-form-label" htmlFor="password">Password *</label>
               <input
                 type="password"
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="form-input"
+                className="collection-form-input"
                 required
               />
             </div>
 
             <button
               type="submit"
-              className="form-button"
+              className="collection-form-button"
               disabled={saving || !lastfmMatch}
             >
               {saving ? 'Adding Record...' : 'Add Vinyl Record'}
@@ -178,23 +178,27 @@ export default function AddVinyl() {
       </div>
 
       <style jsx>{`
-        .form-hint {
+        .vinyl-form-hint {
           margin-top: 0.5rem;
           font-size: 0.85rem;
+          font-family: var(--font-body);
+          color: var(--color-ink);
           opacity: 0.7;
         }
-        .lastfm-cover-preview {
+        .vinyl-lastfm-cover-preview {
           display: flex;
           align-items: center;
           gap: 0.75rem;
         }
-        .lastfm-preview-img {
+        .vinyl-lastfm-preview-img {
           object-fit: cover;
-          border-radius: 4px;
+          border-radius: var(--radius-cover);
           flex-shrink: 0;
         }
-        .lastfm-preview-label {
+        .vinyl-lastfm-preview-label {
           font-size: 0.85rem;
+          font-family: var(--font-body);
+          color: var(--color-ink);
           opacity: 0.7;
         }
       `}</style>

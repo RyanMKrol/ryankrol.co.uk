@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
+import PipMeter from '../../../../components/PipMeter';
 import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes, ApplicationSpotsSprayer } from '../../../../components/PerfumeCharacteristics';
 
 const PERFUME_TYPES = ['EDP', 'EDT', 'Parfum'];
@@ -82,11 +83,10 @@ export default function EditPerfumeReview() {
     });
   };
 
-  const handleRatingChange = (e) => {
-    const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
+  const handleRatingChange = (rating) => {
     setFormData({
       ...formData,
-      rating: Number.isNaN(value) ? 0 : value,
+      rating,
     });
   };
 
@@ -221,48 +221,48 @@ export default function EditPerfumeReview() {
       <Header />
       <h1 className="page-title">👃 Edit Perfume Review</h1>
 
-      <div className="form-container">
+      <div className="collection-form-card">
         {message && (
-          <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+          <div className={`collection-form-message ${messageType === 'success' ? 'collection-form-message-success' : 'collection-form-message-error'}`}>
             {message}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="title">Title</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="title">Title</label>
             <input
               type="text"
               id="title"
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="designer">Designer</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="designer">Designer</label>
             <input
               type="text"
               id="designer"
               name="designer"
               value={formData.designer}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
-          <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <label className="form-label" htmlFor="type" style={{ display: 'inline', flexShrink: 0 }}>Type</label>
+          <div className="collection-form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <label className="collection-form-label" htmlFor="type" style={{ display: 'inline', flexShrink: 0 }}>Type</label>
             <select
               id="type"
               name="type"
               value={formData.type}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               style={{ width: 'auto' }}
               required
             >
@@ -272,52 +272,43 @@ export default function EditPerfumeReview() {
             </select>
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="rating">Rating (0-10)</label>
-            <input
-              type="number"
-              id="rating"
-              name="rating"
-              min="0"
-              max="10"
-              step="1"
-              value={formData.rating}
-              onChange={handleRatingChange}
-              className="form-input"
-              required
-            />
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="rating">
+              Rating (0-10): {formData.rating}
+            </label>
+            <PipMeter value={formData.rating} onChange={handleRatingChange} />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="description">Description</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="description">Description</label>
             <textarea
               id="description"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
-              className="form-input form-textarea"
+              className="collection-form-textarea"
               required
             />
           </div>
 
           <ApplicationSpotsSprayer value={formData.applicationSpots} onChange={handleApplicationSpotsChange} />
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="fragranticaUrl">Fragrantica URL</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="fragranticaUrl">Fragrantica URL</label>
             <input
               type="url"
               id="fragranticaUrl"
               name="fragranticaUrl"
               value={formData.fragranticaUrl}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               placeholder="https://www.fragrantica.com/perfume/..."
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">
+          <div className="collection-form-group">
+            <label className="collection-form-label">
               <input
                 type="checkbox"
                 name="considerTravelSize"
@@ -328,8 +319,8 @@ export default function EditPerfumeReview() {
             </label>
           </div>
 
-          <div className="form-group">
-            <label className="form-label">
+          <div className="collection-form-group">
+            <label className="collection-form-label">
               <input
                 type="checkbox"
                 name="considerFullBottle"
@@ -346,23 +337,23 @@ export default function EditPerfumeReview() {
 
           <SeasonsCheckboxes value={formData.seasons} onChange={handleSeasonsChange} />
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+          <div className="collection-form-group">
+            <label className="collection-form-label" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="form-input"
+              className="collection-form-input"
               required
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="collection-form-actions">
             <button
               type="submit"
-              className="form-button"
+              className="collection-form-button"
               disabled={saving || deleting}
             >
               {saving ? 'Updating Review...' : 'Update Review'}
@@ -372,7 +363,7 @@ export default function EditPerfumeReview() {
               type="button"
               onClick={handleDelete}
               disabled={saving || deleting || !formData.password}
-              className="btn-danger"
+              className="collection-form-button collection-form-button-danger"
             >
               {deleting ? 'Deleting Review...' : 'Delete Review'}
             </button>
