@@ -94,7 +94,7 @@ export default function AddAlbumReview() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">🎵 Add Album Review</h1>
+      <h1 className="page-title">add album review</h1>
 
       <div className="collection-form-card">
         {message && (

@@ -88,7 +88,7 @@ export default function AddVinyl() {
 
       <div className="review-container">
         <Header />
-        <h1 className="page-title">💿 Add Vinyl Record</h1>
+        <h1 className="page-title">add vinyl record</h1>
 
         <div className="collection-form-card">
           {message && (

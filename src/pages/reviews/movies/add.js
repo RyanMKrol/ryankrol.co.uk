@@ -86,7 +86,7 @@ export default function AddMovieReview() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">🎬 Add Movie Review</h1>
+      <h1 className="page-title">add movie review</h1>
 
       <div className="collection-form-card">
         {message && (

@@ -93,7 +93,7 @@ export default function AddBookReview() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">📚 Add Book Review</h1>
+      <h1 className="page-title">add book review</h1>
 
       <div className="collection-form-card">
         {message && (
