@@ -300,6 +300,111 @@
   }
 }
 
+/* ===== Perfume Review Card (T154) ===== */
+
+.perfume-card {
+  display: flex;
+  gap: 1rem;
+  background: var(--color-card);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  box-shadow: var(--shadow-cover);
+}
+
+.perfume-card .cover-tile-wrap {
+  flex: 0 0 auto;
+  width: 88px;
+}
+
+.perfume-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  justify-content: center;
+}
+
+.perfume-card-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.perfume-card-meta {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-ink-mute);
+  font-size: 0.9rem;
+}
+
+.perfume-card-score-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.perfume-card-score {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.75rem;
+  color: var(--accent-perfumes);
+}
+
+.perfume-card-score-row .pip-meter {
+  margin: 0;
+}
+
+.perfume-card-snippet {
+  margin: 0;
+  font-style: italic;
+  color: var(--color-ink-soft);
+  line-height: var(--line-height-body);
+}
+
+.perfume-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 700px) {
+  .perfume-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.perfume-empty-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  border: var(--border-width) dashed var(--accent-perfumes);
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  color: var(--accent-perfumes);
+  font-weight: 700;
+  text-align: center;
+}
+
+.perfume-scale-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-card);
+  padding: 0.75rem 1.25rem;
+  background: var(--accent-perfumes);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  max-width: 320px;
+  line-height: 1.4;
+}
+
 /* ===== Collection Review Header (T150) ===== */
 
 .collection-review-header {

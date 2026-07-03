@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
-import SortButtons from '../../../components/SortButtons';
+import SearchInput from '../../../components/SearchInput';
+import PillGroup from '../../../components/PillGroup';
 
-const SORT_FIELDS = [
-  { key: 'date',  label: 'Date',  defaultValue: 'date',  flippedValue: 'date-desc',  defaultArrow: '↓', flippedArrow: '↑' },
-  { key: 'title', label: 'Title', defaultValue: 'title', flippedValue: 'title-desc', defaultArrow: '↑', flippedArrow: '↓' },
-  { key: 'score', label: 'Score', defaultValue: 'score', flippedValue: 'score-desc', defaultArrow: '↓', flippedArrow: '↑' },
+const SORT_OPTIONS = [
+  { value: 'date', label: 'date ↓' },
+  { value: 'title', label: 'title' },
+  { value: 'score', label: 'score' },
 ];
 
 export default function Perfumes() {
@@ -42,18 +43,8 @@ export default function Perfumes() {
 
     if (sortBy === 'title') {
       filtered = filtered.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (sortBy === 'title-desc') {
-      filtered = filtered.sort((a, b) => b.title.localeCompare(a.title));
     } else if (sortBy === 'score') {
       filtered = filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    } else if (sortBy === 'score-desc') {
-      filtered = filtered.sort((a, b) => (a.rating || 0) - (b.rating || 0));
-    } else if (sortBy === 'date-desc') {
-      filtered = filtered.sort((a, b) => {
-        const dateA = new Date(a.date.split('-').reverse().join('-'));
-        const dateB = new Date(b.date.split('-').reverse().join('-'));
-        return dateA - dateB;
-      });
     } else {
       filtered = filtered.sort((a, b) => {
         const dateA = new Date(a.date.split('-').reverse().join('-'));
@@ -89,17 +80,33 @@ export default function Perfumes() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">perfumes</h1>
+
+      <div className="collection-review-header">
+        <div className="collection-review-title-group">
+          <h1 className="page-title">perfumes</h1>
+          <p className="collection-review-meta">
+            rated out of 10 · a new &amp; growing shelf
+          </p>
+        </div>
+
+        <p className="perfume-scale-chip">
+          perfumes use a 0-10 scale — shown as a pip meter, not stars, so it never gets confused
+          with the /5 reviews.
+        </p>
+      </div>
 
       <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search perfumes by title..."
+        <SearchInput
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
+          onChange={setSearchTerm}
+          placeholder="search perfumes by title..."
         />
-        <SortButtons fields={SORT_FIELDS} sortBy={sortBy} onChange={setSortBy} />
+        <PillGroup
+          options={SORT_OPTIONS}
+          value={sortBy}
+          onChange={setSortBy}
+          accentColor="var(--accent-perfumes)"
+        />
         {searchTerm && (
           <div className="search-results-count">
             Found {filteredPerfumes.length} perfume{filteredPerfumes.length !== 1 ? 's' : ''}
@@ -107,16 +114,17 @@ export default function Perfumes() {
         )}
       </div>
 
-      <div className="reviews-wrapper">
+      <div className="perfume-card-grid">
         {filteredPerfumes.map((perfume, index) => (
           <ReviewCard
             key={`${perfume.id}-${index}`}
             item={perfume}
             type="perfume"
             isLast={index === filteredPerfumes.length - 1}
-            styleVariant={2}
+            styleVariant="perfume-card"
           />
         ))}
+        <div className="perfume-empty-card">+ your next review lands here</div>
       </div>
     </div>
   );
