@@ -4284,7 +4284,7 @@
     {
       "id": "T158",
       "title": "Rebuild the projects page (repo cards, GitHub language-color dots, topic pills)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
