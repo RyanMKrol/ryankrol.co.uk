@@ -5,8 +5,22 @@ import Link from 'next/link';
 import Header from '../../components/Header';
 import ExerciseProgressCharts from '../../components/ExerciseProgressCharts';
 import CardioProgressCharts from '../../components/CardioProgressCharts';
-import DateRangeFilter from '../../components/DateRangeFilter';
-import { filterByDateRange } from '../../lib/dateRange';
+import PillGroup from '../../components/PillGroup';
+import StatBlock from '../../components/StatBlock';
+import { DATE_RANGES, filterByDateRange } from '../../lib/dateRange';
+
+const DATE_RANGE_OPTIONS = DATE_RANGES.map((range) => ({ value: range.key, label: range.label }));
+
+const SPLIT_COLORS = {
+  push: 'var(--split-push)',
+  pull: 'var(--split-pull)',
+  legs: 'var(--split-legs)',
+};
+
+function splitForTitle(title) {
+  const lower = (title || '').toLowerCase();
+  return Object.keys(SPLIT_COLORS).find((key) => lower.includes(key));
+}
 
 export default function ExerciseDetailPage() {
   const router = useRouter();
@@ -175,7 +189,7 @@ export default function ExerciseDetailPage() {
 
         <div className="container">
           <Header />
-          <h1 className="page-title">📊 {exerciseName}</h1>
+          <h1 className="page-title">{exerciseName}</h1>
           <p>No history found for this exercise.</p>
           <button
             onClick={() => router.back()}
@@ -198,99 +212,53 @@ export default function ExerciseDetailPage() {
       <div className="container">
         <Header />
 
-        <div style={{ marginBottom: '2rem' }}>
-          <button
-            onClick={() => router.back()}
-            className="btn-back"
-          >
-            ← Back to Workouts
-          </button>
+        <Link href="/workouts" className="collection-back-link">
+          ← back to workouts
+        </Link>
 
-          <h1 className="page-title">📊 {exerciseName}</h1>
+        <h1 className="page-title" style={{ marginBottom: '1rem' }}>{exerciseName}</h1>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <DateRangeFilter value={dateRange} onChange={setDateRange} />
-          </div>
-
-          {stats && (
-            <div className="stat-panel" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '1rem',
-              marginBottom: '2rem'
-            }}>
-              <div>
-                <div className="stat-label">TOTAL SESSIONS</div>
-                <div className="stat-value">{stats.totalSessions}</div>
-              </div>
-
-              {stats.exerciseType === 'strength' && (
-                <>
-                  <div>
-                    <div className="stat-label">ALL-TIME MAX 1RM</div>
-                    <div className="stat-value">{stats.allTimeMax1RM}kg</div>
-                  </div>
-
-                  <div>
-                    <div className="stat-label">ALL-TIME MAX WEIGHT</div>
-                    <div className="stat-value">{stats.allTimeMaxWeight}kg</div>
-                  </div>
-
-                  <div>
-                    <div className="stat-label">MAX SESSION VOLUME</div>
-                    <div className="stat-value">{stats.allTimeMaxVolume}kg</div>
-                  </div>
-
-                  <div>
-                    <div className="stat-label">TOTAL VOLUME</div>
-                    <div className="stat-value">{stats.totalVolume.toLocaleString()}kg</div>
-                  </div>
-
-                  <div>
-                    <div className="stat-label">1RM PROGRESS (RECENT)</div>
-                    <div className="stat-value" style={{
-                      color: stats.progress1RM > 0 ? 'var(--color-progress-positive)' : stats.progress1RM < 0 ? 'var(--color-progress-negative)' : undefined
-                    }}>
-                      {stats.progress1RM > 0 ? '+' : ''}{stats.progress1RM}%
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {stats.exerciseType === 'cardio' && (
-                <>
-                  <div>
-                    <div className="stat-label">TOTAL DISTANCE</div>
-                    <div className="stat-value">{(stats.totalDistance / 1000).toFixed(2)}km</div>
-                  </div>
-
-                  <div>
-                    <div className="stat-label">TOTAL TIME</div>
-                    <div className="stat-value">
-                      {Math.floor(stats.totalDuration / 3600)}h {Math.floor((stats.totalDuration % 3600) / 60)}m
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="stat-label">MAX DISTANCE</div>
-                    <div className="stat-value">{(stats.maxDistance / 1000).toFixed(2)}km</div>
-                  </div>
-
-                  <div>
-                    <div className="stat-label">AVG DISTANCE</div>
-                    <div className="stat-value">{(stats.averageDistance / 1000).toFixed(2)}km</div>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-
-          {!stats && !loading && (
-            <p className="text-muted" style={{ marginBottom: '2rem' }}>
-              No sessions in the selected date range.
-            </p>
-          )}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <PillGroup options={DATE_RANGE_OPTIONS} value={dateRange} onChange={setDateRange} />
         </div>
+
+        {stats && stats.exerciseType === 'strength' && (
+          <div className="exercise-detail-stats">
+            <StatBlock value={stats.totalSessions} label="sessions" />
+            <StatBlock
+              value={stats.allTimeMax1RM}
+              unit="kg"
+              label="all-time 1RM"
+              accentColor="var(--accent-movies)"
+            />
+            <StatBlock value={stats.allTimeMaxWeight} unit="kg" label="max weight" />
+            <StatBlock value={stats.totalVolume.toLocaleString()} unit="kg" label="total volume" />
+            <StatBlock
+              value={`${stats.progress1RM > 0 ? '+' : ''}${stats.progress1RM}%`}
+              label="1RM progress"
+              accentColor="var(--accent-books)"
+            />
+          </div>
+        )}
+
+        {stats && stats.exerciseType === 'cardio' && (
+          <div className="exercise-detail-stats">
+            <StatBlock value={stats.totalSessions} label="sessions" />
+            <StatBlock value={(stats.totalDistance / 1000).toFixed(2)} unit="km" label="total distance" />
+            <StatBlock
+              value={`${Math.floor(stats.totalDuration / 3600)}h ${Math.floor((stats.totalDuration % 3600) / 60)}m`}
+              label="total time"
+            />
+            <StatBlock value={(stats.maxDistance / 1000).toFixed(2)} unit="km" label="max distance" />
+            <StatBlock value={(stats.averageDistance / 1000).toFixed(2)} unit="km" label="avg distance" />
+          </div>
+        )}
+
+        {!stats && !loading && (
+          <p className="text-muted" style={{ marginBottom: '2rem' }}>
+            No sessions in the selected date range.
+          </p>
+        )}
 
         {stats && stats.exerciseType === 'strength' && (
           <ExerciseProgressCharts
@@ -308,86 +276,67 @@ export default function ExerciseDetailPage() {
 
         <div style={{ marginTop: '3rem' }}>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            📋 Session History
+            Recent Sessions
           </h2>
 
-          <div className="session-history-container">
-            {filteredHistory.slice(0, 20).map((session, index) => {
-              const isStrength = session.exerciseType === 'strength' ||
-                               (!session.exerciseType && session.bestEstimated1RM > 0 && session.heaviestWeight > 0);
-              const isCardio = session.exerciseType === 'cardio' ||
-                             (!session.exerciseType && (session.totalDistance > 0 || session.totalDuration > 0));
+          <table className="exercise-sessions-table">
+            <thead>
+              <tr>
+                <th>Date / Split</th>
+                <th>Volume</th>
+                <th>Max Wt</th>
+                <th>Est. 1RM</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredHistory.slice(0, 20).map((session) => {
+                const isStrength = session.exerciseType === 'strength' ||
+                  (!session.exerciseType && session.bestEstimated1RM > 0 && session.heaviestWeight > 0);
+                const isCardio = session.exerciseType === 'cardio' ||
+                  (!session.exerciseType && (session.totalDistance > 0 || session.totalDuration > 0));
+                const split = splitForTitle(session.workout_title);
 
-              return (
-                <div
-                  key={session.exercise_id}
-                  style={{
-                    padding: '1rem',
-                    borderBottom: index < 19 && index < filteredHistory.length - 1 ? '1px solid var(--color-border)' : 'none',
-                    display: 'grid',
-                    gridTemplateColumns: isStrength ? 'auto 1fr auto auto auto' : isCardio ? 'auto 1fr auto auto' : 'auto 1fr auto',
-                    gap: '1rem',
-                    alignItems: 'center'
-                  }}
-                >
-                  <div className="text-muted" style={{ fontSize: '0.8rem' }}>
-                    {new Date(session.workout_date).toLocaleDateString()}
-                  </div>
-
-                  <Link
-                    href={`/workouts/${session.workout_id}`}
-                    className="session-link"
-                  >
-                    {session.workout_title}
-                  </Link>
-
-                  {isStrength && (
-                    <>
-                      <div style={{ fontSize: '0.8rem', textAlign: 'right' }}>
-                        <div className="text-muted">Volume</div>
-                        <div style={{ fontWeight: '500' }}>{session.sessionVolume}kg</div>
+                return (
+                  <tr key={session.exercise_id}>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', textAlign: 'left' }}>
+                        <Link href={`/workouts/${session.workout_id}`} className="session-link">
+                          {new Date(session.workout_date).toLocaleDateString()}
+                        </Link>
+                        <span
+                          className="text-muted"
+                          style={{ fontSize: '0.75rem', color: split ? SPLIT_COLORS[split] : undefined }}
+                        >
+                          {session.workout_title}
+                        </span>
                       </div>
-
-                      <div style={{ fontSize: '0.8rem', textAlign: 'right' }}>
-                        <div className="text-muted">Max Weight</div>
-                        <div style={{ fontWeight: '500' }}>{session.heaviestWeight}kg</div>
-                      </div>
-
-                      <div style={{ fontSize: '0.8rem', textAlign: 'right' }}>
-                        <div className="text-muted">Est. 1RM</div>
-                        <div style={{ fontWeight: '500' }}>{session.bestEstimated1RM}kg</div>
-                      </div>
-                    </>
-                  )}
-
-                  {isCardio && (
-                    <>
-                      <div style={{ fontSize: '0.8rem', textAlign: 'right' }}>
-                        <div className="text-muted">Distance</div>
-                        <div style={{ fontWeight: '500' }}>
-                          {session.totalDistance ? `${(session.totalDistance / 1000).toFixed(2)}km` : '-'}
-                        </div>
-                      </div>
-
-                      <div style={{ fontSize: '0.8rem', textAlign: 'right' }}>
-                        <div className="text-muted">Duration</div>
-                        <div style={{ fontWeight: '500' }}>
-                          {session.totalDuration ? `${Math.floor(session.totalDuration / 60)}m ${session.totalDuration % 60}s` : '-'}
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  {!isStrength && !isCardio && (
-                    <div style={{ fontSize: '0.8rem', textAlign: 'right' }}>
-                      <div className="text-muted">Sets</div>
-                      <div style={{ fontWeight: '500' }}>{session.totalWorkingSets}</div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    </td>
+                    {isStrength && (
+                      <>
+                        <td>{session.sessionVolume}kg</td>
+                        <td>{session.heaviestWeight}kg</td>
+                        <td>{session.bestEstimated1RM}kg</td>
+                      </>
+                    )}
+                    {isCardio && (
+                      <>
+                        <td>{session.totalDistance ? `${(session.totalDistance / 1000).toFixed(2)}km` : '-'}</td>
+                        <td>{session.totalDuration ? `${Math.floor(session.totalDuration / 60)}m ${session.totalDuration % 60}s` : '-'}</td>
+                        <td>-</td>
+                      </>
+                    )}
+                    {!isStrength && !isCardio && (
+                      <>
+                        <td>{session.totalWorkingSets} sets</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </>
+                    )}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
           {filteredHistory.length > 20 && (
             <p className="text-muted" style={{

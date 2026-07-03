@@ -218,12 +218,12 @@ export default function CardioProgressCharts({ exerciseHistory, exerciseName }) 
       </div>
 
       {/* Summary insights */}
-      <div className="insights-panel" style={{ marginTop: '2rem' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.75rem' }}>
-          📋 Progress Insights
+      <div className="exercise-insights-panel">
+        <h3 className="exercise-insights-panel-title">
+          Progress Insights
         </h3>
 
-        <div className="text-secondary" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>
+        <div>
           <p>
             <strong>Sessions analyzed:</strong> {cardioHistory.length} cardio sessions
           </p>

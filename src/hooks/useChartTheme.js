@@ -16,7 +16,14 @@ function readTheme() {
       tooltipBg: 'rgba(255, 255, 255, 0.95)',
       tooltipTitle: '#111827',
       tooltipBody: '#374151',
-      tooltipBorder: '#e5e7eb'
+      tooltipBorder: '#e5e7eb',
+      chartCoral: '#FF5C39',
+      chartCoralBg: 'rgba(255, 92, 57, 0.15)',
+      chartIndigo: '#4B4DED',
+      chartIndigoBg: 'rgba(75, 77, 237, 0.15)',
+      chartGrape: '#93328E',
+      chartMarigold: '#F4A72C',
+      chartMarigoldBg: 'rgba(244, 167, 44, 0.15)'
     };
   }
 
@@ -37,7 +44,14 @@ function readTheme() {
     tooltipBg: get('--color-tooltip-bg', 'rgba(255, 255, 255, 0.95)'),
     tooltipTitle: get('--color-tooltip-title', '#111827'),
     tooltipBody: get('--color-tooltip-body', '#374151'),
-    tooltipBorder: get('--color-tooltip-border', '#e5e7eb')
+    tooltipBorder: get('--color-tooltip-border', '#e5e7eb'),
+    chartCoral: get('--color-chart-coral', '#FF5C39'),
+    chartCoralBg: get('--color-chart-coral-bg', 'rgba(255, 92, 57, 0.15)'),
+    chartIndigo: get('--color-chart-indigo', '#4B4DED'),
+    chartIndigoBg: get('--color-chart-indigo-bg', 'rgba(75, 77, 237, 0.15)'),
+    chartGrape: get('--color-chart-grape', '#93328E'),
+    chartMarigold: get('--color-chart-marigold', '#F4A72C'),
+    chartMarigoldBg: get('--color-chart-marigold-bg', 'rgba(244, 167, 44, 0.15)')
   };
 }
 

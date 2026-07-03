@@ -4,13 +4,14 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
   Filler
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import { Line } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
 import useChartTheme from '../hooks/useChartTheme';
 import { toTimeSeries, timeScaleOptions } from '../lib/chartTime';
 
@@ -19,19 +20,34 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
   Filler
 );
 
+// Builds a top-to-bottom fade from the theme color to transparent, for area chart fills.
+function gradientFill(hexColor) {
+  return (context) => {
+    const { ctx, chartArea } = context.chart;
+    if (!chartArea) return 'transparent';
+
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+
+    const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+    gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.35)`);
+    gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+    return gradient;
+  };
+}
+
 export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }) {
   const {
     gridColor, textColor, fontFamily,
-    chartPrimary, chartPrimaryBg,
-    chartSecondary, chartSecondaryBg,
-    chartTertiary, chartTertiaryBg,
-    chartCardDefault,
+    chartCoral, chartIndigo, chartGrape, chartMarigold,
     tooltipBg, tooltipTitle, tooltipBody, tooltipBorder
   } = useChartTheme();
 
@@ -132,8 +148,8 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Estimated 1RM (kg)',
         data: oneRMData,
-        borderColor: chartPrimary,
-        backgroundColor: chartPrimaryBg,
+        borderColor: chartCoral,
+        backgroundColor: gradientFill(chartCoral),
         borderWidth: 2,
         fill: true
       }
@@ -145,8 +161,8 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Max Weight (kg)',
         data: maxWeightData,
-        borderColor: chartSecondary,
-        backgroundColor: chartSecondaryBg,
+        borderColor: chartMarigold,
+        backgroundColor: gradientFill(chartMarigold),
         borderWidth: 2,
         fill: true
       }
@@ -158,15 +174,15 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Session Volume (kg)',
         data: volumeData,
-        borderColor: chartTertiary,
-        backgroundColor: chartTertiaryBg,
-        borderWidth: 2,
-        fill: true
+        backgroundColor: volumeData.map((_, index) =>
+          index === volumeData.length - 1 ? chartGrape : chartIndigo
+        ),
+        borderRadius: 4
       }
     ]
   };
 
-  const ChartCard = ({ title, children, color = chartCardDefault }) => (
+  const ChartCard = ({ title, children, color = chartCoral }) => (
     <div className="chart-card">
       <h3 style={{
         fontSize: '1.1rem',
@@ -195,26 +211,26 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
         gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
         gap: '1.5rem'
       }}>
-        <ChartCard title="📊 Session Volume" color={chartTertiary}>
-          <Line data={volumeChartData} options={chartOptions} />
-        </ChartCard>
-
-        <ChartCard title="🎯 Estimated 1RM Progress" color={chartPrimary}>
+        <ChartCard title="🎯 Estimated 1RM Progress" color={chartCoral}>
           <Line data={oneRMChartData} options={chartOptions} />
         </ChartCard>
 
-        <ChartCard title="💪 Max Weight Progress" color={chartSecondary}>
+        <ChartCard title="📊 Session Volume" color={chartIndigo}>
+          <Bar data={volumeChartData} options={chartOptions} />
+        </ChartCard>
+
+        <ChartCard title="💪 Max Weight Progress" color={chartMarigold}>
           <Line data={maxWeightChartData} options={chartOptions} />
         </ChartCard>
       </div>
 
       {/* Summary insights */}
-      <div className="insights-panel" style={{ marginTop: '2rem' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.75rem' }}>
-          📋 Progress Insights
+      <div className="exercise-insights-panel">
+        <h3 className="exercise-insights-panel-title">
+          Progress Insights
         </h3>
 
-        <div className="text-secondary" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>
+        <div>
           <p>
             <strong>Sessions analyzed:</strong> {strengthHistory.length} strength training sessions
           </p>
