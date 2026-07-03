@@ -118,7 +118,7 @@ function SpraySpotCounter({ spot, count, onChange }) {
           animation: poofs.length ? 'spray-squeeze 0.25s ease' : 'none',
         }}
       >
-        🧴
+        👃
         {poofs.map((id) => (
           <span
             key={id}
@@ -170,7 +170,7 @@ export function ApplicationSpotsSprayer({ value, onChange }) {
 
   return (
     <div className="form-group">
-      <span className="form-label">Application spots — tap the bottle to spray 🧴💦</span>
+      <span className="form-label">Application spots — tap the bottle to spray 👃💦</span>
       <div
         style={{
           display: 'flex',
