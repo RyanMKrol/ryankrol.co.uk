@@ -1,1 +1,2 @@
 {"taskId":"T042","axis":"layer","closest":"style","note":"task writes a strategic full-site design-brief doc, not CSS/theming tokens — no existing layer value covers cross-cutting IA/design planning output","ts":"2026-07-01T00:00:00Z"}
+{"taskId":"T170","axis":"layer","closest":"harness","note":"pure root-level docs sync (CLAUDE.md/README.md) with no code change has no good layer fit — ui/page/api/hook/lib/style/db all imply source code; harness chosen as closest (meta/non-runtime housekeeping) but this task does not touch .harness/**","ts":"2026-07-03T00:45:38Z"}

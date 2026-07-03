@@ -3725,6 +3725,1072 @@
         "risk": []
       },
       "expectsTest": false
+    },
+    {
+      "id": "T141",
+      "title": "Retire the legacy multi-theme AppearancePicker system (keep Matrix easter egg intact)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "theming"
+      ],
+      "facets": {
+        "layer": "style",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/styles/globals.css",
+        "src/components/AppearancePicker.js",
+        "src/hooks/useTheme.js",
+        "src/lib/appearance.js",
+        "src/lib/appearance.test.js",
+        "src/components/MatrixLayout.js",
+        "src/pages/_document.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T141.md"
+    },
+    {
+      "id": "T142",
+      "title": "Install Collection design tokens (fonts + CSS custom properties) as the site's single palette",
+      "status": "pending",
+      "dependsOn": [
+        "T141"
+      ],
+      "gate": "gate",
+      "tags": [
+        "collection-redesign",
+        "theming",
+        "foundation"
+      ],
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/styles/globals.css",
+        "src/pages/_document.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T142.md"
+    },
+    {
+      "id": "T143",
+      "title": "Build shared Pill/PillGroup, SearchInput and Badge primitives",
+      "status": "pending",
+      "dependsOn": [
+        "T142"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "component-library"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/Pill.js",
+        "src/components/PillGroup.js",
+        "src/components/SearchInput.js",
+        "src/components/Badge.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T143.md"
+    },
+    {
+      "id": "T144",
+      "title": "Re-skin StarRating to Collection tokens and build a new PipMeter component",
+      "status": "pending",
+      "dependsOn": [
+        "T142"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "component-library"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/StarRating.js",
+        "src/components/PipMeter.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T144.md"
+    },
+    {
+      "id": "T145",
+      "title": "Build shared CoverTile component (gradient placeholder + real-image slot)",
+      "status": "pending",
+      "dependsOn": [
+        "T142"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "component-library"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/CoverTile.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T145.md"
+    },
+    {
+      "id": "T146",
+      "title": "Rebuild Header.js into the persistent Collection nav (desktop pills + mobile hamburger)",
+      "status": "pending",
+      "dependsOn": [
+        "T142",
+        "T143"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "component-library",
+        "nav"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/components/Header.js",
+        "src/components/NowPlaying.js",
+        "src/pages/_app.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T146.md"
+    },
+    {
+      "id": "T147",
+      "title": "Build shared Footer component",
+      "status": "pending",
+      "dependsOn": [
+        "T142"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "component-library"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/Footer.js",
+        "src/pages/_app.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T147.md"
+    },
+    {
+      "id": "T148",
+      "title": "Build shared StatBlock component",
+      "status": "pending",
+      "dependsOn": [
+        "T142"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "component-library"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/StatBlock.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T148.md"
+    },
+    {
+      "id": "T149",
+      "title": "Rebuild the home page to the Collection design",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "home"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T149.md"
+    },
+    {
+      "id": "T150",
+      "title": "Build the poster-banner ReviewCard variant and rebuild the movies list page",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "reviews",
+        "movies"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/pages/reviews/movies/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T150.md"
+    },
+    {
+      "id": "T151",
+      "title": "Rebuild the TV list page using the poster-banner ReviewCard variant",
+      "status": "pending",
+      "dependsOn": [
+        "T150"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "reviews",
+        "tv"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/reviews/tv/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T151.md"
+    },
+    {
+      "id": "T152",
+      "title": "Build the horizontal spine-cover ReviewCard variant and rebuild the books list page",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "reviews",
+        "books"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/pages/reviews/books/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T152.md"
+    },
+    {
+      "id": "T153",
+      "title": "Build the 2-col square-cover ReviewCard variant and rebuild the albums list page",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "reviews",
+        "albums"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/pages/reviews/albums/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T153.md"
+    },
+    {
+      "id": "T154",
+      "title": "Rebuild the perfumes list page (0-10 pip meter, scale-explainer chip, empty-review slot)",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "reviews",
+        "perfumes"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/pages/reviews/perfumes/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T154.md"
+    },
+    {
+      "id": "T155",
+      "title": "Build a shared Pagination component and wire it into the movies/tv/books/albums list pages",
+      "status": "pending",
+      "dependsOn": [
+        "T150",
+        "T151",
+        "T152",
+        "T153"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "reviews",
+        "pagination"
+      ],
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": []
+      },
+      "scope": [
+        "src/lib/pagination.js",
+        "src/lib/pagination.test.js",
+        "src/components/Pagination.js",
+        "src/pages/reviews/movies/index.js",
+        "src/pages/reviews/tv/index.js",
+        "src/pages/reviews/books/index.js",
+        "src/pages/reviews/albums/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T155.md"
+    },
+    {
+      "id": "T156",
+      "title": "Rebuild the vinyl page (covers/list toggle, artist-letter grouping, CoverTile grid)",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "vinyl"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/vinyl/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T156.md"
+    },
+    {
+      "id": "T157",
+      "title": "Rebuild the listening page (ranked rows, #1 accent-filled)",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "listening"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/listening/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T157.md"
+    },
+    {
+      "id": "T158",
+      "title": "Rebuild the projects page (repo cards, GitHub language-color dots, topic pills)",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "projects"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/projects/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T158.md"
+    },
+    {
+      "id": "T159",
+      "title": "Rebuild the workouts list page (split filter pills, 2-col session cards)",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148",
+        "T155"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "workouts"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T159.md"
+    },
+    {
+      "id": "T160",
+      "title": "Rebuild the workout detail page (stat chips, per-exercise set cards, warmup/working rows)",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "workouts"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/workouts/[id].js",
+        "src/components/WorkoutCard.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T160.md"
+    },
+    {
+      "id": "T161",
+      "title": "Rebuild the exercise detail page (stat cards, restyled charts, insights panel, sessions table)",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "workouts",
+        "charts"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "scope": [
+        "src/pages/exercises/[exerciseName].js",
+        "src/components/ExerciseProgressCharts.js",
+        "src/components/CardioProgressCharts.js",
+        "src/hooks/useChartTheme.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T161.md"
+    },
+    {
+      "id": "T162",
+      "title": "Restyle movies + TV add/edit forms to Collection tokens and shared components",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148",
+        "T150",
+        "T151"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "forms",
+        "movies",
+        "tv"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/reviews/movies/add.js",
+        "src/pages/reviews/movies/edit.js",
+        "src/pages/reviews/movies/edit/[id].js",
+        "src/pages/reviews/tv/add.js",
+        "src/pages/reviews/tv/edit.js",
+        "src/pages/reviews/tv/edit/[id].js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T162.md"
+    },
+    {
+      "id": "T163",
+      "title": "Restyle books + albums add/edit forms to Collection tokens and shared components",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148",
+        "T152",
+        "T153"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "forms",
+        "books",
+        "albums"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/reviews/books/add.js",
+        "src/pages/reviews/books/edit.js",
+        "src/pages/reviews/books/edit/[id].js",
+        "src/pages/reviews/albums/add.js",
+        "src/pages/reviews/albums/edit.js",
+        "src/pages/reviews/albums/edit/[id].js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T163.md"
+    },
+    {
+      "id": "T164",
+      "title": "Restyle perfumes add/edit forms and the vinyl add form to Collection tokens and shared components",
+      "status": "pending",
+      "dependsOn": [
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148",
+        "T154",
+        "T156"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "forms",
+        "perfumes",
+        "vinyl"
+      ],
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit.js",
+        "src/pages/reviews/perfumes/edit/[id].js",
+        "src/pages/vinyl/add.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T164.md"
+    },
+    {
+      "id": "T165",
+      "title": "Visual audit & tweak: home page, nav, footer, shared components vs the design renders",
+      "status": "pending",
+      "dependsOn": [
+        "T149"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "visual-audit"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/index.js",
+        "src/components/Header.js",
+        "src/components/Footer.js",
+        "src/components/Pill.js",
+        "src/components/PillGroup.js",
+        "src/components/SearchInput.js",
+        "src/components/Badge.js",
+        "src/components/StarRating.js",
+        "src/components/PipMeter.js",
+        "src/components/CoverTile.js",
+        "src/components/StatBlock.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T165.md"
+    },
+    {
+      "id": "T166",
+      "title": "Visual audit & tweak: reviews list pages vs the design renders",
+      "status": "pending",
+      "dependsOn": [
+        "T150",
+        "T151",
+        "T152",
+        "T153",
+        "T154",
+        "T155"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "visual-audit"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/reviews/movies/index.js",
+        "src/pages/reviews/tv/index.js",
+        "src/pages/reviews/books/index.js",
+        "src/pages/reviews/albums/index.js",
+        "src/pages/reviews/perfumes/index.js",
+        "src/components/ReviewCard.js",
+        "src/components/Pagination.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T166.md"
+    },
+    {
+      "id": "T167",
+      "title": "Visual audit & tweak: vinyl, listening, projects pages vs the design renders",
+      "status": "pending",
+      "dependsOn": [
+        "T156",
+        "T157",
+        "T158"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "visual-audit"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/vinyl/index.js",
+        "src/pages/listening/index.js",
+        "src/pages/projects/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T167.md"
+    },
+    {
+      "id": "T168",
+      "title": "Visual audit & tweak: workouts list, workout detail, exercise detail vs the design renders",
+      "status": "pending",
+      "dependsOn": [
+        "T159",
+        "T160",
+        "T161"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "visual-audit"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/pages/workouts/[id].js",
+        "src/pages/exercises/[exerciseName].js",
+        "src/components/WorkoutCard.js",
+        "src/components/ExerciseProgressCharts.js",
+        "src/components/CardioProgressCharts.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T168.md"
+    },
+    {
+      "id": "T169",
+      "title": "Visual audit: cross-cutting design-system consistency pass + Matrix-mode regression check",
+      "status": "pending",
+      "dependsOn": [
+        "T162",
+        "T163",
+        "T164",
+        "T165",
+        "T166",
+        "T167",
+        "T168"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "visual-audit",
+        "matrix"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/styles/globals.css",
+        "src/components/MatrixRain.js",
+        "src/components/CRTOverlay.js",
+        "src/components/MatrixLayout.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T169.md"
+    },
+    {
+      "id": "T170",
+      "title": "Final docs sync for the Collection redesign",
+      "status": "pending",
+      "dependsOn": [
+        "T169"
+      ],
+      "gate": null,
+      "tags": [
+        "collection-redesign",
+        "docs"
+      ],
+      "facets": {
+        "layer": "harness",
+        "workType": "docs",
+        "risk": []
+      },
+      "scope": [
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T170.md"
     }
   ]
 }
