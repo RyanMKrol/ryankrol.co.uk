@@ -9,6 +9,7 @@ describe('applicationSpotCounts', () => {
       Beard: 0,
       'Back of neck': 0,
       'Behind ears': 0,
+      Clothes: 0,
     });
   });
 
@@ -20,6 +21,7 @@ describe('applicationSpotCounts', () => {
       Beard: 0,
       'Back of neck': 0,
       'Behind ears': 0,
+      Clothes: 0,
     });
   });
 
@@ -60,6 +62,7 @@ describe('countsToApplicationSpots', () => {
       Beard: 0,
       'Back of neck': 0,
       'Behind ears': 0,
+      Clothes: 0,
     });
 
     expect(result).toEqual([]);

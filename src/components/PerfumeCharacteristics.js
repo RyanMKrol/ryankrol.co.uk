@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 const SEASONS = ['Winter', 'Spring', 'Summer', 'Autumn', 'Day', 'Night'];
 
-const APPLICATION_SPOTS = ['Wrists', 'Elbows', 'Clavicles', 'Beard', 'Back of neck', 'Behind ears'];
+const APPLICATION_SPOTS = ['Wrists', 'Elbows', 'Clavicles', 'Beard', 'Back of neck', 'Behind ears', 'Clothes'];
 
 const PROJECTION_LABELS = {
   1: 'Skin scent',
@@ -95,13 +95,14 @@ function SpraySpotCounter({ spot, count, onChange }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '0.3rem',
-        padding: '0.5rem 0.4rem',
+        gap: '0.25rem',
+        padding: '0.4rem 0.25rem',
         border: `1px solid ${count > 0 ? 'var(--color-accent)' : 'var(--color-border-strong)'}`,
         borderRadius: 'var(--radius-base)',
         background: count > 0 ? 'var(--color-surface-alt)' : 'transparent',
         transition: 'border-color 0.2s, background-color 0.2s',
-        minWidth: '5rem',
+        minWidth: '3.75rem',
+        flex: '0 0 auto',
         font: 'inherit',
         textAlign: 'center',
         cursor: 'pointer',
@@ -111,7 +112,7 @@ function SpraySpotCounter({ spot, count, onChange }) {
         style={{
           position: 'relative',
           display: 'inline-block',
-          fontSize: '1.2rem',
+          fontSize: '1.1rem',
           lineHeight: 1,
           transformOrigin: 'bottom center',
           animation: poofs.length ? 'spray-squeeze 0.25s ease' : 'none',
@@ -135,12 +136,12 @@ function SpraySpotCounter({ spot, count, onChange }) {
           </span>
         ))}
       </span>
-      <span className="form-label" style={{ margin: 0, textAlign: 'center' }}>{spot}</span>
+      <span className="form-label" style={{ margin: 0, textAlign: 'center', fontSize: '0.75rem' }}>{spot}</span>
       <span
         style={{
           color: count > 0 ? 'var(--color-accent)' : 'var(--color-text-muted)',
           fontWeight: 600,
-          fontSize: '0.875rem',
+          fontSize: '0.75rem',
         }}
       >
         {count === 0 ? 'no sprays' : `${count} spray${count === 1 ? '' : 's'}`}
@@ -170,7 +171,16 @@ export function ApplicationSpotsSprayer({ value, onChange }) {
   return (
     <div className="form-group">
       <span className="form-label">Application spots — tap the bottle to spray 🧴💦</span>
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: '0.4rem',
+          flexWrap: 'nowrap',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          paddingBottom: '0.25rem',
+        }}
+      >
         {APPLICATION_SPOTS.map((spot) => (
           <SpraySpotCounter
             key={spot}
