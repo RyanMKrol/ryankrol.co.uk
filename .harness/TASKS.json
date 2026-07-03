@@ -4319,7 +4319,7 @@
     {
       "id": "T159",
       "title": "Rebuild the workouts list page (split filter pills, 2-col session cards)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
