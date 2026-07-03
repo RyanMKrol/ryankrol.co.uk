@@ -15,14 +15,14 @@ describe('isDone', () => {
 
 describe('computeBacklog', () => {
   // T1 done. T2 ready (dep done). T_h needs-human. T_wh waits transitively on T_h (via T2b).
-  // T_wl waits only on a buildable task (must be entirely omitted). T5 blocked via worklog.
+  // T_wl waits only on a buildable task (ready, but with an unmet dep). T5 blocked via worklog.
   const tasks = [
     { id: 'T1', status: 'done', gate: null, dependsOn: [] },
     { id: 'T2', status: 'pending', gate: null, dependsOn: ['T1'] }, // ready: dep done
     { id: 'T_h', status: 'pending', gate: 'needs-human', dependsOn: [] }, // needsHuman
     { id: 'T2b', status: 'pending', gate: null, dependsOn: ['T_h'] }, // waiting (direct human dep)
     { id: 'T_wh', status: 'pending', gate: null, dependsOn: ['T2b'] }, // waiting (transitive)
-    { id: 'T_wl', status: 'pending', gate: null, dependsOn: ['T2'] }, // waiting-loop: omitted entirely
+    { id: 'T_wl', status: 'pending', gate: null, dependsOn: ['T2'] }, // ready: unmet dep is itself buildable
     { id: 'T5', status: 'pending', gate: null, dependsOn: [] }, // needsHuman via worklog-blocked
   ];
   const res = computeBacklog(tasks, { blockedIds: ['T5'] });
@@ -33,8 +33,9 @@ describe('computeBacklog', () => {
   it('the needs-human task itself → needsHuman', () => expect(by.T_h.bucket).toBe('needsHuman'));
   it('a task with a DIRECT needs-human dep → waiting', () => expect(by.T2b.bucket).toBe('waiting'));
   it('a task TRANSITIVELY blocked by a needs-human → waiting', () => expect(by.T_wh.bucket).toBe('waiting'));
-  it('a task waiting only on a buildable dep is excluded entirely (not ready, not waiting)', () => {
-    expect(by.T_wl).toBeUndefined();
+  it('a task waiting only on a buildable dep is ready (not hidden), with the dep listed in unmetDeps', () => {
+    expect(by.T_wl.bucket).toBe('ready');
+    expect(by.T_wl.unmetDeps).toEqual(['T2']);
   });
   it('failed:blocked worklog task → needsHuman, flagged blocked:true', () => {
     expect(by.T5.bucket).toBe('needsHuman');
@@ -87,10 +88,10 @@ describe('computeBacklog', () => {
     expect(m.B.reviewed).toBe(false);
   });
 
-  it('summarize counts every bucket in the new four-bucket model', () => {
+  it('summarize counts every bucket in the four-bucket model', () => {
     const s = summarize(res);
     expect(s.done).toBe(1);
-    expect(s.ready).toBe(1);
+    expect(s.ready).toBe(2); // T2 + T_wl
     expect(s.needsHuman).toBe(2); // T_h + T5
     expect(s.waiting).toBe(2); // T2b + T_wh
     expect(s['waiting-loop']).toBeUndefined();

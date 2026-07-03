@@ -242,7 +242,9 @@ window.markReviewedBulk=function(){ var ids=[...document.querySelectorAll('.sel-
 window.filterDone=function(mode,el){ document.querySelectorAll('#done-section .task').forEach(t=>{ var rv=t.dataset.reviewed==='true'; t.style.display=(mode==='all'||(mode==='reviewed'&&rv)||(mode==='unreviewed'&&!rv))?'':'none'; });
   document.querySelectorAll('.filt').forEach(b=>b.classList.remove('on')); if(el)el.classList.add('on'); window.__doneFilter = mode; };
 function pill(t){
-  if (t.bucket === 'ready') return '<span class="pill p-ready">🤖 buildable</span>';
+  if (t.bucket === 'ready') return (t.unmetDeps && t.unmetDeps.length)
+    ? '<span class="pill p-ready">🤖 queued</span>'
+    : '<span class="pill p-ready">🤖 buildable</span>';
   if (t.bucket === 'waiting') return '<span class="pill p-waiting">⏳ waiting</span>';
   if (t.bucket === 'needsHuman') return t.blocked ? '<span class="pill p-blocked">⚠ blocked (loop gave up)</span>' : '<span class="pill p-needs-human">🔒 needs human</span>';
   if (t.bucket === 'done') return t.failed ? '<span class="pill p-failed">✗ failed</span>' : '<span class="pill p-done">✓ done</span>';

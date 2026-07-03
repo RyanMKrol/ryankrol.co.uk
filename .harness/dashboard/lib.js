@@ -39,11 +39,13 @@ function numericId(id) {
 
 // Given all tasks + overlays, return tasks with derived status + an eligibility bucket + unmet deps.
 // Buckets: ready | waiting | needsHuman | done (four display buckets — mirrors local-jobs).
-//   ready      = not-done, ungated, all deps done (the rule select_task uses)
+//   ready      = not-done, ungated, and NOT blocked by a human anywhere in its dependency closure —
+//                i.e. nothing stands between this task and getting built except ordinary buildable
+//                work. Includes both tasks with zero unmet deps (buildable this instant) AND tasks
+//                still waiting on other buildable tasks (the loop will work through them on its own,
+//                no owner action needed) — `unmetDeps` on the task tells you which case it is.
 //   waiting    = has unmet deps AND its dependency closure contains a needs-human/gate/failed
-//                blocker that isn't done — i.e. it CANNOT progress until the owner acts. A task
-//                whose unmet deps are ALL themselves buildable ("waiting-loop") is noise — the
-//                loop will get to its blocker on its own — so it is omitted entirely, not tagged.
+//                blocker that isn't done — i.e. it CANNOT progress until the owner acts.
 //   needsHuman = union of a needs-human/gate task AND a loop-given-up (`failed:blocked`) task —
 //                both need the owner's attention; `blocked: true` distinguishes the latter for the UI.
 //   done       = union of done tasks AND terminal `status:"failed"` tasks (an owner-marked false
@@ -82,14 +84,11 @@ function computeBacklog(tasks, opts = {}) {
     let bucket;
     if (t.done || t.failed) bucket = 'done';
     else if (t.needsHuman || t.isGate || t.blocked) bucket = 'needsHuman';
-    else if (unmetDeps.length === 0) bucket = 'ready';
-    else bucket = blockedByHuman(t.id) ? 'waiting' : 'waiting-loop';
+    else bucket = blockedByHuman(t.id) ? 'waiting' : 'ready';
     return { ...t, bucket, unmetDeps };
   });
 
-  // waiting-loop tasks are noise from the owner's point of view — the loop will build their
-  // blocker on its own — so they're excluded from the returned array entirely.
-  const result = withBucket.filter((t) => t.bucket !== 'waiting-loop');
+  const result = withBucket;
 
   // done bucket sort: not-reviewed items first, then ascending numeric task id (within each group).
   const doneBucket = result.filter((t) => t.bucket === 'done');
