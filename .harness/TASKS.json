@@ -4430,7 +4430,7 @@
     {
       "id": "T162",
       "title": "Restyle movies + TV add/edit forms to Collection tokens and shared components",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
