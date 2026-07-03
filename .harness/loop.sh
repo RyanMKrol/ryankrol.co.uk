@@ -871,7 +871,15 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
         log "push to $MAIN_BRANCH failed (remote moved / network) — soft retry."
         bump "$task" "push-fail" "remote moved / network"; board; continue
       fi
-      if [ "$REQUIRE_CI" = "1" ]; then
+      if git -C "$ROOT" log -1 --format=%s | grep -qF '[skip ci]'; then
+        # The just-pushed commit's own message is tagged [skip ci] (a worklog-only/no-code-diff
+        # build, e.g. an operational task with scope: []) — GitHub never creates a workflow run for
+        # a [skip ci]-tagged commit, so wait_ci_green would sit out the full CI_TIMEOUT waiting for
+        # a run that can never exist, then soft-retry (cold-rebuild + redeploy for an operational
+        # task) forever. Skip the wait entirely and go straight to done, same as REQUIRE_CI=0 below.
+        log "$task's pushed commit is tagged [skip ci] — no CI run will ever appear for it; skipping the CI wait."
+        mark_done "$task"; run_integrate_hook; log "marked $task done ([skip ci] commit — CI wait skipped)"; cur_task=""; cur_attempts=0; cur_rung=0; cur_base=0
+      elif [ "$REQUIRE_CI" = "1" ]; then
         ci_rc=0; wait_ci_green || ci_rc=$?
         case "$ci_rc" in
           0)

@@ -384,3 +384,25 @@ dated bullet when you defer something new.
   above where it'll actually be read before this repeats. *If it recurs anyway:* kill the stray
   `loop.sh`/`claude` processes immediately (don't wait for it to self-resolve — it won't, it'll climb
   every rung), then check `git stash list` before assuming the working tree is what you left it.
+- **2026-07-03 — FOUND + FIXED: `wait_ci_green` was called unconditionally even when the just-pushed
+  commit's OWN message was tagged `[skip ci]`, guaranteeing a `CI_TIMEOUT` (1200s) wasted wait every
+  single time.** *Symptom:* `T171` (a `scope: []` operational deploy task — its diff is worklog-only)
+  built successfully, was independently audited PASS, and pushed a commit whose message the builder
+  itself tagged `[skip ci]` (a reasonable choice for a no-code-diff commit). GitHub never creates a
+  workflow run for a `[skip ci]`-tagged commit — confirmed via `gh run list`, zero runs for that SHA
+  — so `wait_ci_green` sat in its 30s poll loop for the full 1200s, returned indeterminate (correctly
+  did NOT revert — that fix from 2026-07-01 held), and soft-retried: cold-rebuilt the same
+  already-complete task, redeployed to production again (harmless, deploying is idempotent, but
+  wasteful — a real `vercel --prod` and real model cost every ~20-25 min), and would have repeated
+  indefinitely. Caught live by the owner watching `supervise.sh` output and cross-checking GitHub
+  directly (no CI run existed for the SHA it claimed to be waiting on). *Fix:* the main loop body now
+  checks `git log -1 --format=%s` for `[skip ci]` BEFORE calling `wait_ci_green` at all — if present,
+  skip straight to `mark_done` (same path as `REQUIRE_CI=0`), logging why. This is a general fix, not
+  scoped to `T171` specifically: any future task whose build commit ends up `[skip ci]`-tagged (a
+  worklog-only diff is the common case, but not the only possible one) is covered. *Recovery for the
+  in-flight orphan:* owner stopped the loop (confirmed via `ps`/lock check before touching anything),
+  the live deployment was independently re-verified (curl 200 + both Collection-redesign HTML
+  markers + `vercel ls --prod` showing two successful READY deployments matching the two build
+  attempts), `T171` marked `done` by hand with one accurate `outcomes.jsonl` row (no bogus
+  `failures.jsonl` rows existed yet for it — the timeout hadn't fired before the loop was stopped, so
+  there was nothing to clean up, unlike the `T108` recovery earlier this session).

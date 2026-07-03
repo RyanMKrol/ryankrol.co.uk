@@ -4793,7 +4793,7 @@
     {
       "id": "T171",
       "title": "Deploy the Collection redesign to production",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T170"
       ],
