@@ -3624,7 +3624,7 @@
     {
       "id": "T137",
       "title": "Add 'Clothes' spot to the sprayer UI and fit all 7 spot cards on one row",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T136"
       ],
