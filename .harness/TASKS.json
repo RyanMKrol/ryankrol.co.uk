@@ -5481,7 +5481,7 @@
     {
       "id": "T197",
       "title": "Show artist/author subtitle on collection wall tiles",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
