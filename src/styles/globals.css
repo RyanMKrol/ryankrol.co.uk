@@ -1551,54 +1551,6 @@ input[type='range'].form-input::-moz-range-thumb {
   background-color: var(--color-filter-active-hover-bg);
 }
 
-/* Now Playing Component - Last.fm */
-.now-playing {
-  background: linear-gradient(135deg, var(--color-now-playing-start) 0%, var(--color-now-playing-end) 100%);
-  color: var(--color-now-playing-text);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-large);
-  margin-bottom: 1rem;
-  font-family: var(--font-body);
-  box-shadow: var(--shadow-card);
-  border: 1px solid var(--color-border-strong);
-}
-
-.now-playing.loading,
-.now-playing.offline {
-  background: var(--color-now-playing-inactive);
-  color: var(--color-now-playing-inactive-text);
-  border-color: var(--color-border);
-}
-
-.now-playing-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  opacity: 0.9;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.now-playing.loading .now-playing-label,
-.now-playing.offline .now-playing-label {
-  margin-bottom: 0;
-}
-
-/* Split layout for static label + marquee text */
-.now-playing-split {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.now-playing-label-inline {
-  font-size: 0.875rem;
-  font-weight: 500;
-  opacity: 0.9;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
 .track-link-single {
   text-decoration: none;
   color: inherit;
