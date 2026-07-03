@@ -56,6 +56,49 @@
   --gutter-mobile: 18px;
 }
 
+/* ===== Cover Tile (T145) ===== */
+
+.cover-tile-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cover-tile {
+  width: 100%;
+  border-radius: var(--radius-cover);
+  box-shadow: var(--shadow-cover);
+  overflow: hidden;
+  background-color: var(--color-hairline);
+}
+
+.cover-tile-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: var(--radius-cover);
+}
+
+.cover-tile-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cover-tile-title {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-ink);
+  font-size: 0.95em;
+}
+
+.cover-tile-subtitle {
+  margin: 0;
+  color: var(--color-ink-mute);
+  font-size: 0.85em;
+}
+
 /* ===== Matrix Theme Override ===== */
 
 html.matrix-active {
