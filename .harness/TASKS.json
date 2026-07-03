@@ -3601,7 +3601,7 @@
     {
       "id": "T136",
       "title": "Add 'Clothes' to the server-side application-spot allow-list",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
