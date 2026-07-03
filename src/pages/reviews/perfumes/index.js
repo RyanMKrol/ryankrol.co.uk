@@ -88,25 +88,26 @@ export default function Perfumes() {
             rated out of 10 · a new &amp; growing shelf
           </p>
         </div>
+
+        <div className="collection-review-controls">
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="search perfumes by title..."
+          />
+          <PillGroup
+            options={SORT_OPTIONS}
+            value={sortBy}
+            onChange={setSortBy}
+          />
+        </div>
       </div>
 
-      <div className="search-container">
-        <SearchInput
-          value={searchTerm}
-          onChange={setSearchTerm}
-          placeholder="search perfumes by title..."
-        />
-        <PillGroup
-          options={SORT_OPTIONS}
-          value={sortBy}
-          onChange={setSortBy}
-        />
-        {searchTerm && (
-          <div className="search-results-count">
-            Found {filteredPerfumes.length} perfume{filteredPerfumes.length !== 1 ? 's' : ''}
-          </div>
-        )}
-      </div>
+      {searchTerm && (
+        <div className="search-results-count">
+          Found {filteredPerfumes.length} perfume{filteredPerfumes.length !== 1 ? 's' : ''}
+        </div>
+      )}
 
       <div className="perfume-card-grid">
         {filteredPerfumes.map((perfume, index) => (
