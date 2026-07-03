@@ -5164,7 +5164,7 @@
     {
       "id": "T185",
       "title": "Perfume card variants — side-by-side preview page for owner review",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T180",
         "T181",
