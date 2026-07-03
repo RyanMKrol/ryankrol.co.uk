@@ -3563,3 +3563,90 @@ body::before {
   font-size: 0.8rem;
 }
 
+.perfume-v5-row {
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.perfume-v5-summary {
+  display: grid;
+  grid-template-columns: 2fr 1.4fr 5rem 4.5rem 3.5rem 3.5rem 1.6fr;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.25rem;
+  font-size: 0.8rem;
+  color: var(--color-ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+.perfume-v5-summary::-webkit-details-marker {
+  display: none;
+}
+
+.perfume-v5-title {
+  font-weight: 600;
+  color: var(--color-ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.perfume-v5-designer {
+  font-style: italic;
+  color: var(--color-ink-mute);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.perfume-v5-type {
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: var(--color-bg-mute, rgba(0, 0, 0, 0.06));
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.perfume-v5-type-empty {
+  background: none;
+  text-align: left;
+  color: var(--color-ink-mute);
+}
+
+.perfume-v5-rating {
+  font-weight: 600;
+  text-align: right;
+}
+
+.perfume-v5-cell {
+  text-align: right;
+  color: var(--color-ink-mute);
+}
+
+.perfume-v5-details {
+  padding: 0 0.25rem 0.75rem 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.perfume-v5-description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-ink);
+}
+
+.perfume-v5-application-spots {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8rem;
+  color: var(--color-ink);
+}
+
+.perfume-v5-fragrantica-link {
+  color: var(--accent-perfumes);
+  text-decoration: none;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
