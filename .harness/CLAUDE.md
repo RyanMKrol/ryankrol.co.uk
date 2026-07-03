@@ -247,6 +247,28 @@ spec** to rule the uncertain edit out entirely (tell it to stop and report `fail
 what it needed, rather than silently going out-of-scope) over guessing a scope entry you can't be
 sure is right — see T149's fix for a worked example.
 
+**Fixing the scope gap on a still-pending task is NOT enough by itself — you must also clear its
+stale `failed:blocked` marker, or `select_task()` will keep skipping it forever.** `loop.sh`'s
+`task_blocked()` (used by `select_task`'s selection loop) doesn't check task status or re-evaluate
+anything — it just greps the task's own `.harness/worklog/<id>.md` for the literal string
+`failed:blocked` or `needs-human` ANYWHERE in the file, with no expiry and no re-check once the
+underlying problem is fixed. Discovered when a `/pre-loop-checkin` looked clean (dependencies all
+satisfied, no needs-human blockers) but the loop still reported "nothing eligible" — three tasks
+(`T078`, `T122`, `T147`) had old blocked-attempt worklogs still carrying that phrase, and `T147`
+transitively blocked most of the rest of the backlog via `dependsOn`, even though its scope gap had
+already been fixed. **After fixing a scope/spec bug for a task that's still `pending`** (not built
+interactively — that case is covered by the section above), also rewrite that task's worklog to
+remove the trigger phrase (state plainly what was wrong and that it's fixed — see `T147`/`T122`'s
+worklogs for the pattern) so the task is retryable again. Do NOT just delete the worklog file even
+though it's disposable-in-spirit — `.harness/worklog/*.md` is git-tracked, not gitignored scratch, so
+blanking it away loses real history; rewrite it instead. (Separately: if a task's worklog describes
+real, verified work but still carries a stale blocked marker — e.g. from a `ci-indeterminate` result
+followed by a string of `empty-diff` retries that could never succeed because the work was already
+done — that's the interrupt-orphan pattern in "Known-but-deferred issues" below, not a scope gap;
+verify the code is genuinely on `origin/main` and passes the DoD before marking it `done` by hand, and
+correct/prune any bogus `failures.jsonl`/`outcomes.jsonl` rows the futile retries left behind so they
+don't skew that `(layer, workType)` cell's calibration — see `T108`'s recovery for a worked example.)
+
 ## Bumping the base model (preserve calibration — migrate the ledger in lockstep)
 
 When a new model ships and you switch the harness to it, the difficulty calibration in

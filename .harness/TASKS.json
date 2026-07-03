@@ -2812,7 +2812,7 @@
     {
       "id": "T108",
       "title": "Exclude private repos from GET /api/github/repos response",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
