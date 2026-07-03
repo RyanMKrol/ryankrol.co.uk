@@ -3361,3 +3361,81 @@ body::before {
   font-style: italic;
 }
 
+.perfume-v3-tile-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.perfume-v3-tile {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md, 8px);
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.perfume-v3-season-chips {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.perfume-v3-season-chip {
+  font-size: 0.6rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.2rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+
+.perfume-v3-title {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.perfume-v3-rating .pip-meter {
+  transform: scale(0.75);
+  transform-origin: left center;
+}
+
+.perfume-v3-caption {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--color-ink-mute);
+}
+
+.perfume-v3-designer {
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.perfume-v3-type-badge {
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: var(--color-bg-mute, rgba(0, 0, 0, 0.06));
+  font-size: 0.7rem;
+}
+
+.perfume-v3-fragrantica-link {
+  color: var(--accent-perfumes);
+  text-decoration: none;
+  font-style: italic;
+  margin-left: auto;
+}
+
