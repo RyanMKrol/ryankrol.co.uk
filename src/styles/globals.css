@@ -2739,6 +2739,19 @@ body::before {
 
 /* ===== Home page (Collection redesign, T149) ===== */
 
+.home-container {
+  max-width: 1400px;
+  padding-left: var(--gutter-desktop);
+  padding-right: var(--gutter-desktop);
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding-left: var(--gutter-mobile);
+    padding-right: var(--gutter-mobile);
+  }
+}
+
 .home-hero {
   margin-top: 2rem;
 }
@@ -2763,7 +2776,7 @@ body::before {
 .home-hero-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-size: clamp(3.5rem, 9vw, 8.25rem);
   line-height: 0.95;
   letter-spacing: -0.03em;
   color: var(--color-ink);
@@ -2787,6 +2800,10 @@ body::before {
 
 .home-hero-meta p {
   margin: 0.15rem 0;
+}
+
+.home-hero-now-playing {
+  display: none;
 }
 
 .home-stats {
@@ -2979,7 +2996,16 @@ body::before {
   }
 
   .home-hero-meta {
-    text-align: left;
+    display: none;
+  }
+
+  .home-hero-now-playing {
+    display: block;
+    margin-top: 1.25rem;
+  }
+
+  .header-now-playing {
+    display: none;
   }
 
   .home-stats {

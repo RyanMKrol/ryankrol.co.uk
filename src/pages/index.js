@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Header from '../components/Header'
+import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
-import CoverTile from '../components/CoverTile'
+import CoverTile, { gradientForKey } from '../components/CoverTile'
 import { tmdbPosterUrl } from '../lib/tmdb'
 
 const QUICK_LINKS = [
@@ -103,7 +104,7 @@ export default function Home() {
         <title>ryankrol.co.uk</title>
       </Head>
 
-      <div className="container">
+      <div className="container home-container">
         <Header />
 
         <section className="home-hero">
@@ -121,6 +122,9 @@ export default function Home() {
               <p>{totalRated} things rated</p>
               <p>updated today</p>
             </div>
+          </div>
+          <div className="home-hero-now-playing">
+            <NowPlaying />
           </div>
         </section>
 
@@ -158,7 +162,7 @@ export default function Home() {
               <div key={`${item.kind}-${item.id}`} className="home-latest-card">
                 <div
                   className="home-latest-thumb"
-                  style={!(item.thumbnail || tmdbPosterUrl(item.posterPath)) ? { background: 'var(--color-hairline-strong)' } : undefined}
+                  style={!(item.thumbnail || tmdbPosterUrl(item.posterPath)) ? { background: gradientForKey(`${item.kind}-${item.id}`) } : undefined}
                 >
                   {(item.thumbnail || tmdbPosterUrl(item.posterPath)) && (
                     <img src={item.thumbnail || tmdbPosterUrl(item.posterPath)} alt="" />
