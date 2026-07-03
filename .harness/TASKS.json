@@ -4952,7 +4952,7 @@
     {
       "id": "T177",
       "title": "Fix gym-panel sparkline: recent-activity data source collapses to 1-2 bars, and bars render as a single flat colour",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
