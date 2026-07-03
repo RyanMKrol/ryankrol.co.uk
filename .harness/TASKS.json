@@ -3998,7 +3998,7 @@
     {
       "id": "T150",
       "title": "Build the poster-banner ReviewCard variant and rebuild the movies list page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
