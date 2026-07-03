@@ -4214,7 +4214,7 @@
     {
       "id": "T156",
       "title": "Rebuild the vinyl page (covers/list toggle, artist-letter grouping, CoverTile grid)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
