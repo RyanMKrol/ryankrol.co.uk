@@ -99,6 +99,106 @@
   font-size: 0.85em;
 }
 
+/* ===== Poster Banner Review Card (T150) ===== */
+
+.poster-banner-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-card);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-cover);
+}
+
+.poster-banner {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem 1.25rem;
+}
+
+.poster-banner-title {
+  margin: 0;
+  color: #FFFFFF;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+}
+
+.poster-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.poster-banner-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.poster-banner-meta .star-rating {
+  margin: 0;
+}
+
+.poster-banner-date {
+  font-family: var(--font-mono);
+  color: var(--color-ink-mute);
+  font-size: 0.85rem;
+}
+
+.poster-banner-snippet {
+  margin: 0;
+  font-style: italic;
+  color: var(--color-ink-soft);
+  line-height: var(--line-height-body);
+}
+
+.poster-banner-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .poster-banner-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Collection Review Header (T150) ===== */
+
+.collection-review-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.collection-review-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.collection-review-meta {
+  color: var(--color-ink-mute);
+  font-family: var(--font-body);
+}
+
+.collection-review-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 /* ===== Matrix Theme Override ===== */
 
 html.matrix-active {

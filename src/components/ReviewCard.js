@@ -1,3 +1,6 @@
+import { gradientForKey } from './CoverTile';
+import StarRating from './StarRating';
+
 export default function ReviewCard({ item, type, isLast = false, styleVariant }) {
   const getTitle = () => {
     if (type === 'movie' || type === 'tv') return item.title;
@@ -48,6 +51,28 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
     }
     return classes;
   };
+
+  if (styleVariant === 'poster-banner') {
+    return (
+      <div className="poster-banner-card">
+        <div
+          className="poster-banner"
+          style={{ background: gradientForKey(item.id || getTitle()) }}
+        >
+          <h3 className="poster-banner-title">{getTitle()}</h3>
+        </div>
+        <div className="poster-banner-body">
+          <div className="poster-banner-meta">
+            <StarRating rating={getRating()} readOnly />
+            {item.date && <span className="poster-banner-date">{item.date}</span>}
+          </div>
+          {getThoughts() && (
+            <p className="poster-banner-snippet">{getThoughts()}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={getCardClass()}>
