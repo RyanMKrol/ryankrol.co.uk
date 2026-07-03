@@ -5195,7 +5195,7 @@
     {
       "id": "T186",
       "title": "Review the five perfume card variants and pick a winner",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T180",
         "T181",
