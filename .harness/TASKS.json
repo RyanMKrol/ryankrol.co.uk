@@ -5282,7 +5282,7 @@
     {
       "id": "T190",
       "title": "Fix cramped spacing between the search box and sort pills on the perfumes page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
