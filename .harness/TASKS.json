@@ -4525,7 +4525,7 @@
     {
       "id": "T164",
       "title": "Restyle perfumes add/edit forms and the vinyl add form to Collection tokens and shared components",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
