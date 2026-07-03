@@ -1,13 +1,23 @@
 /**
- * Backfill denormalized computed-metrics fields (exercises, totalVolume,
- * totalWarmupSets, totalWorkingSets, uniqueExercises, durationMinutes,
- * workoutType) onto Workouts items that are missing them.
+ * Resync the FULL set of computed-metrics fields (workoutDate, totalVolume,
+ * totalWarmupSets, totalWorkingSets, uniqueExercises, strengthExercises, cardioExercises,
+ * totalDistance, totalDuration, durationMinutes, workoutType) onto every Workouts item.
  *
- * The real per-set data for these workouts already exists in the Exercises
- * table (queryable via the workout_id-index GSI) - it was just never
- * denormalized onto the Workouts item the way workoutBackfill.js does for
- * workouts fetched directly from the Hevy API. This script reuses the same
- * metric math (calculateWorkoutMetrics) rather than reimplementing it.
+ * Every item's metrics are recomputed via calculateWorkoutMetrics() and written back by
+ * spreading its ENTIRE return value (buildSetUpdateParams) - never a hand-picked field
+ * list. A hand-picked list is exactly how `workoutDate` went silently missing from 72
+ * production workouts in 2026-07: this script's own previous version, and
+ * workoutBackfill.js's "heal incomplete workout" path, both called calculateWorkoutMetrics
+ * (which computes workoutDate) but then wrote back only a subset of its fields.
+ *
+ * Two cases, unified into one pass:
+ *   1. Item already has `exercises` denormalized -> recompute metrics directly from it.
+ *   2. Item is missing `exercises` -> reconstruct it from the Exercises table (queryable
+ *      via the workout_id-index GSI), the same real per-set data workoutBackfill.js
+ *      denormalizes for workouts fetched directly from the Hevy API.
+ *
+ * Safe to re-run: recomputation is a pure function of start_time/end_time/exercises, so
+ * already-correct items are just rewritten to the same values.
  *
  * Dry run (default, no writes): node src/scripts/backfillIncompleteWorkoutMetrics.js
  * Live run (writes to DynamoDB): LIVE=1 node src/scripts/backfillIncompleteWorkoutMetrics.js
@@ -19,6 +29,7 @@ require('dotenv').config({ path: '.env.local' });
 
 const { calculateWorkoutMetrics } = require('../lib/workoutMetrics.js');
 const { DYNAMO_TABLES } = require('../lib/constants.js');
+const { buildSetUpdateParams } = require('../lib/dynamo.js');
 
 const LIVE = process.env.LIVE === '1';
 
@@ -36,9 +47,10 @@ function getDocClient() {
 }
 
 /**
- * A Workouts item is "incomplete" if it's missing the denormalized exercises field
+ * A Workouts item is missing its denormalized exercises field and needs it reconstructed
+ * from the Exercises table before metrics can be computed.
  */
-function isIncomplete(workoutItem) {
+function isMissingExercises(workoutItem) {
   return !workoutItem.exercises;
 }
 
@@ -62,29 +74,21 @@ function reshapeExerciseRows(exerciseRows) {
 }
 
 /**
- * Compute the full set of fields to write back onto an incomplete Workouts item
+ * Compute the full set of fields to write back onto a Workouts item - always the
+ * complete calculateWorkoutMetrics() output, never a hand-picked subset.
  */
-function buildMetricsUpdate(workoutItem, exerciseRows) {
-  const exercises = reshapeExerciseRows(exerciseRows);
+function buildMetricsUpdate(workoutItem, exercises) {
   const metrics = calculateWorkoutMetrics({
     start_time: workoutItem.start_time,
     end_time: workoutItem.end_time,
     exercises,
   });
 
-  return {
-    exercises,
-    totalVolume: metrics.totalVolume,
-    totalWarmupSets: metrics.totalWarmupSets,
-    totalWorkingSets: metrics.totalWorkingSets,
-    uniqueExercises: metrics.uniqueExercises,
-    durationMinutes: metrics.durationMinutes,
-    workoutType: metrics.workoutType,
-  };
+  return { exercises, ...metrics };
 }
 
-async function scanIncompleteWorkouts(docClient) {
-  const incomplete = [];
+async function scanAllWorkouts(docClient) {
+  const items = [];
   let lastEvaluatedKey;
 
   do {
@@ -92,12 +96,11 @@ async function scanIncompleteWorkouts(docClient) {
     if (lastEvaluatedKey) params.ExclusiveStartKey = lastEvaluatedKey;
 
     const result = await docClient.send(new ScanCommand(params));
-    const items = result.Items || [];
-    incomplete.push(...items.filter(isIncomplete));
+    items.push(...(result.Items || []));
     lastEvaluatedKey = result.LastEvaluatedKey;
   } while (lastEvaluatedKey);
 
-  return incomplete;
+  return items;
 }
 
 async function getExerciseRowsForWorkout(docClient, workoutId) {
@@ -113,24 +116,7 @@ async function getExerciseRowsForWorkout(docClient, workoutId) {
 }
 
 async function writeMetricsUpdate(docClient, workoutId, update) {
-  const params = {
-    TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
-    Key: { id: workoutId },
-    UpdateExpression: 'SET exercises = :exercises, totalVolume = :totalVolume, ' +
-      'totalWarmupSets = :totalWarmupSets, totalWorkingSets = :totalWorkingSets, ' +
-      'uniqueExercises = :uniqueExercises, durationMinutes = :durationMinutes, ' +
-      'workoutType = :workoutType',
-    ExpressionAttributeValues: {
-      ':exercises': update.exercises,
-      ':totalVolume': update.totalVolume,
-      ':totalWarmupSets': update.totalWarmupSets,
-      ':totalWorkingSets': update.totalWorkingSets,
-      ':uniqueExercises': update.uniqueExercises,
-      ':durationMinutes': update.durationMinutes,
-      ':workoutType': update.workoutType,
-    },
-  };
-
+  const params = buildSetUpdateParams(DYNAMO_TABLES.WORKOUTS_TABLE, { id: workoutId }, update);
   await docClient.send(new UpdateCommand(params));
 }
 
@@ -141,26 +127,31 @@ async function main() {
 
   const docClient = getDocClient();
 
-  console.log('📖 Scanning Workouts table for items missing computed metrics...');
-  const incompleteWorkouts = await scanIncompleteWorkouts(docClient);
-  console.log(`🔎 Found ${incompleteWorkouts.length} incomplete workout(s)`);
+  console.log('📖 Scanning Workouts table...');
+  const allWorkouts = await scanAllWorkouts(docClient);
+  console.log(`🔎 Found ${allWorkouts.length} workout(s) - resyncing computed metrics for all of them\n`);
 
   let updated = 0;
+  let reconstructed = 0;
   let skipped = 0;
 
-  for (const workout of incompleteWorkouts) {
-    console.log(`\n➡️  Workout ${workout.id} (${workout.title || 'Untitled Workout'})`);
+  for (const workout of allWorkouts) {
+    console.log(`➡️  Workout ${workout.id} (${workout.title || 'Untitled Workout'})`);
 
-    const exerciseRows = await getExerciseRowsForWorkout(docClient, workout.id);
-
-    if (exerciseRows.length === 0) {
-      console.log(`⚠️  No Exercises rows found for workout ${workout.id}, skipping`);
-      skipped++;
-      continue;
+    let exercises = workout.exercises;
+    if (isMissingExercises(workout)) {
+      const exerciseRows = await getExerciseRowsForWorkout(docClient, workout.id);
+      if (exerciseRows.length === 0) {
+        console.log(`   ⚠️  No Exercises rows found for workout ${workout.id}, skipping`);
+        skipped++;
+        continue;
+      }
+      exercises = reshapeExerciseRows(exerciseRows);
+      reconstructed++;
     }
 
-    const update = buildMetricsUpdate(workout, exerciseRows);
-    console.log(`   📊 ${exerciseRows.length} exercises, totalVolume=${update.totalVolume}, ` +
+    const update = buildMetricsUpdate(workout, exercises);
+    console.log(`   📊 workoutDate=${update.workoutDate}, totalVolume=${update.totalVolume}, ` +
       `totalWorkingSets=${update.totalWorkingSets}, totalWarmupSets=${update.totalWarmupSets}, ` +
       `uniqueExercises=${update.uniqueExercises}, durationMinutes=${update.durationMinutes}, ` +
       `workoutType=${update.workoutType}`);
@@ -176,7 +167,9 @@ async function main() {
     updated++;
   }
 
-  console.log(`\n🎉 Done. ${updated} workout(s) ${LIVE ? 'updated' : 'would be updated'}, ${skipped} skipped (no matching exercises).`);
+  console.log(`\n🎉 Done. ${updated} workout(s) ${LIVE ? 'updated' : 'would be updated'} ` +
+    `(${reconstructed} had exercises reconstructed from the Exercises table), ` +
+    `${skipped} skipped (no matching exercises anywhere).`);
 }
 
 if (require.main === module) {
@@ -187,7 +180,7 @@ if (require.main === module) {
 }
 
 module.exports = {
-  isIncomplete,
+  isMissingExercises,
   reshapeExerciseRows,
   buildMetricsUpdate,
 };

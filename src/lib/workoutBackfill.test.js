@@ -2,8 +2,20 @@ import { GetCommand, PutCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from './dynamo';
 
 jest.mock('./dynamo', () => ({
+  ...jest.requireActual('./dynamo'),
   docClient: { send: jest.fn() }
 }));
+
+// Reconstructs { fieldName: value } from an UpdateCommand built by buildSetUpdateParams,
+// so assertions don't depend on the internal #f0/:v0 aliasing scheme.
+function getUpdatedFields(updateCommand) {
+  const { ExpressionAttributeNames, ExpressionAttributeValues } = updateCommand.input;
+  const fields = {};
+  Object.entries(ExpressionAttributeNames).forEach(([nameKey, field]) => {
+    fields[field] = ExpressionAttributeValues[nameKey.replace('#f', ':v')];
+  });
+  return fields;
+}
 
 jest.mock('./apiCache', () => ({
   clearApiCache: jest.fn()
@@ -91,8 +103,12 @@ describe('storeWorkoutInDynamoDB (via backfillWorkouts)', () => {
 
     const updateCalls = docClient.send.mock.calls.filter(([cmd]) => cmd instanceof UpdateCommand);
     expect(updateCalls).toHaveLength(1);
-    expect(updateCalls[0][0].input.ExpressionAttributeValues[':exercises']).toEqual(makeWorkout().exercises);
-    expect(updateCalls[0][0].input.ExpressionAttributeValues).toHaveProperty(':totalVolume');
+    const updatedFields = getUpdatedFields(updateCalls[0][0]);
+    expect(updatedFields.exercises).toEqual(makeWorkout().exercises);
+    expect(updatedFields).toHaveProperty('totalVolume');
+    // workoutDate must always be healed alongside the other metrics - this is the exact field
+    // that silently went missing in production before buildSetUpdateParams existed.
+    expect(updatedFields.workoutDate).toBe('2026-06-01');
 
     const exercisePutCalls = docClient.send.mock.calls.filter(
       ([cmd]) => cmd instanceof PutCommand && cmd.input.Item?.exercise_id

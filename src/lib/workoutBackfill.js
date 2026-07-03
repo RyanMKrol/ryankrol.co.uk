@@ -1,5 +1,5 @@
 import { PutCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
-import { docClient } from './dynamo';
+import { docClient, buildSetUpdateParams } from './dynamo';
 import { DYNAMO_TABLES } from './constants';
 import { clearApiCache } from './apiCache';
 import { calculateExerciseMetrics, calculateWorkoutMetrics } from './workoutMetrics.js';
@@ -61,23 +61,11 @@ async function storeWorkoutInDynamoDB(workout) {
       }
 
       console.log(`🩹 [BACKFILL] Workout ${workout.id} exists but is incomplete (missing exercises), healing...`);
-      await docClient.send(new UpdateCommand({
-        TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
-        Key: { id: workout.id },
-        UpdateExpression: 'SET exercises = :exercises, totalVolume = :totalVolume, ' +
-          'totalWarmupSets = :totalWarmupSets, totalWorkingSets = :totalWorkingSets, ' +
-          'uniqueExercises = :uniqueExercises, durationMinutes = :durationMinutes, ' +
-          'workoutType = :workoutType',
-        ExpressionAttributeValues: {
-          ':exercises': workout.exercises,
-          ':totalVolume': metrics.totalVolume,
-          ':totalWarmupSets': metrics.totalWarmupSets,
-          ':totalWorkingSets': metrics.totalWorkingSets,
-          ':uniqueExercises': metrics.uniqueExercises,
-          ':durationMinutes': metrics.durationMinutes,
-          ':workoutType': metrics.workoutType,
-        },
-      }));
+      await docClient.send(new UpdateCommand(buildSetUpdateParams(
+        DYNAMO_TABLES.WORKOUTS_TABLE,
+        { id: workout.id },
+        { exercises: workout.exercises, ...metrics }
+      )));
       console.log(`✅ [BACKFILL] Healed incomplete workout ${workout.id}`);
 
       await storeExercises(workout);

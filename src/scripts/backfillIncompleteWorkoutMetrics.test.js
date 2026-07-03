@@ -1,5 +1,5 @@
 const {
-  isIncomplete,
+  isMissingExercises,
   reshapeExerciseRows,
   buildMetricsUpdate,
 } = require('./backfillIncompleteWorkoutMetrics');
@@ -10,13 +10,13 @@ function set({ type = 'normal', weight = null, reps = null } = {}) {
   return { type, weight_kg: weight, reps, distance_meters: null, duration_seconds: null };
 }
 
-describe('isIncomplete', () => {
+describe('isMissingExercises', () => {
   it('flags a workout missing the denormalized exercises field', () => {
-    expect(isIncomplete({ id: 'w1', title: 'Push Day' })).toBe(true);
+    expect(isMissingExercises({ id: 'w1', title: 'Push Day' })).toBe(true);
   });
 
   it('does not flag a workout that already has exercises', () => {
-    expect(isIncomplete({ id: 'w1', exercises: [] })).toBe(false);
+    expect(isMissingExercises({ id: 'w1', exercises: [] })).toBe(false);
   });
 });
 
@@ -66,9 +66,8 @@ describe('buildMetricsUpdate', () => {
     end_time: '2026-01-01T11:00:00.000Z',
   };
 
-  const exerciseRows = [
+  const exercises = [
     {
-      index: 0,
       title: 'Bench Press',
       sets: [
         set({ type: 'warmup', weight: 40, reps: 10 }),
@@ -77,7 +76,6 @@ describe('buildMetricsUpdate', () => {
       ],
     },
     {
-      index: 1,
       title: 'Overhead Press',
       sets: [
         set({ weight: 50, reps: 8 }),
@@ -85,25 +83,28 @@ describe('buildMetricsUpdate', () => {
     },
   ];
 
-  it('computes metrics matching calculateWorkoutMetrics called directly on the reshaped exercises', () => {
-    const expectedExercises = reshapeExerciseRows(exerciseRows);
+  it('spreads the ENTIRE calculateWorkoutMetrics output, not a hand-picked subset', () => {
     const expectedMetrics = calculateWorkoutMetrics({
       start_time: workoutItem.start_time,
       end_time: workoutItem.end_time,
-      exercises: expectedExercises,
+      exercises,
     });
 
-    const update = buildMetricsUpdate(workoutItem, exerciseRows);
+    const update = buildMetricsUpdate(workoutItem, exercises);
 
-    expect(update).toEqual({
-      exercises: expectedExercises,
-      totalVolume: expectedMetrics.totalVolume,
-      totalWarmupSets: expectedMetrics.totalWarmupSets,
-      totalWorkingSets: expectedMetrics.totalWorkingSets,
-      uniqueExercises: expectedMetrics.uniqueExercises,
-      durationMinutes: expectedMetrics.durationMinutes,
-      workoutType: expectedMetrics.workoutType,
-    });
+    expect(update).toEqual({ exercises, ...expectedMetrics });
+    // Explicitly guard the exact field that went missing in production - a hand-picked
+    // field list previously dropped this even though calculateWorkoutMetrics computes it.
+    expect(update).toHaveProperty('workoutDate');
+    expect(update.workoutDate).toBe('2026-01-01');
+    expect(update).toHaveProperty('strengthExercises');
+    expect(update).toHaveProperty('cardioExercises');
+    expect(update).toHaveProperty('totalDistance');
+    expect(update).toHaveProperty('totalDuration');
+  });
+
+  it('computes metrics matching calculateWorkoutMetrics called directly', () => {
+    const update = buildMetricsUpdate(workoutItem, exercises);
 
     expect(update.totalWorkingSets).toBe(3);
     expect(update.totalWarmupSets).toBe(1);
