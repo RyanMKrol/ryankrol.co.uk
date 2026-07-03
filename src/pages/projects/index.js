@@ -147,7 +147,7 @@ export default function ProjectsPage() {
                 {repo.topics && repo.topics.length > 0 && (
                   <div className="project-card-tags">
                     {repo.topics.slice(0, 5).map((topic) => (
-                      <Badge key={topic} accentColor="var(--accent-projects)" variant="soft">
+                      <Badge key={topic} accentColor="var(--accent-projects)" variant="soft" mono={false}>
                         {topic}
                       </Badge>
                     ))}

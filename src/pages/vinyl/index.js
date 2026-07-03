@@ -80,26 +80,27 @@ export default function VinylPage() {
               {vinyl.length} records on the shelf · sorted by artist
             </p>
           </div>
+
+          <div className="collection-review-controls">
+            <SearchInput
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="search collection..."
+            />
+            <PillGroup
+              options={VIEW_OPTIONS}
+              value={view}
+              onChange={setView}
+              accentColor="var(--accent-vinyl)"
+            />
+          </div>
         </div>
 
-        <div className="search-container">
-          <SearchInput
-            value={searchTerm}
-            onChange={setSearchTerm}
-            placeholder="search vinyl by title or artist..."
-          />
-          <PillGroup
-            options={VIEW_OPTIONS}
-            value={view}
-            onChange={setView}
-            accentColor="var(--accent-vinyl)"
-          />
-          {searchTerm && (
-            <div className="search-results-count">
-              Found {filteredVinyl.length} record{filteredVinyl.length !== 1 ? 's' : ''}
-            </div>
-          )}
-        </div>
+        {searchTerm && (
+          <div className="search-results-count">
+            Found {filteredVinyl.length} record{filteredVinyl.length !== 1 ? 's' : ''}
+          </div>
+        )}
 
         {loading && (
           <div style={{ textAlign: 'center', padding: '2rem' }}>
