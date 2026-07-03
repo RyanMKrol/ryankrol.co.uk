@@ -333,23 +333,6 @@
       "spec": ".harness/tasks/T015.md"
     },
     {
-      "id": "T016",
-      "title": "Aesthetic review of the themes + picker (human step)",
-      "status": "pending",
-      "dependsOn": [
-        "T015"
-      ],
-      "gate": "needs-human",
-      "tags": [
-        "theming"
-      ],
-      "scope": [],
-      "design": null,
-      "verify": [],
-      "expectsTest": false,
-      "spec": ".harness/tasks/T016.md"
-    },
-    {
       "id": "T017",
       "title": "Obtain a TMDB API key (human step)",
       "status": "done",
