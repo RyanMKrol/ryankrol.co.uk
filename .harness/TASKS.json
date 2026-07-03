@@ -5335,7 +5335,7 @@
     {
       "id": "T192",
       "title": "Show a per-card exercise-name preview on the workouts list",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
