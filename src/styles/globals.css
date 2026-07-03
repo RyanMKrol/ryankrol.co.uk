@@ -20,6 +20,7 @@
   --color-hairline-strong: #E7E0D4;
   --color-star-gold: #F4A72C;
   --color-star-empty: #D8D2C8;
+  --color-star-filled: var(--color-star-gold);
 
   /* Section accents — one per content type */
   --accent-movies: #FF5C39;
@@ -444,6 +445,31 @@ a:hover {
   font-size: 0.875rem;
   color: var(--color-text-muted);
   font-weight: 500;
+}
+
+.pip-meter {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+}
+
+.pip-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: var(--pip-empty);
+  transition: background 0.2s;
+}
+
+.pip-dot.filled {
+  background: var(--pip-filled);
+}
+
+.pip-dot.interactive {
+  cursor: pointer;
 }
 
 .form-container {
