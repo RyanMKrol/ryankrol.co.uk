@@ -253,7 +253,14 @@ Run before declaring done, and keep them green:
   especially pure functions in `src/lib`. Tests are co-located as `*.test.js`.
 - **`npm run build`** — `next build` must succeed.
 - **Docs updated** in the same commit (the rule above).
-- Vercel auto-deploys `main` on push, so `main` must always be build-green.
+- `main` must always be build-green regardless of whether a given push actually deploys (see next
+  bullet) — a broken `main` blocks the next real deploy from being clean too.
+- **Vercel does NOT auto-deploy every push right now.** `vercel.json`'s `ignoreCommand` cancels the
+  build unless the triggering commit's message contains the literal marker `[deploy]` — added while
+  the autonomous redesign loop pushes a commit per task, to avoid a full Vercel build queuing behind
+  every single one of them (Hobby plan allows only 1 concurrent build). To actually ship a change to
+  production, push a commit whose message includes `[deploy]`. Revisit/remove this once the loop's
+  commit cadence settles down.
 
 **ESLint setup:** flat config in `eslint.config.mjs` extends `next/core-web-vitals`, ignores build
 artefacts, and adds a jest-globals override for `*.test.js`. `npm run lint` runs the `eslint` CLI
