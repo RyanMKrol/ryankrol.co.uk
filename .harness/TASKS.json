@@ -4249,7 +4249,7 @@
     {
       "id": "T157",
       "title": "Rebuild the listening page (ranked rows, #1 accent-filled)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T141",
         "T142",
