@@ -719,19 +719,33 @@ a:hover {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: var(--spacing-container-padding);
+  padding-left: var(--gutter-desktop);
+  padding-right: var(--gutter-desktop);
+  padding-top: var(--gutter-desktop);
+  padding-bottom: var(--gutter-desktop);
   background-color: var(--color-surface);
   min-height: 100vh;
 }
 
 .review-container {
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: var(--spacing-container-padding);
+  padding-left: var(--gutter-desktop);
+  padding-right: var(--gutter-desktop);
+  padding-top: var(--gutter-desktop);
+  padding-bottom: var(--gutter-desktop);
   background-color: var(--color-surface);
   min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .container,
+  .review-container {
+    padding-left: var(--gutter-mobile);
+    padding-right: var(--gutter-mobile);
+  }
 }
 
 .page-title {
