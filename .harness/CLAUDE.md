@@ -213,6 +213,40 @@ requires editing `package.json`, which IS scope-checked, so the lockfile can't s
 This auto-exemption was added after a task scoped to `package.json` failed scope-creep on its sibling
 `package-lock.json` (T220).
 
+### Scope-coverage gaps — the spec asks for an edit the `scope` array doesn't cover
+
+**A recurring authoring bug, not a one-off:** a task's `## Do` section explicitly instructs
+creating/editing/removing something in a specific file, but that file was never added to the task's
+`scope` array. The loop's structural scope-gate then correctly refuses the edit (this is the gate
+working as designed — see the guardrail above), and the builder reports `failed:blocked` instead of
+faking success. First caught in **T141** (spec said to remove a hook call from `_app.js`; `_app.js`
+wasn't in scope) and **T147** (spec said to remove markup from `index.js`; `index.js` wasn't in
+scope), then found again in **T151, T162, T163, T166, T167, T168, T169, T122** during a full-backlog
+audit — nine more instances in one sitting, all the same root cause: the file was named in prose
+(often by **bare filename**, e.g. `` `ReviewCard.js` `` rather than the full `` `src/components/
+ReviewCard.js` `` — this is the form that's easy to miss when writing `scope`, since the full path
+was usually only spelled out once, earlier in the spec or in a dependency's spec) but never
+transcribed into the JSON `scope` field, which is authored separately.
+
+**Prevention — run `.harness/check-task-scope.sh` before finalizing any new task(s):**
+```sh
+.harness/check-task-scope.sh          # scan every pending, non-needs-human task
+.harness/check-task-scope.sh T171     # scan one task
+```
+It's a heuristic advisory scan (extracts backtick-quoted, file-shaped tokens from the spec —
+both full paths and bare filenames — and flags any not covered by `scope`, exact match or
+directory-prefix), **not a hard gate**: it cannot tell "edit this" from "read this for context" or
+"do NOT touch this", so expect some false-positive noise (a file mentioned only as a read-only
+reference will still get flagged) — that's an intentional tradeoff, a false positive costs one line
+of review, a false negative costs another `failed:blocked` loop iteration. Run it as the last step of
+the add-to-backlog skill's own "validate before finishing" pass whenever you add or edit tasks, and
+reconcile every real hit (add the file to `scope`, per the granularity rules above) before
+considering the backlog done. When a task's own spec text is uncertain whether it'll need to touch an
+unpredictable file (e.g. "add a new API route if genuinely necessary"), prefer **constraining the
+spec** to rule the uncertain edit out entirely (tell it to stop and report `failed:blocked` naming
+what it needed, rather than silently going out-of-scope) over guessing a scope entry you can't be
+sure is right — see T149's fix for a worked example.
+
 ## Bumping the base model (preserve calibration — migrate the ledger in lockstep)
 
 When a new model ships and you switch the harness to it, the difficulty calibration in

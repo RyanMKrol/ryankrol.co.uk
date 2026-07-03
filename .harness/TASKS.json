@@ -3272,6 +3272,8 @@
         "feature"
       ],
       "scope": [
+        "CLAUDE.md",
+        "README.md",
         "src/pages/api/reviews/books/update.js"
       ],
       "design": "Keep the existing `originalDate`/`preservedDate` logic (lines 33-46) unchanged, compute `editedDate` via `new Date().toLocaleDateString('en-GB').replace(/\\//g, '-')`, and add it to the `reviewData` object built at lines 66-83 alongside `date: preservedDate`.",
@@ -4066,6 +4068,7 @@
         "risk": []
       },
       "scope": [
+        "src/components/ReviewCard.js",
         "src/pages/reviews/tv/index.js",
         "src/styles/globals.css"
       ],
@@ -4472,6 +4475,7 @@
         ]
       },
       "scope": [
+        "src/components/TmdbSearch.js",
         "src/pages/reviews/movies/add.js",
         "src/pages/reviews/movies/edit.js",
         "src/pages/reviews/movies/edit/[id].js",
@@ -4518,12 +4522,14 @@
         ]
       },
       "scope": [
-        "src/pages/reviews/books/add.js",
-        "src/pages/reviews/books/edit.js",
-        "src/pages/reviews/books/edit/[id].js",
+        "src/components/BookSearch.js",
+        "src/components/LastfmAlbumSearch.js",
         "src/pages/reviews/albums/add.js",
         "src/pages/reviews/albums/edit.js",
         "src/pages/reviews/albums/edit/[id].js",
+        "src/pages/reviews/books/add.js",
+        "src/pages/reviews/books/edit.js",
+        "src/pages/reviews/books/edit/[id].js",
         "src/styles/globals.css"
       ],
       "design": null,
@@ -4564,6 +4570,7 @@
         ]
       },
       "scope": [
+        "src/components/LastfmAlbumSearch.js",
         "src/pages/reviews/perfumes/add.js",
         "src/pages/reviews/perfumes/edit.js",
         "src/pages/reviews/perfumes/edit/[id].js",
@@ -4642,13 +4649,14 @@
         ]
       },
       "scope": [
-        "src/pages/reviews/movies/index.js",
-        "src/pages/reviews/tv/index.js",
-        "src/pages/reviews/books/index.js",
-        "src/pages/reviews/albums/index.js",
-        "src/pages/reviews/perfumes/index.js",
-        "src/components/ReviewCard.js",
         "src/components/Pagination.js",
+        "src/components/Pill.js",
+        "src/components/ReviewCard.js",
+        "src/pages/reviews/albums/index.js",
+        "src/pages/reviews/books/index.js",
+        "src/pages/reviews/movies/index.js",
+        "src/pages/reviews/perfumes/index.js",
+        "src/pages/reviews/tv/index.js",
         "src/styles/globals.css"
       ],
       "design": null,
@@ -4680,9 +4688,11 @@
         ]
       },
       "scope": [
-        "src/pages/vinyl/index.js",
+        "src/components/Badge.js",
+        "src/components/CoverTile.js",
         "src/pages/listening/index.js",
         "src/pages/projects/index.js",
+        "src/pages/vinyl/index.js",
         "src/styles/globals.css"
       ],
       "design": null,
@@ -4714,12 +4724,15 @@
         ]
       },
       "scope": [
-        "src/pages/workouts/index.js",
-        "src/pages/workouts/[id].js",
-        "src/pages/exercises/[exerciseName].js",
-        "src/components/WorkoutCard.js",
-        "src/components/ExerciseProgressCharts.js",
+        "src/components/Badge.js",
         "src/components/CardioProgressCharts.js",
+        "src/components/ExerciseProgressCharts.js",
+        "src/components/StatBlock.js",
+        "src/components/WorkoutCard.js",
+        "src/hooks/useChartTheme.js",
+        "src/pages/exercises/[exerciseName].js",
+        "src/pages/workouts/[id].js",
+        "src/pages/workouts/index.js",
         "src/styles/globals.css"
       ],
       "design": null,
@@ -4757,9 +4770,9 @@
       },
       "scope": [
         "src/styles/globals.css",
-        "src/components/MatrixRain.js",
-        "src/components/CRTOverlay.js",
-        "src/components/MatrixLayout.js"
+        "src/components/**",
+        "src/hooks/useChartTheme.js",
+        "src/lib/pagination.js"
       ],
       "design": null,
       "verify": [
