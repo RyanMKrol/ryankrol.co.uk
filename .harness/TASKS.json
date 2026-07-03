@@ -3679,7 +3679,7 @@
     {
       "id": "T139",
       "title": "ReviewCard: rename 'Edited' label to 'Updated'",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
