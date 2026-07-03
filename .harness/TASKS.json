@@ -4035,7 +4035,7 @@
     {
       "id": "T151",
       "title": "Rebuild the TV list page using the poster-banner ReviewCard variant",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T150"
       ],
