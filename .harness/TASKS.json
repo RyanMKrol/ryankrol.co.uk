@@ -4903,7 +4903,7 @@
     {
       "id": "T175",
       "title": "Give the books spine-cover review list actual per-item cards (border/background/radius), matching the design brief",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
