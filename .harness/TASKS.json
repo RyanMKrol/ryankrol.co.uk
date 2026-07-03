@@ -4795,12 +4795,12 @@
     },
     {
       "id": "T171",
-      "title": "Manually deploy the Collection redesign to production",
+      "title": "Deploy the Collection redesign to production",
       "status": "pending",
       "dependsOn": [
         "T170"
       ],
-      "gate": "needs-human",
+      "gate": null,
       "tags": [
         "collection-redesign",
         "deploy"
@@ -4809,7 +4809,14 @@
       "design": null,
       "verify": [],
       "expectsTest": false,
-      "spec": ".harness/tasks/T171.md"
+      "spec": ".harness/tasks/T171.md",
+      "facets": {
+        "layer": "harness",
+        "workType": "config",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
     }
   ]
 }

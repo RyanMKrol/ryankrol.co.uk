@@ -13,17 +13,26 @@ chooser task with a review task, runs the **poor-fit / layer-evolution gate**, a
 schema-correct task object + its `tasks/TNNN.md` spec. Prefer it over hand-editing `TASKS.json`.
 
 **Every backlog sequence that touches `src/`, `public/`, or anything else that ships to the live
-site MUST end with a manual-deploy task (see root `CLAUDE.md`'s "Deploying" section for why —
-Vercel's Git integration is disconnected, so nothing ships automatically anymore).** When authoring
-or extending a backlog whose tasks change the site, the LAST task in dependency order (i.e. every
-other new task, directly or transitively, `dependsOn` it, or it's simply appended after everything
-else with no downstream dependents) must be a `"gate": "needs-human"` task titled along the lines of
-"Manually deploy `<the feature/phase>` to production" whose spec instructs: run `vercel --prod` (or
-push/amend a commit whose message contains the literal marker `[deploy]`) from a session with the
-Vercel CLI authenticated, then verify the live site reflects the change. Do not add a second one if
-a prior, still-pending deploy task already sits at the end of the backlog for the same body of
-work — extend its `dependsOn` instead of duplicating it. A pure-docs/harness-only task sequence
-(nothing under `src/`/`public/`) does not need one.
+site MUST end with a deploy task (see root `CLAUDE.md`'s "Deploying" section for why — Vercel's Git
+integration is disconnected, so nothing ships automatically anymore).** When authoring or extending
+a backlog whose tasks change the site, the LAST task in dependency order (i.e. every other new task,
+directly or transitively, `dependsOn` it, or it's simply appended after everything else with no
+downstream dependents) must be a **buildable** task (`"gate": null`, real `facets` — do NOT make it
+`needs-human`; running `vercel --prod` and checking its own exit code + a `curl` of the resulting URL
+is entirely something the loop's own builder can do unattended, the same way T083 ran a production
+DynamoDB backfill autonomously using credentials already available in the checkout) titled along the
+lines of "Deploy `<the feature/phase>` to production", `scope: []` (it makes no code changes — see
+T171 for the template), whose spec instructs it to: confirm `main` is current, run `vercel whoami`
+and record `failed:blocked` if that fails (the one genuine human-only prerequisite — someone has to
+`vercel login` once), otherwise run `vercel --prod --yes` non-interactively, and verify the deploy
+objectively (the CLI's own exit code, a `curl` HTTP-200 check on the returned URL, and a `curl | grep`
+for a couple of content markers that only exist post-change — never "look at it and confirm it looks
+right," that's not something an unattended agent can do). Do not add a second one if a prior,
+still-pending deploy task already sits at the end of the backlog for the same body of work — extend
+its `dependsOn` instead of duplicating it. A pure-docs/harness-only task sequence (nothing under
+`src/`/`public/`) does not need one. `layer`/`workType` won't map cleanly onto any existing
+`facets.json` value for a task like this (no code diff at all) — that's expected, pick the closest
+per the poor-fit protocol below and log it to `facet-misfits.jsonl` rather than inventing a value.
 
 ## Ideas inbox & the two-step flow (ideas → tasks)
 

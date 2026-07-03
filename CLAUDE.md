@@ -289,7 +289,8 @@ vercel --prod      # deploys the current local working tree directly, no Git int
 triggering a deploy when that body of work is actually done, whether or not it went through the
 harness:**
 - **Inside the autonomous harness**: see `.harness/CLAUDE.md`'s backlog-authoring convention — every
-  task sequence that touches the site ends with a `needs-human` "manually deploy" task, so a
+  task sequence that touches the site ends with an ordinary **buildable** deploy task (`gate: null`,
+  runs `vercel --prod` and verifies it via exit code + a `curl` check — no human click-through), so a
   `supervise.sh` run naturally culminates in shipping what it built, not leaving it stranded on
   `main`.
 - **Outside the harness** (an interactive Claude Code session, whether or not `.harness/` is
