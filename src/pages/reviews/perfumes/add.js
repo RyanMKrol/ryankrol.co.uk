@@ -167,14 +167,15 @@ export default function AddPerfumeReview() {
             </datalist>
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="type">Type</label>
+          <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <label className="form-label" htmlFor="type" style={{ display: 'inline', flexShrink: 0 }}>Type</label>
             <select
               id="type"
               name="type"
               value={formData.type}
               onChange={handleInputChange}
               className="form-input"
+              style={{ width: 'auto' }}
               required
             >
               {PERFUME_TYPES.map((type) => (
