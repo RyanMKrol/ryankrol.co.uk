@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Header from '../components/Header'
@@ -6,6 +6,15 @@ import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
 import CoverTile, { gradientForKey } from '../components/CoverTile'
 import { tmdbPosterUrl } from '../lib/tmdb'
+import { bookCoverUrl } from '../lib/openlibrary'
+
+const WALL_KIND_HREF = {
+  movie: '/reviews/movies',
+  tv: '/reviews/tv',
+  book: '/reviews/books',
+  album: '/reviews/albums',
+  vinyl: '/vinyl',
+}
 
 const QUICK_LINKS = [
   { href: '/vinyl', label: '~/vinyl' },
@@ -24,8 +33,13 @@ function sortByDateDesc(items) {
   return [...items].sort((a, b) => (parseUkDate(b.date) ?? 0) - (parseUkDate(a.date) ?? 0))
 }
 
-function sortByRatingDesc(items) {
-  return [...items].sort((a, b) => (b.rating || 0) - (a.rating || 0))
+function pickRandomSample(items, count) {
+  const pool = [...items]
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[pool[i], pool[j]] = [pool[j], pool[i]]
+  }
+  return pool.slice(0, count)
 }
 
 export default function Home() {
@@ -66,23 +80,20 @@ export default function Home() {
 
   const totalRated = movies.length + tv.length + books.length + albums.length + vinyl.length + (workoutStats?.totalWorkouts || 0)
 
-  const wallItems = [
-    ...sortByRatingDesc(movies).slice(0, 6).map((m) => ({
-      key: `movie-${m.id}`,
-      title: m.title,
-      imageUrl: tmdbPosterUrl(m.posterPath),
-    })),
-    ...sortByRatingDesc(albums).slice(0, 6).map((a) => ({
-      key: `album-${a.id}`,
-      title: a.title,
-      imageUrl: a.thumbnail || null,
-    })),
-    ...vinyl.slice(0, 6).map((v) => ({
-      key: `vinyl-${v.id}`,
-      title: v.title,
-      imageUrl: v.thumbnail || null,
-    })),
-  ].slice(0, 18)
+  const wallItems = useMemo(() => {
+    const wallCandidates = [
+      movies.map((m) => ({ key: `movie-${m.id}`, title: m.title, imageUrl: tmdbPosterUrl(m.posterPath), kind: 'movie', href: WALL_KIND_HREF.movie })),
+      tv.map((t) => ({ key: `tv-${t.id}`, title: t.title, imageUrl: tmdbPosterUrl(t.posterPath), kind: 'tv', href: WALL_KIND_HREF.tv })),
+      books.map((b) => ({ key: `book-${b.id}`, title: b.title, imageUrl: b.coverUrl || (b.coverId ? bookCoverUrl(b.coverId) : null), kind: 'book', href: WALL_KIND_HREF.book })),
+      albums.map((a) => ({ key: `album-${a.id}`, title: a.title, imageUrl: a.thumbnail || null, kind: 'album', href: WALL_KIND_HREF.album })),
+      vinyl.map((v) => ({ key: `vinyl-${v.id}`, title: v.title, imageUrl: v.thumbnail || null, kind: 'vinyl', href: WALL_KIND_HREF.vinyl })),
+    ]
+
+    return pickRandomSample(
+      wallCandidates.flatMap((pool) => pickRandomSample(pool, 4)),
+      18
+    )
+  }, [movies, tv, books, albums, vinyl])
 
   const latestTakes = sortByDateDesc([
     ...movies.map((m) => ({ ...m, kind: 'movie' })),
@@ -141,7 +152,9 @@ export default function Home() {
           <h2 className="home-section-title">The collection wall</h2>
           <div className="home-wall-grid">
             {wallItems.map((item) => (
-              <CoverTile key={item.key} title={item.title} imageUrl={item.imageUrl} id={item.key} />
+              <Link key={item.key} href={item.href} className="home-wall-tile-link">
+                <CoverTile title={item.title} imageUrl={item.imageUrl} id={item.key} />
+              </Link>
             ))}
           </div>
         </section>

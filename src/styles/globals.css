@@ -2938,6 +2938,17 @@ body::before {
   gap: 0.75rem;
 }
 
+.home-wall-tile-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s;
+}
+
+.home-wall-tile-link:hover {
+  transform: translateY(-2px);
+}
+
 .home-quicklinks {
   display: none;
   flex-direction: column;
