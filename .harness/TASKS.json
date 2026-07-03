@@ -4176,7 +4176,7 @@
     {
       "id": "T155",
       "title": "Build a shared Pagination component and wire it into the movies/tv/books/albums list pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T150",
         "T151",
