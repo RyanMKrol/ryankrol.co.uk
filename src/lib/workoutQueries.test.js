@@ -1,48 +1,45 @@
-import { selectRecentActivity } from './workoutQueries';
+import { bucketVolumeByMonth } from './workoutQueries';
 
-const makeWorkout = (workoutDate) => ({ workoutDate });
+const makeWorkout = (workoutDate, totalVolume) => ({ workoutDate, totalVolume });
 
-describe('selectRecentActivity', () => {
-  test('returns exactly `limit` items, most-recent-workoutDate-first, when more than limit exist', () => {
-    const workouts = [
-      makeWorkout('2024-01-01'),
-      makeWorkout('2024-03-01'),
-      makeWorkout('2024-02-01'),
-    ];
-    const result = selectRecentActivity(workouts, 2);
-    expect(result).toHaveLength(2);
-    expect(result[0].workoutDate).toBe('2024-03-01');
-    expect(result[1].workoutDate).toBe('2024-02-01');
+describe('bucketVolumeByMonth', () => {
+  test('returns one bucket per trailing month, oldest first, ending on `now`', () => {
+    const now = new Date(2026, 6, 3); // 3 Jul 2026
+    const buckets = bucketVolumeByMonth([], 12, now);
+    expect(buckets).toHaveLength(12);
+    expect(buckets[0].month).toBe('2025-08');
+    expect(buckets[0].label).toBe('Aug 2025');
+    expect(buckets[11].month).toBe('2026-07');
+    expect(buckets[11].label).toBe('Jul 2026');
   });
 
-  test('returns all workouts sorted desc when fewer than limit exist', () => {
-    const workouts = [makeWorkout('2024-01-01'), makeWorkout('2024-02-01')];
-    const result = selectRecentActivity(workouts, 10);
-    expect(result).toHaveLength(2);
-    expect(result[0].workoutDate).toBe('2024-02-01');
-    expect(result[1].workoutDate).toBe('2024-01-01');
+  test('sums totalVolume per calendar month', () => {
+    const now = new Date(2026, 6, 3);
+    const workouts = [
+      makeWorkout('2026-07-01', 100),
+      makeWorkout('2026-07-15', 50),
+      makeWorkout('2026-06-10', 200),
+    ];
+    const buckets = bucketVolumeByMonth(workouts, 12, now);
+    expect(buckets.find((b) => b.month === '2026-07').totalVolume).toBe(150);
+    expect(buckets.find((b) => b.month === '2026-06').totalVolume).toBe(200);
   });
 
-  test('returns up to limit even when none fall within the last 30 days', () => {
-    const workouts = [
-      makeWorkout('2019-05-01'),
-      makeWorkout('2019-04-01'),
-      makeWorkout('2020-01-01'),
-    ];
-    const result = selectRecentActivity(workouts, 10);
-    expect(result).toHaveLength(3);
-    expect(result[0].workoutDate).toBe('2020-01-01');
+  test('leaves months with no workouts at zero volume', () => {
+    const now = new Date(2026, 6, 3);
+    const buckets = bucketVolumeByMonth([], 12, now);
+    expect(buckets.every((b) => b.totalVolume === 0)).toBe(true);
   });
 
-  test('filters out workouts missing workoutDate instead of crashing', () => {
+  test('ignores workouts outside the requested window and missing workoutDate', () => {
+    const now = new Date(2026, 6, 3);
     const workouts = [
-      makeWorkout('2024-01-01'),
-      { totalVolume: 100 },
-      makeWorkout(undefined),
-      makeWorkout('2024-02-01'),
+      makeWorkout('2020-01-01', 999),
+      { totalVolume: 500 },
+      makeWorkout('2026-07-01', 42),
     ];
-    const result = selectRecentActivity(workouts, 10);
-    expect(result).toHaveLength(2);
-    expect(result.map(w => w.workoutDate)).toEqual(['2024-02-01', '2024-01-01']);
+    const buckets = bucketVolumeByMonth(workouts, 12, now);
+    const total = buckets.reduce((sum, b) => sum + b.totalVolume, 0);
+    expect(total).toBe(42);
   });
 });

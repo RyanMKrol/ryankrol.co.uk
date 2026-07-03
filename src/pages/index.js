@@ -104,10 +104,9 @@ export default function Home() {
     ...albums.map((a) => ({ ...a, kind: 'album', review_text: a.highlights })),
   ]).slice(0, 3)
 
-  const recentActivity = workoutStats?.recentActivity || []
-  const chronological = [...recentActivity].reverse()
-  const maxVolume = chronological.reduce((max, w) => Math.max(max, w.totalVolume || 0), 0)
-  const bestSessionVolume = maxVolume ? Math.round(maxVolume) : null
+  const monthlyVolume = workoutStats?.monthlyVolume || []
+  const maxMonthlyVolume = monthlyVolume.reduce((max, m) => Math.max(max, m.totalVolume || 0), 0)
+  const bestSessionVolume = workoutStats?.bestSessionVolume || null
 
   const handleShelfRefresh = () => {
     setShelfItems(pickRandomSample(vinyl, 5))
@@ -217,12 +216,14 @@ export default function Home() {
                 </div>
               </div>
               <div className="home-sparkline">
-                {chronological.map((w, i) => (
-                  <div
-                    key={i}
-                    className="home-sparkline-bar"
-                    style={{ height: maxVolume ? `${Math.max(8, ((w.totalVolume || 0) / maxVolume) * 100)}%` : '8%' }}
-                  />
+                {monthlyVolume.map((m) => (
+                  <div key={m.month} className="home-sparkline-bar-wrap">
+                    <span className="home-sparkline-tooltip">{m.label} &middot; {m.totalVolume}kg</span>
+                    <div
+                      className="home-sparkline-bar"
+                      style={{ height: maxMonthlyVolume ? `${Math.max(8, (m.totalVolume / maxMonthlyVolume) * 100)}%` : '8%' }}
+                    />
+                  </div>
                 ))}
               </div>
             </div>

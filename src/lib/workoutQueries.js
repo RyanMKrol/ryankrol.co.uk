@@ -207,17 +207,53 @@ export async function getExerciseHistory(exerciseName) {
   }
 }
 
+const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 /**
- * Get workout statistics summary
+ * Bucket workouts' totalVolume into the trailing `months` calendar months (oldest first),
+ * including months with zero volume so the series has a consistent length.
+ * @param {Array} workouts - workouts with `workoutDate` ('YYYY-MM-DD') and `totalVolume`
+ * @param {number} months - size of the trailing window
+ * @param {Date} now - reference date the window is trailing from
+ * @returns {Array<{month: string, label: string, totalVolume: number}>}
+ */
+export function bucketVolumeByMonth(workouts, months = 12, now = new Date()) {
+  const buckets = [];
+  for (let i = months - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    buckets.push({ month, label: `${MONTH_LABELS[d.getMonth()]} ${d.getFullYear()}`, totalVolume: 0 });
+  }
+
+  const byMonth = new Map(buckets.map((b) => [b.month, b]));
+  workouts.forEach((w) => {
+    if (!w.workoutDate) return;
+    const bucket = byMonth.get(w.workoutDate.slice(0, 7));
+    if (bucket) bucket.totalVolume += w.totalVolume || 0;
+  });
+
+  buckets.forEach((b) => { b.totalVolume = Math.round(b.totalVolume); });
+  return buckets;
+}
+
+/**
+ * Get workout statistics for the trailing 12 calendar months.
  * @returns {Object} Summary statistics
  */
 export async function getWorkoutStats() {
   try {
-    console.log('🗄️  [DYNAMO] Scanning workouts table for statistics');
+    const windowMonths = 12;
+    const now = new Date();
+    const cutoff = new Date(now.getFullYear(), now.getMonth() - (windowMonths - 1), 1);
+    const cutoffDate = `${cutoff.getFullYear()}-${String(cutoff.getMonth() + 1).padStart(2, '0')}-01`;
+
+    console.log(`🗄️  [DYNAMO] Scanning workouts table for statistics (trailing ${windowMonths} months, since ${cutoffDate})`);
 
     const params = {
       TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
-      ProjectionExpression: 'totalVolume, durationMinutes, workoutType, uniqueExercises, workoutDate'
+      ProjectionExpression: 'totalVolume, durationMinutes, workoutType, uniqueExercises, workoutDate',
+      FilterExpression: 'workoutDate >= :cutoffDate',
+      ExpressionAttributeValues: { ':cutoffDate': cutoffDate }
     };
 
     const startTime = Date.now();
@@ -232,13 +268,15 @@ export async function getWorkoutStats() {
         totalVolume: 0,
         averageDuration: 0,
         workoutTypes: {},
-        recentActivity: []
+        bestSessionVolume: 0,
+        monthlyVolume: bucketVolumeByMonth([], windowMonths, now)
       };
     }
 
     // Calculate statistics
     const totalVolume = workouts.reduce((sum, w) => sum + (w.totalVolume || 0), 0);
     const averageDuration = workouts.reduce((sum, w) => sum + (w.durationMinutes || 0), 0) / workouts.length;
+    const bestSessionVolume = workouts.reduce((max, w) => Math.max(max, w.totalVolume || 0), 0);
 
     const workoutTypes = {};
     workouts.forEach(workout => {
@@ -251,24 +289,12 @@ export async function getWorkoutStats() {
       totalVolume: Math.round(totalVolume),
       averageDuration: Math.round(averageDuration),
       workoutTypes,
-      recentActivity: selectRecentActivity(workouts, 10)
+      bestSessionVolume: Math.round(bestSessionVolume),
+      monthlyVolume: bucketVolumeByMonth(workouts, windowMonths, now)
     };
 
   } catch (error) {
     console.error('Error fetching workout statistics:', error);
     throw error;
   }
-}
-
-/**
- * Select the most recently logged workouts, regardless of calendar recency.
- * @param {Array} workouts - workouts with a `workoutDate` field ('YYYY-MM-DD')
- * @param {number} limit - max number of workouts to return
- * @returns {Array} up to `limit` workouts, most-recent-first
- */
-export function selectRecentActivity(workouts, limit = 10) {
-  return [...workouts]
-    .filter(w => w.workoutDate)
-    .sort((a, b) => new Date(b.workoutDate) - new Date(a.workoutDate))
-    .slice(0, limit);
 }
