@@ -4652,7 +4652,7 @@
     {
       "id": "T167",
       "title": "Visual audit & tweak: vinyl, listening, projects pages vs the design renders",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T156",
         "T157",
