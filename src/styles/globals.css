@@ -2586,7 +2586,7 @@ body::before {
 
 .collection-form-card {
   max-width: 640px;
-  margin: 0 auto;
+  margin: 2rem auto 0;
   background-color: var(--color-card);
   border: var(--border-width) solid var(--color-ink);
   border-radius: var(--radius-card);
