@@ -12,6 +12,19 @@ source of authoring logic**: it assigns the task's **facets** (difficulty auto-t
 chooser task with a review task, runs the **poor-fit / layer-evolution gate**, and writes a
 schema-correct task object + its `tasks/TNNN.md` spec. Prefer it over hand-editing `TASKS.json`.
 
+**Every backlog sequence that touches `src/`, `public/`, or anything else that ships to the live
+site MUST end with a manual-deploy task (see root `CLAUDE.md`'s "Deploying" section for why —
+Vercel's Git integration is disconnected, so nothing ships automatically anymore).** When authoring
+or extending a backlog whose tasks change the site, the LAST task in dependency order (i.e. every
+other new task, directly or transitively, `dependsOn` it, or it's simply appended after everything
+else with no downstream dependents) must be a `"gate": "needs-human"` task titled along the lines of
+"Manually deploy `<the feature/phase>` to production" whose spec instructs: run `vercel --prod` (or
+push/amend a commit whose message contains the literal marker `[deploy]`) from a session with the
+Vercel CLI authenticated, then verify the live site reflects the change. Do not add a second one if
+a prior, still-pending deploy task already sits at the end of the backlog for the same body of
+work — extend its `dependsOn` instead of duplicating it. A pure-docs/harness-only task sequence
+(nothing under `src/`/`public/`) does not need one.
+
 ## Ideas inbox & the two-step flow (ideas → tasks)
 
 Tasks are NOT authored directly from a raw thought. A backlog task carries a high planning bar

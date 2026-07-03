@@ -4792,6 +4792,24 @@
       "verify": [],
       "expectsTest": false,
       "spec": ".harness/tasks/T170.md"
+    },
+    {
+      "id": "T171",
+      "title": "Manually deploy the Collection redesign to production",
+      "status": "pending",
+      "dependsOn": [
+        "T170"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "collection-redesign",
+        "deploy"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T171.md"
     }
   ]
 }

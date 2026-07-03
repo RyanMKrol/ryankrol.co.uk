@@ -253,14 +253,8 @@ Run before declaring done, and keep them green:
   especially pure functions in `src/lib`. Tests are co-located as `*.test.js`.
 - **`npm run build`** — `next build` must succeed.
 - **Docs updated** in the same commit (the rule above).
-- `main` must always be build-green regardless of whether a given push actually deploys (see next
-  bullet) — a broken `main` blocks the next real deploy from being clean too.
-- **Vercel does NOT auto-deploy every push right now.** `vercel.json`'s `ignoreCommand` cancels the
-  build unless the triggering commit's message contains the literal marker `[deploy]` — added while
-  the autonomous redesign loop pushes a commit per task, to avoid a full Vercel build queuing behind
-  every single one of them (Hobby plan allows only 1 concurrent build). To actually ship a change to
-  production, push a commit whose message includes `[deploy]`. Revisit/remove this once the loop's
-  commit cadence settles down.
+- `main` must always be build-green regardless of whether a given push actually deploys (see
+  "Deploying" below) — a broken `main` blocks the next real deploy from being clean too.
 
 **ESLint setup:** flat config in `eslint.config.mjs` extends `next/core-web-vitals`, ignores build
 artefacts, and adds a jest-globals override for `*.test.js`. `npm run lint` runs the `eslint` CLI
@@ -272,6 +266,37 @@ directly (not the deprecated `next lint`).
   changing behaviour. Worth revisiting, not urgent.
 - **No component/integration tests yet** — only pure-logic unit tests. Adding React Testing
   Library coverage for the review forms / charts is a good next step (the deps are installed).
+
+## Deploying
+
+**Vercel's Git integration is disconnected — pushing to `main` no longer deploys anything,
+automatically or otherwise.** (Disconnected 2026-07-03: the autonomous redesign loop was pushing a
+commit roughly every few minutes, and even a Vercel deployment that gets immediately cancelled via
+`vercel.json`'s `ignoreCommand` still counts as a full deployment against Hobby's quota — 100/day,
+100/hour, 60/5min — so cancelling wasn't enough; the Git connection itself had to come off.
+`ignoreCommand` is still left in `vercel.json` as a belt-and-suspenders safeguard for whenever Git
+gets reconnected, but it's not doing anything on its own right now.)
+
+To actually ship a change to production:
+
+```sh
+vercel --prod      # deploys the current local working tree directly, no Git integration needed
+```
+
+(`vercel git connect` reverses the disconnect if you ever want auto-deploy-on-push back.)
+
+**Convention — any session that changes what ships (`src/`, `public/`, etc.) is responsible for
+triggering a deploy when that body of work is actually done, whether or not it went through the
+harness:**
+- **Inside the autonomous harness**: see `.harness/CLAUDE.md`'s backlog-authoring convention — every
+  task sequence that touches the site ends with a `needs-human` "manually deploy" task, so a
+  `supervise.sh` run naturally culminates in shipping what it built, not leaving it stranded on
+  `main`.
+- **Outside the harness** (an interactive Claude Code session, whether or not `.harness/` is
+  involved): if you've pushed a change to `main` that affects the live site and you're at a natural
+  stopping point (not mid-way through a larger piece of work the user is about to continue), run
+  `vercel --prod` yourself before ending the session, or tell the user a deploy is needed and how to
+  trigger one. Don't assume "I pushed it" means "it's live" anymore.
 
 ## Gotchas
 
