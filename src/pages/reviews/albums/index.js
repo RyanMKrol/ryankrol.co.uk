@@ -3,15 +3,15 @@ import { useRouter } from 'next/router';
 import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
-import PillGroup from '../../../components/PillGroup';
+import SortButtons from '../../../components/SortButtons';
 import Pagination from '../../../components/Pagination';
 import { paginate } from '../../../lib/pagination';
 import { assignGradients } from '../../../components/CoverTile';
 
-const SORT_OPTIONS = [
-  { value: 'date', label: 'date ↓' },
-  { value: 'title', label: 'title' },
-  { value: 'score', label: 'score' },
+const SORT_FIELDS = [
+  { key: 'date', label: 'date', defaultValue: 'date', flippedValue: 'date-asc', defaultArrow: '↓', flippedArrow: '↑' },
+  { key: 'title', label: 'title', defaultValue: 'title', flippedValue: 'title-desc', defaultArrow: '↓', flippedArrow: '↑' },
+  { key: 'score', label: 'score', defaultValue: 'score', flippedValue: 'score-asc', defaultArrow: '↓', flippedArrow: '↑' },
 ];
 
 const PAGE_SIZE = 8;
@@ -79,8 +79,22 @@ export default function Albums() {
         const titleB = b.title.replace(/^The\s+/i, '');
         return titleA.localeCompare(titleB);
       });
+    } else if (sortBy === 'title-desc') {
+      filtered = filtered.sort((a, b) => {
+        const titleA = a.title.replace(/^The\s+/i, '');
+        const titleB = b.title.replace(/^The\s+/i, '');
+        return titleB.localeCompare(titleA);
+      });
     } else if (sortBy === 'score') {
       filtered = filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    } else if (sortBy === 'score-asc') {
+      filtered = filtered.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+    } else if (sortBy === 'date-asc') {
+      filtered = filtered.sort((a, b) => {
+        const dateA = new Date((a.editedDate || a.date).split('-').reverse().join('-'));
+        const dateB = new Date((b.editedDate || b.date).split('-').reverse().join('-'));
+        return dateA - dateB;
+      });
     } else {
       filtered = filtered.sort((a, b) => {
         const dateA = new Date((a.editedDate || a.date).split('-').reverse().join('-'));
@@ -146,9 +160,9 @@ export default function Albums() {
             onChange={setSearchTerm}
             placeholder="search by title or artist..."
           />
-          <PillGroup
-            options={SORT_OPTIONS}
-            value={sortBy}
+          <SortButtons
+            fields={SORT_FIELDS}
+            sortBy={sortBy}
             onChange={setSortBy}
           />
         </div>
