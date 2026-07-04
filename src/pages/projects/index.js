@@ -4,6 +4,12 @@ import Header from '../../components/Header';
 import Badge from '../../components/Badge';
 import SearchInput from '../../components/SearchInput';
 import Pill from '../../components/Pill';
+import SortButtons from '../../components/SortButtons';
+
+const SORT_FIELDS = [
+  { key: 'date', label: 'date', defaultValue: 'date', flippedValue: 'date-asc', defaultArrow: '↓', flippedArrow: '↑' },
+  { key: 'stars', label: 'stars', defaultValue: 'stars', flippedValue: 'stars-asc', defaultArrow: '↓', flippedArrow: '↑' },
+];
 
 const LANGUAGE_COLORS = {
   TypeScript: '#3178C6',
@@ -52,6 +58,7 @@ export default function ProjectsPage() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
+  const [sortBy, setSortBy] = useState('date');
 
   useEffect(() => {
     async function fetchRepos() {
@@ -97,6 +104,20 @@ export default function ProjectsPage() {
     });
   }, [repos, searchTerm, selectedTags]);
 
+  const sortedRepos = useMemo(() => {
+    const sorted = [...filteredRepos];
+    if (sortBy === 'date-asc') {
+      sorted.sort((a, b) => new Date(a.lastPush) - new Date(b.lastPush));
+    } else if (sortBy === 'stars') {
+      sorted.sort((a, b) => (b.stars || 0) - (a.stars || 0));
+    } else if (sortBy === 'stars-asc') {
+      sorted.sort((a, b) => (a.stars || 0) - (b.stars || 0));
+    } else {
+      sorted.sort((a, b) => new Date(b.lastPush) - new Date(a.lastPush));
+    }
+    return sorted;
+  }, [filteredRepos, sortBy]);
+
   return (
     <>
       <Head>
@@ -110,7 +131,7 @@ export default function ProjectsPage() {
           <div className="collection-review-title-group">
             <h1 className="page-title">projects</h1>
             <p className="collection-review-meta">
-              what I&apos;ve been building on github · sorted by recent activity
+              what I&apos;ve been building on github
             </p>
           </div>
 
@@ -120,6 +141,7 @@ export default function ProjectsPage() {
               onChange={setSearchTerm}
               placeholder="search by title or description..."
             />
+            <SortButtons fields={SORT_FIELDS} sortBy={sortBy} onChange={setSortBy} />
             {allTags.length > 0 && (
               <div className="collection-pill-group">
                 {allTags.map((tag) => (
@@ -163,7 +185,7 @@ export default function ProjectsPage() {
 
         {!loading && !error && filteredRepos.length > 0 && (
           <div className="projects-grid">
-            {filteredRepos.map((repo) => (
+            {sortedRepos.map((repo) => (
               <div key={repo.fullName} className="project-card">
                 <div className="project-card-top">
                   <a
