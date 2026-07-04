@@ -6109,7 +6109,7 @@
     {
       "id": "T219",
       "title": "Add review date to books and albums review-list cards (ReviewCard.js)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T217"
       ],
