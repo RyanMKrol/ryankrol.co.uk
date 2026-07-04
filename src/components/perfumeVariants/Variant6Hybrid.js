@@ -4,6 +4,22 @@ import PipMeter from '../PipMeter';
 const LONGEVITY_MAX = 8;
 const PROJECTION_MAX = 4;
 
+export const PAIRED_APPLICATION_SPOTS = [
+  'Wrists',
+  'Elbows',
+  'Clavicles',
+  'Behind ears',
+];
+
+export function formatApplicationSpotLine({ spot, sprays }) {
+  if (sprays === 1) {
+    return PAIRED_APPLICATION_SPOTS.includes(spot)
+      ? `1 spray each — ${spot}`
+      : `1 spray — ${spot}`;
+  }
+  return `${sprays} sprays — ${spot}`;
+}
+
 export default function Variant6Hybrid({ item }) {
   const hasSeasons = Array.isArray(item.seasons) && item.seasons.length > 0;
   const hasApplicationSpots =
@@ -75,7 +91,7 @@ export default function Variant6Hybrid({ item }) {
         <ul className="perfume-v4-checklist">
           {item.applicationSpots.map(({ spot, sprays }) => (
             <li key={spot} className="perfume-v4-checklist-item">
-              {sprays} {sprays === 1 ? 'spray' : 'sprays'} — {spot}
+              {formatApplicationSpotLine({ spot, sprays })}
             </li>
           ))}
         </ul>
