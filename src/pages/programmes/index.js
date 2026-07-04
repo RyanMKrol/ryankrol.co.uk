@@ -6,6 +6,7 @@ import { aggregateProgramme } from '../../lib/programmeStats';
 import { filterByDateRange } from '../../lib/dateRange';
 
 const PROGRAMMES = ['push', 'pull', 'legs'];
+const FILTER_OPTIONS = ['all', ...PROGRAMMES];
 
 export default function Programmes() {
   const [allWorkouts, setAllWorkouts] = useState([]);
@@ -79,7 +80,7 @@ export default function Programmes() {
         <div className="workout-filters">
           <span className="filter-label">Programme:</span>
           <div className="filter-buttons">
-            {PROGRAMMES.map(p => (
+            {FILTER_OPTIONS.map(p => (
               <button
                 key={p}
                 onClick={() => setSelected(p)}
