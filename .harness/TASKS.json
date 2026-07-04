@@ -6385,7 +6385,7 @@
     {
       "id": "T229",
       "title": "Fix search placeholder truncation by giving .collection-search-input a real flex-basis",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
