@@ -6440,7 +6440,7 @@
     {
       "id": "T231",
       "title": "Fix search box / sort-buttons vertical misalignment on review list pages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
