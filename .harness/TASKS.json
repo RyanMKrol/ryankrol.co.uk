@@ -5769,7 +5769,7 @@
     {
       "id": "T207",
       "title": "Highlight the workouts nav pill when on /programmes",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
