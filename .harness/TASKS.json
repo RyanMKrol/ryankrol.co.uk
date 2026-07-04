@@ -6139,7 +6139,7 @@
     {
       "id": "T220",
       "title": "Format workout session dates as written English dates (workouts/index.js)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T217"
       ],
