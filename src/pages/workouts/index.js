@@ -66,8 +66,8 @@ function getTotalVolume(exercises = []) {
   ), 0);
 }
 
-function formatVolumeTonnes(volumeKg) {
-  return (volumeKg / 1000).toFixed(1);
+export function formatVolumeKg(volumeKg) {
+  return `${Math.round(volumeKg)}`;
 }
 
 export default function Workouts() {
@@ -199,7 +199,7 @@ export default function Workouts() {
                       </ul>
                       <span className="workout-session-volume">
                         <span className="workout-session-volume-value">
-                          {formatVolumeTonnes(getTotalVolume(exercises))}t
+                          {formatVolumeKg(getTotalVolume(exercises))}kg
                         </span>
                         <span className="workout-session-volume-label">volume</span>
                       </span>
