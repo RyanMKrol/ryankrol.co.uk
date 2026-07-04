@@ -6050,6 +6050,586 @@
           "cross-cutting"
         ]
       }
+    },
+    {
+      "id": "T217",
+      "title": "Add shared English-language date-format helper (src/lib/dateFormat.js)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "lib",
+        "date-format"
+      ],
+      "scope": [
+        "src/lib/dateFormat.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T217.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T218",
+      "title": "Format movies/TV review dates as written English dates (ReviewCard.js)",
+      "status": "pending",
+      "dependsOn": [
+        "T217"
+      ],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "date-format"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T218.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T219",
+      "title": "Add review date to books and albums review-list cards (ReviewCard.js)",
+      "status": "pending",
+      "dependsOn": [
+        "T217"
+      ],
+      "gate": null,
+      "tags": [
+        "feature",
+        "date-format"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T219.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T220",
+      "title": "Format workout session dates as written English dates (workouts/index.js)",
+      "status": "pending",
+      "dependsOn": [
+        "T217"
+      ],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "date-format"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T220.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T221",
+      "title": "Migrate all 5 review edit-list pages off legacy styleVariant={2} onto each type's modern named card variant",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "edit-pages",
+        "consistency",
+        "styleVariant"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/edit.js",
+        "src/pages/reviews/tv/edit.js",
+        "src/pages/reviews/books/edit.js",
+        "src/pages/reviews/albums/edit.js",
+        "src/pages/reviews/perfumes/edit.js"
+      ],
+      "design": "Confirmed 2026-07-04: all 5 files pass styleVariant={2} to ReviewCard (movies/edit.js:70, tv/edit.js:70, books/edit.js:70, albums/edit.js:70, perfumes/edit.js:69), which matches none of ReviewCard.js's named-string variant checks ('spine-cover' ReviewCard.js:123, 'square-cover' :135, 'poster-banner' :148) and falls through to the legacy default/fallback render (:170-216, plain card + review-style-2 class). Each type's own PUBLIC list page already uses a specific named variant: movies/index.js:168 and tv/index.js:168 = 'poster-banner'; books/index.js:171 = 'spine-cover'; albums/index.js:177 = 'square-cover'. Perfumes/index.js bypasses ReviewCard entirely, rendering perfumeVariants/Variant6Hybrid directly (per root CLAUDE.md's file map) — there is no named ReviewCard variant for perfumes, so perfumes/edit.js should switch to rendering Variant6Hybrid directly too, matching its own public list exactly. Verified Variant6Hybrid.js takes only an `item` prop and renders a self-contained card with no edit-awareness, so it drops into the existing `<div className=\"review-card-with-edit\">` wrapper (position:relative, defined in globals.css:1359) with the existing absolutely-positioned `<Link className=\"edit-button-overlay\">` sibling unchanged — the overlay button is layered purely by CSS and doesn't care what the wrapped card component renders, so no wrapper/CSS changes are needed for the swap. styleVariant={2} is used ONLY in these 5 files repo-wide (grep-confirmed) — books and albums were included here even though the owner only explicitly named perfumes/movies/TV, because (a) they share the byte-for-byte identical bug, and (b) the owner's own broadening pattern in this same conversation (perfumes -> also movies/TV -> 'all of the edit pages' for the header ask) strongly signals they want full consistency across all 5 types, not a partial fix. This is a judgment call, not confirmed directly with the owner — flagged in the conversion report.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T221.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T222",
+      "title": "Lowercase + remove emoji from all 10 edit-page h1 titles (5 edit.js + 5 edit/[id].js)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "copy",
+        "edit-pages",
+        "consistency"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/edit.js",
+        "src/pages/reviews/movies/edit/[id].js",
+        "src/pages/reviews/tv/edit.js",
+        "src/pages/reviews/tv/edit/[id].js",
+        "src/pages/reviews/books/edit.js",
+        "src/pages/reviews/books/edit/[id].js",
+        "src/pages/reviews/albums/edit.js",
+        "src/pages/reviews/albums/edit/[id].js",
+        "src/pages/reviews/perfumes/edit.js",
+        "src/pages/reviews/perfumes/edit/[id].js"
+      ],
+      "design": "Exact before -> after text for the <h1 className=\"page-title\"> in each of the 10 files (re-verified directly against source 2026-07-04, matching the already-shipped T194 fix's convention for the /add pages): movies/edit.js:61 '🎬 Edit Movie Reviews' -> 'edit movie reviews'. movies/edit/[id].js:203 '🎬 Edit Movie Review' -> 'edit movie review'. tv/edit.js:61 '📺 Edit TV Show Reviews' -> 'edit tv show reviews' (lowercase 'tv', matching the precedent set by tv/index.js and T194). tv/edit/[id].js:203 '📺 Edit TV Show Review' -> 'edit tv show review'. books/edit.js:61 '📚 Edit Book Reviews' -> 'edit book reviews'. books/edit/[id].js:203 '📚 Edit Book Review' -> 'edit book review'. albums/edit.js:61 '🎵 Edit Album Reviews' -> 'edit album reviews'. albums/edit/[id].js:219 '🎵 Edit Album Review' -> 'edit album review'. perfumes/edit.js:60 '👃 Edit Perfume Reviews' -> 'edit perfume reviews'. perfumes/edit/[id].js:222 '👃 Edit Perfume Review' -> 'edit perfume review'. In every case: delete the leading emoji character and the single space that follows it, then lowercase every letter in the remaining text (no other punctuation/wording changes, no change to any other string in these files e.g. button labels, loading/error text, or form field labels).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T222.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T223",
+      "title": "Books review list: switch .spine-cover-list to CSS multi-column masonry (stop row-height stretch)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "books",
+        "layout",
+        "masonry"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T223.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T224",
+      "title": "Movies + TV review lists: switch .poster-banner-grid to CSS multi-column masonry (stop row-height stretch)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "movies",
+        "tv",
+        "layout",
+        "masonry"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T224.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T225",
+      "title": "Workouts list: switch .workout-session-grid to CSS multi-column masonry (stop row-height stretch)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "layout",
+        "masonry"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T225.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T226",
+      "title": "Surface fork count on Projects page cards",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects",
+        "ui",
+        "card-metadata"
+      ],
+      "scope": [
+        "src/pages/projects/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T226.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T227",
+      "title": "Add sort-by-stars / sort-by-date controls to the Projects page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects",
+        "ui",
+        "sort"
+      ],
+      "scope": [
+        "src/pages/projects/index.js"
+      ],
+      "design": "Field mapping for SortButtons, following the exact reuse pattern from the review-list pages (e.g. src/pages/reviews/movies/index.js's SORT_FIELDS + sortBy state):\n- date:  defaultValue 'date' (newest push first — matches today's fixed server-side default, so the page's initial landing view is visually unchanged) / flippedValue 'date-asc' (oldest push first)\n- stars: defaultValue 'stars' (highest star count first) / flippedValue 'stars-asc' (lowest first)\nUse '↓' as defaultArrow and '↑' as flippedArrow for both fields, matching the review-pages convention. Initial `sortBy` state is 'date' so the default view is unchanged from today. Do not add commits/LOC fields to this control — those are gated behind a separate needs-human decision task (see the commit-count decision task in this same batch) and are not available data today.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T227.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T228",
+      "title": "Decide whether commit-count sourcing (GitHub GraphQL migration) is worth building for Projects cards/sort (needs-human)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "projects",
+        "decision",
+        "needs-human",
+        "github-api"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T228.md",
+      "expectsTest": false
+    },
+    {
+      "id": "T229",
+      "title": "Fix search placeholder truncation by giving .collection-search-input a real flex-basis",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "style",
+        "projects",
+        "search"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": "Root cause (confirmed by reading the full CSS chain): `.collection-search-input` (globals.css:2585-2593) is a flex item of `.collection-review-controls` (a `display:flex; flex-wrap:wrap` row, globals.css:427-432) but sets no `flex`/`min-width`/`width` of its own, so it falls back to the flex default `flex: 0 1 auto` — meaning its rendered width is its 'auto' flex-basis, i.e. its own content-based hypothetical size. That size is driven entirely by the bare `<input>` inside it (globals.css:2601-2608, `flex: 1`, no `size` attribute and no CSS `width` in `src/components/SearchInput.js`), which falls back to the browser's UA-default text-input width (the HTML spec default is equivalent to `size=\"20\"`, roughly 150-190px depending on font/font-size — NOT related to placeholder text length; browsers do not auto-size an input to fit its placeholder string). Because `.collection-search-input` has `flex-grow: 0`, it never grows to claim extra space from its flex row regardless of what sibling sits next to it — so the difference between pages is NOT the sibling (SortButtons on review pages vs. the tag-filter Pill row on Projects) squeezing it; every page's search box renders at roughly this same small UA-driven width. It only becomes visibly broken on `/projects` because `placeholder=\"search by title or description...\"` (33 chars) is the longest placeholder on the site — every other page's shorter placeholder happens to fit (or nearly fit) inside that same narrow default width, so the underlying under-sizing was never noticed elsewhere. Fix: give `.collection-search-input` an explicit `flex-basis` wide enough for the longest placeholder in the site's current font/size (Nunito, 0.9375rem, per globals.css:2606-2607), WITHOUT adding `flex-grow` — growth would stretch the search box to fill all remaining row width on every review page that currently looks correct (e.g. next to the much-narrower SortButtons widget on movies/tv/books/albums), which is a bigger, unnecessary visual change and risks a regression the idea explicitly asked to avoid ('spot-check the other review pages still look correct too'). Keep `flex-shrink: 1` (already the default) plus an explicit `min-width: 0` override (flex items otherwise clamp their shrink minimum to their content's min-content size, not 0) and `max-width: 100%` as a safety net, so on narrow/mobile viewports the box can still shrink or wrap (via the parent's existing `flex-wrap: wrap`) instead of overflowing its row.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T229.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T230",
+      "title": "Rank Projects tag-filter pills by frequency and cap with a show-more toggle",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects",
+        "ui-polish"
+      ],
+      "scope": [
+        "src/pages/projects/index.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T230.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T231",
+      "title": "Fix search box / sort-buttons vertical misalignment on review list pages",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "css"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T231.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T232",
+      "title": "Decide whether to still pursue a full DynamoDB workout-data wipe + reset",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "workouts",
+        "db-integrity",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T232.md",
+      "expectsTest": false
+    },
+    {
+      "id": "T233",
+      "title": "workoutBackfill.js: export storeWorkoutInDynamoDB/storeExercises and self-heal missing Exercises rows on already-existing workouts",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "db-integrity"
+      ],
+      "scope": [
+        "src/lib/workoutBackfill.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T233.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "bugfix",
+        "risk": [
+          "touches-data",
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T234",
+      "title": "auditWorkouts.js: delegate to the shared storeWorkoutInDynamoDB/storeExercises instead of its own reimplementation",
+      "status": "pending",
+      "dependsOn": [
+        "T233"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "db-integrity"
+      ],
+      "scope": [
+        "src/scripts/auditWorkouts.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T234.md",
+      "facets": {
+        "layer": "db",
+        "workType": "refactor",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T235",
+      "title": "migrateWorkoutData.js: delegate to the shared storeWorkoutInDynamoDB/storeExercises instead of its own reimplementation",
+      "status": "pending",
+      "dependsOn": [
+        "T233"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "db-integrity"
+      ],
+      "scope": [
+        "src/scripts/migrateWorkoutData.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T235.md",
+      "facets": {
+        "layer": "db",
+        "workType": "refactor",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T236",
+      "title": "Build a script to backfill missing Exercises-table rows from Workouts items' own denormalized exercises[] data",
+      "status": "pending",
+      "dependsOn": [
+        "T233"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "db-integrity"
+      ],
+      "scope": [
+        "src/scripts/backfillMissingExerciseRows.js",
+        "package.json"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T236.md",
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T237",
+      "title": "Run the missing-exercise-rows backfill against production and verify the Iso-Lateral High Row gap is closed",
+      "status": "pending",
+      "dependsOn": [
+        "T236"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "db-integrity"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [
+        "npm test",
+        "npm run lint"
+      ],
+      "spec": ".harness/tasks/T237.md",
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": false
     }
   ]
 }
