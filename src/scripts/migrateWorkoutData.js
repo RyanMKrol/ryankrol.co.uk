@@ -1,19 +1,7 @@
 import dotenv from 'dotenv';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
-import { calculateExerciseMetrics, calculateWorkoutMetrics } from '../lib/workoutMetrics.js';
+import { storeWorkoutInDynamoDB } from '../lib/workoutBackfill.js';
 
 dotenv.config({ path: '.env.local' });
-
-const client = new DynamoDBClient({
-  region: 'us-east-2',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
-
-const dynamodb = DynamoDBDocumentClient.from(client);
 
 // Rate limiting helper - 100ms between calls
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -77,127 +65,29 @@ async function fetchAllWorkoutsFromHevy() {
   return allWorkouts;
 }
 
-// Metric calculation functions moved to shared library: ../lib/workoutMetrics.js
-
-async function storeWorkoutInDynamoDB(workout) {
-  const metrics = calculateWorkoutMetrics(workout);
-
-  const workoutItem = {
-    id: workout.id,
-    title: workout.title || 'Untitled Workout',
-    start_time: workout.start_time,
-    end_time: workout.end_time,
-    exercises: workout.exercises,
-    // Computed metrics
-    ...metrics,
-    // Metadata
-    created_at: new Date().toISOString(),
-    data_source: 'hevy_api'
-  };
-
-  const params = {
-    TableName: 'Workouts',
-    Item: workoutItem,
-    ConditionExpression: 'attribute_not_exists(id)' // Don't overwrite existing workouts
-  };
-
-  try {
-    await dynamodb.send(new PutCommand(params));
-    return true;
-  } catch (error) {
-    if (error.name === 'ConditionalCheckFailedException') {
-      console.log(`   ⚠️  Workout ${workout.id} already exists, skipping`);
-      return false;
-    } else {
-      throw error;
-    }
-  }
-}
-
-async function storeExerciseInDynamoDB(workout, exercise, exerciseIndex) {
-  const metrics = calculateExerciseMetrics(exercise);
-  const workoutDate = new Date(workout.start_time).toISOString().split('T')[0];
-
-  const exerciseItem = {
-    exercise_id: `${workout.id}_${exerciseIndex}`,
-    workout_id: workout.id,
-    exercise_name: exercise.title,
-    workout_date: workoutDate,
-    workout_title: workout.title || 'Untitled Workout',
-    start_time: workout.start_time,
-    end_time: workout.end_time,
-    sets: exercise.sets,
-    exercise_index: exerciseIndex,
-    // Computed metrics
-    ...metrics,
-    // Metadata
-    created_at: new Date().toISOString(),
-    data_source: 'hevy_api'
-  };
-
-  const params = {
-    TableName: 'Exercises',
-    Item: exerciseItem,
-    ConditionExpression: 'attribute_not_exists(exercise_id)' // Don't overwrite existing exercises
-  };
-
-  try {
-    await dynamodb.send(new PutCommand(params));
-    return true;
-  } catch (error) {
-    if (error.name === 'ConditionalCheckFailedException') {
-      console.log(`   ⚠️  Exercise ${exerciseItem.exercise_id} already exists, skipping`);
-      return false;
-    } else {
-      throw error;
-    }
-  }
-}
-
 async function migrateWorkoutData(workouts) {
   console.log(`💾 Starting to store ${workouts.length} workouts in DynamoDB...\n`);
 
-  let workoutsStored = 0;
-  let workoutsSkipped = 0;
-  let exercisesStored = 0;
-  let exercisesSkipped = 0;
+  let workoutsProcessed = 0;
 
   for (let i = 0; i < workouts.length; i++) {
     const workout = workouts[i];
     console.log(`📝 Processing workout ${i + 1}/${workouts.length}: "${workout.title}" (${workout.id})`);
 
     try {
-      // Store workout
-      const workoutStored = await storeWorkoutInDynamoDB(workout);
-      if (workoutStored) {
-        workoutsStored++;
-      } else {
-        workoutsSkipped++;
-      }
-
-      // Store each exercise
-      for (let j = 0; j < workout.exercises.length; j++) {
-        const exercise = workout.exercises[j];
-        const exerciseStored = await storeExerciseInDynamoDB(workout, exercise, j);
-        if (exerciseStored) {
-          exercisesStored++;
-        } else {
-          exercisesSkipped++;
-        }
-      }
-
+      await storeWorkoutInDynamoDB(workout);
+      workoutsProcessed++;
       console.log(`   ✅ Processed workout with ${workout.exercises.length} exercises`);
-
     } catch (error) {
       console.error(`   ❌ Error processing workout ${workout.id}:`, error);
     }
   }
 
   console.log('\n🎉 Migration completed!');
-  console.log(`📊 Summary:`);
-  console.log(`   Workouts: ${workoutsStored} stored, ${workoutsSkipped} skipped`);
-  console.log(`   Exercises: ${exercisesStored} stored, ${exercisesSkipped} skipped`);
+  console.log(`📊 Summary: ${workoutsProcessed}/${workouts.length} workouts processed`);
 }
+
+export { migrateWorkoutData };
 
 async function main() {
   console.log('🚀 Starting workout data migration from Hevy to DynamoDB...\n');
@@ -220,4 +110,6 @@ async function main() {
   }
 }
 
-main();
+if (process.env.NODE_ENV !== 'test') {
+  main();
+}
