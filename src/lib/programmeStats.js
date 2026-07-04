@@ -16,12 +16,14 @@ export function classifyProgramme(workout) {
 /**
  * Aggregate per-session and summary stats for one programme.
  * @param {Object[]} workouts - full workout list (may contain all programmes)
- * @param {'push'|'pull'|'legs'} programme
+ * @param {'push'|'pull'|'legs'|'all'} programme
  * @returns {{ sessions, frequencyByMonth, totals }}
  */
 export function aggregateProgramme(workouts, programme) {
   const filtered = workouts
-    .filter(w => classifyProgramme(w) === programme)
+    .filter(w =>
+      programme === 'all' ? classifyProgramme(w) !== null : classifyProgramme(w) === programme
+    )
     .sort((a, b) => {
       const ta = a.start_time || a.workoutDate || '';
       const tb = b.start_time || b.workoutDate || '';

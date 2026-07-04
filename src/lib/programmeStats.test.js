@@ -85,4 +85,42 @@ describe('aggregateProgramme', () => {
     expect(noMatch.frequencyByMonth).toEqual([]);
     expect(noMatch.totals).toEqual({ workouts: 0, totalVolume: 0, avgVolumePerWorkout: 0 });
   });
+
+  describe("programme === 'all'", () => {
+    it('totals.workouts equals the sum of push + pull + legs counts', () => {
+      const all = aggregateProgramme(WORKOUTS, 'all');
+      const push = aggregateProgramme(WORKOUTS, 'push');
+      const pull = aggregateProgramme(WORKOUTS, 'pull');
+      const legs = aggregateProgramme(WORKOUTS, 'legs');
+      expect(all.totals.workouts).toBe(
+        push.totals.workouts + pull.totals.workouts + legs.totals.workouts
+      );
+      expect(all.totals.totalVolume).toBe(
+        push.totals.totalVolume + pull.totals.totalVolume + legs.totals.totalVolume
+      );
+    });
+
+    it('excludes workouts that do not classify as push/pull/legs', () => {
+      const all = aggregateProgramme(WORKOUTS, 'all');
+      expect(all.sessions).toHaveLength(5); // excludes 'Rest Day'
+      expect(all.totals.workouts).toBe(5);
+      const restDayVolume = 0;
+      expect(all.totals.totalVolume).not.toBe(restDayVolume);
+    });
+
+    it('returns sessions sorted date ascending', () => {
+      const all = aggregateProgramme(WORKOUTS, 'all');
+      const dates = all.sessions.map(s => s.date);
+      expect(dates).toEqual([...dates].sort());
+    });
+
+    it('merges frequency counts across programmes into the same month bucket', () => {
+      const all = aggregateProgramme(WORKOUTS, 'all');
+      // Jan 2024 has push+pull+legs+push = 4 workouts; Feb 2024 has pull session = 1
+      expect(all.frequencyByMonth).toEqual([
+        { month: '2024-01', count: 4 },
+        { month: '2024-02', count: 1 },
+      ]);
+    });
+  });
 });
