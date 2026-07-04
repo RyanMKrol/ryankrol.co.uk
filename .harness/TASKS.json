@@ -5593,7 +5593,7 @@
     {
       "id": "T201",
       "title": "Add list-aware gradient assignment helper to CoverTile/ReviewCard",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
