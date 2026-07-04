@@ -6672,6 +6672,500 @@
           "cross-cutting"
         ]
       }
+    },
+    {
+      "id": "T239",
+      "title": "Show an 'archived' badge on Projects cards for GitHub-archived repos",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "feature"
+      ],
+      "scope": [
+        "src/pages/api/github/repos.js",
+        "src/pages/api/github/repos.test.js",
+        "src/pages/projects/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build",
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T239.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "full-stack"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T240",
+      "title": "Fix masonry sort-order reading order on the Projects page (+ build shared JS masonry-column helper)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "masonry"
+      ],
+      "scope": [
+        "src/lib/masonryColumns.js",
+        "src/lib/masonryColumns.test.js",
+        "src/hooks/useResponsiveColumnCount.js",
+        "src/components/MasonryColumns.js",
+        "src/pages/projects/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Replace CSS column-count with a JS round-robin column assignment (item i -> column i % N), rendered as N sibling flex columns instead of one column-count container. This reproduces left-to-right-then-top-to-bottom reading order for row 1 while each column still stacks its own subset's variable-height cards with no forced uniform rows (masonry packing preserved). No new npm dependency needed — pure JS + flexbox.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T240.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T241",
+      "title": "Fix masonry sort-order reading order on the Movies review list (movies + tv share this CSS)",
+      "status": "pending",
+      "dependsOn": [
+        "T240"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "masonry"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Adopt the shared MasonryColumns component + distributeRoundRobin helper + useResponsiveColumnCount hook (built in the Projects sort-order task) for the poster-banner-grid layout. Do NOT rebuild those files.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T241.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T242",
+      "title": "Fix masonry sort-order reading order on the TV review list",
+      "status": "pending",
+      "dependsOn": [
+        "T241"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "masonry"
+      ],
+      "scope": [
+        "src/pages/reviews/tv/index.js"
+      ],
+      "design": "Same pattern as the Movies sort-order fix, applied to the TV page. The shared .poster-banner-grid/.poster-banner-grid-col CSS was already migrated by the Movies task (same CSS classes, both pages use styleVariant=\"poster-banner\") — this task should NOT need to touch globals.css again; only wire up the TV page's JS.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T242.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T243",
+      "title": "Fix masonry sort-order reading order on the Books review list",
+      "status": "pending",
+      "dependsOn": [
+        "T240"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "masonry"
+      ],
+      "scope": [
+        "src/pages/reviews/books/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Adopt the shared MasonryColumns component + distributeRoundRobin helper + useResponsiveColumnCount hook for the spine-cover-list layout (its own CSS class, not shared with movies/tv/projects/workouts, so no cross-task CSS collision).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T243.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T244",
+      "title": "Fix masonry sort-order reading order on the Workouts list",
+      "status": "pending",
+      "dependsOn": [
+        "T240"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "masonry"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Adopt the shared MasonryColumns component + distributeRoundRobin helper + useResponsiveColumnCount hook for the workout-session-grid layout (its own CSS class, no cross-task CSS collision). Not explicitly screenshotted by the owner, but shares the exact same column-count root cause and this page also has sort/filter controls.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T244.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T245",
+      "title": "Fix /reviews/movies/edit to match the real movies list page's grid layout",
+      "status": "pending",
+      "dependsOn": [
+        "T241"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "edit-page"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/edit.js"
+      ],
+      "design": "By the time this task runs, movies/index.js already renders via the shared MasonryColumns component (built + wired in an earlier, separate task) instead of a plain .poster-banner-grid div. The edit page must adopt the exact same MasonryColumns usage (not just swap a CSS class name) so it genuinely matches the list page, while keeping its existing edit-button-overlay markup inside each rendered item.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T245.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T246",
+      "title": "Fix /reviews/tv/edit to match the real tv list page's grid layout",
+      "status": "pending",
+      "dependsOn": [
+        "T242"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "edit-page"
+      ],
+      "scope": [
+        "src/pages/reviews/tv/edit.js"
+      ],
+      "design": "Same pattern as the movies/edit fix, applied to the TV edit page — mirror whatever MasonryColumns usage src/pages/reviews/tv/index.js ends up with (built in an earlier, separate task).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T246.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T247",
+      "title": "Fix /reviews/albums/edit to match the real albums list page's grid layout",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "edit-page"
+      ],
+      "scope": [
+        "src/pages/reviews/albums/edit.js"
+      ],
+      "design": "Albums' list page (src/pages/reviews/albums/index.js:171) uses .square-cover-grid, which is real CSS Grid (display:grid; grid-template-columns: repeat(2, 1fr)) — NOT the column-count technique, so this is unaffected by the sort-order bug/fix. This is a plain CSS class swap, no MasonryColumns/JS wiring needed.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T247.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T248",
+      "title": "Fix /reviews/books/edit to match the real books list page's grid layout",
+      "status": "pending",
+      "dependsOn": [
+        "T243"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "edit-page"
+      ],
+      "scope": [
+        "src/pages/reviews/books/edit.js"
+      ],
+      "design": "Confirmed during exploration: books/edit.js has the identical reviews-wrapper bug as movies/tv/albums (not just a hypothesis — verified by reading the file). Books' list page uses .spine-cover-list, which IS affected by the column-count sort-order bug, so — like movies/tv — this edit page must adopt whatever MasonryColumns wiring the books sort-order task introduces, not just swap a CSS class.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T248.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T249",
+      "title": "Fix /reviews/perfumes/edit to match the real perfumes list page's grid layout",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "edit-page"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/edit.js"
+      ],
+      "design": "Confirmed during exploration: perfumes/edit.js has the same reviews-wrapper bug, though it wasn't mentioned by the owner. Perfumes' list page uses .perfume-card-grid, which is real CSS Grid (display:grid; grid-template-columns: repeat(2, 1fr)) — NOT the column-count technique, so unaffected by the sort-order bug. Plain CSS class swap, no MasonryColumns/JS wiring needed. Note perfumes' edit page uses Variant6Hybrid directly (not ReviewCard) — keep that as-is, only the wrapper changes.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T249.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T250",
+      "title": "Perfume rating pips: show hovered number in the label, not just pip fill",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "perfumes"
+      ],
+      "scope": [
+        "src/components/PipMeter.js",
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T250.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T251",
+      "title": "Perfume update API: preserve original date + stamp editedDate (mirror movies pattern)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "api",
+        "perfumes",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/api/reviews/perfumes/update.js",
+        "src/pages/api/reviews/perfumes/update.test.js",
+        "README.md",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T251.md",
+      "facets": {
+        "layer": "api",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T252",
+      "title": "Render review date + \"last edited\" date on the perfume review card",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "perfumes"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Mirror `src/components/ReviewCard.js`'s date-rendering convention (lines ~207-217): render `item.date` (formatted via `formatReviewDate` from `src/lib/dateFormat.js`, already imported/used elsewhere in this codebase — import it fresh in `Variant6Hybrid.js`) as a plain 'Date: <formatted>' style line, and — only when `item.editedDate` is present — a second line reading 'Updated: <formatted>'. Perfume records DO already carry a valid `date` on every existing row (confirmed live against the production `PerfumeRatings` table during conversion — both current records have a populated `date`), so this is a pure read/render addition with no missing data to guard against beyond the normal `item.date &&` / `item.editedDate &&` presence checks (mirroring `ReviewCard.js`'s own guards) — `editedDate` will only start appearing on records edited after task perfume-review-dates-1 ships, so guard its render the same optional way `ReviewCard.js` does.\n\nPlace the date line(s) near the bottom of the card, after the Fragrantica link block (or wherever reads best structurally — this card's layout, unlike `ReviewCard.js`'s default variant, is fairly dense already; use your judgement on placement but keep it visually de-emphasized/secondary, e.g. small muted text, consistent with how `.review-date` is styled in `globals.css`). Add new CSS class(es) scoped to this card (e.g. `.perfume-v6-date`) to `src/styles/globals.css`, following the existing naming convention already used nearby (`perfume-v6-card`, `perfume-v4-*` — see lines ~3308-3396) rather than reusing `.review-date` verbatim (that class's sizing/spacing is tuned for the default `ReviewCard` variant, not this card).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T252.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T253",
+      "title": "Add Longevity/Projection headings above perfume scale bars",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Add a small bold uppercase heading naming each metric ('Longevity' / 'Projection') directly above the existing spectrum sub-label ('Light ↔ All-day' / 'Skin scent ↔ Room-filling'), reusing the exact visual style the card already uses elsewhere for this purpose: `.perfume-v4-best-for-label` (rendered just above the season chips, a few lines up in the same component) is already a 0.7rem/700-weight/uppercase/letter-spaced label used to caption a block of content. Rather than repurposing that class's semantically-named selector, add a new CSS class with identical rules (`.perfume-v4-scale-heading`) so the class name matches what it labels, and use it for the new heading line while leaving the existing `.perfume-v4-scale-label` spectrum text as a secondary sub-caption underneath. This is the lowest-risk option that stays consistent with the site's plain, unadorned 'Collection' design system — a full read of Variant6Hybrid.js confirms there are no tooltips, info icons, or hover-popovers anywhere in this component or its sibling perfume markup, so introducing one here would be inconsistent with the rest of the card; a plain heading text is the native idiom already used once in this exact file for the same kind of problem (a raw value needing a caption). No JS logic changes — this is a template + one CSS rule addition only.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T253.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T254",
+      "title": "Source per-repo commit counts in the GitHub repos API via REST N+1 + Link-header parsing",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "feature"
+      ],
+      "scope": [
+        "src/pages/api/github/repos.js",
+        "src/pages/api/github/repos.test.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T254.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T255",
+      "title": "Render commit count on Projects cards and add a commits sort option",
+      "status": "pending",
+      "dependsOn": [
+        "T254"
+      ],
+      "gate": null,
+      "tags": [
+        "feature"
+      ],
+      "scope": [
+        "src/pages/projects/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build",
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T255.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T256",
+      "title": "Remove dead legacy page/pageSize pagination branch from /api/workouts",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "cleanup"
+      ],
+      "scope": [
+        "src/pages/api/workouts.js",
+        "src/lib/workoutQueries.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T256.md",
+      "facets": {
+        "layer": "api",
+        "workType": "refactor",
+        "risk": []
+      },
+      "expectsTest": false
     }
   ]
 }
