@@ -94,4 +94,29 @@ describe('github repos API', () => {
     expect(payload.repos.some(r => r.name === 'public-repo')).toBe(true);
     expect(payload.total).toBe(1);
   });
+
+  it('threads the archived flag through, defaulting to false when absent', async () => {
+    checkRateLimit.mockReturnValue({ allowed: true, retryAfterSeconds: 0 });
+    const archivedRepo = {
+      ...publicRepo,
+      name: 'archived-repo',
+      full_name: 'testuser/archived-repo',
+      html_url: 'https://github.com/testuser/archived-repo',
+      archived: true
+    };
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue([publicRepo, archivedRepo])
+    });
+    const req = { method: 'GET' };
+    const res = mockRes();
+
+    await handler(req, res);
+
+    const [payload] = res.json.mock.calls[0];
+    const archived = payload.repos.find(r => r.name === 'archived-repo');
+    const nonArchived = payload.repos.find(r => r.name === 'public-repo');
+    expect(archived.archived).toBe(true);
+    expect(nonArchived.archived).toBe(false);
+  });
 });

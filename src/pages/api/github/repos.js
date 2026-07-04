@@ -88,7 +88,8 @@ export default async function handler(req, res) {
           lastPush: repo.pushed_at,
           createdAt: repo.created_at,
           isPrivate: repo.private,
-          topics: repo.topics || []
+          topics: repo.topics || [],
+          archived: Boolean(repo.archived)
         }));
 
       return {

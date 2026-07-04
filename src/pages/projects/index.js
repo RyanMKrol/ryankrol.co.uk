@@ -248,6 +248,11 @@ export default function ProjectsPage() {
                       {repo.forks} {repo.forks === 1 ? 'fork' : 'forks'}
                     </span>
                   )}
+                  {repo.archived && (
+                    <Badge accentColor="var(--color-ink-mute)" variant="soft" mono={false}>
+                      archived
+                    </Badge>
+                  )}
                 </div>
 
                 {repo.topics && repo.topics.length > 0 && (
