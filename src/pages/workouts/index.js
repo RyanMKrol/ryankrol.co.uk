@@ -49,12 +49,11 @@ function getDuration(startTime, endTime) {
   return `${Math.floor(diffMins / 60)}h ${diffMins % 60}m`;
 }
 
-function getExercisePreview(exercises = [], maxShown = 3) {
+export function getExercisePreview(exercises = [], maxShown = 3) {
   const names = exercises.map((exercise) => exercise.title).filter(Boolean);
-  if (names.length === 0) return null;
   const shown = names.slice(0, maxShown);
   const remaining = names.length - shown.length;
-  return remaining > 0 ? `${shown.join(' · ')} · +${remaining} more` : shown.join(' · ');
+  return { shown, remaining };
 }
 
 function getTotalVolume(exercises = []) {
@@ -165,6 +164,7 @@ export default function Workouts() {
           <div className="workout-session-grid">
             {pageWorkouts.map((workout, index) => {
               const exercises = workout.exercises || [];
+              const { shown, remaining } = getExercisePreview(exercises);
               return (
                 <Link
                   key={workout.id || index}
@@ -183,22 +183,33 @@ export default function Workouts() {
                     {formatTime(workout.end_time)} · {getDuration(workout.start_time, workout.end_time)}
                   </p>
 
-                  {getExercisePreview(exercises) && (
-                    <p className="workout-session-exercise-preview">
-                      {getExercisePreview(exercises)}
-                    </p>
+                  {shown.length > 0 && (
+                    <div className="workout-session-exercise-row">
+                      <ul className="workout-session-exercise-list">
+                        {shown.map((name) => (
+                          <li key={name} className="workout-session-exercise-item">
+                            {name}
+                          </li>
+                        ))}
+                        {remaining > 0 && (
+                          <li className="workout-session-exercise-item workout-session-exercise-more">
+                            +{remaining} more
+                          </li>
+                        )}
+                      </ul>
+                      <span className="workout-session-volume">
+                        <span className="workout-session-volume-value">
+                          {formatVolumeTonnes(getTotalVolume(exercises))}t
+                        </span>
+                        <span className="workout-session-volume-label">volume</span>
+                      </span>
+                    </div>
                   )}
 
                   <div className="workout-session-stats">
                     <span className="workout-session-stat">
                       <span className="workout-session-stat-value">{exercises.length}</span>
                       <span className="workout-session-stat-label">exercises</span>
-                    </span>
-                    <span className="workout-session-stat">
-                      <span className="workout-session-stat-value">
-                        {formatVolumeTonnes(getTotalVolume(exercises))}t
-                      </span>
-                      <span className="workout-session-stat-label">volume</span>
                     </span>
                   </div>
                 </Link>
