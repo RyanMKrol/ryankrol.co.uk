@@ -6634,7 +6634,7 @@
     {
       "id": "T238",
       "title": "Deploy pending site changes to production",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T217",
         "T218",
