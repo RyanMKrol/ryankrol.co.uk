@@ -198,6 +198,11 @@ export default function ProjectsPage() {
                       updated {formatUpdatedAgo(repo.lastPush)}
                     </span>
                   )}
+                  {typeof repo.forks === 'number' && repo.forks > 0 && (
+                    <span className="project-card-forks">
+                      {repo.forks} {repo.forks === 1 ? 'fork' : 'forks'}
+                    </span>
+                  )}
                 </div>
 
                 {repo.topics && repo.topics.length > 0 && (
