@@ -1,5 +1,6 @@
 import CoverTile, { gradientForKey } from './CoverTile';
 import StarRating from './StarRating';
+import { formatReviewDate } from '../lib/dateFormat';
 
 function splitHighlights(highlights) {
   if (!highlights) return [];
@@ -157,7 +158,7 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant, g
         <div className="poster-banner-body">
           <div className="poster-banner-meta">
             <StarRating rating={getRating()} readOnly />
-            {item.date && <span className="poster-banner-date">{item.date}</span>}
+            {item.date && <span className="poster-banner-date">{formatReviewDate(item.date)}</span>}
           </div>
           {getThoughts() && (
             <p className="poster-banner-snippet">{getThoughts()}</p>
@@ -203,13 +204,13 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant, g
       
       {item.date && (
         <p className="review-date">
-          Date: {item.date}
+          Date: {formatReviewDate(item.date)}
         </p>
       )}
 
       {item.editedDate && (
         <p className="review-date">
-          Updated: {item.editedDate}
+          Updated: {formatReviewDate(item.editedDate)}
         </p>
       )}
     </div>
