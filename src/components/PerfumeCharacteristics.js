@@ -85,79 +85,26 @@ function SpraySpotCounter({ spot, count, onChange }) {
   };
 
   return (
-    <button
-      type="button"
-      onClick={spray}
-      onContextMenu={unspray}
-      title="Tap to add a spray, right-click to remove one"
-      style={{
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '0.25rem',
-        padding: '0.4rem 0.25rem',
-        border: `1px solid ${count > 0 ? 'var(--color-accent)' : 'var(--color-border-strong)'}`,
-        borderRadius: 'var(--radius-base)',
-        background: count > 0 ? 'var(--color-surface-alt)' : 'transparent',
-        transition: 'border-color 0.2s, background-color 0.2s',
-        minWidth: '3.75rem',
-        flex: '0 0 auto',
-        font: 'inherit',
-        textAlign: 'center',
-        cursor: 'pointer',
-      }}
-    >
-      <span
-        style={{
-          position: 'relative',
-          display: 'inline-block',
-          fontSize: '1.1rem',
-          lineHeight: 1,
-          transformOrigin: 'bottom center',
-          animation: poofs.length ? 'spray-squeeze 0.25s ease' : 'none',
-        }}
+    <div className="perfume-spray-spot">
+      <button
+        type="button"
+        onClick={spray}
+        onContextMenu={unspray}
+        title="Tap to add a spray, right-click to remove one"
+        className={`perfume-spray-spot-circle${count > 0 ? ' is-active' : ''}`}
       >
-        👃
-        {poofs.map((id) => (
-          <span
-            key={id}
-            style={{
-              position: 'absolute',
-              top: '-0.25rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              fontSize: '1rem',
-              pointerEvents: 'none',
-              animation: 'spray-poof 0.6s ease-out forwards',
-            }}
-          >
-            💦
-          </span>
-        ))}
-      </span>
-      <span className="form-label" style={{ margin: 0, textAlign: 'center', fontSize: '0.75rem' }}>{spot}</span>
-      <span
-        style={{
-          color: count > 0 ? 'var(--color-accent)' : 'var(--color-text-muted)',
-          fontWeight: 600,
-          fontSize: '0.75rem',
-        }}
-      >
-        {count === 0 ? 'no sprays' : `${count} spray${count === 1 ? '' : 's'}`}
-      </span>
-      <style jsx>{`
-        @keyframes spray-poof {
-          0% { opacity: 1; transform: translate(-50%, 0) scale(0.6); }
-          100% { opacity: 0; transform: translate(-50%, -1.5rem) scale(1.3); }
-        }
-        @keyframes spray-squeeze {
-          0% { transform: scale(1); }
-          40% { transform: scale(0.85); }
-          100% { transform: scale(1); }
-        }
-      `}</style>
-    </button>
+        <span className={`perfume-spray-spot-emoji${poofs.length ? ' is-spraying' : ''}`}>
+          👃
+          {poofs.map((id) => (
+            <span key={id} className="perfume-spray-spot-poof">
+              💦
+            </span>
+          ))}
+        </span>
+        <span className={`perfume-spray-spot-count${count > 0 ? ' is-active' : ''}`}>{count}</span>
+      </button>
+      <span className="perfume-spray-spot-label">{spot}</span>
+    </div>
   );
 }
 
@@ -171,16 +118,7 @@ export function ApplicationSpotsSprayer({ value, onChange }) {
   return (
     <div className="form-group">
       <span className="form-label">Application spots — tap the bottle to spray 👃💦</span>
-      <div
-        style={{
-          display: 'flex',
-          gap: '0.4rem',
-          flexWrap: 'nowrap',
-          overflowX: 'auto',
-          WebkitOverflowScrolling: 'touch',
-          paddingBottom: '0.25rem',
-        }}
-      >
+      <div className="perfume-spray-spots">
         {APPLICATION_SPOTS.map((spot) => (
           <SpraySpotCounter
             key={spot}
