@@ -6414,7 +6414,7 @@
     {
       "id": "T230",
       "title": "Rank Projects tag-filter pills by frequency and cap with a show-more toggle",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
