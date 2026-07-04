@@ -29,6 +29,7 @@ function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts, gr
           <StarRating rating={getRating()} readOnly />
         </div>
         {getAuthor() && <p className="square-cover-artist">{getAuthor()}</p>}
+        {item.date && <p className="square-cover-date">{formatReviewDate(item.date)}</p>}
         {tracks.length > 0 && (
           <p className="square-cover-highlights">
             <span className="square-cover-highlights-label">HIGHLIGHTS</span>
@@ -46,6 +47,7 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
     item.author,
     item.pageCount ? `${item.pageCount}pp` : null,
     item.firstPublishedYear || null,
+    item.editedDate ? `Updated ${formatReviewDate(item.editedDate)}` : (item.date ? formatReviewDate(item.date) : null),
   ].filter(Boolean);
 
   return (

@@ -363,6 +363,12 @@
   font-size: 0.9rem;
 }
 
+.square-cover-date {
+  margin: 0;
+  color: var(--color-ink-mute);
+  font-size: 0.9rem;
+}
+
 .square-cover-highlights {
   margin: 0;
   font-family: var(--font-mono);
