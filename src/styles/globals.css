@@ -188,6 +188,8 @@
   border-radius: var(--radius-card);
   overflow: hidden;
   box-shadow: var(--shadow-cover);
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
 }
 
 .poster-banner {
@@ -238,14 +240,13 @@
 }
 
 .poster-banner-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  column-count: 3;
+  column-gap: 1.5rem;
 }
 
 @media (max-width: 900px) {
   .poster-banner-grid {
-    grid-template-columns: 1fr;
+    column-count: 1;
   }
 }
 
