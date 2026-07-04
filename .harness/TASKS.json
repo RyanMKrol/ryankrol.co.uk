@@ -6080,7 +6080,7 @@
     {
       "id": "T218",
       "title": "Format movies/TV review dates as written English dates (ReviewCard.js)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T217"
       ],
