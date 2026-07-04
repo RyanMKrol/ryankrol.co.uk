@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import Header from '../../components/Header';
 import Badge from '../../components/Badge';
+import SearchInput from '../../components/SearchInput';
+import Pill from '../../components/Pill';
 
 const LANGUAGE_COLORS = {
   TypeScript: '#3178C6',
@@ -48,6 +50,8 @@ export default function ProjectsPage() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTags, setSelectedTags] = useState([]);
 
   useEffect(() => {
     async function fetchRepos() {
@@ -69,6 +73,30 @@ export default function ProjectsPage() {
     fetchRepos();
   }, []);
 
+  const allTags = useMemo(
+    () => [...new Set(repos.flatMap((repo) => repo.topics || []))].sort(),
+    [repos]
+  );
+
+  const toggleTag = (tag) => {
+    setSelectedTags((current) =>
+      current.includes(tag) ? current.filter((t) => t !== tag) : [...current, tag]
+    );
+  };
+
+  const filteredRepos = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    return repos.filter((repo) => {
+      const matchesSearch =
+        repo.name.toLowerCase().includes(term) ||
+        (repo.description || '').toLowerCase().includes(term);
+      const matchesTags =
+        selectedTags.length === 0 ||
+        (repo.topics || []).some((topic) => selectedTags.includes(topic));
+      return matchesSearch && matchesTags;
+    });
+  }, [repos, searchTerm, selectedTags]);
+
   return (
     <>
       <Head>
@@ -84,6 +112,28 @@ export default function ProjectsPage() {
             <p className="collection-review-meta">
               what I&apos;ve been building on github · sorted by recent activity
             </p>
+          </div>
+
+          <div className="collection-review-controls">
+            <SearchInput
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="search by title or description..."
+            />
+            {allTags.length > 0 && (
+              <div className="collection-pill-group">
+                {allTags.map((tag) => (
+                  <Pill
+                    key={tag}
+                    active={selectedTags.includes(tag)}
+                    accentColor="var(--accent-projects)"
+                    onClick={() => toggleTag(tag)}
+                  >
+                    {tag}
+                  </Pill>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -105,9 +155,15 @@ export default function ProjectsPage() {
           </div>
         )}
 
-        {!loading && !error && repos.length > 0 && (
+        {!loading && !error && repos.length > 0 && filteredRepos.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            No projects match your search/filters.
+          </div>
+        )}
+
+        {!loading && !error && filteredRepos.length > 0 && (
           <div className="projects-grid">
-            {repos.map((repo) => (
+            {filteredRepos.map((repo) => (
               <div key={repo.fullName} className="project-card">
                 <div className="project-card-top">
                   <a

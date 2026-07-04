@@ -130,7 +130,7 @@ src/lib (the data layer)
 | `src/pages/_document.js` | HTML scaffold; loads Google font; boots matrix class from `sessionStorage` pre-paint |
 | `src/pages/index.js` | Home: tagline, `NowPlaying` widget, 'the collection wall' (a random 18-item mosaic sampled fresh from movies/tv/books/albums/vinyl on each page load, each tile linking to its content type's list page), link grid to all sections |
 | `src/pages/listening/index.js` | Last.fm top-50 albums (3-month) with playcount bars |
-| `src/pages/projects/index.js` | GitHub repo cards (stars/forks/last-push/topics) |
+| `src/pages/projects/index.js` | GitHub repo cards (stars/forks/last-push/topics), with client-side search (name + description) and multi-select OR tag filtering over the already-fetched repo list |
 | `src/pages/vinyl/{index,add}.js` | Vinyl list (grouped by artist surname) + gated add form |
 | `src/pages/reviews/<type>/index.js` | Public list view for a review type (sort by date/title/score) |
 | `src/pages/reviews/<type>/add.js` | Gated add form → POST add API |
