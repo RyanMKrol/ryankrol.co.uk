@@ -6236,7 +6236,7 @@
     {
       "id": "T223",
       "title": "Books review list: switch .spine-cover-list to CSS multi-column masonry (stop row-height stretch)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
