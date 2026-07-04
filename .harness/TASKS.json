@@ -5952,7 +5952,7 @@
     {
       "id": "T214",
       "title": "Change workouts session card volume display from tonnes to kg",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T213"
       ],
