@@ -5846,7 +5846,7 @@
     {
       "id": "T210",
       "title": "Switch .projects-grid from a row-stretching CSS grid to a CSS multi-column masonry layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
