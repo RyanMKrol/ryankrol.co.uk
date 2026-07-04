@@ -5689,7 +5689,7 @@
     {
       "id": "T204",
       "title": "Append \"each\" to 1-spray application-spot lines for anatomically paired spots",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
