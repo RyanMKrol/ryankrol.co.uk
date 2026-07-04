@@ -643,8 +643,6 @@ a:hover {
   padding-right: var(--gutter-desktop);
   padding-top: var(--gutter-desktop);
   padding-bottom: var(--gutter-desktop);
-  background-color: var(--color-surface);
-  min-height: 100vh;
 }
 
 .review-container {
@@ -654,8 +652,6 @@ a:hover {
   padding-right: var(--gutter-desktop);
   padding-top: var(--gutter-desktop);
   padding-bottom: var(--gutter-desktop);
-  background-color: var(--color-surface);
-  min-height: 100vh;
 }
 
 @media (max-width: 768px) {
