@@ -192,7 +192,7 @@
 
 .poster-banner {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 18 / 5;
   display: flex;
   align-items: flex-end;
   padding: 1rem 1.25rem;
