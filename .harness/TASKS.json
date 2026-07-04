@@ -6606,7 +6606,7 @@
     {
       "id": "T237",
       "title": "Run the missing-exercise-rows backfill against production and verify the Iso-Lateral High Row gap is closed",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T236"
       ],
