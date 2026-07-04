@@ -6367,7 +6367,7 @@
     {
       "id": "T228",
       "title": "Decide whether commit-count sourcing (GitHub GraphQL migration) is worth building for Projects cards/sort (needs-human)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "needs-human",
       "tags": [
