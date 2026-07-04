@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Header from '../../components/Header';
 import SearchInput from '../../components/SearchInput';
 import PillGroup from '../../components/PillGroup';
-import CoverTile from '../../components/CoverTile';
+import CoverTile, { assignGradients } from '../../components/CoverTile';
 
 const VIEW_OPTIONS = [
   { value: 'covers', label: 'covers' },
@@ -71,6 +71,19 @@ export default function VinylPage() {
 
   const groupedVinyl = groupByLetter(filteredVinyl);
   const sortedLetters = Object.keys(groupedVinyl).sort();
+
+  const orderedVinyl = sortedLetters.flatMap((letter) => groupedVinyl[letter]);
+  const gradientKeys = orderedVinyl
+    .filter((record) => !record.thumbnail)
+    .map((record) => record.id || `${record.artist}-${record.title}`);
+  const gradients = assignGradients(gradientKeys);
+  const gradientByRecord = new Map();
+  let gradientIndex = 0;
+  orderedVinyl.forEach((record) => {
+    if (!record.thumbnail) {
+      gradientByRecord.set(record, gradients[gradientIndex++]);
+    }
+  });
 
   return (
     <>
@@ -149,6 +162,7 @@ export default function VinylPage() {
                         title={record.title || 'Unknown Title'}
                         subtitle={record.artist || 'Unknown Artist'}
                         imageUrl={record.thumbnail || undefined}
+                        gradient={gradientByRecord.get(record)}
                       />
                     ))}
                   </div>

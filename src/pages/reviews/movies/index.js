@@ -6,6 +6,7 @@ import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
 import Pagination from '../../../components/Pagination';
 import { paginate } from '../../../lib/pagination';
+import { assignGradients } from '../../../components/CoverTile';
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'date ↓' },
@@ -116,6 +117,7 @@ export default function Movies() {
 
   const { rated, avgRating, thisYear } = summarizeMovies(movies);
   const { items: pagedMovies, page, pageCount } = paginate(filteredMovies, currentPage, PAGE_SIZE);
+  const movieGradients = assignGradients(pagedMovies.map((movie, index) => movie.id || `${movie.title}-${index}`));
 
   return (
     <div className="review-container">
@@ -150,6 +152,7 @@ export default function Movies() {
             item={movie}
             type="movie"
             styleVariant="poster-banner"
+            gradient={movieGradients[index]}
           />
         ))}
       </div>

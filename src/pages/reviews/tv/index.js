@@ -6,6 +6,7 @@ import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
 import Pagination from '../../../components/Pagination';
 import { paginate } from '../../../lib/pagination';
+import { assignGradients } from '../../../components/CoverTile';
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'date ↓' },
@@ -116,6 +117,7 @@ export default function TV() {
 
   const { rated, avgRating, thisYear } = summarizeTvShows(tvShows);
   const { items: pagedTvShows, page, pageCount } = paginate(filteredTvShows, currentPage, PAGE_SIZE);
+  const tvGradients = assignGradients(pagedTvShows.map((tvShow, index) => tvShow.id || `${tvShow.title}-${index}`));
 
   return (
     <div className="review-container">
@@ -150,6 +152,7 @@ export default function TV() {
             item={tvShow}
             type="tv"
             styleVariant="poster-banner"
+            gradient={tvGradients[index]}
           />
         ))}
       </div>

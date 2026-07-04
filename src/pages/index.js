@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Header from '../components/Header'
 import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
-import CoverTile, { gradientForKey } from '../components/CoverTile'
+import CoverTile, { assignGradients } from '../components/CoverTile'
 import { tmdbPosterUrl } from '../lib/tmdb'
 import { bookCoverUrl } from '../lib/openlibrary'
 
@@ -91,18 +91,38 @@ export default function Home() {
       vinyl.map((v) => ({ key: `vinyl-${v.id}`, title: v.title, imageUrl: v.thumbnail || null, kind: 'vinyl', href: WALL_KIND_HREF.vinyl, subtitle: v.artist || null })),
     ]
 
-    return pickRandomSample(
+    const sampled = pickRandomSample(
       wallCandidates.flatMap((pool) => pickRandomSample(pool, 4)),
       18
     )
+
+    const gradientKeys = sampled.filter((item) => !item.imageUrl).map((item) => item.key)
+    const gradients = assignGradients(gradientKeys)
+    let gradientIndex = 0
+    return sampled.map((item) => (
+      item.imageUrl ? item : { ...item, gradient: gradients[gradientIndex++] }
+    ))
   }, [movies, tv, books, albums, vinyl])
 
-  const latestTakes = sortByDateDesc([
-    ...movies.map((m) => ({ ...m, kind: 'movie' })),
-    ...tv.map((t) => ({ ...t, kind: 'tv' })),
-    ...books.map((b) => ({ ...b, kind: 'book' })),
-    ...albums.map((a) => ({ ...a, kind: 'album', review_text: a.highlights })),
-  ]).slice(0, 3)
+  const latestTakes = useMemo(() => {
+    const items = sortByDateDesc([
+      ...movies.map((m) => ({ ...m, kind: 'movie' })),
+      ...tv.map((t) => ({ ...t, kind: 'tv' })),
+      ...books.map((b) => ({ ...b, kind: 'book' })),
+      ...albums.map((a) => ({ ...a, kind: 'album', review_text: a.highlights })),
+    ]).slice(0, 3)
+
+    const gradientKeys = items
+      .filter((item) => !(item.thumbnail || tmdbPosterUrl(item.posterPath)))
+      .map((item) => `${item.kind}-${item.id}`)
+    const gradients = assignGradients(gradientKeys)
+    let gradientIndex = 0
+    return items.map((item) => (
+      (item.thumbnail || tmdbPosterUrl(item.posterPath))
+        ? item
+        : { ...item, gradient: gradients[gradientIndex++] }
+    ))
+  }, [movies, tv, books, albums])
 
   const monthlyVolume = workoutStats?.monthlyVolume || []
   const maxMonthlyVolume = monthlyVolume.reduce((max, m) => Math.max(max, m.totalVolume || 0), 0)
@@ -156,7 +176,7 @@ export default function Home() {
           <div className="home-wall-grid">
             {wallItems.map((item) => (
               <Link key={item.key} href={{ pathname: item.href, query: { q: item.title } }} className="home-wall-tile-link">
-                <CoverTile title={item.title} imageUrl={item.imageUrl} id={item.key} subtitle={item.subtitle} />
+                <CoverTile title={item.title} imageUrl={item.imageUrl} id={item.key} subtitle={item.subtitle} gradient={item.gradient} />
               </Link>
             ))}
           </div>
@@ -178,7 +198,7 @@ export default function Home() {
               <div key={`${item.kind}-${item.id}`} className="home-latest-card">
                 <div
                   className="home-latest-thumb"
-                  style={!(item.thumbnail || tmdbPosterUrl(item.posterPath)) ? { background: gradientForKey(`${item.kind}-${item.id}`) } : undefined}
+                  style={!(item.thumbnail || tmdbPosterUrl(item.posterPath)) ? { background: item.gradient } : undefined}
                 >
                   {(item.thumbnail || tmdbPosterUrl(item.posterPath)) && (
                     <img src={item.thumbnail || tmdbPosterUrl(item.posterPath)} alt="" />

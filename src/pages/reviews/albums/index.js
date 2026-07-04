@@ -6,6 +6,7 @@ import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
 import Pagination from '../../../components/Pagination';
 import { paginate } from '../../../lib/pagination';
+import { assignGradients } from '../../../components/CoverTile';
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'date ↓' },
@@ -118,6 +119,14 @@ export default function Albums() {
 
   const { rated, avgRating, thisYear } = summarizeAlbums(albums);
   const { items: pagedAlbums, page, pageCount } = paginate(filteredAlbums, currentPage, PAGE_SIZE);
+  const albumGradientKeys = pagedAlbums
+    .filter((album) => !(album.thumbnail || album.coverUrl))
+    .map((album, index) => album.id || `${album.title}-${album.artist}-${index}`);
+  const albumGradientPool = assignGradients(albumGradientKeys);
+  let albumGradientIndex = 0;
+  const albumGradients = pagedAlbums.map((album) => (
+    (album.thumbnail || album.coverUrl) ? null : albumGradientPool[albumGradientIndex++]
+  ));
 
   return (
     <div className="review-container">
@@ -152,6 +161,7 @@ export default function Albums() {
             item={album}
             type="album"
             styleVariant="square-cover"
+            gradient={albumGradients[index]}
           />
         ))}
       </div>

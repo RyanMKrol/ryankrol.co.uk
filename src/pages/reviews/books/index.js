@@ -6,6 +6,7 @@ import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
 import Pagination from '../../../components/Pagination';
 import { paginate } from '../../../lib/pagination';
+import { assignGradients } from '../../../components/CoverTile';
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'date ↓' },
@@ -118,6 +119,7 @@ export default function Books() {
 
   const { rated, avgRating, thisYear } = summarizeBooks(books);
   const { items: pagedBooks, page, pageCount } = paginate(filteredBooks, currentPage, PAGE_SIZE);
+  const bookGradients = assignGradients(pagedBooks.map((book, index) => book.id || `${book.title}-${book.author}-${index}`));
 
   return (
     <div className="review-container">
@@ -153,6 +155,7 @@ export default function Books() {
             type="book"
             isLast={index === pagedBooks.length - 1}
             styleVariant="spine-cover"
+            gradient={bookGradients[index]}
           />
         ))}
       </div>

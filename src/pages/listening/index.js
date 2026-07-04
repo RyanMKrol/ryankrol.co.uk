@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Header from '../../components/Header';
-import { gradientForKey } from '../../components/CoverTile';
+import { assignGradients } from '../../components/CoverTile';
 
 export default function ListeningPage() {
   const [albums, setAlbums] = useState([]);
@@ -31,6 +31,13 @@ export default function ListeningPage() {
   const maxPlaycount = albums.length > 0
     ? Math.max(...albums.map(a => Number(a.playcount) || 0))
     : 1;
+
+  const gradientKeys = albums
+    .filter((album) => !album.image)
+    .map((album) => `${album.artist}-${album.name}`);
+  const gradients = assignGradients(gradientKeys);
+  let gradientIndex = 0;
+  const albumGradients = albums.map((album) => (album.image ? null : gradients[gradientIndex++]));
 
   return (
     <>
@@ -79,7 +86,7 @@ export default function ListeningPage() {
 
                   <div
                     className="listening-cover-thumb"
-                    style={!album.image ? { background: gradientForKey(`${album.artist}-${album.name}`) } : undefined}
+                    style={!album.image ? { background: albumGradients[index] } : undefined}
                   >
                     {album.image && (
                       <img src={album.image} alt="" />
