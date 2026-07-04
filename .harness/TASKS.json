@@ -5742,7 +5742,7 @@
     {
       "id": "T206",
       "title": "Shrink the poster-banner gradient area so its top gap matches the bottom padding",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
