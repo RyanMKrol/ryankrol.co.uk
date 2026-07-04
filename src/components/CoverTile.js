@@ -23,10 +23,34 @@ export function gradientForKey(key) {
   return `linear-gradient(135deg, ${from}, ${to})`;
 }
 
-export default function CoverTile({ title, subtitle, imageUrl, id, aspectRatio = '1 / 1' }) {
+export function assignGradients(keys) {
+  const recentIndices = [];
+  return keys.map((key) => {
+    const preferred = hashString(String(key)) % GRADIENT_PAIRS.length;
+    let chosen = preferred;
+    if (recentIndices.includes(preferred)) {
+      chosen = preferred;
+      for (let offset = 1; offset < GRADIENT_PAIRS.length; offset++) {
+        const candidate = (preferred + offset) % GRADIENT_PAIRS.length;
+        if (!recentIndices.includes(candidate)) {
+          chosen = candidate;
+          break;
+        }
+      }
+    }
+
+    recentIndices.push(chosen);
+    if (recentIndices.length > 4) recentIndices.shift();
+
+    const [from, to] = GRADIENT_PAIRS[chosen];
+    return `linear-gradient(135deg, ${from}, ${to})`;
+  });
+}
+
+export default function CoverTile({ title, subtitle, imageUrl, id, aspectRatio = '1 / 1', gradient }) {
   const tileStyle = imageUrl
     ? { aspectRatio }
-    : { aspectRatio, background: gradientForKey(id || title || '') };
+    : { aspectRatio, background: gradient || gradientForKey(id || title || '') };
 
   return (
     <div className="cover-tile-wrap">

@@ -10,7 +10,7 @@ function splitHighlights(highlights) {
     .slice(0, 4);
 }
 
-function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts }) {
+function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts, gradient }) {
   const tracks = splitHighlights(getThoughts());
 
   return (
@@ -20,6 +20,7 @@ function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts }) 
         imageUrl={item.thumbnail || item.coverUrl}
         id={item.id || getTitle()}
         aspectRatio="1 / 1"
+        gradient={gradient}
       />
       <div className="square-cover-body">
         <div className="square-cover-heading">
@@ -39,7 +40,7 @@ function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts }) 
   );
 }
 
-function SpineCoverCard({ item, getTitle, getRating, getThoughts }) {
+function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
   const metaParts = [
     item.author,
     item.pageCount ? `${item.pageCount}pp` : null,
@@ -50,7 +51,7 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts }) {
     <div className="spine-cover-card">
       <div
         className="spine-cover-tile"
-        style={{ background: gradientForKey(item.id || getTitle()) }}
+        style={{ background: gradient || gradientForKey(item.id || getTitle()) }}
       />
       <div className="spine-cover-body">
         <div className="spine-cover-heading">
@@ -68,7 +69,7 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts }) {
   );
 }
 
-export default function ReviewCard({ item, type, isLast = false, styleVariant }) {
+export default function ReviewCard({ item, type, isLast = false, styleVariant, gradient }) {
   const getTitle = () => {
     if (type === 'movie' || type === 'tv') return item.title;
     return item.title; // For books and albums, return just the title
@@ -126,6 +127,7 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
         getTitle={getTitle}
         getRating={getRating}
         getThoughts={getThoughts}
+        gradient={gradient}
       />
     );
   }
@@ -138,6 +140,7 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
         getAuthor={getAuthor}
         getRating={getRating}
         getThoughts={getThoughts}
+        gradient={gradient}
       />
     );
   }
@@ -147,7 +150,7 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant })
       <div className="poster-banner-card">
         <div
           className="poster-banner"
-          style={{ background: gradientForKey(item.id || getTitle()) }}
+          style={{ background: gradient || gradientForKey(item.id || getTitle()) }}
         >
           <h3 className="poster-banner-title">{getTitle()}</h3>
         </div>
