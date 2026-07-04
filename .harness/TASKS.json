@@ -5715,7 +5715,7 @@
     {
       "id": "T205",
       "title": "Redesign the perfume application-spots spray-tapper as fixed-size circles with classed CSS",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
