@@ -1820,15 +1820,14 @@ input[type='range'].form-input::-moz-range-thumb {
 /* ===== Workouts list page (T159) ===== */
 
 .workout-session-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
+  column-count: 2;
+  column-gap: 1.25rem;
   margin-bottom: 2rem;
 }
 
 @media (max-width: 900px) {
   .workout-session-grid {
-    grid-template-columns: 1fr;
+    column-count: 1;
   }
 }
 
@@ -1843,6 +1842,8 @@ input[type='range'].form-input::-moz-range-thumb {
   background-color: var(--color-card);
   color: inherit;
   text-decoration: none;
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
 }
 
 .workout-session-card-top {
