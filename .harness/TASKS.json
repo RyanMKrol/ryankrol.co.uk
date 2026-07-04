@@ -5978,7 +5978,7 @@
     {
       "id": "T215",
       "title": "Wire SortButtons into movies/tv/books/albums review lists for direction toggle",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
