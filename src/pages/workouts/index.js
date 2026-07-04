@@ -7,6 +7,7 @@ import PillGroup from '../../components/PillGroup';
 import Pagination from '../../components/Pagination';
 import { paginate } from '../../lib/pagination';
 import { filterWorkouts } from '../../lib/workoutPagination';
+import { formatEnglishDate } from '../../lib/dateFormat';
 
 const PAGE_SIZE = 10;
 
@@ -34,9 +35,7 @@ function splitColorForTitle(title) {
 }
 
 function formatDate(dateString) {
-  return new Date(dateString)
-    .toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
-    .replace(/\//g, '-');
+  return formatEnglishDate(dateString);
 }
 
 function formatTime(dateString) {
