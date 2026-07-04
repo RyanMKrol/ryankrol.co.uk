@@ -28,6 +28,8 @@ const LANGUAGE_COLORS = {
 
 const FALLBACK_LANGUAGE_COLOR = '#8A837A';
 
+const TAG_DISPLAY_LIMIT = 12;
+
 function getLanguageColor(language) {
   return LANGUAGE_COLORS[language] || FALLBACK_LANGUAGE_COLOR;
 }
@@ -59,6 +61,7 @@ export default function ProjectsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const [sortBy, setSortBy] = useState('date');
+  const [tagsExpanded, setTagsExpanded] = useState(false);
 
   useEffect(() => {
     async function fetchRepos() {
@@ -80,10 +83,23 @@ export default function ProjectsPage() {
     fetchRepos();
   }, []);
 
-  const allTags = useMemo(
-    () => [...new Set(repos.flatMap((repo) => repo.topics || []))].sort(),
-    [repos]
-  );
+  const allTags = useMemo(() => {
+    const counts = new Map();
+    repos.flatMap((repo) => repo.topics || []).forEach((topic) => {
+      counts.set(topic, (counts.get(topic) || 0) + 1);
+    });
+    return [...counts.keys()].sort((a, b) => {
+      const countDiff = counts.get(b) - counts.get(a);
+      return countDiff !== 0 ? countDiff : a.localeCompare(b);
+    });
+  }, [repos]);
+
+  const visibleTags = useMemo(() => {
+    if (tagsExpanded || allTags.length <= TAG_DISPLAY_LIMIT) return allTags;
+    const topTags = allTags.slice(0, TAG_DISPLAY_LIMIT);
+    const strandedSelectedTags = selectedTags.filter((tag) => !topTags.includes(tag));
+    return [...topTags, ...strandedSelectedTags];
+  }, [allTags, tagsExpanded, selectedTags]);
 
   const toggleTag = (tag) => {
     setSelectedTags((current) =>
@@ -144,7 +160,7 @@ export default function ProjectsPage() {
             <SortButtons fields={SORT_FIELDS} sortBy={sortBy} onChange={setSortBy} />
             {allTags.length > 0 && (
               <div className="collection-pill-group">
-                {allTags.map((tag) => (
+                {visibleTags.map((tag) => (
                   <Pill
                     key={tag}
                     active={selectedTags.includes(tag)}
@@ -154,6 +170,13 @@ export default function ProjectsPage() {
                     {tag}
                   </Pill>
                 ))}
+                {allTags.length > TAG_DISPLAY_LIMIT && (
+                  <Pill
+                    onClick={() => setTagsExpanded((current) => !current)}
+                  >
+                    {tagsExpanded ? 'show less' : `+${allTags.length - TAG_DISPLAY_LIMIT} more`}
+                  </Pill>
+                )}
               </div>
             )}
           </div>
