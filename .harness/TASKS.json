@@ -5565,7 +5565,7 @@
     {
       "id": "T200",
       "title": "Add SVG favicon matching the nav wordmark's red-circle \"r\" mark",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
