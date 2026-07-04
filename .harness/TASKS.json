@@ -6009,7 +6009,7 @@
     {
       "id": "T216",
       "title": "Deploy pending site changes to production",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T194",
         "T195",
