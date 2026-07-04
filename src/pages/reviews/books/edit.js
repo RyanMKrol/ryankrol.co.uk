@@ -58,7 +58,7 @@ export default function EditBooks() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">📚 Edit Book Reviews</h1>
+      <h1 className="page-title">edit book reviews</h1>
       
       <div className="reviews-wrapper">
         {books.map((book) => (

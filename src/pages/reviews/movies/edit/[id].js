@@ -200,7 +200,7 @@ export default function EditMovieReview() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">🎬 Edit Movie Review</h1>
+      <h1 className="page-title">edit movie review</h1>
 
       <div className="collection-form-card">
         {message && (

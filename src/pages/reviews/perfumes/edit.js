@@ -57,7 +57,7 @@ export default function EditPerfumes() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">👃 Edit Perfume Reviews</h1>
+      <h1 className="page-title">edit perfume reviews</h1>
 
       <div className="reviews-wrapper">
         {perfumes.map((perfume, index) => (

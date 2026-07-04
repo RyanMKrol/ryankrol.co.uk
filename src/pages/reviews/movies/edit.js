@@ -58,7 +58,7 @@ export default function EditMovies() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">🎬 Edit Movie Reviews</h1>
+      <h1 className="page-title">edit movie reviews</h1>
       
       <div className="reviews-wrapper">
         {movies.map((movie, index) => (

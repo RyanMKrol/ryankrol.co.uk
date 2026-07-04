@@ -58,7 +58,7 @@ export default function EditAlbums() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">🎵 Edit Album Reviews</h1>
+      <h1 className="page-title">edit album reviews</h1>
       
       <div className="reviews-wrapper">
         {albums.map((album) => (

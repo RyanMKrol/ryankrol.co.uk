@@ -219,7 +219,7 @@ export default function EditPerfumeReview() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">👃 Edit Perfume Review</h1>
+      <h1 className="page-title">edit perfume review</h1>
 
       <div className="collection-form-card">
         {message && (

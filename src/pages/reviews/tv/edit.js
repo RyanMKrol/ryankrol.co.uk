@@ -58,7 +58,7 @@ export default function EditTVShows() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">📺 Edit TV Show Reviews</h1>
+      <h1 className="page-title">edit tv show reviews</h1>
       
       <div className="reviews-wrapper">
         {tvShows.map((tvShow) => (

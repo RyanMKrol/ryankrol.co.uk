@@ -200,7 +200,7 @@ export default function EditBookReview() {
   return (
     <div className="review-container">
       <Header />
-      <h1 className="page-title">📚 Edit Book Review</h1>
+      <h1 className="page-title">edit book review</h1>
 
       <div className="collection-form-card">
         {message && (
