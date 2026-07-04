@@ -157,6 +157,7 @@ src/lib (the data layer)
 | `src/lib/openlibrary.js` | `mapBookResult(doc)` normaliser + `bookCoverUrl(coverId, size)` helper |
 | `src/lib/googlebooks.js` | `mapGoogleBooksResult(volume)` normaliser — maps Google Books `volumeInfo` to common shape with `source:'googlebooks'`, https `coverUrl`, ISBNs, year from `publishedDate` |
 | `src/lib/dynamo.js` | `docClient`, `paginatedScan`, `scanTable` (region hardcoded `us-east-2`) |
+| `src/lib/dateFormat.js` | `formatEnglishDate(date)` / `formatReviewDate(dateString)` — shared English-language date formatting (e.g. '17 May 2026'), for use by `ReviewCard.js` and the workouts list page (not wired in yet) |
 | `src/lib/apiCache.js` | `withApiCache`, `generateCacheKey`, `clearApiCache`, `getCacheStats` |
 | `src/lib/rateLimit.js` | `checkRateLimit`, `getClientIp` — fixed-window rate limiter; **per-serverless-instance only**, does not coordinate across Vercel instances (same limitation as `apiCache.js`) |
 | `src/lib/tmdb.js` | `mapTmdbResult(raw, type)` normaliser + `tmdbPosterUrl(path)` helper |
