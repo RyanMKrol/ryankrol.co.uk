@@ -84,6 +84,33 @@ describe('storeWorkoutInDynamoDB (via backfillWorkouts)', () => {
     expect(result.newWorkouts).toBe(0);
   });
 
+  it('still writes missing Exercises rows for an already-existing complete workout, without healing the Workouts item', async () => {
+    mockFetchOnce([makeWorkout()]);
+
+    docClient.send.mockImplementation((cmd) => {
+      if (cmd instanceof PutCommand && cmd.input.Item?.id === 'workout-1') {
+        const err = new Error('conditional check failed');
+        err.name = 'ConditionalCheckFailedException';
+        return Promise.reject(err);
+      }
+      if (cmd instanceof GetCommand) {
+        return Promise.resolve({ Item: { id: 'workout-1', exercises: [{ title: 'Bench Press', sets: [] }] } });
+      }
+      return Promise.resolve({});
+    });
+
+    const result = await backfillWorkouts();
+
+    expect(docClient.send.mock.calls.some(([cmd]) => cmd instanceof UpdateCommand)).toBe(false);
+
+    const exercisePutCalls = docClient.send.mock.calls.filter(
+      ([cmd]) => cmd instanceof PutCommand && cmd.input.Item?.exercise_id
+    );
+    expect(exercisePutCalls).toHaveLength(1);
+
+    expect(result.newWorkouts).toBe(0);
+  });
+
   it('heals an incomplete existing workout (missing exercises) and counts it as stored', async () => {
     mockFetchOnce([makeWorkout()]);
 

@@ -12,7 +12,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 /**
  * Store workout and exercises in DynamoDB
  */
-async function storeWorkoutInDynamoDB(workout) {
+export async function storeWorkoutInDynamoDB(workout) {
   const metrics = calculateWorkoutMetrics(workout);
 
   const workoutItem = {
@@ -57,6 +57,7 @@ async function storeWorkoutInDynamoDB(workout) {
 
       if (existingItem && existingItem.exercises) {
         console.log(`⚠️  [BACKFILL] Workout ${workout.id} already exists, skipping`);
+        await storeExercises(workout);
         return false; // Signal that workout was not stored (already exists)
       }
 
@@ -81,7 +82,7 @@ async function storeWorkoutInDynamoDB(workout) {
 /**
  * Store all exercises for a workout, tolerating exercises that already exist
  */
-async function storeExercises(workout) {
+export async function storeExercises(workout) {
   console.log(`🗄️  [BACKFILL] Storing ${workout.exercises.length} exercises for workout ${workout.id}`);
 
   for (let j = 0; j < workout.exercises.length; j++) {
