@@ -6199,7 +6199,7 @@
     {
       "id": "T222",
       "title": "Lowercase + remove emoji from all 10 edit-page h1 titles (5 edit.js + 5 edit/[id].js)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
