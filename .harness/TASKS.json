@@ -6482,7 +6482,7 @@
     {
       "id": "T233",
       "title": "workoutBackfill.js: export storeWorkoutInDynamoDB/storeExercises and self-heal missing Exercises rows on already-existing workouts",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
