@@ -12,7 +12,7 @@ const NAV_SECTIONS = [
   { key: 'albums', label: 'albums', href: '/reviews/albums', prefixes: ['/reviews/albums'] },
   { key: 'perfumes', label: 'perfumes', href: '/reviews/perfumes', prefixes: ['/reviews/perfumes'] },
   { key: 'vinyl', label: 'vinyl', href: '/vinyl', prefixes: ['/vinyl'] },
-  { key: 'workouts', label: 'workouts', href: '/workouts', prefixes: ['/workouts', '/exercises'] },
+  { key: 'workouts', label: 'workouts', href: '/workouts', prefixes: ['/workouts', '/exercises', '/programmes'] },
   { key: 'listening', label: 'listening', href: '/listening', prefixes: ['/listening'] },
   { key: 'projects', label: 'projects', href: '/projects', prefixes: ['/projects'] },
 ];
