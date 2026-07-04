@@ -5795,7 +5795,7 @@
     {
       "id": "T208",
       "title": "Add an 'all' aggregation mode to aggregateProgramme",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
