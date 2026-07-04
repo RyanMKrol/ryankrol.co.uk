@@ -5623,7 +5623,7 @@
     {
       "id": "T202",
       "title": "Wire every list-rendering page to use list-aware gradient assignment",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T201"
       ],
