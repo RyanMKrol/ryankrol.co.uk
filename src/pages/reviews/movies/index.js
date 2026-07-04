@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
@@ -31,6 +32,7 @@ export function summarizeMovies(movies) {
 }
 
 export default function Movies() {
+  const router = useRouter();
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,6 +40,12 @@ export default function Movies() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (router.isReady && typeof router.query.q === 'string') {
+      setSearchTerm(router.query.q);
+    }
+  }, [router.isReady, router.query.q]);
 
   useEffect(() => {
     async function fetchMovies() {

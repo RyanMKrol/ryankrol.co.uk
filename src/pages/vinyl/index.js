@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Header from '../../components/Header';
 import SearchInput from '../../components/SearchInput';
@@ -30,11 +31,18 @@ function groupByLetter(items) {
 }
 
 export default function VinylPage() {
+  const router = useRouter();
   const [vinyl, setVinyl] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [view, setView] = useState('covers');
+
+  useEffect(() => {
+    if (router.isReady && typeof router.query.q === 'string') {
+      setSearchTerm(router.query.q);
+    }
+  }, [router.isReady, router.query.q]);
 
   useEffect(() => {
     async function fetchVinyl() {
