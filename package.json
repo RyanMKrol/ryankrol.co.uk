@@ -18,6 +18,7 @@
     "workout:audit": "node src/scripts/auditWorkouts.js",
     "workout:audit-backfill": "node src/scripts/auditWorkouts.js --backfill",
     "workout:backfill-metrics": "node src/scripts/backfillIncompleteWorkoutMetrics.js",
+    "workout:backfill-missing-exercises": "node src/scripts/backfillMissingExerciseRows.js",
     "perfume:create-table": "node src/scripts/createPerfumeTable.js",
     "books:migrate-openlibrary": "node src/scripts/migrateOpenLibraryBooksToGoogleBooks.js"
   },
