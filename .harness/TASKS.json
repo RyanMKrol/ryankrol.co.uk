@@ -6262,7 +6262,7 @@
     {
       "id": "T224",
       "title": "Movies + TV review lists: switch .poster-banner-grid to CSS multi-column masonry (stop row-height stretch)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
