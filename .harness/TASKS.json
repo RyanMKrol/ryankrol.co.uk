@@ -6574,7 +6574,7 @@
     {
       "id": "T236",
       "title": "Build a script to backfill missing Exercises-table rows from Workouts items' own denormalized exercises[] data",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T233"
       ],
