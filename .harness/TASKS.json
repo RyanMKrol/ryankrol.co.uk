@@ -5925,7 +5925,7 @@
     {
       "id": "T213",
       "title": "Redesign workout session cards: vertical exercise list + volume placement, fix horizontal overflow",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
