@@ -860,6 +860,9 @@ a:hover {
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
+}
+
+.collection-nav-pills.has-scroll-fade {
   mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
   -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
 }

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Pill from './Pill';
 import NowPlaying from './NowPlaying';
+import { shouldShowScrollFade } from '../lib/scrollFade';
 
 const NAV_SECTIONS = [
   { key: 'books', label: 'books', href: '/reviews/books', prefixes: ['/reviews/books'] },
@@ -27,6 +28,36 @@ export default function Header() {
   const router = useRouter();
   const activeSection = getActiveSection(router.pathname);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const [showNavFade, setShowNavFade] = useState(false);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return undefined;
+
+    const updateFade = () => {
+      setShowNavFade(
+        shouldShowScrollFade({
+          scrollWidth: nav.scrollWidth,
+          clientWidth: nav.clientWidth,
+          scrollLeft: nav.scrollLeft,
+        })
+      );
+    };
+
+    updateFade();
+    nav.addEventListener('scroll', updateFade);
+    window.addEventListener('resize', updateFade);
+
+    const resizeObserver = new ResizeObserver(updateFade);
+    resizeObserver.observe(nav);
+
+    return () => {
+      nav.removeEventListener('scroll', updateFade);
+      window.removeEventListener('resize', updateFade);
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   return (
     <header className="site-header">
@@ -36,7 +67,10 @@ export default function Header() {
           <span className="wordmark-text">ryan krol</span>
         </Link>
 
-        <nav className="collection-nav-pills">
+        <nav
+          ref={navRef}
+          className={`collection-nav-pills${showNavFade ? ' has-scroll-fade' : ''}`}
+        >
           {NAV_SECTIONS.map((section) => (
             <Link key={section.key} href={section.href}>
               <Pill

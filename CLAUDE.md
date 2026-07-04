@@ -164,6 +164,7 @@ src/lib (the data layer)
 | `src/lib/workoutMetrics.js` | Pure metric math (`calculateEstimated1RM`, `calculate{Exercise,Workout}Metrics`) |
 | `src/lib/workoutBackfill.js` | Background fetch of missing workouts from Hevy → DynamoDB (on cache miss) |
 | `src/lib/pagination.js` | Pure pagination math (page slicing/bounds) shared by `Pagination` and the paginated pages |
+| `src/lib/scrollFade.js` | Pure function — decides whether the header nav pill row's right-edge fade mask should show (overflow + not scrolled to end), used by `Header.js` |
 | `src/lib/perfumes.js` | Validators (`validatePerfumeRating`, `validateLongevity`, `validateProjection`, `validateSeasons`, `validateApplicationSpots`, `validateFragranticaUrl`) + `perfumeId` — shared by the perfume API routes |
 | `src/components/*` | Presentational components (see below) |
 | `src/components/perfumeVariants/Variant6Hybrid.js` | The perfume review card, used directly by `src/pages/reviews/perfumes/index.js` (bypasses `ReviewCard`) |
