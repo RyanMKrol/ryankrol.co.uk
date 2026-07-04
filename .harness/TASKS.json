@@ -6289,7 +6289,7 @@
     {
       "id": "T225",
       "title": "Workouts list: switch .workout-session-grid to CSS multi-column masonry (stop row-height stretch)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
