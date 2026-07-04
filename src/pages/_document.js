@@ -11,6 +11,7 @@ export default function Document() {
   return (
     <Html lang="en" style={{ backgroundColor: '#FBF7EF' }}>
       <Head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         {/* Bricolage Grotesque (display) / Nunito (body) / Space Mono (mono/labels) — the

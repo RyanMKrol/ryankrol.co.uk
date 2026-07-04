@@ -126,8 +126,9 @@ src/lib (the data layer)
 | `design/README.md` | The "Collection" redesign handoff from the design agency — design tokens (color/type/spacing), a per-screen spec, and an index into `design/renders/`. This is the source spec the Collection redesign (T141–T169) was built from; kept in-repo for future reference rather than living only in a local Downloads folder. Note: the README references a `renders/1b.png` (rejected alternate homepage concept) that was never actually included in the handoff — a pre-existing gap in the agency's package, not something to recreate. |
 | `design/renders/*.png` | One full-page render per screen (desktop `1a`–`3g`, mobile `4a`–`4l`), named by the card id used in `design/README.md` and `Ryan Krol Homepage.dc.html` |
 | `design/Ryan Krol Homepage.dc.html` + `design/support.js` | The original design-canvas tool source (all 25 screens as one labelled canvas) + its runtime script. Reference/provenance only — not something this repo's build depends on |
+| `public/favicon.svg` | Site favicon — SVG circle-and-"r" mark matching the nav wordmark's `.wordmark-avatar` |
 | `src/pages/_app.js` | Wraps every page in `MatrixLayout`; `useKonamiCode()` toggles matrix mode |
-| `src/pages/_document.js` | HTML scaffold; loads Google font; boots matrix class from `sessionStorage` pre-paint |
+| `src/pages/_document.js` | HTML scaffold; references `/favicon.svg`; loads Google font; boots matrix class from `sessionStorage` pre-paint |
 | `src/pages/index.js` | Home: tagline, `NowPlaying` widget, 'the collection wall' (a random 18-item mosaic sampled fresh from movies/tv/books/albums/vinyl on each page load, each tile linking to its content type's list page), link grid to all sections |
 | `src/pages/listening/index.js` | Last.fm top-50 albums (3-month) with playcount bars |
 | `src/pages/projects/index.js` | GitHub repo cards (stars/forks/last-push/topics), with client-side search (name + description) and multi-select OR tag filtering over the already-fetched repo list |
