@@ -1,6 +1,6 @@
 import { GetCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
-import { docClient, paginatedScan } from './dynamo';
-import { DYNAMO_TABLES } from './constants';
+import { docClient, paginatedScan } from './dynamo.js';
+import { DYNAMO_TABLES } from './constants.js';
 
 /**
  * Get paginated workouts from DynamoDB, sorted by start_time descending

@@ -1,19 +1,7 @@
-import dotenv from 'dotenv';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
-import { calculateExerciseMetrics, calculateWorkoutMetrics } from '../lib/workoutMetrics.js';
-
-dotenv.config({ path: '.env.local' });
-
-const client = new DynamoDBClient({
-  region: 'us-east-2',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
-
-const dynamodb = DynamoDBDocumentClient.from(client);
+import './_env.js';
+import { paginatedScan } from '../lib/dynamo.js';
+import { DYNAMO_TABLES } from '../lib/constants.js';
+import { storeWorkoutInDynamoDB } from '../lib/workoutBackfill.js';
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -77,28 +65,10 @@ async function fetchAllWorkoutsFromHevy() {
 async function fetchAllWorkoutsFromDynamo() {
   console.log('Scanning all workouts from DynamoDB...');
 
-  let allItems = [];
-  let lastEvaluatedKey = undefined;
-
-  do {
-    const params = {
-      TableName: 'Workouts',
-      ProjectionExpression: 'id, title, start_time, workoutDate',
-    };
-
-    if (lastEvaluatedKey) {
-      params.ExclusiveStartKey = lastEvaluatedKey;
-    }
-
-    const result = await dynamodb.send(new ScanCommand(params));
-    const items = result.Items || [];
-    allItems.push(...items);
-    lastEvaluatedKey = result.LastEvaluatedKey;
-
-    if (lastEvaluatedKey) {
-      console.log(`  Scanned ${allItems.length} workouts so far, fetching next page...`);
-    }
-  } while (lastEvaluatedKey);
+  const allItems = await paginatedScan({
+    TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
+    ProjectionExpression: 'id, title, start_time, workoutDate',
+  });
 
   console.log(`Scanned ${allItems.length} total workouts from DynamoDB\n`);
   return allItems;
@@ -157,89 +127,27 @@ async function backfillMissing(missingWorkouts) {
 
   let workoutsStored = 0;
   let workoutsSkipped = 0;
-  let exercisesStored = 0;
-  let exercisesSkipped = 0;
 
   for (let i = 0; i < missingWorkouts.length; i++) {
     const workout = missingWorkouts[i];
     const date = new Date(workout.start_time).toISOString().split('T')[0];
     console.log(`[${i + 1}/${missingWorkouts.length}] ${date} - ${workout.title || 'Untitled'} (${workout.id})`);
 
-    // Store workout
-    const metrics = calculateWorkoutMetrics(workout);
-    const workoutItem = {
-      id: workout.id,
-      title: workout.title || 'Untitled Workout',
-      start_time: workout.start_time,
-      end_time: workout.end_time,
-      exercises: workout.exercises,
-      ...metrics,
-      created_at: new Date().toISOString(),
-      data_source: 'hevy_api',
-      backfilled_at: new Date().toISOString(),
-    };
-
-    try {
-      await dynamodb.send(new PutCommand({
-        TableName: 'Workouts',
-        Item: workoutItem,
-        ConditionExpression: 'attribute_not_exists(id)',
-      }));
+    const stored = await storeWorkoutInDynamoDB(workout);
+    if (stored) {
       workoutsStored++;
-    } catch (error) {
-      if (error.name === 'ConditionalCheckFailedException') {
-        console.log(`  Workout already exists, skipping`);
-        workoutsSkipped++;
-        continue;
-      }
-      throw error;
+      console.log(`  Stored workout + ${workout.exercises.length} exercises`);
+    } else {
+      workoutsSkipped++;
+      console.log(`  Workout already exists, skipping`);
     }
-
-    // Store exercises
-    const workoutDate = new Date(workout.start_time).toISOString().split('T')[0];
-    for (let j = 0; j < workout.exercises.length; j++) {
-      const exercise = workout.exercises[j];
-      const exerciseMetrics = calculateExerciseMetrics(exercise);
-
-      const exerciseItem = {
-        exercise_id: `${workout.id}_${j}`,
-        workout_id: workout.id,
-        exercise_name: exercise.title,
-        workout_date: workoutDate,
-        workout_title: workout.title || 'Untitled Workout',
-        start_time: workout.start_time,
-        end_time: workout.end_time,
-        sets: exercise.sets,
-        exercise_index: j,
-        ...exerciseMetrics,
-        created_at: new Date().toISOString(),
-        data_source: 'hevy_api',
-        backfilled_at: new Date().toISOString(),
-      };
-
-      try {
-        await dynamodb.send(new PutCommand({
-          TableName: 'Exercises',
-          Item: exerciseItem,
-          ConditionExpression: 'attribute_not_exists(exercise_id)',
-        }));
-        exercisesStored++;
-      } catch (error) {
-        if (error.name === 'ConditionalCheckFailedException') {
-          exercisesSkipped++;
-        } else {
-          throw error;
-        }
-      }
-    }
-
-    console.log(`  Stored workout + ${workout.exercises.length} exercises`);
   }
 
   console.log('\n=== Backfill Summary ===');
   console.log(`Workouts: ${workoutsStored} stored, ${workoutsSkipped} skipped`);
-  console.log(`Exercises: ${exercisesStored} stored, ${exercisesSkipped} skipped`);
 }
+
+export { backfillMissing };
 
 // --- Main ---
 
@@ -259,7 +167,9 @@ async function main() {
   }
 }
 
-main().catch(error => {
-  console.error('Audit failed:', error);
-  process.exit(1);
-});
+if (process.env.NODE_ENV !== 'test') {
+  main().catch(error => {
+    console.error('Audit failed:', error);
+    process.exit(1);
+  });
+}

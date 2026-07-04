@@ -1,7 +1,5 @@
-import dotenv from 'dotenv';
+import './_env.js';
 import { storeWorkoutInDynamoDB } from '../lib/workoutBackfill.js';
-
-dotenv.config({ path: '.env.local' });
 
 // Rate limiting helper - 100ms between calls
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));

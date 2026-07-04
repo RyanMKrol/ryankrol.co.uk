@@ -1,7 +1,7 @@
 import { PutCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
-import { docClient, buildSetUpdateParams } from './dynamo';
-import { DYNAMO_TABLES } from './constants';
-import { clearApiCache } from './apiCache';
+import { docClient, buildSetUpdateParams } from './dynamo.js';
+import { DYNAMO_TABLES } from './constants.js';
+import { clearApiCache } from './apiCache.js';
 import { calculateExerciseMetrics, calculateWorkoutMetrics } from './workoutMetrics.js';
 
 // Rate limiting helper - 150ms between calls to be extra safe
