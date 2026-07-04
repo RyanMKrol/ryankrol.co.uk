@@ -6543,7 +6543,7 @@
     {
       "id": "T235",
       "title": "migrateWorkoutData.js: delegate to the shared storeWorkoutInDynamoDB/storeExercises instead of its own reimplementation",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T233"
       ],
