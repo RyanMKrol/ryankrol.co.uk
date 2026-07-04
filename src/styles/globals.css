@@ -1745,15 +1745,14 @@ input[type='range'].form-input::-moz-range-thumb {
 /* ===== Projects page (T158) ===== */
 
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
+  column-count: 3;
+  column-gap: 1.25rem;
   margin-bottom: 2rem;
 }
 
 @media (max-width: 900px) {
   .projects-grid {
-    grid-template-columns: 1fr;
+    column-count: 1;
   }
 }
 
@@ -1766,6 +1765,8 @@ input[type='range'].form-input::-moz-range-thumb {
   border: var(--border-width) solid var(--color-ink);
   border-radius: var(--radius-card);
   background-color: var(--color-card);
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
 }
 
 .project-card-top {
