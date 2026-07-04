@@ -2599,6 +2599,9 @@ body::before {
   border-radius: var(--radius-pill);
   background-color: var(--color-card);
   padding: 0.5rem 1.25rem;
+  flex: 0 1 22rem;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .collection-search-icon {
