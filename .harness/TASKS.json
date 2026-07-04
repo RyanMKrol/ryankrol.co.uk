@@ -5660,7 +5660,7 @@
     {
       "id": "T203",
       "title": "Fix header nav right-edge fade showing when there's nothing left to scroll to",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
