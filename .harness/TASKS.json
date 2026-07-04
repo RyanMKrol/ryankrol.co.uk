@@ -5871,7 +5871,7 @@
     {
       "id": "T211",
       "title": "Add title/description search and multi-select tag filtering to the Projects page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
