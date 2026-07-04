@@ -67,7 +67,7 @@ export default function EditAlbums() {
               item={album}
               type="album"
               isLast={false}
-              styleVariant={2}
+              styleVariant="square-cover"
             />
             <Link
               href={`/reviews/albums/edit/${encodeURIComponent(album.id)}`}

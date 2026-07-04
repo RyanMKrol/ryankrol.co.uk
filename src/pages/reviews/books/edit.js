@@ -67,7 +67,7 @@ export default function EditBooks() {
               item={book}
               type="book"
               isLast={false}
-              styleVariant={2}
+              styleVariant="spine-cover"
             />
             <Link
               href={`/reviews/books/edit/${encodeURIComponent(book.id)}`}

@@ -67,7 +67,7 @@ export default function EditMovies() {
               item={movie}
               type="movie"
               isLast={false}
-              styleVariant={2}
+              styleVariant="poster-banner"
             />
             <Link
               href={`/reviews/movies/edit/${encodeURIComponent(movie.id)}`}

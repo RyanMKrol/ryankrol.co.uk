@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import ReviewCard from '../../../components/ReviewCard';
+import Variant6Hybrid from '../../../components/perfumeVariants/Variant6Hybrid';
 import Header from '../../../components/Header';
 
 export default function EditPerfumes() {
@@ -62,12 +62,7 @@ export default function EditPerfumes() {
       <div className="reviews-wrapper">
         {perfumes.map((perfume, index) => (
           <div key={`${perfume.id}-${index}`} className="review-card-with-edit">
-            <ReviewCard
-              item={perfume}
-              type="perfume"
-              isLast={false}
-              styleVariant={2}
-            />
+            <Variant6Hybrid item={perfume} />
             <Link
               href={`/reviews/perfumes/edit/${encodeURIComponent(perfume.id)}`}
               className="edit-button-overlay"

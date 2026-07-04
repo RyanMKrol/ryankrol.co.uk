@@ -67,7 +67,7 @@ export default function EditTVShows() {
               item={tvShow}
               type="tv"
               isLast={false}
-              styleVariant={2}
+              styleVariant="poster-banner"
             />
             <Link
               href={`/reviews/tv/edit/${encodeURIComponent(tvShow.id)}`}
