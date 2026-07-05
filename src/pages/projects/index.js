@@ -5,6 +5,8 @@ import Badge from '../../components/Badge';
 import SearchInput from '../../components/SearchInput';
 import Pill from '../../components/Pill';
 import SortButtons from '../../components/SortButtons';
+import MasonryColumns from '../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../hooks/useResponsiveColumnCount';
 
 const SORT_FIELDS = [
   { key: 'date', label: 'date', defaultValue: 'date', flippedValue: 'date-asc', defaultArrow: '↓', flippedArrow: '↑' },
@@ -62,6 +64,7 @@ export default function ProjectsPage() {
   const [selectedTags, setSelectedTags] = useState([]);
   const [sortBy, setSortBy] = useState('date');
   const [tagsExpanded, setTagsExpanded] = useState(false);
+  const columnCount = useResponsiveColumnCount(3, 900);
 
   useEffect(() => {
     async function fetchRepos() {
@@ -207,8 +210,12 @@ export default function ProjectsPage() {
         )}
 
         {!loading && !error && filteredRepos.length > 0 && (
-          <div className="projects-grid">
-            {sortedRepos.map((repo) => (
+          <MasonryColumns
+            items={sortedRepos}
+            columnCount={columnCount}
+            className="projects-grid"
+            columnClassName="projects-grid-col"
+            renderItem={(repo) => (
               <div key={repo.fullName} className="project-card">
                 <div className="project-card-top">
                   <a
@@ -265,8 +272,8 @@ export default function ProjectsPage() {
                   </div>
                 )}
               </div>
-            ))}
-          </div>
+            )}
+          />
         )}
       </div>
     </>

@@ -1748,15 +1748,18 @@ input[type='range'].form-input::-moz-range-thumb {
 /* ===== Projects page (T158) ===== */
 
 .projects-grid {
-  column-count: 3;
-  column-gap: 1.25rem;
+  display: flex;
+  gap: 1.25rem;
   margin-bottom: 2rem;
+  align-items: flex-start;
 }
 
-@media (max-width: 900px) {
-  .projects-grid {
-    column-count: 1;
-  }
+.projects-grid-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .project-card {
@@ -1769,7 +1772,6 @@ input[type='range'].form-input::-moz-range-thumb {
   border-radius: var(--radius-card);
   background-color: var(--color-card);
   break-inside: avoid;
-  margin-bottom: 1.25rem;
 }
 
 .project-card-top {
