@@ -6465,7 +6465,7 @@
     {
       "id": "T232",
       "title": "Decide whether to still pursue a full DynamoDB workout-data wipe + reset",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "needs-human",
       "tags": [
