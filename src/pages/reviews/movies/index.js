@@ -5,6 +5,8 @@ import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
 import SortButtons from '../../../components/SortButtons';
 import Pagination from '../../../components/Pagination';
+import MasonryColumns from '../../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 import { paginate } from '../../../lib/pagination';
 import { assignGradients } from '../../../components/CoverTile';
 
@@ -41,6 +43,7 @@ export default function Movies() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnCount = useResponsiveColumnCount(3, 900);
 
   useEffect(() => {
     if (router.isReady && typeof router.query.q === 'string') {
@@ -159,8 +162,12 @@ export default function Movies() {
         </div>
       </div>
 
-      <div className="poster-banner-grid">
-        {pagedMovies.map((movie, index) => (
+      <MasonryColumns
+        items={pagedMovies}
+        columnCount={columnCount}
+        className="poster-banner-grid"
+        columnClassName="poster-banner-grid-col"
+        renderItem={(movie, index) => (
           <ReviewCard
             key={`${movie.title}-${index}`}
             item={movie}
@@ -168,8 +175,8 @@ export default function Movies() {
             styleVariant="poster-banner"
             gradient={movieGradients[index]}
           />
-        ))}
-      </div>
+        )}
+      />
 
       <Pagination
         currentPage={page}

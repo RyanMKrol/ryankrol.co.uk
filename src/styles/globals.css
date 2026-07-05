@@ -189,7 +189,6 @@
   overflow: hidden;
   box-shadow: var(--shadow-cover);
   break-inside: avoid;
-  margin-bottom: 1.5rem;
 }
 
 .poster-banner {
@@ -240,14 +239,16 @@
 }
 
 .poster-banner-grid {
-  column-count: 3;
-  column-gap: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
 }
 
-@media (max-width: 900px) {
-  .poster-banner-grid {
-    column-count: 1;
-  }
+.poster-banner-grid-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 /* ===== Spine Cover Review Card (T152) ===== */
