@@ -3330,6 +3330,15 @@ body::before {
   color: var(--color-ink-mute);
 }
 
+.perfume-v4-scale-heading {
+  margin: 0 0 0.15rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-mute);
+}
+
 .perfume-v4-season-chips {
   display: flex;
   flex-wrap: wrap;

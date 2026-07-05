@@ -65,6 +65,7 @@ export default function Variant6Hybrid({ item }) {
       <div className="perfume-v4-scales">
         {hasLongevity && (
           <div className="perfume-v4-scale">
+            <p className="perfume-v4-scale-heading">Longevity</p>
             <p className="perfume-v4-scale-label">Light ↔ All-day</p>
             <div className="perfume-v4-scale-track">
               <div
@@ -77,6 +78,7 @@ export default function Variant6Hybrid({ item }) {
 
         {hasProjection && (
           <div className="perfume-v4-scale">
+            <p className="perfume-v4-scale-heading">Projection</p>
             <p className="perfume-v4-scale-label">Skin scent ↔ Room-filling</p>
             <div className="perfume-v4-scale-track">
               <div
