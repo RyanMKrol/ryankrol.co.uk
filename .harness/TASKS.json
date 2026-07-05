@@ -6707,7 +6707,7 @@
     {
       "id": "T240",
       "title": "Fix masonry sort-order reading order on the Projects page (+ build shared JS masonry-column helper)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
