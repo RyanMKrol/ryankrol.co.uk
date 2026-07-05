@@ -359,6 +359,61 @@ tier_strength() {
   echo $(( mr * 10 + er ))
 }
 
+# site_touched_since_last_deploy — 0 (true, "yes, deploy") / 1 (false, "nothing site-touching
+# changed, skip"). Derives the baseline from committed history rather than a new state file: the
+# highest-numbered DONE task titled exactly "Deploy pending site changes to production" is the last
+# real deploy; find its `mark done` commit and diff src/+public/ against it. Fails OPEN (returns 0,
+# "deploy") if no such task/commit can be resolved — never silently skip a first-ever or
+# unresolvable case.
+site_touched_since_last_deploy() {
+  local last_id last_sha
+  last_id="$(tj -r '[.tasks[] | select(.title=="Deploy pending site changes to production" and .status=="done")] | max_by(.id|ltrimstr("T")|tonumber) | .id // empty' 2>/dev/null || true)"
+  if [ -z "$last_id" ]; then
+    log "auto-deploy: no prior completed deploy task found — treating as site-touching changed (fail open)."
+    return 0
+  fi
+  last_sha="$(git -C "$ROOT" log --all --grep="^${last_id}: mark done" --format=%H -1 2>/dev/null || true)"
+  if [ -z "$last_sha" ]; then
+    log "auto-deploy: could not resolve commit for $last_id's mark-done — treating as site-touching changed (fail open)."
+    return 0
+  fi
+  if git -C "$ROOT" diff --quiet "$last_sha" HEAD -- src public 2>/dev/null; then
+    log "auto-deploy: no src/public changes since $last_id ($last_sha) — nothing to deploy."
+    return 1
+  fi
+  log "auto-deploy: src/public changed since $last_id ($last_sha) — deploy warranted."
+  return 0
+}
+
+# run_auto_deploy — mirrors the sanctioned unattended deploy procedure already established by
+# .harness/tasks/T193.md (the canonical "Deploy pending site changes to production" task spec, run
+# successfully for real 3 times as T193/T216/T238) — same steps, same verification, just invoked
+# directly by the loop instead of via a Claude-agent-built task. Never blocks the loop; only logs
+# and returns nonzero on any failure (there's no task to mark failed:blocked against here).
+run_auto_deploy() {
+  if ! vercel whoami >/dev/null 2>&1; then
+    log "auto-deploy: 'vercel whoami' failed (not logged in) — skipping auto-deploy; run 'vercel login' to enable it."
+    return 1
+  fi
+  local out url code
+  out="$(vercel --prod --yes 2>&1)" || { log "auto-deploy: 'vercel --prod --yes' failed: $out"; return 1; }
+  url="$(printf '%s\n' "$out" | tail -1)"
+  code="$(curl -s -o /dev/null -w '%{http_code}' "$url" 2>/dev/null || true)"
+  if [ "$code" != "200" ]; then
+    # the raw per-deployment URL can 302 under deployment-protection/SSO (not a failure) — recheck
+    # against the aliased production domain, same fallback T193's spec documents.
+    code="$(curl -s -o /dev/null -w '%{http_code}' "https://www.ryankrol.co.uk" 2>/dev/null || true)"
+    url="https://www.ryankrol.co.uk"
+  fi
+  if [ "$code" = "200" ]; then
+    log "auto-deploy: SUCCESS — $url returned 200."
+    return 0
+  else
+    log "auto-deploy: deploy ran but verification returned '$code' (expected 200) for $url."
+    return 1
+  fi
+}
+
 # SELECT — echo the next eligible task id; return 1 if nothing is eligible.
 select_task() {
   local t d ok
@@ -809,6 +864,9 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
   sel="$(select_task || true)"
   if [ -z "$sel" ]; then
     log "no eligible task — backlog complete or everything left is needs-human/blocked."
+    if site_touched_since_last_deploy; then
+      run_auto_deploy || log "auto-deploy: did not complete successfully — see log above; the dedicated 'Deploy pending site changes to production' task convention (.harness/CLAUDE.md) remains the fallback for a human/next authoring pass to pick up."
+    fi
     board; exit 0
   fi
   task="$sel"

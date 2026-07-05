@@ -95,6 +95,18 @@ all — it doesn't add to the deploy task's `dependsOn` and doesn't trigger crea
 (no code diff at all) — that's expected, pick the closest per the poor-fit protocol below and log it
 to `facet-misfits.jsonl` rather than inventing a value.
 
+**Belt-and-suspenders fallback: `.harness/loop.sh` also auto-deploys directly.** When the main loop's
+`select_task()` finds nothing eligible left to build, it now calls `site_touched_since_last_deploy()`
+(diffs `src`/`public` against the highest-numbered `done` "Deploy pending site changes to production"
+task's own `mark done` commit, resolved from git history — not a new state file) and, if real site
+files changed since then, runs `run_auto_deploy()` (the same `vercel --prod` + exit-code + `curl`
+verification procedure `T193`'s spec already established) before exiting. This is explicitly a
+**fallback, not a replacement** for the dedicated-task authoring convention above — it only catches
+the case where that authoring-time step gets missed (the exact failure mode T171/T193/T188 hit), and
+it fails open (treats "no prior deploy task found" or "can't resolve its commit" as "yes, deploy")
+rather than silently skipping a first-ever or unresolvable case. Keep authoring pending deploy tasks
+as before; this is a safety net sitting underneath that habit, not a substitute for it.
+
 ## Ideas inbox & the two-step flow (ideas → tasks)
 
 Tasks are NOT authored directly from a raw thought. A backlog task carries a high planning bar

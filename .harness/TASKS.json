@@ -7446,7 +7446,7 @@
     {
       "id": "T267",
       "title": "loop.sh: auto-deploy to production when the backlog empties out and site files changed since the last deploy",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "needs-human",
       "tags": [
