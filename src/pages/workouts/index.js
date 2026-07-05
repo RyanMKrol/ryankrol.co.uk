@@ -5,6 +5,8 @@ import Header from '../../components/Header';
 import Badge from '../../components/Badge';
 import PillGroup from '../../components/PillGroup';
 import Pagination from '../../components/Pagination';
+import MasonryColumns from '../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../hooks/useResponsiveColumnCount';
 import { paginate } from '../../lib/pagination';
 import { filterWorkouts } from '../../lib/workoutPagination';
 import { formatEnglishDate } from '../../lib/dateFormat';
@@ -75,6 +77,7 @@ export default function Workouts() {
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const columnCount = useResponsiveColumnCount(2, 900);
 
   useEffect(() => {
     async function fetchWorkouts() {
@@ -160,8 +163,12 @@ export default function Workouts() {
         {pageWorkouts.length === 0 ? (
           <p>No workouts found matching your filter.</p>
         ) : (
-          <div className="workout-session-grid">
-            {pageWorkouts.map((workout, index) => {
+          <MasonryColumns
+            items={pageWorkouts}
+            columnCount={columnCount}
+            className="workout-session-grid"
+            columnClassName="workout-session-grid-col"
+            renderItem={(workout, index) => {
               const exercises = workout.exercises || [];
               const { shown, remaining } = getExercisePreview(exercises);
               return (
@@ -213,8 +220,8 @@ export default function Workouts() {
                   </div>
                 </Link>
               );
-            })}
-          </div>
+            }}
+          />
         )}
 
         <Pagination
