@@ -59,7 +59,7 @@ export default function EditPerfumes() {
       <Header />
       <h1 className="page-title">edit perfume reviews</h1>
 
-      <div className="reviews-wrapper">
+      <div className="perfume-card-grid">
         {perfumes.map((perfume, index) => (
           <div key={`${perfume.id}-${index}`} className="review-card-with-edit">
             <Variant6Hybrid item={perfume} />
