@@ -7086,7 +7086,7 @@
     {
       "id": "T254",
       "title": "Source per-repo commit counts in the GitHub repos API via REST N+1 + Link-header parsing",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
