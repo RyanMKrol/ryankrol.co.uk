@@ -6739,7 +6739,7 @@
     {
       "id": "T241",
       "title": "Fix masonry sort-order reading order on the Movies review list (movies + tv share this CSS)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T240"
       ],
