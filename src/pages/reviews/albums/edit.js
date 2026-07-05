@@ -60,7 +60,7 @@ export default function EditAlbums() {
       <Header />
       <h1 className="page-title">edit album reviews</h1>
       
-      <div className="reviews-wrapper">
+      <div className="square-cover-grid">
         {albums.map((album) => (
           <div key={album.id} className="review-card-with-edit">
             <ReviewCard
