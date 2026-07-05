@@ -3,57 +3,6 @@ import { docClient, paginatedScan } from './dynamo.js';
 import { DYNAMO_TABLES } from './constants.js';
 
 /**
- * Get paginated workouts from DynamoDB, sorted by start_time descending
- * @param {number} page - Page number (1-based)
- * @param {number} pageSize - Number of items per page
- * @returns {Object} Paginated workout results
- */
-export async function getWorkoutsPaginated(page = 1, pageSize = 10) {
-  try {
-    console.log(`🗄️  [DYNAMO] Scanning workouts table for pagination (page ${page}, size ${pageSize})`);
-
-    // First, get all workouts to sort them properly
-    // Note: DynamoDB doesn't support sorting on non-key attributes without scanning
-    const scanParams = {
-      TableName: DYNAMO_TABLES.WORKOUTS_TABLE,
-      ProjectionExpression: 'id, title, start_time, end_time, totalVolume, totalWorkingSets, totalWarmupSets, uniqueExercises, durationMinutes, workoutType, exercises'
-    };
-
-    const startTime = Date.now();
-    const allWorkouts = await paginatedScan(scanParams);
-    const queryTime = Date.now() - startTime;
-
-    console.log(`🗄️  [DYNAMO] Scan completed: ${allWorkouts.length} workouts found in ${queryTime}ms`);
-
-    // Sort by start_time descending (most recent first)
-    allWorkouts.sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
-
-    // Calculate pagination
-    const totalWorkouts = allWorkouts.length;
-    const totalPages = Math.ceil(totalWorkouts / pageSize);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-
-    // Get the slice for this page
-    const pageWorkouts = allWorkouts.slice(startIndex, endIndex);
-
-    console.log(`📄 [DYNAMO] Returning page ${page}/${totalPages}: ${pageWorkouts.length} workouts`);
-
-    return {
-      workouts: pageWorkouts,
-      page: parseInt(page),
-      page_count: totalPages,
-      total_count: totalWorkouts,
-      page_size: parseInt(pageSize)
-    };
-
-  } catch (error) {
-    console.error('❌ [DYNAMO] Error fetching workouts from DynamoDB:', error);
-    throw error;
-  }
-}
-
-/**
  * Get all workouts from DynamoDB, sorted by start_time descending.
  * Used by the workouts page for client-side filter + pagination.
  * @returns {Array} All workout records

@@ -329,10 +329,6 @@ harness:**
 
 ## Gotchas
 
-- **Workout pagination scans the whole table then slices in memory.** `getWorkoutsPaginated`
-  (`workoutQueries.js`) `paginatedScan`s ALL workouts, sorts, and `.slice()`s the page — there's
-  no DynamoDB-native paging, and the Push/Pull/Legs filter is applied client-side to the current
-  page only. (This is the root of the known pagination bug.)
 - **Cache is per serverless instance** (see Architecture) — a write only busts the instance that
   served it. Use `/dev/cache` to flush everywhere if you need an immediate global refresh.
 - **Workout backfill fires on cache miss.** `GET /api/workouts` (page 1) and `GET /api/workouts/stats`
