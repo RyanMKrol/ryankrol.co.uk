@@ -6877,7 +6877,7 @@
     {
       "id": "T246",
       "title": "Fix /reviews/tv/edit to match the real tv list page's grid layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T242"
       ],
