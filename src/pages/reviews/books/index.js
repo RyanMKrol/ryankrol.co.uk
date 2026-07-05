@@ -7,6 +7,8 @@ import SortButtons from '../../../components/SortButtons';
 import Pagination from '../../../components/Pagination';
 import { paginate } from '../../../lib/pagination';
 import { assignGradients } from '../../../components/CoverTile';
+import MasonryColumns from '../../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
 const SORT_FIELDS = [
   { key: 'date', label: 'date', defaultValue: 'date', flippedValue: 'date-asc', defaultArrow: '↓', flippedArrow: '↑' },
@@ -41,6 +43,7 @@ export default function Books() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnCount = useResponsiveColumnCount(2, 700);
 
   useEffect(() => {
     if (router.isReady && typeof router.query.q === 'string') {
@@ -161,8 +164,12 @@ export default function Books() {
         </div>
       </div>
 
-      <div className="spine-cover-list">
-        {pagedBooks.map((book, index) => (
+      <MasonryColumns
+        items={pagedBooks}
+        columnCount={columnCount}
+        className="spine-cover-list"
+        columnClassName="spine-cover-list-col"
+        renderItem={(book, index) => (
           <ReviewCard
             key={`${book.title}-${book.author}-${index}`}
             item={book}
@@ -171,8 +178,8 @@ export default function Books() {
             styleVariant="spine-cover"
             gradient={bookGradients[index]}
           />
-        ))}
-      </div>
+        )}
+      />
 
       <Pagination
         currentPage={page}

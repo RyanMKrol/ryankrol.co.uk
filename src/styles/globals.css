@@ -261,7 +261,6 @@
   border: var(--border-width) solid var(--color-ink);
   border-radius: var(--radius-card);
   break-inside: avoid;
-  margin-bottom: 1.5rem;
 }
 
 .spine-cover-tile {
@@ -310,14 +309,16 @@
 }
 
 .spine-cover-list {
-  column-count: 2;
-  column-gap: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
 }
 
-@media (max-width: 700px) {
-  .spine-cover-list {
-    column-count: 1;
-  }
+.spine-cover-list-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 /* ===== Square Cover Review Card (T153) ===== */
