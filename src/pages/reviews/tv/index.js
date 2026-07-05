@@ -7,6 +7,8 @@ import SortButtons from '../../../components/SortButtons';
 import Pagination from '../../../components/Pagination';
 import { paginate } from '../../../lib/pagination';
 import { assignGradients } from '../../../components/CoverTile';
+import MasonryColumns from '../../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
 const SORT_FIELDS = [
   { key: 'date', label: 'date', defaultValue: 'date', flippedValue: 'date-asc', defaultArrow: '↓', flippedArrow: '↑' },
@@ -41,6 +43,7 @@ export default function TV() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnCount = useResponsiveColumnCount(3, 900);
 
   useEffect(() => {
     if (router.isReady && typeof router.query.q === 'string') {
@@ -159,8 +162,12 @@ export default function TV() {
         </div>
       </div>
 
-      <div className="poster-banner-grid">
-        {pagedTvShows.map((tvShow, index) => (
+      <MasonryColumns
+        items={pagedTvShows}
+        columnCount={columnCount}
+        className="poster-banner-grid"
+        columnClassName="poster-banner-grid-col"
+        renderItem={(tvShow, index) => (
           <ReviewCard
             key={`${tvShow.title}-${index}`}
             item={tvShow}
@@ -168,8 +175,8 @@ export default function TV() {
             styleVariant="poster-banner"
             gradient={tvGradients[index]}
           />
-        ))}
-      </div>
+        )}
+      />
 
       <Pagination
         currentPage={page}
