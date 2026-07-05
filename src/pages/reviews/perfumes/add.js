@@ -26,6 +26,7 @@ export default function AddPerfumeReview() {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [designerSuggestions, setDesignerSuggestions] = useState([]);
+  const [hoveredRating, setHoveredRating] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -186,9 +187,13 @@ export default function AddPerfumeReview() {
 
           <div className="collection-form-group">
             <label className="collection-form-label" htmlFor="rating">
-              Rating (0-10): {formData.rating}
+              Rating (0-10): {hoveredRating || formData.rating}
             </label>
-            <PipMeter value={formData.rating} onChange={handleRatingChange} />
+            <PipMeter
+              value={formData.rating}
+              onChange={handleRatingChange}
+              onHoverChange={setHoveredRating}
+            />
           </div>
 
           <div className="collection-form-group">

@@ -2,7 +2,12 @@ import { useState } from 'react';
 
 const PIP_COUNT = 10;
 
-export default function PipMeter({ value, onChange, readOnly = false }) {
+export default function PipMeter({
+  value,
+  onChange,
+  readOnly = false,
+  onHoverChange = () => {},
+}) {
   const [hoveredPip, setHoveredPip] = useState(0);
 
   if (readOnly) {
@@ -24,10 +29,12 @@ export default function PipMeter({ value, onChange, readOnly = false }) {
 
   const handlePipHover = (pipValue) => {
     setHoveredPip(pipValue);
+    onHoverChange(pipValue);
   };
 
   const handleMouseLeave = () => {
     setHoveredPip(0);
+    onHoverChange(0);
   };
 
   return (

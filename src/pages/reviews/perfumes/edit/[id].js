@@ -31,6 +31,7 @@ export default function EditPerfumeReview() {
   const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [hoveredRating, setHoveredRating] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -274,9 +275,13 @@ export default function EditPerfumeReview() {
 
           <div className="collection-form-group">
             <label className="collection-form-label" htmlFor="rating">
-              Rating (0-10): {formData.rating}
+              Rating (0-10): {hoveredRating || formData.rating}
             </label>
-            <PipMeter value={formData.rating} onChange={handleRatingChange} />
+            <PipMeter
+              value={formData.rating}
+              onChange={handleRatingChange}
+              onHoverChange={setHoveredRating}
+            />
           </div>
 
           <div className="collection-form-group">
