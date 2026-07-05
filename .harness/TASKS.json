@@ -6904,7 +6904,7 @@
     {
       "id": "T247",
       "title": "Fix /reviews/albums/edit to match the real albums list page's grid layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
