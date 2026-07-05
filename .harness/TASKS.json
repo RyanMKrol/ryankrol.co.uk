@@ -6956,7 +6956,7 @@
     {
       "id": "T249",
       "title": "Fix /reviews/perfumes/edit to match the real perfumes list page's grid layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
