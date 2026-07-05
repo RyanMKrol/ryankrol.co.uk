@@ -144,6 +144,113 @@ const newTaskObjects = allocatedTasks.map(a => {
   return obj;
 });
 
+// ---- 5.5. Deploy-task convention enforcement ----
+// Per .harness/CLAUDE.md's deploy-task convention: at most one pending "Deploy pending site
+// changes to production" task at a time; every new site-touching task's id must be tracked by it.
+// This used to be an authoring-time rule each pass had to remember (and already failed silently
+// once — the T171/T193/T188 double-deploy-task incident) — this makes it mechanical instead.
+const DEPLOY_TITLE = 'Deploy pending site changes to production';
+
+function isSiteTouching(taskObj) {
+  const scope = Array.isArray(taskObj.scope) ? taskObj.scope : [];
+  return scope.some(s => s !== '.harness' && !s.startsWith('.harness/'));
+}
+
+function buildDeploySpec(depIds) {
+  return `## Do
+
+**This is the single canonical deploy checkpoint for the backlog.** At any given time there must be
+at most ONE task in \`TASKS.json\` with \`status: pending\` and a title matching "Deploy pending site
+changes to production" — this is it right now. Vercel's Git integration is disconnected (see root
+\`CLAUDE.md\`'s "Deploying" section) — none of this task's dependencies' work goes live no matter how
+many commits land on \`main\`. This task makes no code changes; it is a pure operational run
+(\`scope: []\`, diff should be empty aside from the worklog).
+
+This task was auto-created by \`/convert-ideas\`'s consolidation pass (\`.harness/consolidate-ideas.mjs\`)
+because the sweep that authored it added at least one site-touching task with no existing pending
+deploy task to attach to. Its \`dependsOn\` covers every site-touching task from that sweep:
+${depIds.join(', ')}.
+
+1. \`git fetch origin && git status\` — confirm the local checkout's \`main\` matches \`origin/main\`
+   exactly (no ahead/behind). If it doesn't, \`git pull\` first.
+2. \`npm run build\` locally as a final pre-deploy sanity check (CI should already have passed this on
+   every commit, but re-confirm before spending a Vercel build).
+3. \`vercel whoami\` — confirm the CLI is authenticated. **If this fails (not logged in), STOP and
+   record \`failed:blocked\`** with that exact reason — this is a genuine prerequisite this task
+   cannot supply itself, a human needs to run \`vercel login\` once. Do not attempt any workaround.
+4. Run the deploy non-interactively and capture its output (the production URL is the last line of
+   stdout on success):
+   \`\`\`sh
+   vercel --prod --yes
+   \`\`\`
+5. Confirm the deployment actually reached a ready state — parse the CLI's own exit code AND
+   independently verify by fetching the returned URL:
+   \`\`\`sh
+   curl -s -o /dev/null -w '%{http_code}' <the-production-url>
+   \`\`\`
+   must print \`200\`. Note: the raw per-deployment URL may 302-redirect (Vercel's deployment-
+   protection/SSO on internal deployment hostnames, not a failure) — if so, verify against the
+   aliased production domain (\`https://www.ryankrol.co.uk\`) instead.
+6. Objectively confirm the deployed site reflects real changes from this batch — pick a couple of
+   fast, unambiguous, server-rendered checks against whatever this sweep's dependency tasks actually
+   changed (read their committed code on \`main\` first, then write the checks against it — don't
+   guess the exact strings blindly).
+
+## Done when
+
+- \`vercel whoami\` succeeded (or the task correctly stopped with \`failed:blocked\` if it didn't).
+- \`vercel --prod --yes\` exited 0 and printed a production URL.
+- \`curl -s -o /dev/null -w '%{http_code}' <url-or-www.ryankrol.co.uk>\` printed \`200\`.
+- The spot-checks in step 6 found matches against the live production site.
+- The exact production URL, the deployment's timestamp, and the spot-check results are recorded in
+  this task's worklog.
+`;
+}
+
+let deployTaskAction = 'none'; // 'none' | 'updated' | 'created'
+let deployTaskId = null;
+
+const siteTouchingIds = newTaskObjects.filter(isSiteTouching).map(t => t.id);
+if (siteTouchingIds.length > 0) {
+  const existingPendingDeploy = tasksDoc.tasks.find(t => t.title === DEPLOY_TITLE && t.status === 'pending');
+  if (existingPendingDeploy) {
+    const merged = new Set([...(existingPendingDeploy.dependsOn || []), ...siteTouchingIds]);
+    existingPendingDeploy.dependsOn = [...merged];
+    deployTaskAction = 'updated';
+    deployTaskId = existingPendingDeploy.id;
+    console.log(`Deploy task: updated existing pending ${deployTaskId}'s dependsOn with ${siteTouchingIds.length} site-touching task(s).`);
+  } else {
+    const realId = allocId();
+    const deployObj = {
+      id: realId,
+      title: DEPLOY_TITLE,
+      status: 'pending',
+      dependsOn: siteTouchingIds,
+      gate: null,
+      tags: ['deploy'],
+      scope: [],
+      design: null,
+      verify: [],
+      spec: `.harness/tasks/${realId}.md`,
+      expectsTest: false,
+      facets: { layer: 'harness', workType: 'config', risk: ['cross-cutting'] },
+    };
+    newTaskObjects.push(deployObj);
+    allocatedTasks.push({
+      realId,
+      tempId: null,
+      raw: { title: DEPLOY_TITLE },
+      unit: { data: { agentSlug: 'deploy-task-enforcement' } },
+    });
+    fs.writeFileSync(path.join(TASKS_DIR, `${realId}.md`), buildDeploySpec(siteTouchingIds), 'utf8');
+    deployTaskAction = 'created';
+    deployTaskId = realId;
+    console.log(`Deploy task: created new pending ${realId}, depending on ${siteTouchingIds.length} site-touching task(s).`);
+  }
+} else {
+  console.log('Deploy task: no site-touching tasks this sweep — no action.');
+}
+
 // ---- 6. Merge into TASKS.json ----
 tasksDoc.tasks.push(...newTaskObjects);
 fs.writeFileSync(TASKS_PATH, JSON.stringify(tasksDoc, null, 2) + '\n', 'utf8');
@@ -216,14 +323,18 @@ const first = idList[0];
 const last = idList[idList.length - 1];
 const idRange = idList.length === 0 ? '' : idList.length === 1 ? first : `${first}-${last}`;
 const unitSlugs = [...new Set(units.map(u => u.data.agentSlug))];
+const deployLine = deployTaskAction === 'created' ? `\n\nAlso created ${deployTaskId} (deploy checkpoint) for ${siteTouchingIds.length} site-touching task(s).`
+  : deployTaskAction === 'updated' ? `\n\nAlso added ${siteTouchingIds.length} site-touching task(s) to ${deployTaskId}'s (deploy checkpoint) dependsOn.`
+  : '';
 const suggestedCommitMessage = idList.length
-  ? `backlog: add ${idRange} from idea conversion sweep\n\nConverted ${unitSlugs.length} idea unit(s): ${unitSlugs.join(', ')}.\n\nCo-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`
+  ? `backlog: add ${idRange} from idea conversion sweep\n\nConverted ${unitSlugs.length} idea unit(s): ${unitSlugs.join(', ')}.${deployLine}\n\nCo-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`
   : '';
 
 const summary = {
   allocatedTasks: allocatedTasks.map(a => ({ realId: a.realId, tempId: a.tempId, unit: a.unit.data.agentSlug, title: a.raw.title })),
   droppedDeps,
   removedBulletCount,
+  deployTask: { action: deployTaskAction, id: deployTaskId, siteTouchingTaskIds: siteTouchingIds },
   pendingFilesConsumed: pendingFiles,
   suggestedCommitMessage,
 };

@@ -7468,7 +7468,7 @@
     {
       "id": "T268",
       "title": "consolidate-ideas.mjs: auto-enforce the single-pending-deploy-task convention during /convert-ideas",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "needs-human",
       "tags": [

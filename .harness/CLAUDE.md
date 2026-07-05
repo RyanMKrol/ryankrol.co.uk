@@ -107,6 +107,18 @@ it fails open (treats "no prior deploy task found" or "can't resolve its commit"
 rather than silently skipping a first-ever or unresolvable case. Keep authoring pending deploy tasks
 as before; this is a safety net sitting underneath that habit, not a substitute for it.
 
+**Also enforced mechanically at authoring time: `/convert-ideas`'s consolidation pass.**
+`.harness/consolidate-ideas.mjs` now checks, for every sweep, whether any of the tasks it's about to
+merge into `TASKS.json` are "site-touching" (their `scope` has an entry not under `.harness/`). If
+so, it automatically either adds their ids to the existing pending deploy task's `dependsOn`, or —
+if none is pending — allocates a brand-new one itself (same shape as `T193`/`T216`/`T238`) and writes
+its spec file, no separate authoring step required. This closes the exact gap that used to depend on
+a human/agent remembering the rule above during every sweep (the actual root cause behind
+T171/T193/T188). It is deliberately redundant with the `loop.sh`-level fallback just above — one
+enforces at authoring time for `/convert-ideas` sweeps specifically, the other catches anything that
+slips through any path (including tasks added directly via `ralph-loop-add-to-backlog`, outside
+`/convert-ideas` entirely) — both exist, neither replaces the other.
+
 ## Ideas inbox & the two-step flow (ideas → tasks)
 
 Tasks are NOT authored directly from a raw thought. A backlog task carries a high planning bar
