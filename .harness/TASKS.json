@@ -7531,16 +7531,22 @@
       "dependsOn": [
         "T269"
       ],
-      "gate": "needs-human",
+      "gate": null,
       "tags": [
-        "hot-takes",
-        "needs-human"
+        "hot-takes"
       ],
       "scope": [],
       "design": null,
       "verify": [],
       "spec": ".harness/tasks/T270.md",
-      "expectsTest": false
+      "expectsTest": false,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T271",
@@ -8133,16 +8139,22 @@
       "dependsOn": [
         "T291"
       ],
-      "gate": "needs-human",
+      "gate": null,
       "tags": [
-        "workouts",
-        "needs-human"
+        "workouts"
       ],
       "scope": [],
       "design": null,
       "verify": [],
       "spec": ".harness/tasks/T292.md",
-      "expectsTest": false
+      "expectsTest": false,
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
     },
     {
       "id": "T293",
