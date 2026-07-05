@@ -29,7 +29,6 @@ task_done()    { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="done"'
                  || { [ -f "$HARNESS_DIR/human-done.json" ] && jq -e --arg id "$1" '.[$id].done==true' "$HARNESS_DIR/human-done.json" >/dev/null 2>&1; }; }
 task_title()   { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.title'; }
 deps_for()     { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.dependsOn[]?' | tr '\n' ' '; }
-is_gate()      { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.gate=="gate"' >/dev/null; }
 needs_human()  { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.gate=="needs-human"' >/dev/null; }
 task_failed()  { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="failed"' >/dev/null; }
 task_blocked() { [ -f "$WORKLOG/$1.md" ] && grep -qiE 'failed:blocked|needs-human' "$WORKLOG/$1.md"; }
@@ -42,9 +41,6 @@ for t in $(all_tasks); do
   if task_failed "$t"; then
     board+=("  ❌ failed        $t  $title")
     needs+=("$t — ❌ failed (owner marked it a false success): fix the work or author a follow-up ($title)")
-  elif is_gate "$t"; then
-    board+=("  🚦 gate         $t  $title")
-    needs+=("$t — 🚦 gate: review the deliverable before dependents proceed ($title)")
   elif needs_human "$t" || task_blocked "$t"; then
     board+=("  🔒 needs you     $t  $title")
     needs+=("$t — 🔒 needs-human: $title")

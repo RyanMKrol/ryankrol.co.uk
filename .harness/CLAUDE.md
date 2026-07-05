@@ -9,9 +9,9 @@ loop's design is in `HARNESS.md` + `designs/`.)
 
 **Any task whose `scope` array contains an entry under `.harness/` (the loop's own scripts, the
 `/convert-ideas` consolidation pipeline, `TASKS.json`'s own machinery, `facets.json`, etc.) MUST be
-authored with `"gate": "needs-human"` — never `null`, never `"gate"`. No exceptions carved out for a
-harness change that looks small or low-risk; the rule is mechanical, based on `scope` alone, not a
-judgment call about how risky a given change looks.**
+authored with `"gate": "needs-human"` — never `null`. No exceptions carved out for a harness change
+that looks small or low-risk; the rule is mechanical, based on `scope` alone, not a judgment call
+about how risky a given change looks.**
 
 **Why:** the autonomous loop building or modifying the very mechanism that runs it is a uniquely
 dangerous kind of self-referential change. A bug in application code gets caught by the loop's own
@@ -26,7 +26,7 @@ against its own files. This convention just writes down, as a hard rule, what al
 practice.
 
 **Mechanically, this is nothing new to build**: `needs-human` tasks are already, by this file's own
-"Completing a `gate`/`needs-human` task interactively" section below, built by the owner directly in
+"Completing a `needs-human` task interactively" section below, built by the owner directly in
 an interactive Claude Code session and hand-marked done — never routed through `loop.sh`. Marking a
 harness-scoped task `needs-human` is exactly how you keep it out of the unattended loop's hands; no
 new mechanism is needed, just consistent application of the existing one.
@@ -39,6 +39,17 @@ longer touches `.harness/`).
 This does NOT apply to a task that merely *references* a `.harness/` path in its spec prose for
 context (e.g. "mirrors the pattern in `.harness/tasks/T193.md`") without that path appearing in its
 own `scope` array — the rule is about what the task is authorized to *edit*, not what it reads.
+
+**`gate` is a binary schema — `null` or `"needs-human"`, full stop.** A third value, `"gate"` (meant
+to mark "a human reviews the deliverable before dependents run"), previously existed but has been
+removed entirely — from the schema, from `loop.sh`/`postflight.sh`'s scheduling and status-board
+logic, and from every doc that described it. It never actually behaved differently from
+`needs-human` in `select_task()` (both were skipped identically, forever, by the unattended loop —
+see `HARNESS.md` §8 for the schema), so it added a distinction without a real mechanism backing it,
+and it's gone now. If you find a stray `"gate": "gate"` anywhere (a task authored before this rule,
+or a stale doc reference), normalize it: `null` if the task should be buildable by the loop, or
+`"needs-human"` if a human genuinely must build it directly (which, per the rule above, is *always*
+true for any `.harness/`-scoped task).
 
 ## Adding a backlog task → invoke the add-to-backlog skill
 
@@ -202,11 +213,11 @@ pre-flight the loop ALSO reconciles it → `TASKS.json` `status=failed` (`reconc
 terminal status the loop skips; it does NOT re-open/rebuild the task (the re-do is a separate
 follow-up). The loop still never WRITES the overlay file. Full design: `designs/manual-fail-signal.md`.
 
-## Completing a `gate` / `needs-human` task interactively — NEVER route it through the loop afterward
+## Completing a `needs-human` task interactively — NEVER route it through the loop afterward
 
-When the owner has you build a `gate` or `needs-human` task directly in an interactive session
+When the owner has you build a `needs-human` task directly in an interactive session
 (not via `.harness/loop.sh`), **that interactive work IS the completion mechanism.** The whole point
-of those gate values is "the owner wants this done by directing a Claude session, not by the
+of that gate value is "the owner wants this done by directing a Claude session, not by the
 unattended loop" — so once you've built and verified it, close it out yourself; do NOT afterward run
 `.harness/loop.sh <TNNN>` to "make it official" or get it through CI-gating. The loop exists to
 *build* tasks cold from `origin/main`, not to bless work that's already there — forcing it at an

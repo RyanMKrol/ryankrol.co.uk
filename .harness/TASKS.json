@@ -7593,7 +7593,7 @@
       "title": "Render full Markdown (bold/italic/lists/links) in review display components",
       "status": "pending",
       "dependsOn": [],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "reviews"
       ],
@@ -7623,7 +7623,7 @@
       "title": "Build a shared Markdown/WYSIWYG-style toolbar editor component for review text inputs",
       "status": "pending",
       "dependsOn": [],
-      "gate": "gate",
+      "gate": null,
       "tags": [
         "reviews"
       ],

@@ -27,7 +27,7 @@ deliberately **don't** here:
 
 ```
 SELECT (shell)  → next not-done task in LOCAL TASKS.json whose dependsOn are all done and which
-                  is not a 🚦 gate / 🔒 needs-human / blocked task. None eligible → stop.
+                  is not a 🔒 needs-human / blocked task. None eligible → stop.
 WORK   (claude) → one `claude -p` at the policy-chosen tier builds the task COLD in this checkout
                   on main, runs the Definition of Done (§5), and COMMITS (does NOT push).
 GATE   (shell)  → pre-push guard (§4) → structural checks + sampled blocking audit (§5) → push main
@@ -152,7 +152,7 @@ agent must not edit it.
     {
       "id": "T001", "title": "…", "status": "pending",   // pending | done  (SHELL-owned)
       // NOTE: NO `reviewed` field — since T136 it lives in owner-owned .harness/reviews.json
-      "dependsOn": [], "gate": null,                      // gate: null | "gate" | "needs-human"
+      "dependsOn": [], "gate": null,                      // gate: null | "needs-human"
       "facets": { "layer": "ui", "workType": "style", "risk": [] },  // difficulty auto-tuning (OMIT for needs-human); values from .harness/facets.json
       "scope": ["src/…"], "verify": [], "expectsTest": false,  // expectsTest: true → audit's structural gate requires a test in the diff (§5)
       "spec": ".harness/tasks/T001.md"                    // do/doneWhen live in this MD (T131); NO per-task model/effort/escalation
@@ -161,8 +161,11 @@ agent must not edit it.
 }
 ```
 
-`gate:"gate"` = a human reviews the deliverable before dependents run; `gate:"needs-human"` = a
-one-time human step (the agent prepares around it and records `failed:blocked`).
+`gate` is binary: `null` (buildable, the loop selects and builds it normally) or `"needs-human"` (a
+one-time human step — the loop never selects it; the agent prepares around it and records
+`failed:blocked` if forced to attempt it anyway). There is no third value — see `.harness/CLAUDE.md`
+if you're looking for a review-then-build-dependents gate; that concept (`"gate":"gate"`) has been
+removed, since `select_task()` never actually distinguished it from `needs-human` in practice.
 
 **`facets` — difficulty auto-tuning (see `designs/difficulty-autotune.md`).** Each BUILDABLE task
 carries `facets: { layer, workType, risk[] }`, chosen from the controlled vocabulary in

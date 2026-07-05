@@ -11,7 +11,7 @@
 #
 # Each iteration:
 #   SELECT (shell)  — from .harness/TASKS.json: the next not-done task whose dependsOn are all
-#                     done and which is NOT a 🚦 gate / 🔒 needs-human / blocked task. None → stop.
+#                     done and which is NOT a 🔒 needs-human / blocked task. None → stop.
 #   WORK   (claude) — one `claude -p` (per-task model/effort) builds the task IN THIS CHECKOUT
 #                     on main, runs the Definition of Done, and COMMITS (does NOT push).
 #   GATE   (shell)  — pre-push guard (refuse if anything sensitive is staged) → push main →
@@ -149,7 +149,7 @@ task_spec_rel() { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.spec // empty'
 
 # record_outcome <id> <blocked:true|false> [reason] — append ONE escalation-outcome row to the
 # ledger (the sole input to difficulty calibration). FORWARD-ONLY: only fires for tasks the loop
-# actually builds, so gated/needs-human tasks (never selected) are excluded by construction.
+# actually builds, so needs-human tasks (never selected) are excluded by construction.
 # cur_rung/cur_attempts are the live success (or top) rung at call time; each escalation = exactly
 # MAX_ATTEMPTS soft failures, so totalSoftFails is derivable. Best-effort — never fails the caller.
 record_outcome() {
@@ -724,7 +724,7 @@ if [ "${DRY_RUN:-0}" = "1" ]; then
   git -C "$ROOT" fetch origin --quiet 2>/dev/null || true
   sel="$(select_task || true)"
   [ -n "$sel" ] && echo "DRY-RUN → would build: $sel" \
-                || echo "DRY-RUN → nothing eligible (backlog done or all gate/human-blocked)"
+                || echo "DRY-RUN → nothing eligible (backlog done or all needs-human/blocked)"
   exit 0
 fi
 
@@ -808,7 +808,7 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
   reconcile_overlays                      # promote owner overlay verdicts (human-done→done, manual-fail→failed) into TASKS.json status BEFORE selecting
   sel="$(select_task || true)"
   if [ -z "$sel" ]; then
-    log "no eligible task — backlog complete or everything left is gate/human-blocked."
+    log "no eligible task — backlog complete or everything left is needs-human/blocked."
     board; exit 0
   fi
   task="$sel"
