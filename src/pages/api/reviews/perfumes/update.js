@@ -1,4 +1,4 @@
-import { PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
+import { GetCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
@@ -31,7 +31,6 @@ export default async function handler(req, res) {
     seasons,
     applicationSpots,
     fragranticaUrl,
-    date,
     password,
   } = req.body;
 
@@ -73,6 +72,20 @@ export default async function handler(req, res) {
   }
 
   try {
+    const getParams = {
+      TableName: DYNAMO_TABLES.PERFUME_RATINGS_TABLE,
+      Key: {
+        id: originalId,
+      },
+    };
+
+    const existingReview = await docClient.send(new GetCommand(getParams));
+    const originalDate = existingReview.Item?.date;
+
+    // If no original date found, use current date (shouldn't happen for updates)
+    const preservedDate = originalDate || new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+    const editedDate = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+
     const id = perfumeId({ title, designer, type });
     const idChanged = id !== originalId;
 
@@ -100,7 +113,8 @@ export default async function handler(req, res) {
       ...(projection !== undefined && { projection }),
       ...(seasons !== undefined && { seasons }),
       ...(applicationSpots !== undefined && { applicationSpots }),
-      date: date || new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
+      date: preservedDate,
+      editedDate,
     };
 
     const putParams = {

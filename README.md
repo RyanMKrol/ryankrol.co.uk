@@ -282,7 +282,8 @@ Perfume reviews. Validation for the fields below lives in `src/lib/perfumes.js`.
     { spot: "Clothes", sprays: 1 }
   ],
   fragranticaUrl: "https://www.fragrantica.com/...",  // Required
-  date: "15-01-2024"                 // DD-MM-YYYY
+  date: "15-01-2024",                // DD-MM-YYYY
+  editedDate: "20-01-2024"           // DD-MM-YYYY, set on every edit
 }
 ```
 
