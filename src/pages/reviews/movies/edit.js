@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
+import MasonryColumns from '../../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
 export default function EditMovies() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnCount = useResponsiveColumnCount(3, 900);
 
   useEffect(() => {
     async function fetchMovies() {
@@ -60,8 +63,12 @@ export default function EditMovies() {
       <Header />
       <h1 className="page-title">edit movie reviews</h1>
       
-      <div className="reviews-wrapper">
-        {movies.map((movie, index) => (
+      <MasonryColumns
+        items={movies}
+        columnCount={columnCount}
+        className="poster-banner-grid"
+        columnClassName="poster-banner-grid-col"
+        renderItem={(movie) => (
           <div key={movie.id} className="review-card-with-edit">
             <ReviewCard
               item={movie}
@@ -76,8 +83,8 @@ export default function EditMovies() {
               Edit
             </Link>
           </div>
-        ))}
-      </div>
+        )}
+      />
     </div>
   );
 }
