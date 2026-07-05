@@ -6822,7 +6822,7 @@
     {
       "id": "T244",
       "title": "Fix masonry sort-order reading order on the Workouts list",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T240"
       ],
