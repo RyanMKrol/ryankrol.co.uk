@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
+import MasonryColumns from '../../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
 export default function EditBooks() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnCount = useResponsiveColumnCount(2, 700);
 
   useEffect(() => {
     async function fetchBooks() {
@@ -60,8 +63,12 @@ export default function EditBooks() {
       <Header />
       <h1 className="page-title">edit book reviews</h1>
       
-      <div className="reviews-wrapper">
-        {books.map((book) => (
+      <MasonryColumns
+        items={books}
+        columnCount={columnCount}
+        className="spine-cover-list"
+        columnClassName="spine-cover-list-col"
+        renderItem={(book) => (
           <div key={book.id} className="review-card-with-edit">
             <ReviewCard
               item={book}
@@ -76,8 +83,8 @@ export default function EditBooks() {
               Edit
             </Link>
           </div>
-        ))}
-      </div>
+        )}
+      />
     </div>
   );
 }
