@@ -7142,7 +7142,7 @@
     {
       "id": "T256",
       "title": "Remove dead legacy page/pageSize pagination branch from /api/workouts",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
