@@ -6767,7 +6767,7 @@
     {
       "id": "T242",
       "title": "Fix masonry sort-order reading order on the TV review list",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T241"
       ],
