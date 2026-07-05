@@ -7061,7 +7061,7 @@
     {
       "id": "T253",
       "title": "Add Longevity/Projection headings above perfume scale bars",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
