@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
 import Header from '../../../components/Header';
+import MasonryColumns from '../../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
 export default function EditTVShows() {
   const [tvShows, setTvShows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnCount = useResponsiveColumnCount(3, 900);
 
   useEffect(() => {
     async function fetchTvShows() {
@@ -60,8 +63,12 @@ export default function EditTVShows() {
       <Header />
       <h1 className="page-title">edit tv show reviews</h1>
       
-      <div className="reviews-wrapper">
-        {tvShows.map((tvShow) => (
+      <MasonryColumns
+        items={tvShows}
+        columnCount={columnCount}
+        className="poster-banner-grid"
+        columnClassName="poster-banner-grid-col"
+        renderItem={(tvShow) => (
           <div key={tvShow.id} className="review-card-with-edit">
             <ReviewCard
               item={tvShow}
@@ -76,8 +83,8 @@ export default function EditTVShows() {
               Edit
             </Link>
           </div>
-        ))}
-      </div>
+        )}
+      />
     </div>
   );
 }
