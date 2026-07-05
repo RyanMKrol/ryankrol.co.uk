@@ -5,6 +5,41 @@ tasks in `TASKS.json`. It keeps the harness's own authoring rules *with* the har
 with it and surface at the authoring moment. (Repo-wide conventions are in the root `CLAUDE.md`; the
 loop's design is in `HARNESS.md` + `designs/`.)
 
+## ⚠️ Never let the autonomous loop modify itself — `.harness/`-scoped tasks are always `needs-human`
+
+**Any task whose `scope` array contains an entry under `.harness/` (the loop's own scripts, the
+`/convert-ideas` consolidation pipeline, `TASKS.json`'s own machinery, `facets.json`, etc.) MUST be
+authored with `"gate": "needs-human"` — never `null`, never `"gate"`. No exceptions carved out for a
+harness change that looks small or low-risk; the rule is mechanical, based on `scope` alone, not a
+judgment call about how risky a given change looks.**
+
+**Why:** the autonomous loop building or modifying the very mechanism that runs it is a uniquely
+dangerous kind of self-referential change. A bug in application code gets caught by the loop's own
+CI-gating/revert machinery — but a bug introduced INTO that machinery (`loop.sh`, the consolidation
+scripts) can silently break the loop's own ability to detect, revert, or recover from that exact bug,
+with no external safety net watching the watcher. This isn't a hypothetical concern for this repo —
+it's already this project's consistent, unbroken practice: every single harness bug documented in the
+"Known-but-deferred issues" log below (the `set -e` landmine, the `wait_ci_green` cancelled-run
+conflation, the `mark_done` silent-no-op regression, the `[skip ci]` timeout waste) was found and
+fixed by the OWNER in a directed interactive session — never by the autonomous loop building a task
+against its own files. This convention just writes down, as a hard rule, what already happens in
+practice.
+
+**Mechanically, this is nothing new to build**: `needs-human` tasks are already, by this file's own
+"Completing a `gate`/`needs-human` task interactively" section below, built by the owner directly in
+an interactive Claude Code session and hand-marked done — never routed through `loop.sh`. Marking a
+harness-scoped task `needs-human` is exactly how you keep it out of the unattended loop's hands; no
+new mechanism is needed, just consistent application of the existing one.
+
+Per the schema floor below, a `needs-human` task carries **no** `facets` object — strip it if a task
+is reclassified from buildable to `needs-human` (or vice versa, add one back from `facets.json`'s
+vocabulary if a harness task is ever legitimately reclassified as buildable because its `scope` no
+longer touches `.harness/`).
+
+This does NOT apply to a task that merely *references* a `.harness/` path in its spec prose for
+context (e.g. "mirrors the pattern in `.harness/tasks/T193.md`") without that path appearing in its
+own `scope` array — the rule is about what the task is authorized to *edit*, not what it reads.
+
 ## Adding a backlog task → invoke the add-to-backlog skill
 
 To add a task to the backlog, invoke the **`ralph-loop-add-to-backlog`** skill. It is the **single

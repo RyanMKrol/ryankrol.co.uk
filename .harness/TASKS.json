@@ -7448,9 +7448,10 @@
       "title": "loop.sh: auto-deploy to production when the backlog empties out and site files changed since the last deploy",
       "status": "pending",
       "dependsOn": [],
-      "gate": null,
+      "gate": "needs-human",
       "tags": [
-        "harness"
+        "harness",
+        "needs-human"
       ],
       "scope": [
         ".harness/loop.sh",
@@ -7462,13 +7463,6 @@
         "DRY_RUN=1 .harness/loop.sh"
       ],
       "spec": ".harness/tasks/T267.md",
-      "facets": {
-        "layer": "harness",
-        "workType": "feature",
-        "risk": [
-          "cross-cutting"
-        ]
-      },
       "expectsTest": true
     },
     {
@@ -7476,9 +7470,10 @@
       "title": "consolidate-ideas.mjs: auto-enforce the single-pending-deploy-task convention during /convert-ideas",
       "status": "pending",
       "dependsOn": [],
-      "gate": null,
+      "gate": "needs-human",
       "tags": [
-        "harness"
+        "harness",
+        "needs-human"
       ],
       "scope": [
         ".harness/consolidate-ideas.mjs",
@@ -7489,13 +7484,6 @@
         "node --check .harness/consolidate-ideas.mjs"
       ],
       "spec": ".harness/tasks/T268.md",
-      "facets": {
-        "layer": "harness",
-        "workType": "feature",
-        "risk": [
-          "cross-cutting"
-        ]
-      },
       "expectsTest": true
     },
     {
