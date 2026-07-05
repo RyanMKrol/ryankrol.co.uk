@@ -6981,7 +6981,7 @@
     {
       "id": "T250",
       "title": "Perfume rating pips: show hovered number in the label, not just pip fill",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
