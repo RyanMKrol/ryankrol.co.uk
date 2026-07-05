@@ -1,5 +1,6 @@
 import Badge from '../Badge';
 import PipMeter from '../PipMeter';
+import { formatReviewDate } from '../../lib/dateFormat';
 
 const LONGEVITY_MAX = 8;
 const PROJECTION_MAX = 4;
@@ -106,6 +107,13 @@ export default function Variant6Hybrid({ item }) {
         >
           Fragrantica →
         </a>
+      )}
+
+      {item.date && (
+        <p className="perfume-v6-date">Date: {formatReviewDate(item.date)}</p>
+      )}
+      {item.editedDate && (
+        <p className="perfume-v6-date">Updated: {formatReviewDate(item.editedDate)}</p>
       )}
     </div>
   );

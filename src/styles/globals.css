@@ -3401,6 +3401,11 @@ body::before {
   font-size: 0.8rem;
 }
 
+.perfume-v6-date {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
 .perfume-spray-spots {
   display: flex;
   gap: 0.4rem;
