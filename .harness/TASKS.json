@@ -6929,7 +6929,7 @@
     {
       "id": "T248",
       "title": "Fix /reviews/books/edit to match the real books list page's grid layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T243"
       ],
