@@ -7113,7 +7113,7 @@
     {
       "id": "T255",
       "title": "Render commit count on Projects cards and add a commits sort option",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T254"
       ],
