@@ -11,6 +11,7 @@ import useResponsiveColumnCount from '../../hooks/useResponsiveColumnCount';
 const SORT_FIELDS = [
   { key: 'date', label: 'date', defaultValue: 'date', flippedValue: 'date-asc', defaultArrow: '↓', flippedArrow: '↑' },
   { key: 'stars', label: 'stars', defaultValue: 'stars', flippedValue: 'stars-asc', defaultArrow: '↓', flippedArrow: '↑' },
+  { key: 'commits', label: 'commits', defaultValue: 'commits', flippedValue: 'commits-asc', defaultArrow: '↓', flippedArrow: '↑' },
 ];
 
 const LANGUAGE_COLORS = {
@@ -131,6 +132,10 @@ export default function ProjectsPage() {
       sorted.sort((a, b) => (b.stars || 0) - (a.stars || 0));
     } else if (sortBy === 'stars-asc') {
       sorted.sort((a, b) => (a.stars || 0) - (b.stars || 0));
+    } else if (sortBy === 'commits') {
+      sorted.sort((a, b) => (b.commitCount || 0) - (a.commitCount || 0));
+    } else if (sortBy === 'commits-asc') {
+      sorted.sort((a, b) => (a.commitCount || 0) - (b.commitCount || 0));
     } else {
       sorted.sort((a, b) => new Date(b.lastPush) - new Date(a.lastPush));
     }
@@ -253,6 +258,11 @@ export default function ProjectsPage() {
                   {typeof repo.forks === 'number' && repo.forks > 0 && (
                     <span className="project-card-forks">
                       {repo.forks} {repo.forks === 1 ? 'fork' : 'forks'}
+                    </span>
+                  )}
+                  {typeof repo.commitCount === 'number' && (
+                    <span className="project-card-commits">
+                      {repo.commitCount} {repo.commitCount === 1 ? 'commit' : 'commits'}
                     </span>
                   )}
                   {repo.archived && (
