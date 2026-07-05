@@ -7166,6 +7166,1035 @@
         "risk": []
       },
       "expectsTest": false
+    },
+    {
+      "id": "T257",
+      "title": "Build shared bulk metadata-backfill queue + list component",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "metadata-backfill"
+      ],
+      "scope": [
+        "src/lib/backfillQueue.js",
+        "src/lib/backfillQueue.test.js",
+        "src/lib/backfillEligibility.js",
+        "src/lib/backfillEligibility.test.js",
+        "src/components/BulkBackfillList.js"
+      ],
+      "design": "Rate-limit pacing mechanism (owner asked to respect rate limits; the specific mechanism was left for conversion to decide): do NOT fire all of a page's searches in parallel and do NOT rely on a hardcoded 'safe' page size alone — a fixed 15-per-page assumption does not survive two consecutive pages navigated quickly (15+15=30 requests vs the shared 20-req/60s-window budget in src/lib/rateLimit.js). Instead, `backfillQueue.js` runs searches SEQUENTIALLY (concurrency 1) with a fixed minimum spacing between the START of consecutive requests, and on a 429 response reads `retryAfterSeconds` from the JSON body (every search route already returns `{ message }` with a `Retry-After` header + the same shape on 429 per src/lib/rateLimit.js's `checkRateLimit`) and pauses for at least that long before retrying the same item once, then continues the queue. This is robust regardless of chosen page size or how fast the owner clicks through pages, and composes correctly with the existing `withApiCache` wrapper on every search route (repeat searches for a title already looked up in a prior visit resolve instantly from cache without consuming rate-limit budget at all).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T257.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T258",
+      "title": "Bulk metadata-backfill list page for movies",
+      "status": "pending",
+      "dependsOn": [
+        "T257"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "metadata-backfill"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/backfill.js",
+        "src/pages/reviews/movies/edit.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T258.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T259",
+      "title": "Bulk metadata-backfill list page for TV",
+      "status": "pending",
+      "dependsOn": [
+        "T257"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "metadata-backfill"
+      ],
+      "scope": [
+        "src/pages/reviews/tv/backfill.js",
+        "src/pages/reviews/tv/edit.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T259.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T260",
+      "title": "Bulk metadata-backfill list page for books",
+      "status": "pending",
+      "dependsOn": [
+        "T257"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "metadata-backfill"
+      ],
+      "scope": [
+        "src/pages/reviews/books/backfill.js",
+        "src/pages/reviews/books/edit.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T260.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T261",
+      "title": "Bulk metadata-backfill list page for albums",
+      "status": "pending",
+      "dependsOn": [
+        "T257"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews",
+        "metadata-backfill"
+      ],
+      "scope": [
+        "src/pages/reviews/albums/backfill.js",
+        "src/pages/reviews/albums/edit.js"
+      ],
+      "design": "Albums are the one type where 'confirm' is a TWO-step lookup, not one: the per-item edit page's `handleBackfillConfirm` (`src/pages/reviews/albums/edit/[id].js:87-117`) does a SECOND fetch to `/api/lastfm/album-info` after a candidate is picked, to fetch the full metadata (tags/summary/playcount/etc) before saving — the initial `/api/lastfm/album-search` result only carries title/artist/mbid/image. This second call hits a SEPARATE rate-limit bucket (`lastfm-album-info:<ip>`, independent from `lastfm-album-search:<ip>` — see `src/pages/api/lastfm/album-info.js:10` vs `album-search.js:10`), so it does not eat into the search queue's budget, but it still needs its own 429 handling in `onConfirm` (surface the error on that row rather than crashing the page).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T261.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T262",
+      "title": "Fix Edit button overlapping the star rating on /reviews/books/edit (spine-cover cards)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/books/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": "SpineCoverCard (src/components/ReviewCard.js:45-73) renders `.spine-cover-heading` (title + read-only StarRating, `justify-content: space-between`) as the very first thing inside `.spine-cover-body`, itself inset only by `.spine-cover-card`'s own `padding: 1rem`. The shared `.edit-button-overlay` rule (globals.css:1372-1389) absolutely positions the Edit link at `top: 1rem; right: 1rem` relative to the `.review-card-with-edit` wrapper (globals.css:1368-1370), which has no offset of its own from the card — so the button lands directly on top of the star rating's top-right corner, hiding the last star. Fix: take this page's Edit button out of absolute-overlay flow entirely and place it below the card instead, so it can never overlap card content regardless of card height. Do this via a new page-scoped modifier class (do NOT edit the shared `.edit-button-overlay`/`.review-card-with-edit` base rules directly — other tasks in this same batch are adding their own analogous per-page overrides, and editing the shared base would collide with those).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T262.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T263",
+      "title": "Fix low-contrast Edit button on /reviews/movies/edit (poster-banner cards)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": "The poster-banner variant (ReviewCard.js:151-171) renders `.poster-banner` as an `aspect-ratio: 18/5` div with a per-item gradient background (`gradientForKey`, one of 9 hard-coded color pairs in CoverTile.js) and the title text bottom-aligned (`align-items: flex-end`) inside it. The shared `.edit-button-overlay` sits at `top:1rem;right:1rem` relative to the card, which lands inside this banner area (well above the bottom-aligned title, so no structural overlap) but ON TOP of whatever gradient color that card happens to have. Its fixed styling (`--btn-secondary-bg` background, `--color-accent-secondary` text/border, globals.css:1372-1389) was designed for the plain card background color and has inconsistent, sometimes poor, contrast against certain banner gradients (e.g. lighter pastel pairs like the pink/teal/marigold pairs in CoverTile.js's `GRADIENT_PAIRS`). Fix: give this page's Edit button its own opaque, high-contrast treatment (dark semi-opaque chip + white text/border) that reads reliably against ANY of the 9 gradient pairs, rather than trying to tune the existing secondary-accent colors per-gradient.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T263.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T264",
+      "title": "Fix low-contrast Edit button on /reviews/tv/edit (poster-banner cards)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/tv/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": "tv/edit.js uses the exact same `poster-banner` styleVariant and `poster-banner-grid` layout as movies/edit.js (confirmed by reading both files — identical structure, only the fetched type/API endpoint differs), so it has the identical low-contrast Edit-button-over-gradient-banner issue as the movies task in this same batch, for the same reason (see that task's design note). Not mentioned explicitly by the owner, but included here since it demonstrably shares movies' exact bug and the owner asked for one task per affected page type. This intentionally duplicates the movies fix's CSS content under a distinctly-named class (`--tv-banner` vs `--movies-banner`) rather than sharing one class, so the two tasks don't collide by editing the same CSS rule block — a minor, acceptable duplication for the sake of each task staying independently buildable.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T264.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T265",
+      "title": "Fix Edit button overlapping the star rating on /reviews/albums/edit (square-cover cards)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/albums/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": "The owner reported albums/edit \"has a similar issue\" without a screenshot to confirm which symptom (overlap vs. contrast). Read SquareCoverCard (src/components/ReviewCard.js:14-43) and its CSS (globals.css:326-393): `.square-cover-heading` (title + read-only StarRating, `justify-content: space-between`) is the first child of `.square-cover-body`, which sits inside `.square-cover-card` (`padding: 1rem`, flex row with a 100x100px `cover-tile-wrap` — see CoverTile.js:50, `aspectRatio=\"1/1\"` passed explicitly by SquareCoverCard) — structurally identical in effect to spine-cover's heading placement (heading pinned at the card's top edge, inset only by the card's own padding). This is the SAME root cause as books: the shared `.edit-button-overlay` at `top:1rem;right:1rem` lands on the star rating's top-right corner. Judgment call made from CSS analysis alone (no screenshot): treat this as the overlap symptom (matching books), not the contrast symptom (movies/tv) — apply the same \"take the button out of absolute flow, place it below the card\" fix as the books task, under its own square-cover-scoped class.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T265.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T266",
+      "title": "Fix Edit button overlapping the type badge on /reviews/perfumes/edit (Variant6Hybrid cards)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Perfumes doesn't use `ReviewCard`/`styleVariant` at all — `src/pages/reviews/perfumes/edit.js` renders `Variant6Hybrid` (src/components/perfumeVariants/Variant6Hybrid.js) directly, but it's wrapped in the exact same `.review-card-with-edit` + `.edit-button-overlay` pattern as the other four types (confirmed by reading the file: same wrapper div, same Edit `<Link>` with `className=\"edit-button-overlay\"`). Variant6Hybrid.js:32-41 renders `.perfume-v1-header` (a flex row, `justify-content: space-between`, `align-items: flex-start`) as the FIRST child of `.perfume-v6-card` (`padding: 1.25rem`, globals.css:3314-3322) — title/designer on the left, an optional `Badge` (the perfume's `type`, e.g. \"Eau de Parfum\") on the right, right at the card's top-right corner. The shared `.edit-button-overlay` at `top:1rem;right:1rem` lands directly on top of that Badge, same overlap failure mode as books/albums but hiding the type badge instead of a star. Owner never mentioned perfumes, but it demonstrably has the same overlap bug via the same shared CSS pattern (not a coincidence — same root cause named in the idea), so it's included per \"one task per affected page type.\" Apply the same \"take the button out of absolute flow, place it below the card\" fix, scoped to its own class.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T266.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T267",
+      "title": "loop.sh: auto-deploy to production when the backlog empties out and site files changed since the last deploy",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "harness"
+      ],
+      "scope": [
+        ".harness/loop.sh",
+        ".harness/CLAUDE.md"
+      ],
+      "design": "Owner-preferred mechanism (\"even better\" per the idea text) for guaranteeing the site actually ships when a run finishes, rather than depending on a deploy task having been authored at all. Coexists with (does NOT replace) the existing single-pending-deploy-task authoring convention in .harness/CLAUDE.md — this is a belt-and-suspenders fallback for the case where no deploy task got authored (e.g. a task was added via ralph-loop-add-to-backlog outside the /convert-ideas path, or the sibling consolidate-ideas.mjs enforcement task has a gap). Design decision made here, not left open: \"did anything site-touching change since the last deploy\" is answered by DERIVING the baseline from committed history (TASKS.json + git log), not by introducing a new state file — find the highest-numbered task whose title is exactly the canonical 'Deploy pending site changes to production' string and whose status is done, resolve its 'mark done' commit SHA via `git log --grep`, and diff src/ + public/ against that SHA. If no such task/commit is found (fresh history / pattern not found), fail OPEN (assume changed, run the deploy) rather than silently never deploying.",
+      "verify": [
+        "bash -n .harness/loop.sh",
+        "DRY_RUN=1 .harness/loop.sh"
+      ],
+      "spec": ".harness/tasks/T267.md",
+      "facets": {
+        "layer": "harness",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T268",
+      "title": "consolidate-ideas.mjs: auto-enforce the single-pending-deploy-task convention during /convert-ideas",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "harness"
+      ],
+      "scope": [
+        ".harness/consolidate-ideas.mjs",
+        ".harness/CLAUDE.md"
+      ],
+      "design": "Owner's option (1), built as the documented fallback alongside the preferred loop.sh-level option (2, sibling task harness-deploy-enforcement-1) — both are being built as belt-and-suspenders per the owner's own \"even better\" framing being additive, not a replacement. Moves the deploy-task-authoring convention already written in .harness/CLAUDE.md (~lines 15-50: at most one pending deploy task titled exactly 'Deploy pending site changes to production'; add to its dependsOn or create fresh) from an instruction each authoring pass must remember, to a scripted check enforced mechanically inside the ONE locked consolidation pass every /convert-ideas sweep already goes through — this closes off the exact root cause of the T171/T193/T188 double-deploy-task incident (independent authoring passes each reasoning separately) at the one choke point all sweeps share.",
+      "verify": [
+        "node --check .harness/consolidate-ideas.mjs"
+      ],
+      "spec": ".harness/tasks/T268.md",
+      "facets": {
+        "layer": "harness",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T269",
+      "title": "Register hot takes table + create-table script",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "hot-takes"
+      ],
+      "scope": [
+        "src/lib/constants.js",
+        "src/scripts/createHotTakesTable.js",
+        "package.json"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T269.md",
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T270",
+      "title": "Provision the HotTakes table (human step)",
+      "status": "pending",
+      "dependsOn": [
+        "T269"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "hot-takes",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T270.md",
+      "expectsTest": false
+    },
+    {
+      "id": "T271",
+      "title": "Hot takes API routes",
+      "status": "pending",
+      "dependsOn": [
+        "T270"
+      ],
+      "gate": null,
+      "tags": [
+        "hot-takes"
+      ],
+      "scope": [
+        "src/pages/api/hot-takes/**",
+        "src/lib/hotTakes.js"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T271.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T272",
+      "title": "Hot takes page + homepage link",
+      "status": "pending",
+      "dependsOn": [
+        "T271"
+      ],
+      "gate": null,
+      "tags": [
+        "hot-takes"
+      ],
+      "scope": [
+        "src/pages/hot-takes/**",
+        "src/pages/index.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T272.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T273",
+      "title": "Render full Markdown (bold/italic/lists/links) in review display components",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "gate",
+      "tags": [
+        "reviews"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "package.json",
+        "src/components/Markdown.js",
+        "src/components/Markdown.test.js"
+      ],
+      "design": "NEW DEPENDENCY (owner explicitly asked for full Markdown support, so this is justified despite CLAUDE.md's 'no new infra unless explicitly asked' convention - call this out in the PR/commit): add `react-markdown` + `remark-gfm` (GFM gives lists, autolinks, strikethrough - all things the owner asked for) to package.json dependencies. Do NOT add `rehype-raw` or any raw-HTML-passthrough plugin - react-markdown without it already escapes embedded HTML by default, which is the correct safe posture here (review text is owner-authored via the password-gated write endpoints, but there's no reason to widen the render surface to arbitrary HTML). Create ONE new shared component `src/components/Markdown.js` wrapping react-markdown + remark-gfm, e.g. `export default function Markdown({ children, inline = false })`. In `inline` mode (used for short/snippet contexts), configure the `components` prop so block-level wrappers like `p` render as a plain Fragment/span (not a `<p>`) to avoid invalid nested-`<p>`-in-`<p>` HTML and to keep single-line contexts single-line - only inline marks (bold/italic/links/code) should render there. In block mode, render normally (paragraphs, lists, headings all allowed).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T273.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "feature",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T274",
+      "title": "Build a shared Markdown/WYSIWYG-style toolbar editor component for review text inputs",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "gate",
+      "tags": [
+        "reviews"
+      ],
+      "scope": [
+        "src/components/MarkdownEditor.js",
+        "src/components/MarkdownEditor.test.js",
+        "src/styles/globals.css",
+        "package.json"
+      ],
+      "design": "NEW DEPENDENCY under consideration (owner explicitly asked for an out-of-box WYSIWYG-ish markdown editor - 'select text, make it bold, make it italic... if there are any Markdown editors out of the box... it would be cool' - this is a conditional ask, not a mandate, so evaluate fit before committing). PRIMARY CANDIDATE: `@uiw/react-md-editor` - a textarea-based (not a heavy CodeMirror/Monaco framework) React markdown editor with a customizable toolbar (bold/italic/list/link commands out of the box via its `commands` prop) and live preview; roughly in the same weight class as this repo's other dependencies. Evaluate it first. FALLBACK if theming integration is too costly: this site's ENTIRE visual identity is CSS custom properties in `src/styles/globals.css` (`--color-*`, `--accent-*`, `--font-*`, `--radius-*`) with a `html.matrix-active` override for the Konami-code Matrix easter egg (see `useChartTheme()` in `src/hooks/` for the established pattern of reading those vars at runtime and re-reading on class changes) - if `@uiw/react-md-editor`'s own default styling can't be cleanly reskinned to both the Collection theme AND the Matrix theme using CSS-variable overrides (its docs expose some CSS custom properties for this - check `--color-canvas-default` etc. in its stylesheet), do NOT fight it - fall back to hand-rolling a minimal toolbar: a row of buttons (Bold/Italic/List/Link) above a plain `<textarea className=\"collection-form-textarea\">` that insert markdown syntax around the current text-selection (using the textarea's `selectionStart`/`selectionEnd` + a synthetic `onChange`, a well-known lightweight pattern - no dependency needed for this fallback path). Document whichever path was taken and why in the PR description. Either way, ship exactly ONE new component, `src/components/MarkdownEditor.js`, with a **textarea-compatible controlled prop contract**: `{ id, name, value, onChange, placeholder, required, className }` (matching exactly what every existing `<textarea id name value onChange className=\"collection-form-textarea\" placeholder required />` call site already passes - see task 3/4 for the exact call sites this must drop into) - `onChange` must fire with a `{ target: { name, value } }`-shaped event (or be adapted internally) so it works untouched with every existing form's generic `handleInputChange(e)` handler that reads `e.target.name`/`e.target.value`.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T274.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T275",
+      "title": "Wire the shared Markdown editor into all 5 review 'add' forms",
+      "status": "pending",
+      "dependsOn": [
+        "T274"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/add.js",
+        "src/pages/reviews/tv/add.js",
+        "src/pages/reviews/books/add.js",
+        "src/pages/reviews/albums/add.js",
+        "src/pages/reviews/perfumes/add.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T275.md",
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T276",
+      "title": "Wire the shared Markdown editor into all 5 review 'edit' forms",
+      "status": "pending",
+      "dependsOn": [
+        "T274"
+      ],
+      "gate": null,
+      "tags": [
+        "reviews"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/edit/[id].js",
+        "src/pages/reviews/tv/edit/[id].js",
+        "src/pages/reviews/books/edit/[id].js",
+        "src/pages/reviews/albums/edit/[id].js",
+        "src/pages/reviews/perfumes/edit/[id].js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T276.md",
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T277",
+      "title": "Switch /reviews/albums to the shared round-robin masonry layout",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "masonry"
+      ],
+      "scope": [
+        "src/pages/reviews/albums/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Adopt the shared MasonryColumns component + distributeRoundRobin helper + useResponsiveColumnCount hook (built in T240, already reused as-is by T241/T242/T243/T244) for the .square-cover-grid layout — go straight to the JS mechanism rather than doing a CSS-multi-column-then-fix dance. Do NOT rebuild src/lib/masonryColumns.js, src/components/MasonryColumns.js, or src/hooks/useResponsiveColumnCount.js — only consume them. Column count/breakpoint: 2 desktop columns / collapse to 1 below 700px, matching this page's current .square-cover-grid repeat(2, 1fr) + its existing `@media (max-width: 700px)` rule (src/styles/globals.css:389-399) — same numbers books' MasonryColumns rollout used (useResponsiveColumnCount(2, 700), src/pages/reviews/books/index.js:46). NOTE: this task should transparently pick up whatever distribution algorithm distributeRoundRobin ends up implementing at build time — if a separate task changes that function's internals (e.g. for height-aware balancing), this page does not need to change, since it only calls the shared helper through MasonryColumns/useResponsiveColumnCount.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T277.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T278",
+      "title": "Switch /reviews/perfumes to the shared round-robin masonry layout",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "masonry"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Adopt the shared MasonryColumns component + distributeRoundRobin helper + useResponsiveColumnCount hook (T240, already reused as-is by T241/T242/T243/T244) for the .perfume-card-grid layout. Do NOT rebuild the shared helpers, only consume them. Column count/breakpoint: 2 desktop columns / collapse to 1 below 700px, matching this page's current .perfume-card-grid repeat(2, 1fr) + its existing `@media (max-width: 700px)` rule (src/styles/globals.css:403-413) — same numbers as the Albums task and books' rollout. This page has NO pagination today (renders all filteredPerfumes directly, no PAGE_SIZE/paginate) — do not introduce pagination as part of this task, it's out of scope; just swap the rendering mechanism for whatever list is already being rendered. Like the Albums task, this should transparently pick up whatever distribution algorithm distributeRoundRobin ends up implementing at build time.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T278.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T279",
+      "title": "Truncate long book review text with a Read more/Show less expand toggle (fixes masonry column-height imbalance)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "masonry",
+        "bugfix"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/lib/reviewText.js",
+        "src/lib/reviewText.test.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Owner's own resolution to the books masonry column-height-imbalance design fork raised by this cluster (see the companion idea bullet above): rather than any of accept-imbalance / height-aware packing / DOM-measurement rebalancing, the owner picked truncation — 'let's truncate reviews and let's have an expand button that people can click on if they want to read the rest of the review... if we pick maybe the average size of a review and truncate to that length, that would be a good way to start.' This directly fixes the masonry symptom because a bounded card height is what actually caps how unbalanced two round-robin columns can get — `distributeRoundRobin` itself (src/lib/masonryColumns.js) does NOT need to change. Truncation length grounded in real data, not guessed: a one-off read-only scan of the live `BookRatingsV4` table (53 rated books) during conversion found `review_text` lengths ranging 61-2145 characters, mean ≈259 chars, median 179 chars — the 2145-char outlier is 'Ultra-Processed People', the exact book named in the owner's original bug report, confirming the root-cause diagnosis. Use `maxLength = 260` (the mean, rounded) as the truncation constant. Scope this to the `SpineCoverCard` sub-component in `src/components/ReviewCard.js` ONLY — that's the variant `/reviews/books` (src/pages/reviews/books/index.js:178) and `/reviews/books/edit` (src/pages/reviews/books/edit.js:77) both render via `styleVariant=\"spine-cover\"`, so both automatically get this fix from one shared-component change. Do NOT touch `SquareCoverCard` (albums — already implicitly height-bounded via its existing `splitHighlights(...).slice(0,4)` fragment cap, so it doesn't have this failure mode) or the poster-banner/default variants (movies/tv — no bug reported there; flag as a possible future follow-up idea rather than doing it now, since the owner's answer was specifically scoped to books). Implement the truncation math as a new pure, tested helper in `src/lib/reviewText.js` per this repo's 'pure logic in src/lib ships with tests' convention, rather than inlining string-slicing logic in the component.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T279.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T280",
+      "title": "Remove the redundant mobile-only quicklinks section from the homepage",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T280.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T281",
+      "title": "Replace considerTravelSize/considerFullBottle with a single ownership enum field (validator + API round-trip + docs)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "scope": [
+        "src/lib/perfumes.js",
+        "src/lib/perfumes.test.js",
+        "src/pages/api/reviews/perfumes/add.js",
+        "src/pages/api/reviews/perfumes/update.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T281.md",
+      "facets": {
+        "layer": "api",
+        "workType": "endpoint",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T282",
+      "title": "Migrate existing PerfumeRatings rows from considerTravelSize/considerFullBottle to the new ownership field",
+      "status": "pending",
+      "dependsOn": [
+        "T281"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "scope": [
+        "src/scripts/migratePerfumeOwnership.js",
+        "src/scripts/migratePerfumeOwnership.test.js",
+        "package.json"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T282.md",
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T283",
+      "title": "Replace the two 'consider' checkboxes with a single ownership picker on the perfume add/edit forms",
+      "status": "pending",
+      "dependsOn": [
+        "T281"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "scope": [
+        "src/components/PerfumeCharacteristics.js",
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T283.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T284",
+      "title": "Show the ownership field (sample/travel size/full bottle) on the read-only perfume review card",
+      "status": "pending",
+      "dependsOn": [
+        "T281"
+      ],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T284.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T285",
+      "title": "Give the perfume Type select's caret proper breathing room",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "perfumes"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js",
+        "src/styles/globals.css"
+      ],
+      "design": "Replace reliance on the browser's native <select> arrow chrome (which ignores element padding) with a custom CSS-drawn caret: add a new `.collection-form-select` class in globals.css that sets `appearance: none` (+ -webkit-/-moz- prefixes), a background-image chevron, and explicit `padding-right` to clear it. Apply the new class alongside `.collection-form-input` on both the add and edit Type <select> elements (identical instances, same root cause, same fix). This is chosen over a plain `padding-right` bump on the existing native select because native arrow rendering is inconsistent across browsers and ignores padding — a CSS-drawn caret gives exact, portable control over the spacing the owner is complaining about. Keep the existing `style={{ width: 'auto' }}` shrink-to-fit behaviour untouched; the complaint is about caret/border spacing, not field width.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T285.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T286",
+      "title": "Merge /programmes stats+charts into the top of /workouts (shared Push/Pull/Legs filter, own date-range), remove the separate page, and default the filter to 'all'",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "workouts",
+        "cleanup"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/pages/programmes/index.js",
+        "src/lib/programmeStats.js",
+        "src/lib/dateRange.js",
+        "src/components/ProgrammeOverviewCharts.js",
+        "src/components/DateRangeFilter.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": "IDEA-2 INVESTIGATION (resolved, no data/logic bug found): read src/lib/programmeStats.js in full and traced the arithmetic by hand. classifyProgramme() lowercases the title then does a plain substring match against 'push'/'pull'/'legs' in a fixed loop order — it is case-insensitive correctly (toLowerCase() is applied before .includes()), a title matching more than one keyword only ever counts once (first-match-wins, no double-counting), and a title matching none of the three correctly falls out of every per-programme bucket (and out of the 'all' bucket too, since aggregateProgramme's 'all' branch is `classifyProgramme(w) !== null`, i.e. 'all classified workouts', not literally every workout — this is a real, pre-existing semantic quirk, see caveat below). Cross-checking the four July sessions named in the idea (Pull 5 July, Push 3 July, Legs 4 July, Pull 2 July) against classifyProgramme's logic: exactly one classifies as 'push' (3 July) — which exactly matches the chart's reported 'Sessions: 1' for a Push-filtered view. The arithmetic is fully consistent; there is no classification bug and no data-source mismatch (both pages hit the identical GET /api/workouts?mode=all endpoint). The ACTUAL root cause is a small but real UX defect: src/pages/programmes/index.js:15 hardcodes `useState('push')` as the initial filter — every fresh page load defaults to the Push-only view rather than 'all' (which is first in FILTER_OPTIONS and is /workouts' own default at index.js:78 `useState('all')`), even though nothing in the UI strongly signals 'you are viewing a filtered subset' to a user glancing at a chart tooltip. That default (not a data bug, not a classifyProgramme bug) is what plausibly produced the owner's 'Sessions: 1 vs 4 visible' confusion. FIX: don't ship this as a separate bugfix task — fold it directly into this merge task by making the merged /workouts stats section default to 'all' (reusing /workouts' existing activeFilter default, see Do step 1), which structurally eliminates the confusing default as a side effect of the merge itself. Separately assessed and REJECTED as its own task: the duplicate month-bucketing observation (programmeStats.js's inline frequencyByMonth vs workoutQueries.js's exported bucketVolumeByMonth()). These are NOT true duplicates worth consolidating — bucketVolumeByMonth produces a zero-filled trailing-N-calendar-months window keyed off `workoutDate` for the server-side /api/workouts/stats route (a completely different consumer, unrelated to programmes/workouts UI), while programmeStats.js's frequencyByMonth produces a sparse (only-months-with-data) count over an already client-filtered (programme + date-range) subset keyed off `start_time || workoutDate`. Forcing a shared abstraction between 'zero-filled trailing window for one API route' and 'sparse count over an arbitrary pre-filtered client array' would just be indirection for indirection's sake, against this repo's 'keep it simple' convention — no action taken, no task authored for this.\n\nIDEA-1 DESIGN DECISION (confident, not left as an open question): unify the Push/Pull/Legs control — the merged /workouts page keeps exactly ONE Push/Pull/Legs selector (the existing `activeFilter` PillGroup at workouts/index.js:78/154-159), which now drives BOTH the new stats/charts block above and the existing paginated session list below simultaneously. This is simpler, matches the owner's stated motivation (fewer clicks/less duplication), and avoids two visually-separate Push/Pull/Legs rows on one page. However, KEEP the stats block's own separate date-range control (3 months/1 year/all-time, reusing src/components/DateRangeFilter.js + src/lib/dateRange.js as programmes/index.js already does) scoped ONLY to the stats/charts block — the paginated session list has no natural 'date range' concept today (it's just paginated over everything) and dropping date-range trend analysis entirely would be a real feature loss for no simplicity gain; one extra control row is a reasonable, minor cost for keeping that capability. `/programmes` is deleted outright (no redirect) per the owner's own 'removed' framing and this being a low-traffic personal site — consistent with 'keep it simple, no new infra'. Note CLAUDE.md/README.md currently have NO file-map entry for src/pages/programmes/index.js at all (checked via grep — zero hits) — that's a pre-existing doc gap, not something this task regresses, but this task should still ADD a description of the new merged /workouts behavior to CLAUDE.md's file map row for src/pages/workouts/index.js.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T286.md",
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T287",
+      "title": "Promote commit count to a top-right icon+count on /projects cards",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "projects"
+      ],
+      "scope": [
+        "src/pages/projects/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Codebase convention check: no SVG icon set or icon library exists anywhere in src/components — the only existing icon-like treatments are single Unicode glyphs inheriting text color/font (★ for stars in project-card-stars, ⌕ for the search icon in SearchInput.js's .collection-search-icon). Match that convention rather than introducing SVG/emoji. Chosen glyph: ⎇ (U+2387, ALTERNATIVE KEY SYMBOL) — a standard BMP character long-established in dev tooling (shell prompts, editor statuslines) as a branch/VCS indicator, monochrome so it inherits currentColor like ★ does, and a plain text glyph so no new asset/dependency. Placement: same top-right row as the existing star count, not its own line — wrap both in a new flex container (.project-card-top-right, gap 0.75rem) that replaces the standalone stars span as project-card-top's second child, stars first then the new commit badge (⎇ {commitCount}) immediately to its right, styled identically to .project-card-stars (font-mono, 0.875rem, color-ink-soft) for visual consistency. Once promoted to the top row, remove the now-redundant plain-text commit count from the bottom meta row (lines 263-267) — keeping both would show the same number twice on one card, and the meta row already carries language/date/forks/archived without needing to also repeat commits. Fallback note for the builder: visually verify ⎇ renders cleanly (not a tofu/missing-glyph box) in the deployed JetBrains Mono font stack via the dev server; if it doesn't, substitute a plain filled circle ● (U+25CF) instead — do not introduce an SVG or emoji icon either way.",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T287.md",
+      "facets": {
+        "layer": "page",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T288",
+      "title": "Give archived /projects cards a flush corner tag instead of inline badge text",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "projects"
+      ],
+      "scope": [
+        "src/pages/projects/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": "Owner explicitly wants active design exploration and floated 'earmark the corner and mark it grey' as one direction while saying they're open to suggestion. Weighed two genuinely different directions: (A) a corner tag/ribbon (the owner's own suggestion, refined into a flush rectangular flag rather than a rotated ribbon — rotation/clip-path corner-ribbon tricks are more prone to breaking inside the masonry layout's break-inside:avoid columns at odd card widths, so a plain flush corner rectangle is the lower-risk execution of the same idea), vs (B) a full-card treatment (desaturated border + dimmed content). Chose (A): it's the owner's own explicit starting point (so no need to interrupt them with a menu when one direction is clearly closer to what they asked for), it's a well-established, instantly-recognisable at-a-glance pattern (like a 'sold'/'sale' corner flag), it's lower-risk (touches only archived cards, doesn't alter the base card look non-archived users see 95% of the time), and unlike (B) it doesn't risk hurting the legibility of the description/tags text on an otherwise-normal archived project someone may still want to read closely. Placement: deliberately the TOP-LEFT corner, not top-right — this is the cluster's key coherence call, since the sibling task in this same cluster (commit-count promotion) is claiming the top-right corner for the star+commit row; putting the archived tag in the opposite corner means the two new visual treatments never compete for the same space. Once the corner tag exists, remove the old soft-text Badge from the meta row entirely — it's a straight replacement, not an addition, so an archived card doesn't show the same signal twice (once boldly in the corner, once faintly in the meta row).",
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T288.md",
+      "facets": {
+        "layer": "page",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T289",
+      "title": "Add bestSetVolume + winning-set-index tracking to calculateExerciseMetrics, and a pure detectPersonalBests function",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "scope": [
+        "src/lib/workoutMetrics.js",
+        "src/lib/workoutMetrics.test.js"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T289.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": []
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T290",
+      "title": "Wire personal-best detection into the shared storeExercises/storeWorkoutInDynamoDB write path (the core architectural change)",
+      "status": "pending",
+      "dependsOn": [
+        "T289"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "scope": [
+        "src/lib/workoutBackfill.js",
+        "src/lib/workoutBackfill.test.js",
+        "src/lib/workoutQueries.js",
+        "src/lib/workoutQueries.test.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T290.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "feature",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T291",
+      "title": "One-time script: backfill personal-best flags across all existing historical workouts/exercise rows",
+      "status": "pending",
+      "dependsOn": [
+        "T290"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "scope": [
+        "src/scripts/backfillPersonalBests.js",
+        "src/scripts/backfillPersonalBests.test.js",
+        "package.json"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T291.md",
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T292",
+      "title": "Run the one-time historical personal-bests backfill against production",
+      "status": "pending",
+      "dependsOn": [
+        "T291"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "workouts",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T292.md",
+      "expectsTest": false
+    },
+    {
+      "id": "T293",
+      "title": "Show a personal-best medal next to each PR'd exercise line on the /workouts list",
+      "status": "pending",
+      "dependsOn": [
+        "T290"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T293.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T294",
+      "title": "Show a personal-best medal next to the specific set that broke a personal best on the workout detail page",
+      "status": "pending",
+      "dependsOn": [
+        "T290"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts"
+      ],
+      "scope": [
+        "src/pages/workouts/[id].js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T294.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
     }
   ]
 }
