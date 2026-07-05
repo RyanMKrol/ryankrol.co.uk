@@ -6850,7 +6850,7 @@
     {
       "id": "T245",
       "title": "Fix /reviews/movies/edit to match the real movies list page's grid layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T241"
       ],
