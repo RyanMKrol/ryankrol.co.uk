@@ -7035,7 +7035,7 @@
     {
       "id": "T252",
       "title": "Render review date + \"last edited\" date on the perfume review card",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
