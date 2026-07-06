@@ -7283,7 +7283,7 @@
     {
       "id": "T261",
       "title": "Bulk metadata-backfill list page for albums",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T257"
       ],
