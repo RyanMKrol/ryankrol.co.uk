@@ -8489,7 +8489,7 @@
     {
       "id": "T305",
       "title": "Fix /reviews/perfumes/edit column count to match the view page (2 columns via MasonryColumns)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
