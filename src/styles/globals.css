@@ -1416,6 +1416,19 @@ input[type='range'].form-input::-moz-range-thumb {
   background-color: rgba(0, 0, 0, 0.75);
 }
 
+/* Edit button fix for tv/poster-banner: same fix as movies/poster-banner (shares the
+   identical styleVariant and bug) but its own class so this task doesn't collide with
+   the movies task editing the same CSS rule. */
+.edit-button-overlay--tv-banner {
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.edit-button-overlay--tv-banner:hover {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
 /* Workout Styling Variants */
 .workout-style-1 {
   background: var(--color-surface-alt);

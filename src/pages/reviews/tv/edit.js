@@ -81,7 +81,7 @@ export default function EditTVShows() {
             />
             <Link
               href={`/reviews/tv/edit/${encodeURIComponent(tvShow.id)}`}
-              className="edit-button-overlay"
+              className="edit-button-overlay edit-button-overlay--tv-banner"
             >
               Edit
             </Link>
