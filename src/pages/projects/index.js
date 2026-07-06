@@ -222,6 +222,9 @@ export default function ProjectsPage() {
             columnClassName="projects-grid-col"
             renderItem={(repo) => (
               <div key={repo.fullName} className="project-card">
+                {repo.archived && (
+                  <div className="project-card-archived-tag">archived</div>
+                )}
                 <div className="project-card-top">
                   <a
                     href={repo.url}
@@ -266,11 +269,6 @@ export default function ProjectsPage() {
                     <span className="project-card-forks">
                       {repo.forks} {repo.forks === 1 ? 'fork' : 'forks'}
                     </span>
-                  )}
-                  {repo.archived && (
-                    <Badge accentColor="var(--color-ink-mute)" variant="soft" mono={false}>
-                      archived
-                    </Badge>
                   )}
                 </div>
 

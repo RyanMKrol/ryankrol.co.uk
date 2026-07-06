@@ -1848,6 +1848,7 @@ input[type='range'].form-input::-moz-range-thumb {
 }
 
 .project-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -1857,6 +1858,21 @@ input[type='range'].form-input::-moz-range-thumb {
   border-radius: var(--radius-card);
   background-color: var(--color-card);
   break-inside: avoid;
+}
+
+.project-card-archived-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.25rem 0.6rem;
+  background-color: var(--color-ink-mute);
+  color: var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-top-left-radius: var(--radius-card);
+  border-bottom-right-radius: var(--radius-card);
 }
 
 .project-card-top {
