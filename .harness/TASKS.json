@@ -7621,7 +7621,7 @@
     {
       "id": "T274",
       "title": "Build a shared Markdown/WYSIWYG-style toolbar editor component for review text inputs",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
