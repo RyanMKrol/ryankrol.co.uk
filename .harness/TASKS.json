@@ -8696,7 +8696,7 @@
     {
       "id": "T312",
       "title": "Remove now-fully-dead shared .edit-button-overlay/.review-card-with-edit CSS + final cross-type consistency check",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T307",
         "T308",
