@@ -7564,7 +7564,7 @@
     {
       "id": "T272",
       "title": "Hot takes page + homepage link",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T271"
       ],
