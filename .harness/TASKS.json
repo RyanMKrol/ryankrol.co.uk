@@ -7365,7 +7365,7 @@
     {
       "id": "T264",
       "title": "Fix low-contrast Edit button on /reviews/tv/edit (poster-banner cards)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
