@@ -8439,7 +8439,7 @@
     {
       "id": "T303",
       "title": "Move perfume ownership pill into the card header, next to the type pill",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
