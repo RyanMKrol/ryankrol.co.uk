@@ -7989,7 +7989,7 @@
     {
       "id": "T287",
       "title": "Promote commit count to a top-right icon+count on /projects cards",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
