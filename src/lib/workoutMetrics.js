@@ -24,6 +24,10 @@ export function calculateExerciseMetrics(exercise) {
   let sessionVolume = 0;
   let heaviestWeight = 0;
   let bestEstimated1RM = 0;
+  let bestSetVolume = 0;
+  let heaviestWeightSetIndex = -1;
+  let bestEstimated1RMSetIndex = -1;
+  let bestSetVolumeSetIndex = -1;
   let totalWorkingSets = 0;
   let totalWarmupSets = 0;
   let totalReps = 0;
@@ -32,7 +36,7 @@ export function calculateExerciseMetrics(exercise) {
   let totalDuration = 0;
   let hasWeightData = false;
 
-  exercise.sets.forEach(set => {
+  exercise.sets.forEach((set, setIndex) => {
     const weight = set.weight_kg !== null ? parseFloat(set.weight_kg) : 0;
     const reps = set.reps !== null ? parseInt(set.reps) : 0;
     const distance = set.distance_meters !== null ? parseFloat(set.distance_meters) : 0;
@@ -56,11 +60,18 @@ export function calculateExerciseMetrics(exercise) {
         
         if (weight > heaviestWeight) {
           heaviestWeight = weight;
+          heaviestWeightSetIndex = setIndex;
         }
 
         const estimated1RM = calculateEstimated1RM(weight, reps);
         if (estimated1RM > bestEstimated1RM) {
           bestEstimated1RM = estimated1RM;
+          bestEstimated1RMSetIndex = setIndex;
+        }
+
+        if (volume > bestSetVolume) {
+          bestSetVolume = volume;
+          bestSetVolumeSetIndex = setIndex;
         }
       }
     }
@@ -80,11 +91,38 @@ export function calculateExerciseMetrics(exercise) {
     // Only include weight-based metrics if the exercise has weight data
     heaviestWeight: hasWeightData ? heaviestWeight : null,
     bestEstimated1RM: hasWeightData && bestEstimated1RM > 0 ? bestEstimated1RM : null,
+    bestSetVolume: hasWeightData && bestSetVolume > 0 ? bestSetVolume : null,
+    heaviestWeightSetIndex,
+    bestEstimated1RMSetIndex,
+    bestSetVolumeSetIndex,
     averageWeight: hasWeightData && totalReps > 0 ? Math.round((workingSetVolume / totalReps) * 10) / 10 : null,
     // Add cardio metrics
     totalDistance: totalDistance > 0 ? Math.round(totalDistance * 10) / 10 : null,
     totalDuration: totalDuration > 0 ? totalDuration : null,
     exerciseType: hasWeightData ? 'strength' : (totalDistance > 0 || totalDuration > 0) ? 'cardio' : 'bodyweight'
+  };
+}
+
+/**
+ * Detect which axes of a session's exercise metrics establish a new personal best
+ * @param {Object} sessionMetrics - (subset of) calculateExerciseMetrics's return value
+ * @param {Object|null} priorBest - { heaviestWeight, bestEstimated1RM, bestSetVolume } or null/undefined if never logged before
+ * @returns {Object} { weightPRSetIndex, oneRepMaxPRSetIndex, volumePRSetIndex }
+ */
+export function detectPersonalBests(sessionMetrics, priorBest) {
+  const isPR = (sessionValue, priorValue) =>
+    sessionValue !== null && (!priorBest || priorValue === null || priorValue === undefined || sessionValue > priorValue);
+
+  return {
+    weightPRSetIndex: isPR(sessionMetrics.heaviestWeight, priorBest?.heaviestWeight)
+      ? sessionMetrics.heaviestWeightSetIndex
+      : null,
+    oneRepMaxPRSetIndex: isPR(sessionMetrics.bestEstimated1RM, priorBest?.bestEstimated1RM)
+      ? sessionMetrics.bestEstimated1RMSetIndex
+      : null,
+    volumePRSetIndex: isPR(sessionMetrics.bestSetVolume, priorBest?.bestSetVolume)
+      ? sessionMetrics.bestSetVolumeSetIndex
+      : null,
   };
 }
 
