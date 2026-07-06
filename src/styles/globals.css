@@ -308,6 +308,18 @@
   line-height: var(--line-height-body);
 }
 
+.spine-cover-expand-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  align-self: flex-start;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-accent-secondary);
+  text-decoration: underline;
+}
+
 .spine-cover-list {
   display: flex;
   gap: 1.5rem;

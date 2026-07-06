@@ -1,8 +1,9 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import CoverTile, { gradientForKey } from './CoverTile';
 import StarRating from './StarRating';
 import Markdown from './Markdown';
 import { formatReviewDate } from '../lib/dateFormat';
+import { truncateReviewText } from '../lib/reviewText';
 
 function splitHighlights(highlights) {
   if (!highlights) return [];
@@ -50,6 +51,10 @@ function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts, gr
 }
 
 function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
+  const [expanded, setExpanded] = useState(false);
+  const fullText = getThoughts();
+  const { text: previewText, truncated } = truncateReviewText(fullText, 260);
+
   const metaParts = [
     item.author,
     item.pageCount ? `${item.pageCount}pp` : null,
@@ -71,10 +76,17 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
         {metaParts.length > 0 && (
           <p className="spine-cover-meta">{metaParts.join(' · ')}</p>
         )}
-        {getThoughts() && (
-          <div className="spine-cover-snippet">
-            <Markdown>{getThoughts()}</Markdown>
-          </div>
+        {fullText && (
+          <p className="spine-cover-snippet">{expanded ? fullText : previewText}</p>
+        )}
+        {truncated && (
+          <button
+            type="button"
+            className="spine-cover-expand-btn"
+            onClick={() => setExpanded((e) => !e)}
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
         )}
       </div>
     </div>
