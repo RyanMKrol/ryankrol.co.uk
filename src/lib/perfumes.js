@@ -40,6 +40,12 @@ function validateApplicationSpots(value) {
   );
 }
 
+const VALID_OWNERSHIP = ['Sample', 'Travel size', 'Full bottle'];
+
+function validateOwnership(value) {
+  return VALID_OWNERSHIP.includes(value);
+}
+
 function validateFragranticaUrl(value) {
   if (typeof value !== 'string' || value.trim() === '') {
     return false;
@@ -74,6 +80,7 @@ export {
   validateProjection,
   validateSeasons,
   validateApplicationSpots,
+  validateOwnership,
   validateFragranticaUrl,
   perfumeId,
 };

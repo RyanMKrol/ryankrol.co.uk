@@ -4,6 +4,7 @@ import {
   validateProjection,
   validateSeasons,
   validateApplicationSpots,
+  validateOwnership,
   validateFragranticaUrl,
   perfumeId,
 } from './perfumes';
@@ -87,6 +88,16 @@ describe('validateApplicationSpots', () => {
   test('rejects a sprays value of zero or negative', () => {
     expect(validateApplicationSpots([{ spot: 'Wrists', sprays: 0 }])).toBe(false);
     expect(validateApplicationSpots([{ spot: 'Wrists', sprays: -1 }])).toBe(false);
+  });
+});
+
+describe('validateOwnership', () => {
+  test.each(['Sample', 'Travel size', 'Full bottle'])('accepts %p', (value) => {
+    expect(validateOwnership(value)).toBe(true);
+  });
+
+  test.each(['sample', 'Full Bottle', '', null, undefined, 123])('rejects %p', (value) => {
+    expect(validateOwnership(value)).toBe(false);
   });
 });
 

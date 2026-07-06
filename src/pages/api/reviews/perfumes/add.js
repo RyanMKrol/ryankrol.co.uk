@@ -8,6 +8,7 @@ import {
   validateProjection,
   validateSeasons,
   validateApplicationSpots,
+  validateOwnership,
   validateFragranticaUrl,
   perfumeId,
 } from '../../../../lib/perfumes';
@@ -23,8 +24,7 @@ export default async function handler(req, res) {
     type,
     description,
     rating,
-    considerTravelSize,
-    considerFullBottle,
+    ownership,
     longevity,
     projection,
     seasons,
@@ -70,6 +70,12 @@ export default async function handler(req, res) {
       .json({ message: 'Application spots must be an array of valid application spot values' });
   }
 
+  if (ownership !== undefined && !validateOwnership(ownership)) {
+    return res
+      .status(400)
+      .json({ message: "Ownership must be one of 'Sample', 'Travel size', 'Full bottle'" });
+  }
+
   try {
     const now = new Date();
     const dateString = now.toLocaleDateString('en-GB').replace(/\//g, '-');
@@ -81,9 +87,8 @@ export default async function handler(req, res) {
       type,
       description,
       rating,
-      considerTravelSize,
-      considerFullBottle,
       fragranticaUrl,
+      ...(ownership !== undefined && { ownership }),
       ...(longevity !== undefined && { longevity }),
       ...(projection !== undefined && { projection }),
       ...(seasons !== undefined && { seasons }),

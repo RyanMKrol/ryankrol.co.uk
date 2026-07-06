@@ -272,8 +272,7 @@ Perfume reviews. Validation for the fields below lives in `src/lib/perfumes.js`.
   type: "Eau de Parfum",
   description: "...",
   rating: 8,                         // Integer 0–10 (perfumes use a wider scale than other reviews)
-  considerTravelSize: true,
-  considerFullBottle: false,
+  ownership: "Full bottle",  // 'Sample' | 'Travel size' | 'Full bottle'
   longevity: 6,                      // Integer 0–8
   projection: 3,                     // Integer 1–4
   seasons: ["Autumn", "Night"],      // Subset of Winter/Spring/Summer/Autumn/Day/Night
