@@ -7255,7 +7255,7 @@
     {
       "id": "T260",
       "title": "Bulk metadata-backfill list page for books",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T257"
       ],
