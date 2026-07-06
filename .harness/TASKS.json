@@ -7338,7 +7338,7 @@
     {
       "id": "T263",
       "title": "Fix low-contrast Edit button on /reviews/movies/edit (poster-banner cards)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
