@@ -7419,7 +7419,7 @@
     {
       "id": "T266",
       "title": "Fix Edit button overlapping the type badge on /reviews/perfumes/edit (Variant6Hybrid cards)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
