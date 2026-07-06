@@ -8279,7 +8279,7 @@
     {
       "id": "T297",
       "title": "Add a hot-takes pill to the header nav",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
