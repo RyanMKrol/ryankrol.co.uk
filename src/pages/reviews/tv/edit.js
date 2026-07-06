@@ -68,19 +68,21 @@ export default function EditTVShows() {
         className="poster-banner-grid"
         columnClassName="poster-banner-grid-col"
         renderItem={(tvShow) => (
-          <div key={tvShow.id} className="review-card-with-edit">
+          <div key={tvShow.id} className="review-edit-card">
+            <div className="review-edit-header">
+              <Link
+                href={`/reviews/tv/edit/${encodeURIComponent(tvShow.id)}`}
+                className="review-edit-button"
+              >
+                Edit
+              </Link>
+            </div>
             <ReviewCard
               item={tvShow}
               type="tv"
               isLast={false}
               styleVariant="poster-banner"
             />
-            <Link
-              href={`/reviews/tv/edit/${encodeURIComponent(tvShow.id)}`}
-              className="edit-button-overlay edit-button-overlay--tv-banner"
-            >
-              Edit
-            </Link>
           </div>
         )}
       />
