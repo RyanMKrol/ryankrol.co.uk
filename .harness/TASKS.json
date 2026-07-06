@@ -8665,7 +8665,7 @@
     {
       "id": "T311",
       "title": "Apply the edit header-strip pattern to /reviews/perfumes/edit (Variant6Hybrid cards)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T306",
         "T305"
