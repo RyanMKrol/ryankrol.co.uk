@@ -1443,20 +1443,6 @@ input[type='range'].form-input::-moz-range-thumb {
   background-color: var(--btn-secondary-hover-bg);
 }
 
-/* Edit button fix for books/spine-cover: the shared .edit-button-overlay's absolute
-   top-right position overlaps the spine-cover heading's star rating. Take this page's
-   button out of absolute flow entirely and place it below the card. */
-.review-card-with-edit--spine-cover {
-  display: flex;
-  flex-direction: column;
-}
-
-.review-card-with-edit--spine-cover .edit-button-overlay {
-  position: static;
-  align-self: flex-end;
-  margin-top: 0.5rem;
-}
-
 /* Edit button fix for movies/poster-banner: give the button an opaque, high-contrast
    treatment so it stays legible against any of the poster banner's gradient colors
    (see CoverTile.js's GRADIENT_PAIRS), instead of the shared secondary-accent colors

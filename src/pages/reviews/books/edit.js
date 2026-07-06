@@ -68,19 +68,21 @@ export default function EditBooks() {
         className="spine-cover-list"
         columnClassName="spine-cover-list-col"
         renderItem={(book) => (
-          <div key={book.id} className="review-card-with-edit review-card-with-edit--spine-cover">
+          <div key={book.id} className="review-edit-card">
+            <div className="review-edit-header">
+              <Link
+                href={`/reviews/books/edit/${encodeURIComponent(book.id)}`}
+                className="review-edit-button"
+              >
+                Edit
+              </Link>
+            </div>
             <ReviewCard
               item={book}
               type="book"
               isLast={false}
               styleVariant="spine-cover"
             />
-            <Link
-              href={`/reviews/books/edit/${encodeURIComponent(book.id)}`}
-              className="edit-button-overlay"
-            >
-              Edit
-            </Link>
           </div>
         )}
       />
