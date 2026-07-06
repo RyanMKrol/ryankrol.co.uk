@@ -8095,7 +8095,7 @@
     {
       "id": "T291",
       "title": "One-time script: backfill personal-best flags across all existing historical workouts/exercise rows",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T290"
       ],
