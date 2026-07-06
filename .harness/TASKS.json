@@ -8305,7 +8305,7 @@
     {
       "id": "T298",
       "title": "Add a Hot takes preview panel to the homepage",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
