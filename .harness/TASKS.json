@@ -8635,7 +8635,7 @@
     {
       "id": "T310",
       "title": "Apply the edit header-strip pattern to /reviews/albums/edit (square-cover cards)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T306"
       ],
