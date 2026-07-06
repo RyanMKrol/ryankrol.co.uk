@@ -20,6 +20,7 @@
     "workout:backfill-metrics": "node src/scripts/backfillIncompleteWorkoutMetrics.js",
     "workout:backfill-missing-exercises": "node src/scripts/backfillMissingExerciseRows.js",
     "workout:migrate-legacy-exercises": "node src/scripts/migrateLegacyExerciseRows.js",
+    "workouts:backfill-personal-bests": "node src/scripts/backfillPersonalBests.js",
     "perfume:create-table": "node src/scripts/createPerfumeTable.js",
     "perfume:migrate-ownership": "node src/scripts/migratePerfumeOwnership.js",
     "hot-takes:create-table": "node src/scripts/createHotTakesTable.js",
