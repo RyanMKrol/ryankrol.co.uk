@@ -51,8 +51,8 @@ next-env.d.ts
 .harness/tracking/IDEAS.md
 # /convert-ideas scratch: a per-unit agent writes its decided task(s) to its own uniquely-named
 # file here (zero lock contention during interview/shaping); the Stage 3 consolidation pass reads,
-# allocates ids, and deletes them. Never committed — see .harness/CLAUDE.md and
-# .claude/commands/convert-ideas.md.
+# allocates ids, and deletes them. Never committed — see .harness/CLAUDE.md and the
+# implementation-harness plugin's convert-ideas skill.
 .harness/.pending-tasks/
 # /convert-ideas scratch: a per-unit agent blocked on a genuine open question (it has no
 # AskUserQuestion — that's main-thread-only) writes its questions here durably BEFORE ending its

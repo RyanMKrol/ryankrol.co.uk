@@ -8197,25 +8197,6 @@
       "expectsTest": false
     },
     {
-      "id": "T295",
-      "title": "Strengthen /convert-ideas' Stage 2 interview to demand a high-rigor, verifiable Definition of Done",
-      "status": "pending",
-      "dependsOn": [],
-      "gate": "needs-human",
-      "tags": [
-        "harness",
-        "docs",
-        "needs-human"
-      ],
-      "scope": [
-        ".claude/commands/convert-ideas.md"
-      ],
-      "design": null,
-      "verify": [],
-      "spec": ".harness/tasks/T295.md",
-      "expectsTest": false
-    },
-    {
       "id": "T296",
       "title": "Promote Header into _app.js as a persistent layout so nav scroll position survives navigation",
       "status": "done",

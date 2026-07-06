@@ -157,8 +157,9 @@ interview/shaping), and a **single consolidation pass** — `.harness/scripts/co
 `.mjs`, run once after every agent reports back — allocates every task id, resolves cross-idea
 `dependsOn` links, writes `TASKS.json` + spec files, commits, pushes, and cleans up `IDEAS.md` — all in
 one locked step instead of one per idea. Full mechanics (the pending-file schema, the consolidation
-script, the recovery check for an interrupted prior sweep) live in the skill itself,
-`.claude/commands/convert-ideas.md` — this section is just the model summary.
+script, the recovery check for an interrupted prior sweep) live in the skill itself — the
+`implementation-harness` plugin's `/implementation-harness:implementation-harness-convert-ideas` —
+this section is just the model summary.
 
 **Agents can't ask the owner directly.** `AskUserQuestion` is main-thread/interactive-only, so a
 background per-unit agent can't block on a live prompt itself. A genuine open question is relayed
@@ -215,8 +216,9 @@ launched agent has reported back, the consolidation pass lands the real task(s) 
 bullet from `IDEAS.md`.
 
 > Distribution: the `/idea`, `/convert-ideas`, `/pre-loop-checkin`, and `/loop-recover` commands are
-> project-local (`.claude/commands/`). They were ported into this repo alongside the rest of the
-> harness.
+> provided by the `implementation-harness` plugin as `/implementation-harness:*` skills — invoke them
+> from there. (They were once project-local copies under `.claude/commands/`, removed once the plugin
+> superseded them.)
 
 ## The floor (holds even on a direct edit)
 
