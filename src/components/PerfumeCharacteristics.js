@@ -20,7 +20,7 @@ const SEASONS = ['Winter', 'Spring', 'Summer', 'Autumn', 'Day', 'Night'];
 
 const APPLICATION_SPOTS = ['Wrists', 'Elbows', 'Clavicles', 'Beard', 'Back of neck', 'Behind ears', 'Clothes'];
 
-const PROJECTION_LABELS = {
+export const PROJECTION_LABELS = {
   1: 'Skin scent',
   2: 'Moderate',
   3: 'Strong',

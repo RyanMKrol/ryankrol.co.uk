@@ -1,7 +1,9 @@
 import Badge from '../Badge';
 import PipMeter from '../PipMeter';
 import Markdown from '../Markdown';
+import Tooltip from '../Tooltip';
 import { formatReviewDate } from '../../lib/dateFormat';
+import { PROJECTION_LABELS } from '../PerfumeCharacteristics';
 
 const LONGEVITY_MAX = 8;
 const PROJECTION_MAX = 4;
@@ -69,29 +71,37 @@ export default function Variant6Hybrid({ item }) {
       )}
 
       <div className="perfume-v4-scales">
-        {hasLongevity && (
-          <div className="perfume-v4-scale">
-            <p className="perfume-v4-scale-heading">Longevity</p>
-            <p className="perfume-v4-scale-label">Light ↔ All-day</p>
-            <div className="perfume-v4-scale-track">
-              <div
-                className="perfume-v4-scale-fill"
-                style={{ width: `${(item.longevity / LONGEVITY_MAX) * 100}%` }}
-              />
+        {hasLongevity && (() => {
+          const longevityHours = item.longevity >= LONGEVITY_MAX ? `${LONGEVITY_MAX}+` : item.longevity;
+          const longevityLabel = `${longevityHours} ${item.longevity === 1 ? 'hour' : 'hours'}`;
+          return (
+            <div className="perfume-v4-scale">
+              <p className="perfume-v4-scale-heading">Longevity</p>
+              <p className="perfume-v4-scale-label">Light ↔ All-day</p>
+              <Tooltip label={longevityLabel}>
+                <div className="perfume-v4-scale-track">
+                  <div
+                    className="perfume-v4-scale-fill"
+                    style={{ width: `${(item.longevity / LONGEVITY_MAX) * 100}%` }}
+                  />
+                </div>
+              </Tooltip>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {hasProjection && (
           <div className="perfume-v4-scale">
             <p className="perfume-v4-scale-heading">Projection</p>
             <p className="perfume-v4-scale-label">Skin scent ↔ Room-filling</p>
-            <div className="perfume-v4-scale-track">
-              <div
-                className="perfume-v4-scale-fill"
-                style={{ width: `${(item.projection / PROJECTION_MAX) * 100}%` }}
-              />
-            </div>
+            <Tooltip label={PROJECTION_LABELS[item.projection]}>
+              <div className="perfume-v4-scale-track">
+                <div
+                  className="perfume-v4-scale-fill"
+                  style={{ width: `${(item.projection / PROJECTION_MAX) * 100}%` }}
+                />
+              </div>
+            </Tooltip>
           </div>
         )}
       </div>
