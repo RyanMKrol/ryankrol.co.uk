@@ -232,7 +232,16 @@ const workoutsList = { workouts: [workoutObj(), workoutObj({ id: 'w2', title: 'P
 const workoutExercisesDetail = {
   workoutId: 'w1',
   exercises: [
-    { id: 'ex-0001', workout_id: 'w1', exercise_name: 'Chest Press (Machine)', exercise_index: 0, exerciseType: 'strength', sets: [workoutSet({ weight_kg: 42.5, reps: 12, isVolumePR: true })], heaviestWeight: 45, bestEstimated1RM: 56, bestSetVolume: 510, totalDistance: null, totalDuration: null, workout_date: '2026-07-05' },
+    {
+      id: 'ex-0001', workout_id: 'w1', exercise_name: 'Chest Press (Machine)', exercise_index: 0, exerciseType: 'strength',
+      sets: [workoutSet({ type: 'warmup', weight_kg: 30, reps: 15 }), workoutSet({ weight_kg: 42.5, reps: 12, isVolumePR: true }), workoutSet({ weight_kg: 45, reps: 10 })],
+      heaviestWeight: 45, bestEstimated1RM: 56, bestSetVolume: 510, sessionVolume: 1470, totalDistance: null, totalDuration: null, workout_date: '2026-07-05',
+    },
+    {
+      id: 'ex-0002', workout_id: 'w1', exercise_name: 'Iso-Lateral High Row (Machine)', exercise_index: 1, exerciseType: 'strength',
+      sets: [workoutSet({ type: 'warmup', weight_kg: 35, reps: 15 }), workoutSet({ weight_kg: 50, reps: 12, isWeightPR: true, is1RMPR: true }), workoutSet({ weight_kg: 50, reps: 10 })],
+      heaviestWeight: 50, bestEstimated1RM: 66, bestSetVolume: 600, sessionVolume: 1625, totalDistance: null, totalDuration: null, workout_date: '2026-07-05',
+    },
   ],
 };
 
@@ -240,8 +249,10 @@ const exerciseHistory = {
   exerciseName: 'Chest Press (Machine)',
   history: Array.from({ length: 8 }, (_, i) => ({
     id: `hist-${i}`, exercise_name: 'Chest Press (Machine)', workout_id: `w${i}`, workout_date: `2026-0${(i % 6) + 1}-10`,
-    exerciseType: 'strength', sets: [workoutSet({ weight_kg: 40 + i * 2, reps: 10 })],
+    exerciseType: 'strength',
+    sets: [workoutSet({ type: 'warmup', weight_kg: 30, reps: 15 }), workoutSet({ weight_kg: 40 + i * 2, reps: 10 }), workoutSet({ weight_kg: 40 + i * 2, reps: 8 })],
     heaviestWeight: 40 + i * 2, bestEstimated1RM: 50 + i * 2, bestSetVolume: 400 + i * 20,
+    sessionVolume: 1200 + i * 90, // drives the Session-volume chart + total/avg stats (the page reads h.sessionVolume, not the sets)
     totalDistance: null, totalDuration: null, exercise_index: 0,
   })),
 };
