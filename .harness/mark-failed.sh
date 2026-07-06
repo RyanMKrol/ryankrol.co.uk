@@ -16,6 +16,12 @@
 # fixes the work or authors a follow-up) — see `reconcile_overlays` in loop.sh. This script itself
 # still only writes the overlay; the loop is the sole TASKS.json status writer.
 #
+# Marking a task failed also marks it REVIEWED (.harness/reviews.json), in the same commit: the
+# owner marking a task failed IS an act of having reviewed it (they looked at the work closely
+# enough to judge it a false success) — leaving it "not reviewed" afterward was a gap, not
+# intentional. `--undo` does NOT clear the reviewed flag — un-failing a task doesn't imply un-
+# reviewing it.
+#
 # Usage:
 #   .harness/mark-failed.sh <TNNN> "<reason>"     # mark T<NNN> failed, with a short reason
 #   .harness/mark-failed.sh --undo <TNNN>         # clear a previous manual-fail
@@ -27,6 +33,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # $MANUAL_FAIL, tj). LOOP_SOURCE_ONLY=1 returns from loop.sh BEFORE it runs the loop or takes the
 # lock, so this is side-effect-free; the lock path therefore stays byte-identical to the loop's.
 LOOP_SOURCE_ONLY=1 source "$HERE/loop.sh"
+REVIEWS="$HARNESS_DIR/reviews.json"   # same path mark-reviewed.sh uses
 
 die() { echo "error: $*" >&2; exit 1; }
 
@@ -58,14 +65,29 @@ else
      '.[$id] = {failed:true, reason:$r, at:$at}' "$MANUAL_FAIL" >"$tmp" && mv "$tmp" "$MANUAL_FAIL" || { rm -f "$tmp"; die "failed to update $MANUAL_FAIL"; }
   msg="manual-fail: $id [skip ci]"
   echo "marked $id failed: $reason"
+
+  # Marking a task failed is itself an act of having reviewed it — mark it reviewed too, same commit.
+  [ -f "$REVIEWS" ] || printf '{}\n' >"$REVIEWS"
+  rtmp="$REVIEWS.tmp"
+  jq --arg id "$id" --arg at "$ts" \
+     '.[$id] = {reviewed:true, at:$at}' "$REVIEWS" >"$rtmp" && mv "$rtmp" "$REVIEWS" || { rm -f "$rtmp"; die "failed to update $REVIEWS"; }
+  msg="manual-fail: $id (+ reviewed) [skip ci]"
+  echo "marked $id reviewed"
 fi
 
 # Commit + push the overlay under the loop's lock so we never race its git operations.
 rel="${MANUAL_FAIL#"$ROOT"/}"
+relReviews="${REVIEWS#"$ROOT"/}"
 acquire_lock
 trap 'release_lock' EXIT INT TERM
 git -C "$ROOT" add -- "$rel"
-if git -C "$ROOT" diff --cached --quiet -- "$rel"; then
+if [ "$undo" = 0 ]; then
+  git -C "$ROOT" add -- "$relReviews"
+  diffCheck=(-- "$rel" "$relReviews")
+else
+  diffCheck=(-- "$rel")
+fi
+if git -C "$ROOT" diff --cached --quiet "${diffCheck[@]}"; then
   echo "no change to commit (overlay already in that state)"; exit 0
 fi
 git -C "$ROOT" commit -q --no-gpg-sign -m "$msg" || die "commit failed"
