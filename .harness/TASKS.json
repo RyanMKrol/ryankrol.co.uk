@@ -8147,7 +8147,7 @@
     {
       "id": "T293",
       "title": "Show a personal-best medal next to each PR'd exercise line on the /workouts list",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T290"
       ],
