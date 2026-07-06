@@ -8041,7 +8041,7 @@
     {
       "id": "T289",
       "title": "Add bestSetVolume + winning-set-index tracking to calculateExerciseMetrics, and a pure detectPersonalBests function",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
