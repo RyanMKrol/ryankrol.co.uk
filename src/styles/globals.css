@@ -1403,6 +1403,46 @@ input[type='range'].form-input::-moz-range-thumb {
   background-color: var(--btn-secondary-hover-bg);
 }
 
+/* Shared header-strip pattern for edit-capable review cards (settled 2026-07-06,
+   supersedes the per-variant .edit-button-overlay repositioning fixes below). Each of
+   tasks perfumes-edit-redesign-3..7 swaps its card wrapper's className from
+   .review-card-with-edit to .review-edit-card (never both at once for the same card) and
+   moves its Edit link into a .review-edit-header strip using .review-edit-button. Once
+   all five have landed, the old .review-card-with-edit/.edit-button-overlay/T262-T266
+   modifier rules become fully dead and are removed by a final cleanup task. */
+.review-edit-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+
+.review-edit-button {
+  background-color: var(--btn-secondary-bg);
+  color: var(--color-accent-secondary);
+  border: 1px solid var(--color-accent-secondary);
+  padding: 0.4rem 0.9rem;
+  text-decoration: none;
+  border-radius: var(--radius-base);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.review-edit-button:hover {
+  background-color: var(--btn-secondary-hover-bg);
+}
+
 /* Edit button fix for books/spine-cover: the shared .edit-button-overlay's absolute
    top-right position overlaps the spine-cover heading's star rating. Take this page's
    button out of absolute flow entirely and place it below the card. */
