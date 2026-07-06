@@ -1,8 +1,12 @@
 # LIMITATIONS.md — trade-offs, bottlenecks & known limitations
 
-The single place to evaluate the design's compromises later **without re-deriving them from the
-code**. Per `CLAUDE.md`, every change that introduces or reveals a trade-off, bottleneck, or known
-limitation **adds a row here in the same commit**.
+> **Add THIS project's limitations to the overlay, not here.** This file is plugin-owned and refreshed on
+> upgrade — the rows below are the *harness's own* trade-offs. Record your project's limitations in
+> `custom/docs/LIMITATIONS.md` (the overlay — upgrades never touch it). See `.harness/custom/CLAUDE.md`.
+
+The single place to evaluate the design's compromises later **without re-deriving them from
+the code**. Per `CLAUDE.md` golden rule 5, every change that introduces or reveals a
+trade-off, bottleneck, or known limitation **adds a row** to `custom/docs/LIMITATIONS.md` in the same commit.
 
 Each entry: **what** it is · **why** we chose it · **impact** · **when to revisit**.
 
@@ -10,79 +14,104 @@ Each entry: **what** it is · **why** we chose it · **impact** · **when to rev
 
 ## Harness
 
-- **Works in-place on `main` — no worktree isolation.**
-  *Why:* git revert is a simpler safety net than worktree quarantine for a small single-owner repo.
-  *Impact:* an interrupted task can leave the working tree dirty; don't hand-edit or commit to the
-  repo while the loop runs. Safety = sequential + lock + local-DoD-before-commit + CI-red-stops +
-  one-line `git revert`.
-  *Revisit:* if multiple loops/authors ever run concurrently, move to a push-to-branch worktree model.
+These come from the build harness itself (mirror of [`docs/HARNESS.md`](./HARNESS.md) §12) —
+keep them here so the design's compromises live in one place alongside your project's own.
 
-- **Autonomous `git push` to a public `main`.**
-  *Why:* the loop integrates by pushing; there's no human in the loop to click merge.
-  *Impact:* a bad/secret-leaking commit could in principle reach GitHub (and Vercel would deploy it).
-  *Mitigation / revisit:* the pre-push guard (HARNESS.md §4) halts on any sensitive path (`.env`,
-  `.vercel/`, credentials); CI-red stops the loop. Tighten `SENSITIVE_RE` if new sensitive paths appear.
+- **Hardened Definition of Done makes each task longer.**
+  *Why:* empirical + integration + CI-watch is what makes "done" trustworthy.
+  *Impact:* more wall-clock and tokens per task; a single window may not finish a large one.
+  *Revisit:* if tasks routinely overflow a window — split them smaller.
 
-- **CI-green-after-push, stop-on-red (not gate-before-merge).**
-  *Why:* CI can only run on pushed commits, and the local DoD mirrors CI, so red is rare.
-  *Impact:* `main` can be briefly red — and Vercel may deploy a red commit — until a human reverts.
-  *Revisit:* if red happens often, move to a push-to-branch → ff-main gate (and Vercel preview deploys).
+- **CI-green-before-merge adds minutes per task.**
+  *Why:* it buys an always-green `main`.
+  *Impact:* latency per integration.
+  *Revisit:* acceptable while sequential; only a concern if throughput becomes the constraint.
 
-- **Definition of Done = lint + unit tests + build; no integration/e2e coverage yet.**
-  *Why:* the DoD now runs `npm run lint && npm test && npm run build` — ESLint (flat config,
-  `eslint-config-next`) and Jest (via `next/jest`) — both locally (`LOCAL_DOD` in `harness.env`) and
-  in `ci.yml`, and the structural gate enforces a test file on any `expectsTest: true` task. What's
-  still missing is higher-level coverage: only co-located unit tests exist (mostly pure `src/lib`
-  logic) — no component/integration or end-to-end (e.g. Playwright) tests.
-  *Impact:* the harness verifies a change lints clean, passes unit tests, and builds — but a
-  behavioural regression with no unit coverage (e.g. a broken page interaction) can still pass. The
-  sampled blocking **audit** (a fresh independent Claude reviewing the diff) is the main compensating
-  control for that gap.
-  *Revisit:* add React Testing Library component tests for the review forms / charts and a Playwright
-  smoke check, and set `expectsTest` on more tasks. (ESLint + Jest were wired up 2026-06; the earlier
-  "build-only" DoD limitation is resolved.)
-
-- **No live external-API calls in verification.**
-  *Why:* the site reads Last.fm and writes DynamoDB; hitting those to "verify" touches real data/quota.
-  *Impact:* data-layer logic is verified by reading code + build, not a live call — a live-only
-  regression could slip past.
-  *Revisit:* add an opt-in, read-only smoke test behind a manual flag if data-layer bugs recur.
+- **Sequential, single-flight — no wall-clock parallelism.**
+  *Why:* the binding constraint is tokens-per-window, and parallelism multiplies
+  interruption + merge-reconciliation cost, not throughput.
+  *Impact:* one task at a time.
+  *Revisit:* if a large batch of genuinely independent, low-conflict tasks appears with spare
+  budget (HARNESS.md §6).
 
 - **`--dangerously-skip-permissions` removes per-action guardrails.**
   *Why:* a headless loop has no human to answer prompts.
-  *Impact:* no per-action confirmation; the pre-push guard, CI gate, and reviewable per-task commits
-  are the backstop.
+  *Impact:* no per-action confirmation; the gates + reviewable per-task branches are the
+  backstop.
+  *Revisit:* if a task class needs tighter control, gate it 🔒.
 
-- **The harness pushes its own backlog status commits to `main`.**
-  *Why:* `.harness/TASKS.json` is committed and the shell flips `status` to `done` after green CI.
-  *Impact:* one extra tiny `[skip ci]` commit per completed task in history (and a Vercel deploy
-  trigger, though `[skip ci]` does not skip Vercel — see Project below).
-  *Revisit:* squash/clean up if the noise ever bothers you.
+- **Empirical checks depend on live conditions.**
+  *Why:* they verify clean operation against the real environment, not exhaustive coverage.
+  *Impact:* a quiet environment may not exercise every path a task touches.
+  *Revisit:* add targeted fixtures/flows for paths that matter but aren't naturally exercised.
 
-- **Task do/doneWhen split across two files (JSON + per-task MD).**
-  *Why:* Markdown specs (`.harness/tasks/<TASK>.md`) are far more expressive than a flat JSON string;
-  orchestration fields stay in `TASKS.json`.
-  *Impact:* a new task is two coupled files — a JSON object with a `spec` path PLUS its MD — and a
-  missing/renamed spec leaves the task with an empty body (the loop prompt warns). The two can drift.
-  *Revisit:* if drift becomes a problem, add a backlog linter asserting every task has a readable spec
-  with both sections.
+- **Auto-tuned model routing & escalation trade attempts for cost.**
+  *Why:* start cheap and climb only for tasks that actually need it (the policy picks the start
+  tier from facets + the outcomes ledger).
+  *Impact:* if it starts too weak, a task burns up to `MAX_ATTEMPTS` soft-failures (and their CI
+  runs) per rung before escalating; the rung is in-memory per run, so a fresh run restarts at the
+  policy's chosen start tier.
+  *Revisit:* escalation is a safety net, not a substitute for atomic sizing — split tasks that keep
+  climbing the ladder.
+
+- **The loop pushes its own backlog-status commits straight to `main`.**
+  *Why:* the loop is the sole writer of `TASKS.json` status; it records each `done`/`blocked`
+  verdict + ledger row itself, tagged `[skip ci]`.
+  *Impact:* `main`'s history carries one bookkeeping commit per completed/blocked task interleaved
+  with the code commits.
+  *Revisit:* acceptable for a solo/automated repo; if the history noise matters, squash on a
+  release cadence.
+
+- **A task's `do`/`doneWhen` are split across two files (JSON entry + `tasks/TNNN.md` spec).**
+  *Why:* keeps `TASKS.json` scannable while giving each task room for a real spec.
+  *Impact:* the JSON `spec` pointer and the `.md` can drift if hand-edited carelessly.
+  *Revisit:* author through the add-to-backlog / convert-ideas skills, which write both together.
+
+### In-place variant (only if you run `loop.in-place.sh`)
+
+- **Autonomous pushes to a possibly-public `main`, guarded only by a path denylist.**
+  *Why:* the in-place loop works directly in the primary checkout (needed when the build requires
+  untracked/gitignored local state) and integrates by pushing `main` itself.
+  *Impact:* a pre-push guard refuses commits touching sensitive paths (`.env`, `data/`, keys,
+  `credentials.json`, …), but it's a denylist — a novel secret path it doesn't know about could ship.
+  *Revisit:* extend `SENSITIVE_RE`/keep secrets out of the tree; prefer the worktree variant when the
+  build doesn't need local state.
+
+- **`LOOP_AUTORESET=1` can stash unrelated local work.**
+  *Why:* it lets the in-place loop self-heal a dirty checkout (assumed to be orphaned partial work)
+  instead of refusing to start.
+  *Impact:* if the checkout is *also* used by hand, a dirty tree at startup gets stashed.
+  *Revisit:* leave it OFF (default) unless the checkout is dedicated solely to the loop.
+
+### Field notes — traps learned operating this harness in production
+
+Distilled from real incidents in the harnesses this design grew out of. The *mechanism* fixes are
+already in the scripts; what's listed is the part that stays true for operators and maintainers.
+(Log your own incidents in `.harness/CLAUDE.md` § *Known-but-deferred issues*.)
+
+- **Ctrl-C between the code push and the status commit orphans the task.** The work is merged on
+  `main` but the task is still `pending`, so the next run rebuilds it and the gates then fight the
+  already-merged diff. After ANY manual interrupt, run the **loop-recover skill** before restarting
+  the loop — that's exactly what it exists for.
+- **Never recombine the `git add`s in `mark_done`/`block_task`/`record_outcome`.** They stage
+  always-present files first and add `failures.jsonl` only `if [ -f … ]`, because a single `git add`
+  that lists a missing file fails **atomically** — staging nothing — and the `status:"done"` commit
+  silently never happens (this once orphaned five consecutive completed tasks). The split is
+  load-bearing, not style.
+- **A rapid string of task-completion pushes can trip your deploy webhook's own rate limit.** A
+  Vercel Hobby project once had ~10 pushes land within an hour; deploys silently stopped for ~10h
+  with no alert. That's why `PUSH_COOLDOWN_SECONDS` exists — set it if anything deploys off `main`.
+- **UI false-successes dominate owner manual-fails.** Structurally-green, CI-green changes shipped
+  invisible or mis-rendered UI (an element present in the DOM but not visible; a theme flicker that
+  had to be manually failed four times). Visual verification only works if a human actually LOOKS at
+  the captures — treat "the screenshot exists" as not verified.
+- **Tests can encode the same bug as the code.** A data-migration task passed its own tests because
+  the fixtures used the same wrong field names, then crashed on first live run. A task whose
+  `Done when` only cites its own new tests is weaker evidence than one verified against real data or
+  an independent audit.
 
 ---
 
 ## Project
 
-- **`[skip ci]` skips GitHub Actions but NOT Vercel — every harness status commit triggers a deploy.**
-  *Why:* the loop tags its `status=done` bookkeeping commits `[skip ci]` so GitHub Actions doesn't
-  re-run on a no-code change. Vercel's git integration does not honour the `[skip ci]` convention, so
-  it still builds + deploys those commits.
-  *Impact:* a handful of redundant Vercel deploys (one per completed task) of identical site output.
-  Harmless (idempotent deploy) but uses build minutes.
-  *Revisit:* if deploy minutes matter, add a Vercel `ignoreCommand` (e.g. skip when only `.harness/**`
-  changed) or `[skip ci]` handling in a Vercel ignored-build step.
-
-- **CI installs with `npm ci` against the committed `package-lock.json`.**
-  *Why:* reproducible installs in Actions.
-  *Impact:* a task that changes dependencies must commit BOTH `package.json` and the regenerated
-  `package-lock.json` or `npm ci` fails CI. The loop auto-allows the lockfile in scope checks, but the
-  builder must actually run `npm install` so the lockfile is updated.
-  *Revisit:* n/a — standard npm behaviour, noted so a dependency task doesn't trip CI.
+> Add your project's own trade-offs and limitations below as they arise.
