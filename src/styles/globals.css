@@ -1804,8 +1804,8 @@ input[type='range'].form-input::-moz-range-thumb {
 
 .project-card-archived-tag {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: var(--border-width);
+  left: var(--border-width);
   padding: 0.25rem 0.6rem;
   background-color: var(--color-ink-mute);
   color: var(--color-bg);
@@ -1813,7 +1813,7 @@ input[type='range'].form-input::-moz-range-thumb {
   font-size: 0.7rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  border-top-left-radius: var(--radius-card);
+  border-top-left-radius: calc(var(--radius-card) - var(--border-width));
   border-bottom-right-radius: var(--radius-card);
 }
 
