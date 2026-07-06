@@ -81,7 +81,7 @@ export default function EditMovies() {
             />
             <Link
               href={`/reviews/movies/edit/${encodeURIComponent(movie.id)}`}
-              className="edit-button-overlay"
+              className="edit-button-overlay edit-button-overlay--movies-banner"
             >
               Edit
             </Link>
