@@ -8218,7 +8218,7 @@
     {
       "id": "T296",
       "title": "Promote Header into _app.js as a persistent layout so nav scroll position survives navigation",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
