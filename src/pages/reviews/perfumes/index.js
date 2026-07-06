@@ -3,6 +3,8 @@ import Variant6Hybrid from '../../../components/perfumeVariants/Variant6Hybrid';
 import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
+import MasonryColumns from '../../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'date ↓' },
@@ -15,6 +17,7 @@ export default function Perfumes() {
   const [filteredPerfumes, setFilteredPerfumes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
+  const columnCount = useResponsiveColumnCount(2, 700);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -109,11 +112,15 @@ export default function Perfumes() {
         </div>
       )}
 
-      <div className="perfume-card-grid">
-        {filteredPerfumes.map((perfume, index) => (
+      <MasonryColumns
+        items={filteredPerfumes}
+        columnCount={columnCount}
+        className="perfume-card-grid"
+        columnClassName="perfume-card-grid-col"
+        renderItem={(perfume, index) => (
           <Variant6Hybrid key={`${perfume.id}-${index}`} item={perfume} />
-        ))}
-      </div>
+        )}
+      />
     </div>
   );
 }

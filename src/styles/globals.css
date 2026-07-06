@@ -402,15 +402,16 @@
 /* ===== Perfume Review Card (T154) ===== */
 
 .perfume-card-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
   gap: 1.5rem;
 }
 
-@media (max-width: 700px) {
-  .perfume-card-grid {
-    grid-template-columns: 1fr;
-  }
+.perfume-card-grid-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 /* ===== Collection Review Header (T150) ===== */
