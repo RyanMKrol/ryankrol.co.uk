@@ -15,6 +15,7 @@ const NAV_SECTIONS = [
   { key: 'workouts', label: 'workouts', href: '/workouts', prefixes: ['/workouts', '/exercises', '/programmes'] },
   { key: 'listening', label: 'listening', href: '/listening', prefixes: ['/listening'] },
   { key: 'projects', label: 'projects', href: '/projects', prefixes: ['/projects'] },
+  { key: 'hot-takes', label: 'hot takes', href: '/hot-takes', prefixes: ['/hot-takes'] },
 ];
 
 function getActiveSection(pathname) {
