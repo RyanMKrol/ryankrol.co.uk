@@ -59,7 +59,10 @@ export default function EditAlbums() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">edit album reviews</h1>
-      
+      <Link href="/reviews/albums/backfill" className="backfill-link">
+        Backfill metadata
+      </Link>
+
       <div className="square-cover-grid">
         {albums.map((album) => (
           <div key={album.id} className="review-card-with-edit">
@@ -78,6 +81,14 @@ export default function EditAlbums() {
           </div>
         ))}
       </div>
+
+      <style jsx>{`
+        .backfill-link {
+          display: inline-block;
+          margin-bottom: 1rem;
+          color: var(--color-accent-secondary);
+        }
+      `}</style>
     </div>
   );
 }
