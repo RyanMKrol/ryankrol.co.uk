@@ -62,7 +62,10 @@ export default function EditBooks() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">edit book reviews</h1>
-      
+      <Link href="/reviews/books/backfill" className="backfill-link">
+        Backfill metadata
+      </Link>
+
       <MasonryColumns
         items={books}
         columnCount={columnCount}
@@ -85,6 +88,14 @@ export default function EditBooks() {
           </div>
         )}
       />
+
+      <style jsx>{`
+        .backfill-link {
+          display: inline-block;
+          margin-bottom: 1rem;
+          color: var(--color-accent-secondary);
+        }
+      `}</style>
     </div>
   );
 }
