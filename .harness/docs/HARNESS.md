@@ -116,12 +116,12 @@ there — so a backlog *tries cheap first* and automatically climbs to a stronge
 tasks that actually need it.
 
 > **Keep the ladder short on purpose.** A doomed task BLOCKS to a human after at most
-> `ladder_length × MAX_ATTEMPTS` attempts. A deliberately short ladder (e.g. the 4-tier
-> `sonnet/low→high, opus/high` some deployments use) makes that a *cheap* backstop: if `opus/high`
-> can't do it twice, a human glance is far cheaper than burning `opus/xhigh`/`max`. The template
-> ships a longer ladder that reaches `max`; if you extend it further, remember every extra rung is
-> extra spend a *stuck* task will grind through before it ever asks for help. Match the top rung to
-> the hardest task you'd want built unsupervised — not to the strongest model available.
+> `ladder_length × MAX_ATTEMPTS` attempts. The template ships a deliberately short **4-tier** ladder —
+> `sonnet/low → medium → high`, then `opus/high` — so that's at most `4 × 2 = 8` cold attempts before a
+> stuck task asks for help: if `opus/high` can't do it in two cold passes, a human glance is far cheaper
+> than burning `opus/xhigh`/`max`. If you extend it (adding e.g. `opus/xhigh`/`max`), remember every extra
+> rung is extra spend a *stuck* task grinds through before it ever asks for help — match the top rung to
+> the hardest task you'd want built unsupervised, not to the strongest model available.
 
 **Difficulty is auto-tuned (see `.harness/docs/designs/difficulty-autotune.md`).** Rather than per-task
 `escalation` ladders, the loop rides ONE global tier ladder (`facets.json → .tiers.ladder`) and a
@@ -519,6 +519,22 @@ per line (blank/`#` lines ignored), **OR-appended** to the built-in guard. **App
 *tighten* the guard, never loosen it. If the combined regex won't compile, the file is ignored with a WARN
 and the base guard stays fully active (a bad custom pattern can never wedge the loop or disable the guard).
 Probe a path with `scripts/loop.sh --guard-selftest <path>` (prints `BLOCK`/`ALLOW`).
+
+**Visual-verification prompt snippets — `custom/visual-verify-build.md` / `custom/visual-verify-audit.md`.**
+When the visual-verification block fires for a task (the `VISUAL_VERIFY_HOOK` is set AND the task opts in —
+`visualVerify: true` or the facets heuristic), the loop **appends** the matching file's contents to the
+generic block: `visual-verify-build.md` in the builder prompt, `visual-verify-audit.md` in the auditor
+prompt. It's how a project injects its own richer discipline — exact capture commands, a living-fixtures
+file to keep current, named flows to screenshot — without forking `loop.sh`. It only *appends* (the generic
+baseline stays), only fires when the block already fires (not an independent trigger), and absent → no
+output → identical to stock. Populate one or both.
+
+**Build/audit prompt preambles — `custom/build-preamble.md` / `custom/audit-preamble.md`.** Standing,
+always-applies project rules injected into **every** builder / auditor prompt (respectively) — e.g. "never
+make live paid-API calls during verification; use cached fixtures + the scratch DB." Unlike the visual-verify
+snippet (gated on the task opting into visual verification), a preamble is **unconditional**: present → it's
+appended to every prompt of that kind; absent → no output → byte-identical. Append-only (augments the generic
+instructions, never replaces them). Populate one or both.
 
 Customize behavior or the guard by adding a `custom/` file — **never by editing `loop.sh`** (an inline edit
 forfeits clean upgrades; see `custom/CLAUDE.md`).

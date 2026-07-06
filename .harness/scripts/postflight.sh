@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 #
-# postflight.sh — read-only, ZERO-TOKEN status board for the single sequential loop.
+# postflight.in-place.sh — read-only, ZERO-TOKEN status board for the IN-PLACE loop variant.
 #
-# Counterpart to loop.sh: where loop.sh decides what to BUILD, postflight reports what
-# the backlog looks like. It reads everything from `origin/main` (the integrated truth) —
-# the same source loop.sh uses — plus the loop's branches/worklog, so the two never
-# disagree. It never invokes Claude, so it's fast, reliable, and free to run every cycle.
+# Same board as postflight.sh, but for the in-place loop: that variant builds directly on the primary
+# checkout's `main` (no isolation worktree, no per-task `tNNN` branches), so this reads the LOCAL
+# checkout — the working truth — instead of `git show origin/main` blobs (which would be empty on a
+# no-remote in-place install, and always stale relative to mid-task local state). In-flight is detected
+# from a dirty working tree (a build in progress leaves uncommitted changes) rather than a task branch,
+# which the in-place variant never creates.
+#
+# Both variants install under the name `postflight.sh`; create/upgrade pick the file by the loop variant.
 #
 # Output goes to stdout AND to .harness/worklog/STATUS.md (overwritten each run).
 #
@@ -15,27 +19,31 @@ set -uo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
 NAME="$(basename "$ROOT")"
-TASKS_REF="${TASKS_REF:-origin/main}"
 STATUS_FILE="$ROOT/.harness/worklog/STATUS.md"
 cd "$ROOT" || exit 0
 mkdir -p .harness/worklog
-git fetch origin --quiet 2>/dev/null || true
 
-# All reads come from origin/main (mirrors loop.sh), so the board matches what runs.
-# TASKS.json (schema: .harness/docs/HARNESS.md §8.1) is parsed with jq — same as loop.sh.
+# All reads come from the LOCAL checkout (the in-place loop works directly on main), so the board
+# matches what's on disk right now. TASKS.json schema: .harness/docs/HARNESS.md §8.1.
 command -v jq >/dev/null 2>&1 || { echo "[postflight] jq is required to parse TASKS.json — install it (e.g. brew install jq)" >&2; exit 0; }
-blob()         { git show "$TASKS_REF:.harness/$1" 2>/dev/null || true; }
-tj()           { blob tracking/TASKS.json | jq "$@" 2>/dev/null; }
+TASKS_FILE="$ROOT/.harness/tracking/TASKS.json"
+WORKLOG="$ROOT/.harness/worklog"
+tj()           { jq "$@" "$TASKS_FILE" 2>/dev/null; }
 all_tasks()    { tj -r '.tasks[].id'; }
 task_done()    { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="done"' >/dev/null; }
 task_title()   { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.title'; }
 deps_for()     { tj -r --arg id "$1" '.tasks[]|select(.id==$id)|.dependsOn[]?' | tr '\n' ' '; }
 needs_human()  { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.gate=="needs-human"' >/dev/null; }
 # status="blocked"/"failed" are first-class TASKS.json values the LOOP sets (block_task / manual-fail
-# reconcile) — check them directly, not just the legacy worklog grep, so the board matches the loop.
-task_blocked() { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="blocked"' >/dev/null 2>&1 || blob "worklog/$1.md" | grep -qiE 'failed:blocked|needs-human'; }
+# reconcile) — check them directly, falling back to the legacy worklog marker, so the board matches the loop.
+task_blocked() {
+  tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="blocked"' >/dev/null 2>&1 && return 0
+  [ -f "$WORKLOG/$1.md" ] && grep -qiE 'failed:blocked|needs-human' "$WORKLOG/$1.md"
+}
 task_failed()  { tj -e --arg id "$1" '.tasks[]|select(.id==$id)|.status=="failed"' >/dev/null; }
-inprogress()   { git branch --format='%(refname:short)' | grep -E '^t[0-9]{3,}$' | head -1 || true; }
+# In-place has no `tNNN` task branches; a dirty working tree means a build is mid-flight. (STATUS.md and
+# the other worklog scratch are gitignored, so writing this board never dirties the tree.)
+inprogress()   { [ -n "$(git status --porcelain 2>/dev/null)" ] && echo dirty || true; }
 
 board=(); needs=(); ready=0; done_all=1
 for t in $(all_tasks); do
@@ -66,8 +74,8 @@ out() { printf '%s\n' "$*"; printf '%s\n' "$*" >>"$STATUS_FILE"; }
 
 out "# $NAME — loop status ($(date '+%Y-%m-%d %H:%M:%S'))"
 out ""
-if [ -n "$ip" ]; then out "🔨 In flight: branch \`$ip\` (a task is mid-build / awaiting CI)."
-else out "(no task branch in flight — the loop is between tasks or idle)"; fi
+if [ -n "$ip" ]; then out "🔨 In flight: the working tree is dirty (a task is mid-build / awaiting CI)."
+else out "(clean working tree — the loop is between tasks or idle)"; fi
 out ""
 if [ "$done_all" -eq 1 ]; then
   out "✅ Every task in the backlog is done."
