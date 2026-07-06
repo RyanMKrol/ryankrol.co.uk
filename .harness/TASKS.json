@@ -8015,7 +8015,7 @@
     {
       "id": "T288",
       "title": "Give archived /projects cards a flush corner tag instead of inline badge text",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
