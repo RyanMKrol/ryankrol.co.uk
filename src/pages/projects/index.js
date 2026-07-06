@@ -5,6 +5,7 @@ import SearchInput from '../../components/SearchInput';
 import Pill from '../../components/Pill';
 import SortButtons from '../../components/SortButtons';
 import MasonryColumns from '../../components/MasonryColumns';
+import Tooltip from '../../components/Tooltip';
 import useResponsiveColumnCount from '../../hooks/useResponsiveColumnCount';
 
 const SORT_FIELDS = [
@@ -233,13 +234,23 @@ export default function ProjectsPage() {
                     {repo.name}
                   </a>
                   <div className="project-card-top-right">
-                    <span className="project-card-stars">
-                      ★ {repo.stars || 0}
-                    </span>
-                    {typeof repo.commitCount === 'number' && (
-                      <span className="project-card-commits-badge">
-                        ⎇ {repo.commitCount}
+                    <Tooltip
+                      label={`${repo.stars || 0} ${(repo.stars || 0) === 1 ? 'star' : 'stars'}`}
+                      position="bottom"
+                    >
+                      <span className="project-card-stars">
+                        ★ {repo.stars || 0}
                       </span>
+                    </Tooltip>
+                    {typeof repo.commitCount === 'number' && (
+                      <Tooltip
+                        label={`${repo.commitCount} ${repo.commitCount === 1 ? 'commit' : 'commits'}`}
+                        position="bottom"
+                      >
+                        <span className="project-card-commits-badge">
+                          ⎇ {repo.commitCount}
+                        </span>
+                      </Tooltip>
                     )}
                   </div>
                 </div>
