@@ -8605,7 +8605,7 @@
     {
       "id": "T309",
       "title": "Apply the edit header-strip pattern to /reviews/tv/edit (poster-banner cards)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T306"
       ],
