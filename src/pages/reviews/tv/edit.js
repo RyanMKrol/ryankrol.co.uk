@@ -62,7 +62,10 @@ export default function EditTVShows() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">edit tv show reviews</h1>
-      
+      <Link href="/reviews/tv/backfill" className="backfill-link">
+        Backfill metadata
+      </Link>
+
       <MasonryColumns
         items={tvShows}
         columnCount={columnCount}
@@ -85,6 +88,14 @@ export default function EditTVShows() {
           </div>
         )}
       />
+
+      <style jsx>{`
+        .backfill-link {
+          display: inline-block;
+          margin-bottom: 1rem;
+          color: var(--color-accent-secondary);
+        }
+      `}</style>
     </div>
   );
 }
