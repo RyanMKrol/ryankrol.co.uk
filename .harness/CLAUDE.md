@@ -58,66 +58,42 @@ source of authoring logic**: it assigns the task's **facets** (difficulty auto-t
 chooser task with a review task, runs the **poor-fit / layer-evolution gate**, and writes a
 schema-correct task object + its `tasks/TNNN.md` spec. Prefer it over hand-editing `TASKS.json`.
 
-**There must be AT MOST ONE deploy task in `TASKS.json` with `status: pending` at any time, full
-stop — never one per idea, sweep, cluster, "body of work", or feature.** (See root `CLAUDE.md`'s
-"Deploying" section for why a deploy task needs to exist at all — Vercel's Git integration is
-disconnected, so nothing ships automatically anymore.) This was violated once already: a full
-Collection-redesign sweep authored `T171` (deploy), then two LATER, entirely separate authoring
-passes — an idea-conversion sweep and a perfume-card-variants chooser cluster, run independently —
-each independently added their OWN new deploy task (`T193` and `T188`) because each pass reasoned
-"my body of work needs its own deploy checkpoint," not noticing the other had just done the same
-thing. Result: two pending deploy tasks sitting in the backlog side by side, silently double-booking
-a real `vercel --prod` deploy. Caught by the owner, not by any authoring-time check — don't let it
-recur.
+**Deployment is fully automatic — no backlog task is ever involved, and none should be authored.**
+`.harness/loop.sh` deploys unconditionally, on its own, whenever `select_task()` finds **nothing
+eligible left to build** (whether that's because the whole backlog finished in one run, or across
+several `supervise.sh`-restarted sessions interrupted by usage limits, or because some tasks along
+the way terminally failed/got blocked — none of that stops it; it deploys whatever landed). See root
+`CLAUDE.md`'s "Deploying" section for why deployment needs a mechanism at all (Vercel's Git
+integration is disconnected, so nothing ships on push anymore).
 
-**The actual rule, mechanically: before authoring ANY new task whose work changes the live site,
-check for a pending deploy task first** (`jq -r '.tasks[]|select(.status=="pending" and (.title|test("^Deploy pending site changes to production$")))|.id' .harness/TASKS.json`
-— note the exact canonical title, not a fuzzy "contains deploy" check, since a stray title match on
-an unrelated task would misfire):
-- **A pending one exists** → do NOT author a new deploy task. Add every new site-touching task's id
-  to the EXISTING pending deploy task's `dependsOn` (merge, don't replace — union the ids). This
-  applies regardless of whether your new tasks are thematically related to whatever's already in that
-  `dependsOn` list — one deploy task accumulates dependencies from however many unrelated efforts
-  land between deploys, that's the whole point of batching.
-- **None is pending** (the most recent one already flipped to `status: done` — meaning it actually
-  ran `vercel --prod` and shipped) → author a fresh one now, generically titled exactly **"Deploy
-  pending site changes to production"** (not "Deploy `<feature>` to production" — the whole point of
-  the generic title is that it's the one stable thing to `jq`-match against later; see `T193`'s
-  current title for the corrected template, and its spec for the full worked example: `scope: []`,
-  `"gate": null`, real `facets`, depends on every site-touching task since the last deploy).
-  `vercel --prod` + checking its own exit code + a `curl` HTTP-200/content-marker check is entirely
-  something the loop's own builder can do unattended (same as T083's autonomous production DynamoDB
-  backfill) — never `needs-human`.
+**Do not author a deploy task, and do not add site-touching tasks' ids to one's `dependsOn` — there
+is nothing to add them to.** A pure-docs/harness-only task sequence needs no special handling either;
+the mechanism doesn't care what kind of tasks ran, only whether `src`/`public` changed.
 
-A pure-docs/harness-only task sequence (nothing under `src/`/`public/`) never needs to touch this at
-all — it doesn't add to the deploy task's `dependsOn` and doesn't trigger creating one.
-`layer`/`workType` won't map cleanly onto any existing `facets.json` value for the deploy task itself
-(no code diff at all) — that's expected, pick the closest per the poor-fit protocol below and log it
-to `facet-misfits.jsonl` rather than inventing a value.
+**Mechanism:** when `select_task()` finds nothing eligible, `loop.sh` calls
+`site_touched_since_last_deploy()`, which reads `.harness/last-deploy.json` (a small, git-tracked
+state file — NOT gitignored scratch — containing `{sha, deployedAt, url}` of the last successful
+deploy) and diffs `src`/`public` against that `sha`. If real site files changed, it runs
+`run_auto_deploy()`: the same `vercel --prod` + exit-code + `curl` HTTP-200 verification procedure
+originally established by `T193`'s spec, run directly by the loop rather than via a task. On a
+confirmed-200 success, it writes/commits/pushes the new `sha` into `.harness/last-deploy.json` itself
+— this is what advances the baseline for next time. It fails open (treats a missing/unreadable marker
+file as "yes, deploy") for the very first deploy under this mechanism, same philosophy as before. On a
+deploy FAILURE, the marker is deliberately left untouched, so the next backlog-exhaustion retries
+against the same stale baseline rather than silently giving up.
 
-**Belt-and-suspenders fallback: `.harness/loop.sh` also auto-deploys directly.** When the main loop's
-`select_task()` finds nothing eligible left to build, it now calls `site_touched_since_last_deploy()`
-(diffs `src`/`public` against the highest-numbered `done` "Deploy pending site changes to production"
-task's own `mark done` commit, resolved from git history — not a new state file) and, if real site
-files changed since then, runs `run_auto_deploy()` (the same `vercel --prod` + exit-code + `curl`
-verification procedure `T193`'s spec already established) before exiting. This is explicitly a
-**fallback, not a replacement** for the dedicated-task authoring convention above — it only catches
-the case where that authoring-time step gets missed (the exact failure mode T171/T193/T188 hit), and
-it fails open (treats "no prior deploy task found" or "can't resolve its commit" as "yes, deploy")
-rather than silently skipping a first-ever or unresolvable case. Keep authoring pending deploy tasks
-as before; this is a safety net sitting underneath that habit, not a substitute for it.
-
-**Also enforced mechanically at authoring time: `/convert-ideas`'s consolidation pass.**
-`.harness/consolidate-ideas.mjs` now checks, for every sweep, whether any of the tasks it's about to
-merge into `TASKS.json` are "site-touching" (their `scope` has an entry not under `.harness/`). If
-so, it automatically either adds their ids to the existing pending deploy task's `dependsOn`, or —
-if none is pending — allocates a brand-new one itself (same shape as `T193`/`T216`/`T238`) and writes
-its spec file, no separate authoring step required. This closes the exact gap that used to depend on
-a human/agent remembering the rule above during every sweep (the actual root cause behind
-T171/T193/T188). It is deliberately redundant with the `loop.sh`-level fallback just above — one
-enforces at authoring time for `/convert-ideas` sweeps specifically, the other catches anything that
-slips through any path (including tasks added directly via `ralph-loop-add-to-backlog`, outside
-`/convert-ideas` entirely) — both exist, neither replaces the other.
+**Why there's no task-authoring convention anymore:** this used to be TWO deliberately redundant
+mechanisms — an authoring-time convention (exactly one pending deploy task, updated/created by every
+authoring pass, mechanically enforced inside `/convert-ideas`'s consolidation pass) plus this same
+`loop.sh` fallback, explicitly documented as "a fallback, not a replacement" for the task. That
+authoring convention existed because a full Collection-redesign sweep once authored `T171` (deploy),
+then two LATER, entirely separate authoring passes each independently added their OWN new deploy task
+(`T193`, `T188`) — double-booking a real `vercel --prod` deploy, caught by the owner, not by any
+authoring-time check. Rather than keep relying on every authoring pass remembering a rule (the actual
+root cause of that incident), the task convention has been retired outright: `site_touched_since_last_
+deploy()` no longer resolves its baseline from a task's completion commit at all, so there is nothing
+left for an authoring pass to get wrong. The `loop.sh` mechanism above is now the *sole* deploy
+trigger — not a fallback underneath a habit, the whole thing.
 
 ## Ideas inbox & the two-step flow (ideas → tasks)
 

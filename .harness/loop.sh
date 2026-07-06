@@ -37,6 +37,7 @@ HUMAN_DONE="$HARNESS_DIR/human-done.json"          # owner overlay { "<id>": {do
 MANUAL_FAIL="$HARNESS_DIR/manual-fail.json"        # owner overlay (id → {failed,reason,at}); written ONLY by mark-failed.sh/dashboard, NEVER the loop. Read by calibration (manual_fail_ids) AND reconcile_overlays → TASKS.json status=failed (terminal). See designs/manual-fail-signal.md.
 FAILBUF="$WORKLOG/.failures.buf"                   # gitignored scratch buffer for the current task's failures: survives cold_reset (git clean -fd keeps ignored files), flushed into FAILURES at each terminal event
 LAST_PUSH_TS="$WORKLOG/.last-push-ts"              # gitignored: unix ts of the last successful push, read/written by throttled_push — survives cold_reset + loop/supervise restarts (same durability reasoning as FAILBUF)
+LAST_DEPLOY="$HARNESS_DIR/last-deploy.json"        # COMMITTED (not gitignored): {sha,deployedAt,url} of the last successful auto-deploy — the sole source of truth for site_touched_since_last_deploy, owned entirely by run_auto_deploy
 NAME="$(basename "$ROOT")"
 MODEL="${MODEL:-claude-sonnet-5}"                  # COLD-START FLOOR — cheapest tier; the policy tunes UP from here (pin the full id; the bare alias drifts)
 EFFORT="${EFFORT:-low}"                            # low|medium|high|xhigh|max — cheapest by default (bias-cheap; the ladder escalates on failure)
@@ -360,42 +361,46 @@ tier_strength() {
 }
 
 # site_touched_since_last_deploy — 0 (true, "yes, deploy") / 1 (false, "nothing site-touching
-# changed, skip"). Derives the baseline from committed history rather than a new state file: the
-# highest-numbered DONE task titled exactly "Deploy pending site changes to production" is the last
-# real deploy; find its `mark done` commit and diff src/+public/ against it. Fails OPEN (returns 0,
-# "deploy") if no such task/commit can be resolved — never silently skip a first-ever or
-# unresolvable case.
+# changed, skip"). Baseline comes from $LAST_DEPLOY (a small COMMITTED state file — see its
+# declaration above — owned entirely by run_auto_deploy, written only on a confirmed-successful
+# deploy). No task authoring is involved anywhere in this: deployment is no longer gated on any
+# backlog task existing. Fails OPEN (returns 0, "deploy") if the marker file doesn't exist yet —
+# correct for the very first deploy under this mechanism, same fail-open philosophy as before.
 site_touched_since_last_deploy() {
-  local last_id last_sha
-  last_id="$(tj -r '[.tasks[] | select(.title=="Deploy pending site changes to production" and .status=="done")] | max_by(.id|ltrimstr("T")|tonumber) | .id // empty' 2>/dev/null || true)"
-  if [ -z "$last_id" ]; then
-    log "auto-deploy: no prior completed deploy task found — treating as site-touching changed (fail open)."
+  local last_sha
+  if [ ! -f "$LAST_DEPLOY" ]; then
+    log "auto-deploy: no $LAST_DEPLOY marker found yet — treating as site-touching changed (fail open)."
     return 0
   fi
-  last_sha="$(git -C "$ROOT" log --all --grep="^${last_id}: mark done" --format=%H -1 2>/dev/null || true)"
+  last_sha="$(jq -r '.sha // empty' "$LAST_DEPLOY" 2>/dev/null || true)"
   if [ -z "$last_sha" ]; then
-    log "auto-deploy: could not resolve commit for $last_id's mark-done — treating as site-touching changed (fail open)."
+    log "auto-deploy: $LAST_DEPLOY exists but has no .sha — treating as site-touching changed (fail open)."
     return 0
   fi
   if git -C "$ROOT" diff --quiet "$last_sha" HEAD -- src public 2>/dev/null; then
-    log "auto-deploy: no src/public changes since $last_id ($last_sha) — nothing to deploy."
+    log "auto-deploy: no src/public changes since last deploy ($last_sha) — nothing to deploy."
     return 1
   fi
-  log "auto-deploy: src/public changed since $last_id ($last_sha) — deploy warranted."
+  log "auto-deploy: src/public changed since last deploy ($last_sha) — deploy warranted."
   return 0
 }
 
 # run_auto_deploy — mirrors the sanctioned unattended deploy procedure already established by
 # .harness/tasks/T193.md (the canonical "Deploy pending site changes to production" task spec, run
-# successfully for real 3 times as T193/T216/T238) — same steps, same verification, just invoked
-# directly by the loop instead of via a Claude-agent-built task. Never blocks the loop; only logs
-# and returns nonzero on any failure (there's no task to mark failed:blocked against here).
+# successfully for real 3 times as T193/T216/T238) — same steps, same verification. This is now the
+# SOLE deploy mechanism (no companion backlog task convention exists anymore): on a confirmed-200
+# success it writes/commits/pushes $LAST_DEPLOY recording the exact commit that was deployed, which
+# is what unblocks the NEXT check. Never blocks the loop; only logs and returns nonzero on any
+# failure. Deliberately does NOT touch $LAST_DEPLOY on failure — an unresolved failure leaves the
+# baseline stale, so the very next backlog-exhaustion re-attempts against the same diff rather than
+# silently giving up.
 run_auto_deploy() {
   if ! vercel whoami >/dev/null 2>&1; then
     log "auto-deploy: 'vercel whoami' failed (not logged in) — skipping auto-deploy; run 'vercel login' to enable it."
     return 1
   fi
-  local out url code
+  local deployed_sha out url code
+  deployed_sha="$(git -C "$ROOT" rev-parse HEAD)"
   out="$(vercel --prod --yes 2>&1)" || { log "auto-deploy: 'vercel --prod --yes' failed: $out"; return 1; }
   url="$(printf '%s\n' "$out" | tail -1)"
   code="$(curl -s -o /dev/null -w '%{http_code}' "$url" 2>/dev/null || true)"
@@ -405,13 +410,17 @@ run_auto_deploy() {
     code="$(curl -s -o /dev/null -w '%{http_code}' "https://www.ryankrol.co.uk" 2>/dev/null || true)"
     url="https://www.ryankrol.co.uk"
   fi
-  if [ "$code" = "200" ]; then
-    log "auto-deploy: SUCCESS — $url returned 200."
-    return 0
-  else
+  if [ "$code" != "200" ]; then
     log "auto-deploy: deploy ran but verification returned '$code' (expected 200) for $url."
     return 1
   fi
+  log "auto-deploy: SUCCESS — $url returned 200."
+  jq -n --arg sha "$deployed_sha" --arg deployedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg url "$url" \
+    '{sha: $sha, deployedAt: $deployedAt, url: $url}' >"$LAST_DEPLOY"
+  git -C "$ROOT" add "$LAST_DEPLOY" 2>/dev/null || true
+  git -C "$ROOT" commit -q -m "auto-deploy: update last-deploy marker to $(git -C "$ROOT" rev-parse --short "$deployed_sha") [skip ci]" 2>/dev/null || true
+  throttled_push || log "WARN: deployed successfully but couldn't push the $LAST_DEPLOY marker — the next check will fail open and redeploy needlessly until this pushes."
+  return 0
 }
 
 # SELECT — echo the next eligible task id; return 1 if nothing is eligible.
@@ -865,7 +874,7 @@ for ((i = 1; i <= MAX_ITERS; i++)); do
   if [ -z "$sel" ]; then
     log "no eligible task — backlog complete or everything left is needs-human/blocked."
     if site_touched_since_last_deploy; then
-      run_auto_deploy || log "auto-deploy: did not complete successfully — see log above; the dedicated 'Deploy pending site changes to production' task convention (.harness/CLAUDE.md) remains the fallback for a human/next authoring pass to pick up."
+      run_auto_deploy || log "auto-deploy: did not complete successfully — see log above; the $LAST_DEPLOY marker was NOT updated, so this will be retried automatically the next time the backlog is exhausted."
     fi
     board; exit 0
   fi

@@ -315,20 +315,18 @@ vercel --prod      # deploys the current local working tree directly, no Git int
 **Convention — any session that changes what ships (`src/`, `public/`, etc.) is responsible for
 triggering a deploy when that body of work is actually done, whether or not it went through the
 harness:**
-- **Inside the autonomous harness**: see `.harness/CLAUDE.md`'s backlog-authoring convention —
-  **exactly one** deploy task exists in `TASKS.json` with `status: pending` at any time (never one
-  per idea/sweep/feature — that was tried once, produced two competing pending deploy tasks
-  side-by-side, and had to be caught and merged by hand). New site-touching tasks get added to that
-  ONE pending deploy task's `dependsOn`; a fresh one is only authored once the previous one has
-  actually flipped to `done` (i.e. really shipped). It's an ordinary **buildable** task (`gate: null`,
-  runs `vercel --prod` and verifies it via exit code + a `curl` check — no human click-through), so a
-  `supervise.sh` run naturally culminates in shipping what it built, not leaving it stranded on
-  `main`.
+- **Inside the autonomous harness**: this is fully automatic, no task authoring involved. Per
+  `.harness/CLAUDE.md`, `.harness/loop.sh` deploys on its own whenever it finds nothing eligible left
+  to build (backlog exhausted, spanning as many `supervise.sh`-restarted sessions as it takes; a
+  terminally failed/blocked task doesn't stop it) — tracked via a small git-tracked marker file,
+  `.harness/last-deploy.json`, not a backlog task. A `supervise.sh` run naturally culminates in
+  shipping what it built, not leaving it stranded on `main`.
 - **Outside the harness** (an interactive Claude Code session, whether or not `.harness/` is
   involved): if you've pushed a change to `main` that affects the live site and you're at a natural
   stopping point (not mid-way through a larger piece of work the user is about to continue), run
   `vercel --prod` yourself before ending the session, or tell the user a deploy is needed and how to
-  trigger one. Don't assume "I pushed it" means "it's live" anymore.
+  trigger one. Don't assume "I pushed it" means "it's live" anymore — this path never touches the
+  harness's own exhaustion-triggered deploy, since nothing here runs `loop.sh`.
 
 ## Gotchas
 
