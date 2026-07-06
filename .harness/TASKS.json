@@ -7901,7 +7901,7 @@
     {
       "id": "T284",
       "title": "Show the ownership field (sample/travel size/full bottle) on the read-only perfume review card",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T281"
       ],
