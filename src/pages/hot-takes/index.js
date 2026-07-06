@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Header from '../../components/Header';
 import { formatReviewDate } from '../../lib/dateFormat';
 
 export default function HotTakesPage() {
@@ -35,7 +34,6 @@ export default function HotTakesPage() {
       </Head>
 
       <div className="container">
-        <Header />
 
         <h1 className="page-title">hot takes</h1>
 

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Header from '../../components/Header';
 import { assignGradients } from '../../components/CoverTile';
 
 export default function ListeningPage() {
@@ -46,7 +45,6 @@ export default function ListeningPage() {
       </Head>
 
       <div className="container">
-        <Header />
 
         <div className="collection-review-header">
           <div className="collection-review-title-group">

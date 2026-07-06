@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Header from '../../../components/Header';
 import StarRating from '../../../components/StarRating';
 import TmdbSearch from '../../../components/TmdbSearch';
 import MarkdownEditor from '../../../components/MarkdownEditor';
@@ -86,7 +85,6 @@ export default function AddTVReview() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">add tv show review</h1>
 
       <div className="collection-form-card">

@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import Header from '../components/Header'
 import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
 import CoverTile, { assignGradients } from '../components/CoverTile'
@@ -133,7 +132,6 @@ export default function Home() {
       </Head>
 
       <div className="container home-container">
-        <Header />
 
         <section className="home-hero">
           <span className="collection-badge home-hero-badge">✦ A HOME FOR MY TASTE</span>

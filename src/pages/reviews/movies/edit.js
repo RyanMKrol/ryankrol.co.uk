@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
-import Header from '../../../components/Header';
 import MasonryColumns from '../../../components/MasonryColumns';
 import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
@@ -38,7 +37,6 @@ export default function EditMovies() {
   if (loading) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <div className="spinner"></div>
           <p>Loading movies...</p>
@@ -50,7 +48,6 @@ export default function EditMovies() {
   if (error) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <p className="error-text">Error: {error}</p>
         </div>
@@ -60,7 +57,6 @@ export default function EditMovies() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">edit movie reviews</h1>
       <Link href="/reviews/movies/backfill" className="backfill-link">
         Backfill metadata

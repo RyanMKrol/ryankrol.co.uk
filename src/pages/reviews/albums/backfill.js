@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Header from '../../../components/Header';
 import BulkBackfillList from '../../../components/BulkBackfillList';
 import { needsAlbumBackfill } from '../../../lib/backfillEligibility';
 
@@ -95,7 +94,6 @@ export default function BackfillAlbums() {
   if (loading) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <div className="spinner"></div>
           <p>Loading albums...</p>
@@ -107,7 +105,6 @@ export default function BackfillAlbums() {
   if (error) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <p className="error-text">Error: {error}</p>
         </div>
@@ -117,7 +114,6 @@ export default function BackfillAlbums() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">backfill album metadata</h1>
 
       <div className="collection-form-card">

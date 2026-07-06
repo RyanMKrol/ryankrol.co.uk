@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Header from '../../../components/Header';
 import PipMeter from '../../../components/PipMeter';
 import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes, ApplicationSpotsSprayer, OwnershipPicker } from '../../../components/PerfumeCharacteristics';
 import MarkdownEditor from '../../../components/MarkdownEditor';
@@ -124,7 +123,6 @@ export default function AddPerfumeReview() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">add perfume review</h1>
 
       <div className="collection-form-card">

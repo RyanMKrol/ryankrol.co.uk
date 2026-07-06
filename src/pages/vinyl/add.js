@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Header from '../../components/Header';
 import Head from 'next/head';
 import LastfmAlbumSearch from '../../components/LastfmAlbumSearch';
 
@@ -87,7 +86,6 @@ export default function AddVinyl() {
       </Head>
 
       <div className="review-container">
-        <Header />
         <h1 className="page-title">add vinyl record</h1>
 
         <div className="collection-form-card">

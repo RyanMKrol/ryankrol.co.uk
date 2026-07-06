@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Header from '../../components/Header';
 
 export default function AddHotTake() {
   const router = useRouter();
@@ -68,7 +67,6 @@ export default function AddHotTake() {
       </Head>
 
       <div className="review-container">
-        <Header />
         <h1 className="page-title">add hot take</h1>
 
         <div className="collection-form-card">

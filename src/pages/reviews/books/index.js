@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ReviewCard from '../../../components/ReviewCard';
-import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
 import SortButtons from '../../../components/SortButtons';
 import Pagination from '../../../components/Pagination';
@@ -140,7 +139,6 @@ export default function Books() {
 
   return (
     <div className="review-container">
-      <Header />
 
       <div className="collection-review-header">
         <div className="collection-review-title-group">

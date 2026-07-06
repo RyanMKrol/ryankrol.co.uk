@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Header from '../../../components/Header';
 import BulkBackfillList from '../../../components/BulkBackfillList';
 import { needsMovieBackfill } from '../../../lib/backfillEligibility';
 import { tmdbPosterUrl } from '../../../lib/tmdb';
@@ -74,7 +73,6 @@ export default function BackfillMovies() {
   if (loading) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <div className="spinner"></div>
           <p>Loading movies...</p>
@@ -86,7 +84,6 @@ export default function BackfillMovies() {
   if (error) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <p className="error-text">Error: {error}</p>
         </div>
@@ -96,7 +93,6 @@ export default function BackfillMovies() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">backfill movie metadata</h1>
 
       <div className="collection-form-card">

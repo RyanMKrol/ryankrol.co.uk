@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Header from '../../components/Header';
 
 export default function CacheDevPage() {
   const [stats, setStats] = useState(null);
@@ -196,7 +195,6 @@ export default function CacheDevPage() {
       </Head>
       
       <div className="container">
-        <Header />
         <h1 style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>
           🔧 Cache Dev Tools
         </h1>

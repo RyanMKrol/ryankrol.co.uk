@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
-import Header from '../../../components/Header';
 import MasonryColumns from '../../../components/MasonryColumns';
 import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
@@ -38,7 +37,6 @@ export default function EditBooks() {
   if (loading) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <div className="spinner"></div>
           <p>Loading books...</p>
@@ -50,7 +48,6 @@ export default function EditBooks() {
   if (error) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <p className="error-text">Error: {error}</p>
         </div>
@@ -60,7 +57,6 @@ export default function EditBooks() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">edit book reviews</h1>
       <Link href="/reviews/books/backfill" className="backfill-link">
         Backfill metadata

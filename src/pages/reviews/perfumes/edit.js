@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Variant6Hybrid from '../../../components/perfumeVariants/Variant6Hybrid';
-import Header from '../../../components/Header';
 
 export default function EditPerfumes() {
   const [perfumes, setPerfumes] = useState([]);
@@ -34,7 +33,6 @@ export default function EditPerfumes() {
   if (loading) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <div className="spinner"></div>
           <p>Loading perfumes...</p>
@@ -46,7 +44,6 @@ export default function EditPerfumes() {
   if (error) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <p className="error-text">Error: {error}</p>
         </div>
@@ -56,7 +53,6 @@ export default function EditPerfumes() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">edit perfume reviews</h1>
 
       <div className="perfume-card-grid">

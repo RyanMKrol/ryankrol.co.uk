@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
-import Header from '../../components/Header';
 import Badge from '../../components/Badge';
 import SearchInput from '../../components/SearchInput';
 import Pill from '../../components/Pill';
@@ -149,7 +148,6 @@ export default function ProjectsPage() {
       </Head>
 
       <div className="container">
-        <Header />
 
         <div className="collection-review-header">
           <div className="collection-review-title-group">

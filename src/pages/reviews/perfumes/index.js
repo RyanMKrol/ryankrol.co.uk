@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Variant6Hybrid from '../../../components/perfumeVariants/Variant6Hybrid';
-import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
 import MasonryColumns from '../../../components/MasonryColumns';
@@ -82,7 +81,6 @@ export default function Perfumes() {
 
   return (
     <div className="review-container">
-      <Header />
 
       <div className="collection-review-header">
         <div className="collection-review-title-group">

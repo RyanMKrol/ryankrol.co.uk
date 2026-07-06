@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Header from '../../components/Header';
 import Badge from '../../components/Badge';
 import PillGroup from '../../components/PillGroup';
 import Pagination from '../../components/Pagination';
@@ -132,7 +131,6 @@ export default function Workouts() {
   if (loading) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <div className="spinner"></div>
           <p>Loading workouts...</p>
@@ -144,7 +142,6 @@ export default function Workouts() {
   if (error) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <p className="error-text">Error: {error}</p>
           <p>We&apos;re working on connecting to the Hevy API. Please try again later.</p>
@@ -160,7 +157,6 @@ export default function Workouts() {
       </Head>
 
       <div className="container">
-        <Header />
 
         <div className="collection-review-header">
           <div className="collection-review-title-group">

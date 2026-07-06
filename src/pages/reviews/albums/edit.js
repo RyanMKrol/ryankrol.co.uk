@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
-import Header from '../../../components/Header';
 
 export default function EditAlbums() {
   const [albums, setAlbums] = useState([]);
@@ -35,7 +34,6 @@ export default function EditAlbums() {
   if (loading) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <div className="spinner"></div>
           <p>Loading albums...</p>
@@ -47,7 +45,6 @@ export default function EditAlbums() {
   if (error) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <p className="error-text">Error: {error}</p>
         </div>
@@ -57,7 +54,6 @@ export default function EditAlbums() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">edit album reviews</h1>
       <Link href="/reviews/albums/backfill" className="backfill-link">
         Backfill metadata

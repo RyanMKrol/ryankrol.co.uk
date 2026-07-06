@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Header from '../../components/Header';
 import SearchInput from '../../components/SearchInput';
 import PillGroup from '../../components/PillGroup';
 import CoverTile, { assignGradients } from '../../components/CoverTile';
@@ -92,7 +91,6 @@ export default function VinylPage() {
       </Head>
 
       <div className="container">
-        <Header />
 
         <div className="collection-review-header">
           <div className="collection-review-title-group">

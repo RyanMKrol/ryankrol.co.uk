@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import Header from '../../components/Header';
 import ExerciseProgressCharts from '../../components/ExerciseProgressCharts';
 import CardioProgressCharts from '../../components/CardioProgressCharts';
 import PillGroup from '../../components/PillGroup';
@@ -146,7 +145,6 @@ export default function ExerciseDetailPage() {
         </Head>
 
         <div className="container">
-          <Header />
           <div className="loading-container">
             <div className="spinner"></div>
             <p>Loading exercise history...</p>
@@ -164,7 +162,6 @@ export default function ExerciseDetailPage() {
         </Head>
 
         <div className="container">
-          <Header />
           <div className="loading-container">
             <p className="error-text">Error: {error}</p>
             <button
@@ -188,7 +185,6 @@ export default function ExerciseDetailPage() {
         </Head>
 
         <div className="container">
-          <Header />
           <h1 className="page-title">{exerciseName}</h1>
           <p>No history found for this exercise.</p>
           <button
@@ -210,7 +206,6 @@ export default function ExerciseDetailPage() {
       </Head>
 
       <div className="container">
-        <Header />
 
         <Link href="/workouts" className="collection-back-link">
           ← back to workouts

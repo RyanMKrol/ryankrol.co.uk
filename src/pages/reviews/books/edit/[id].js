@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Header from '../../../../components/Header';
 import StarRating from '../../../../components/StarRating';
 import MetadataBackfillModal from '../../../../components/MetadataBackfillModal';
 import MarkdownEditor from '../../../../components/MarkdownEditor';
@@ -189,7 +188,6 @@ export default function EditBookReview() {
   if (loading) {
     return (
       <div className="review-container">
-        <Header />
         <div className="loading-container">
           <div className="spinner"></div>
           <p>Loading book review...</p>
@@ -200,7 +198,6 @@ export default function EditBookReview() {
 
   return (
     <div className="review-container">
-      <Header />
       <h1 className="page-title">edit book review</h1>
 
       <div className="collection-form-card">
