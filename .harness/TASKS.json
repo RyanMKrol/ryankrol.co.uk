@@ -7818,7 +7818,7 @@
     {
       "id": "T281",
       "title": "Replace considerTravelSize/considerFullBottle with a single ownership enum field (validator + API round-trip + docs)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
