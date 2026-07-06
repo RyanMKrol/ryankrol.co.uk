@@ -7199,7 +7199,7 @@
     {
       "id": "T258",
       "title": "Bulk metadata-backfill list page for movies",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T257"
       ],
