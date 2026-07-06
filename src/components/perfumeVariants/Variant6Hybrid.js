@@ -50,6 +50,9 @@ export default function Variant6Hybrid({ item }) {
       <div className="perfume-v1-rating-row">
         <PipMeter value={item.rating} readOnly />
         <span className="perfume-v1-rating-number">{item.rating}/10</span>
+        {item.ownership && (
+          <Badge accentColor="var(--accent-perfumes)" variant="soft">{item.ownership}</Badge>
+        )}
       </div>
 
       {hasSeasons && (
