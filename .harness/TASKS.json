@@ -8359,7 +8359,7 @@
     {
       "id": "T300",
       "title": "Add hover tooltips to /projects card star and commit-count badges",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T299"
       ],
