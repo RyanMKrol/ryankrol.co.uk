@@ -107,15 +107,20 @@ npm run workout:migrate-data   # Migrate all data from Hevy API
 ### Testing
 
 Unit tests run on **Jest** (via `next/jest`) and are co-located next to source as
-`*.test.js`. The current suite covers the pure logic in `src/lib`
-(`workoutMetrics`, `apiCache`). New logic should ship with tests.
+`*.test.js`. The suite covers the pure logic in `src/lib` (`workoutMetrics`, `apiCache`, …), the
+review add/edit forms (`src/__tests__/pages/reviews/**`), and **React Testing Library component /
+integration tests** for the interactive UI — `SortButtons`, `Pagination`, `StarRating`, `PillGroup`,
+`Header` (nav), `NowPlaying`, and the projects tag-filter page. New logic should ship with tests.
 
-**Visual check (local-only):** `node scripts/visual-check.mjs` renders every page in headless
-Chromium against fully-synthetic data (a hermetic `next start` with all `/api/*` served from
-in-process fixtures and external images placeholdered — no DynamoDB, no external APIs, no network)
-and writes a screenshot of each to the gitignored `scripts/visual-out/`. It's for eyeballing that a
-change actually renders (not just that the build passes); it needs Playwright's Chromium
-(`npx playwright install chromium`) and is **not** part of CI.
+**Visual check (local-only):** `node scripts/visual-check.mjs` renders every page **and every
+interaction flow** (sort / filter / search / toggle — ~65 captures) in headless Chromium against
+fully-synthetic data (a hermetic `next start` with all `/api/*` served from in-process fixtures and
+external images placeholdered — no DynamoDB, no external APIs, no network). It writes a screenshot of
+each to the gitignored `scripts/visual-out/` plus a `manifest.json` (`name`/`description`/`flow`/`covers`)
+so you can find the shots relevant to a change. Each page's `waitFor` is a presence gate (a page that
+doesn't paint its signature element fails). It's for eyeballing that a change actually renders (not
+just that the build passes); it needs Playwright's Chromium (`npx playwright install chromium`) and is
+**not** part of CI. `VISUAL_CHECK_ONLY=<name>` captures a subset for fast iteration.
 
 ## Database Schema
 

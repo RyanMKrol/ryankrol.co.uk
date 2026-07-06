@@ -507,12 +507,32 @@ lint/tests/build all green yet never rendered on the live card — a text diff c
 
 - **What it does:** `node scripts/visual-check.mjs` runs `next build`, starts a hermetic `next start`
   (every `/api/*` served from in-process fixtures, external images placeholdered — NO DynamoDB, NO
-  external APIs, NO network), and screenshots every page in `PAGES` to the gitignored
-  `scripts/visual-out/`. It fails only on hard errors (build/load/console-error), asserts no pixel
-  invariants (no golden images) — the visual judgment is done by whoever views the PNGs.
-- **⚠️ LIVING ARTIFACT:** `scripts/_visual-harness.mjs` owns the `PAGES` list + the synthetic
-  `/api/*` fixtures. When the UI surface changes (a page added/removed, an API response shape
-  changes, a card renders a new field), update `PAGES`/the fixtures in the SAME change — otherwise the
-  check screenshots a stale shape or fails on an intentionally-removed thing. `scripts/` is
+  external APIs, NO network), and screenshots **every `PAGES` entry AND every `FLOWS` interaction**
+  (~65 captures) to the gitignored `scripts/visual-out/`. A `PAGES` entry's `waitFor` is a **presence
+  gate** — a page whose signature element never paints FAILS the run. A `FLOWS` entry runs
+  `actions(page)` (a sort / filter / search / toggle click) then screenshots the resulting state. It
+  asserts no pixel invariants (no golden images) — the visual judgment is done by whoever views the PNGs.
+- **The manifest is how you stay targeted.** Every run writes `scripts/visual-out/manifest.json` and
+  prints a `name | description | flow | covers` table. `VISUAL_CHECK_ONLY=<substring>` captures just a
+  subset locally. Run cost is ~4–5 min for the full set.
+- **⚠️ LIVING ARTIFACT:** `scripts/_visual-harness.mjs` owns `PAGES`, `FLOWS`, and the synthetic
+  `/api/*` fixtures. When the UI surface changes, update it in the SAME change — otherwise the check
+  screenshots a stale shape or a sort/filter flow silently goes trivial. `scripts/` is
   `SCOPE_EXEMPT_GLOBS`-exempt so a UI task can update it without tripping the structural scope gate.
-- **Not in CI** (no browser there) and **local/loop-only** — it's an audit-time aid, not a gate.
+- **Not in CI** (no browser there) and **local/loop-only** — an audit-time aid, not a gate. The
+  CI-gated behaviour tests are the RTL component/integration tests co-located as `*.test.js`.
+
+### Rules for UI tasks (authoring + auditing)
+
+1. **Adding an interactive state → add a `FLOWS` entry, same change (REQUIRED, not optional).** If the
+   only way to SEE your change is to click/sort/filter/toggle/open something, a baseline `PAGES` shot
+   won't show it — add a `FLOWS` entry (real selectors, a `flow:` description, `covers` globs) so a
+   screenshot actually captures that state. Filter/nav pills share the `.collection-pill` class, so
+   target in-page pills with `:text-is("Label")` (exact), not `:has-text` (substring — "list" would
+   also match the "listening" nav pill).
+2. **A `page`/`style`/`ui` task's `## Done when` names the relevant screenshot(s) by manifest `name`**
+   (e.g. "`reviews-perfumes` and `perfumes-ownership-full` render correctly"), not a vague "looks right".
+3. **Auditing: use the manifest to stay targeted.** Read `scripts/visual-out/manifest.json` (or the
+   stdout table), match your task's `scope` paths against each shot's `covers`, and LOOK at only those
+   PNGs — do NOT eyeball all ~65. Confirm the change actually paints AND (for a flow) that the
+   interaction visibly changed the result.

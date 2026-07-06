@@ -175,7 +175,7 @@ src/lib (the data layer)
 | `src/hooks/*` | `useChartTheme`, `useKonamiCode`, `useMatrixActive` |
 | `src/styles/globals.css` | CSS custom properties: `:root` = Collection design tokens (the single site palette) + `html.matrix-active` override |
 | `src/scripts/*` | One-shot ops scripts (table creation, data migration, audits) — run via npm |
-| `scripts/visual-check.mjs` + `scripts/_visual-harness.mjs` | Hermetic Playwright visual check: `next start` with every `/api/*` served from synthetic fixtures (`_visual-harness.mjs` owns the `PAGES` list + fixtures — a **living artifact**, keep current when the UI/API surface changes) + external images placeholdered, screenshots every page to gitignored `scripts/visual-out/`. Wired as the harness `VISUAL_VERIFY_HOOK` (auto-fires on `page`/`style`/`ui` tasks). Local/loop-only, **not** in CI. See the "Visual verification" note in `.harness/custom/CLAUDE.md` |
+| `scripts/visual-check.mjs` + `scripts/_visual-harness.mjs` | Hermetic Playwright visual check: `next start` with every `/api/*` served from synthetic fixtures + external images placeholdered, screenshots every `PAGES` route AND every `FLOWS` interaction (sort/filter/search/toggle — ~65 captures) to gitignored `scripts/visual-out/`, and writes `manifest.json` (`name`/`description`/`flow`/`covers`) so an auditor can match a task's scope to the relevant shots. Each `PAGES` `waitFor` is a presence gate. `_visual-harness.mjs` owns `PAGES`/`FLOWS`/fixtures — a **living artifact**, keep current (incl. a new `FLOWS` entry per new interactive state). Wired as the harness `VISUAL_VERIFY_HOOK` (auto-fires on `page`/`style`/`ui` tasks); `VISUAL_CHECK_ONLY=<name>` filters locally. Local/loop-only, **not** in CI. See the "Visual verification" note in `.harness/custom/CLAUDE.md` |
 
 **Components:** `Header` (top nav across all sections + `NowPlaying`), `Footer` (social links),
 `NowPlaying` (Last.fm poll every 60s), `MarqueeText`, `ReviewCard` (variant system —
@@ -272,12 +272,15 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
   not instead of, the backend per-route rate limit (`src/lib/rateLimit.js`); keep both layers when
   touching these components.
 - **Visual changes are confirmed with real screenshots, not just a passing build.** `node
-  scripts/visual-check.mjs` renders every page hermetically (synthetic `/api/*` fixtures, no network)
-  and screenshots them to `scripts/visual-out/` — because lint/test/build can all pass while an
-  element sits in the DOM unpainted (this shipped once: T273, Markdown that never rendered). When you
-  change a page/component/style, **run it and LOOK**, and if you add/remove a page or change an API
-  response shape, update `PAGES`/the fixtures in `scripts/_visual-harness.mjs` in the same change (it's
-  a living artifact). The harness auto-runs this for `page`/`style`/`ui` tasks via `VISUAL_VERIFY_HOOK`.
+  scripts/visual-check.mjs` renders every page AND every interaction flow hermetically (synthetic
+  `/api/*` fixtures, no network) and screenshots them to `scripts/visual-out/` (+ `manifest.json`) —
+  because lint/test/build can all pass while an element sits in the DOM unpainted (this shipped once:
+  T273, Markdown that never rendered). When you change a page/component/style, **run it and LOOK** at
+  the shots relevant to your change (use `manifest.json`'s `covers`). Keep `scripts/_visual-harness.mjs`
+  current (it's a living artifact): a new page/API-shape → update `PAGES`/fixtures; **a new interactive
+  state (sort/filter/toggle) → add a `FLOWS` entry** in the same change. The harness auto-runs this for
+  `page`/`style`/`ui` tasks via `VISUAL_VERIFY_HOOK`. Interactive behaviour is *also* unit-tested with
+  React Testing Library (`*.test.js`) — that layer runs in CI, the visual check does not.
 
 ## Definition of Done & checks
 
