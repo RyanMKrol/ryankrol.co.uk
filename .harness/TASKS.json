@@ -7845,7 +7845,7 @@
     {
       "id": "T282",
       "title": "Migrate existing PerfumeRatings rows from considerTravelSize/considerFullBottle to the new ownership field",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T281"
       ],
