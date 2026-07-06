@@ -9,8 +9,8 @@ describe('getExercisePreview', () => {
     const exercises = [{ title: 'Bench Press' }, { title: 'Squat' }];
     expect(getExercisePreview(exercises)).toEqual({
       shown: [
-        { name: 'Bench Press', hasPersonalBest: false },
-        { name: 'Squat', hasPersonalBest: false },
+        { name: 'Bench Press', prAxes: [] },
+        { name: 'Squat', prAxes: [] },
       ],
       remaining: 0,
     });
@@ -26,9 +26,9 @@ describe('getExercisePreview', () => {
     ];
     expect(getExercisePreview(exercises)).toEqual({
       shown: [
-        { name: 'Bench Press', hasPersonalBest: false },
-        { name: 'Squat', hasPersonalBest: false },
-        { name: 'Deadlift', hasPersonalBest: false },
+        { name: 'Bench Press', prAxes: [] },
+        { name: 'Squat', prAxes: [] },
+        { name: 'Deadlift', prAxes: [] },
       ],
       remaining: 2,
     });
@@ -37,7 +37,7 @@ describe('getExercisePreview', () => {
   it('respects a custom maxShown value', () => {
     const exercises = [{ title: 'Bench Press' }, { title: 'Squat' }, { title: 'Deadlift' }];
     expect(getExercisePreview(exercises, 1)).toEqual({
-      shown: [{ name: 'Bench Press', hasPersonalBest: false }],
+      shown: [{ name: 'Bench Press', prAxes: [] }],
       remaining: 2,
     });
   });
@@ -46,14 +46,14 @@ describe('getExercisePreview', () => {
     const exercises = [{ title: 'Bench Press' }, {}, { title: 'Squat' }];
     expect(getExercisePreview(exercises)).toEqual({
       shown: [
-        { name: 'Bench Press', hasPersonalBest: false },
-        { name: 'Squat', hasPersonalBest: false },
+        { name: 'Bench Press', prAxes: [] },
+        { name: 'Squat', prAxes: [] },
       ],
       remaining: 0,
     });
   });
 
-  it('marks an exercise as a personal best when any set carries a PR flag', () => {
+  it('names each PR axis that any set carries, per exercise', () => {
     const exercises = [
       { title: 'Bench Press', sets: [{ isWeightPR: true }, {}] },
       { title: 'Squat', sets: [{ is1RMPR: true }] },
@@ -64,15 +64,40 @@ describe('getExercisePreview', () => {
     const { shown } = getExercisePreview(exercises, 4);
 
     expect(shown).toEqual([
-      { name: 'Bench Press', hasPersonalBest: true },
-      { name: 'Squat', hasPersonalBest: true },
-      { name: 'Deadlift', hasPersonalBest: true },
-      { name: 'Row', hasPersonalBest: false },
+      { name: 'Bench Press', prAxes: [{ key: 'weight', label: 'weight PR' }] },
+      { name: 'Squat', prAxes: [{ key: '1rm', label: '1RM PR' }] },
+      { name: 'Deadlift', prAxes: [{ key: 'volume', label: 'volume PR' }] },
+      { name: 'Row', prAxes: [] },
+    ]);
+  });
+
+  it('dedupes and combines multiple PR axes across different sets of one exercise', () => {
+    const exercises = [
+      {
+        title: 'Squat',
+        sets: [
+          { isWeightPR: true },
+          { is1RMPR: true, isVolumePR: true },
+        ],
+      },
+    ];
+
+    const { shown } = getExercisePreview(exercises);
+
+    expect(shown).toEqual([
+      {
+        name: 'Squat',
+        prAxes: [
+          { key: 'weight', label: 'weight PR' },
+          { key: '1rm', label: '1RM PR' },
+          { key: 'volume', label: 'volume PR' },
+        ],
+      },
     ]);
   });
 
   it('treats a missing sets array as no personal best', () => {
     const { shown } = getExercisePreview([{ title: 'Curl' }]);
-    expect(shown).toEqual([{ name: 'Curl', hasPersonalBest: false }]);
+    expect(shown).toEqual([{ name: 'Curl', prAxes: [] }]);
   });
 });

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import Badge from '../../components/Badge';
+import Badge, { PrBadge } from '../../components/Badge';
 import StatBlock from '../../components/StatBlock';
 
 const SPLIT_COLORS = {
@@ -273,29 +273,7 @@ export default function WorkoutDetailPage() {
                       >
                         {formatSetDisplay(set)}
                         {prBadges.map(({ key, label }) => (
-                          <Badge
-                            key={key}
-                            accentColor="var(--accent-workouts)"
-                            variant="soft"
-                            mono={false}
-                          >
-                            <span aria-hidden="true">🏅</span>
-                            <span
-                              style={{
-                                position: 'absolute',
-                                width: '1px',
-                                height: '1px',
-                                padding: 0,
-                                margin: '-1px',
-                                overflow: 'hidden',
-                                clip: 'rect(0, 0, 0, 0)',
-                                whiteSpace: 'nowrap',
-                                border: 0,
-                              }}
-                            >
-                              {' '}{label}
-                            </span>
-                          </Badge>
+                          <PrBadge key={key} label={label} />
                         ))}
                       </span>
                     </div>

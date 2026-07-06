@@ -6,17 +6,33 @@
  * mono: use the Space Mono small-caps treatment (default) — GitHub topic pills
  * use lowercase Nunito instead, so pass mono={false} for those.
  */
-export default function Badge({ children, color, accentColor, variant = 'solid', mono = true }) {
+export default function Badge({
+  children, color, accentColor, variant = 'solid', mono = true, className = '', tabIndex,
+}) {
   const fill = accentColor || color;
   const style = variant === 'soft'
     ? { backgroundColor: `${fill}1A`, color: fill }
     : { backgroundColor: fill, color: '#FFFFFF' };
 
-  const className = mono ? 'collection-badge' : 'collection-badge collection-badge-plain';
+  const baseClassName = mono ? 'collection-badge' : 'collection-badge collection-badge-plain';
 
   return (
-    <span className={className} style={style}>
+    <span className={[baseClassName, className].filter(Boolean).join(' ')} style={style} tabIndex={tabIndex}>
       {children}
     </span>
+  );
+}
+
+/**
+ * Shared medal + axis-label pill for personal-best call-outs (weight/1RM/volume
+ * PRs), used by both the workouts list and workout detail pages so the two
+ * surfaces can't drift into diverging badge markup.
+ */
+export function PrBadge({ label }) {
+  return (
+    <Badge accentColor="var(--accent-workouts)" variant="soft" mono={false} className="pr-badge" tabIndex={0}>
+      <span aria-hidden="true">🏅</span>
+      <span className="pr-badge-label"> {label}</span>
+    </Badge>
   );
 }

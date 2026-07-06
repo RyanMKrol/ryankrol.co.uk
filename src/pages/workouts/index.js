@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Badge from '../../components/Badge';
+import Badge, { PrBadge } from '../../components/Badge';
 import PillGroup from '../../components/PillGroup';
 import Pagination from '../../components/Pagination';
 import MasonryColumns from '../../components/MasonryColumns';
@@ -56,12 +56,15 @@ function getDuration(startTime, endTime) {
 export function getExercisePreview(exercises = [], maxShown = 3) {
   const previews = exercises
     .filter((exercise) => exercise.title)
-    .map((exercise) => ({
-      name: exercise.title,
-      hasPersonalBest: (exercise.sets || []).some(
-        (set) => set.isWeightPR || set.is1RMPR || set.isVolumePR
-      ),
-    }));
+    .map((exercise) => {
+      const sets = exercise.sets || [];
+      const prAxes = [
+        sets.some((set) => set.isWeightPR) && { key: 'weight', label: 'weight PR' },
+        sets.some((set) => set.is1RMPR) && { key: '1rm', label: '1RM PR' },
+        sets.some((set) => set.isVolumePR) && { key: 'volume', label: 'volume PR' },
+      ].filter(Boolean);
+      return { name: exercise.title, prAxes };
+    });
   const shown = previews.slice(0, maxShown);
   const remaining = previews.length - shown.length;
   return { shown, remaining };
@@ -236,33 +239,12 @@ export default function Workouts() {
                   {shown.length > 0 && (
                     <div className="workout-session-exercise-row">
                       <ul className="workout-session-exercise-list">
-                        {shown.map(({ name, hasPersonalBest }) => (
+                        {shown.map(({ name, prAxes }) => (
                           <li key={name} className="workout-session-exercise-item">
                             {name}
-                            {hasPersonalBest && (
-                              <Badge
-                                accentColor="var(--accent-workouts)"
-                                variant="soft"
-                                mono={false}
-                              >
-                                <span aria-hidden="true">🏅</span>
-                                <span
-                                  style={{
-                                    position: 'absolute',
-                                    width: '1px',
-                                    height: '1px',
-                                    padding: 0,
-                                    margin: '-1px',
-                                    overflow: 'hidden',
-                                    clip: 'rect(0, 0, 0, 0)',
-                                    whiteSpace: 'nowrap',
-                                    border: 0,
-                                  }}
-                                >
-                                  {' '}personal best
-                                </span>
-                              </Badge>
-                            )}
+                            {prAxes.map(({ key, label }) => (
+                              <PrBadge key={key} label={label} />
+                            ))}
                           </li>
                         ))}
                         {remaining > 0 && (
