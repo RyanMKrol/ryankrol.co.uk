@@ -62,7 +62,10 @@ export default function EditMovies() {
     <div className="review-container">
       <Header />
       <h1 className="page-title">edit movie reviews</h1>
-      
+      <Link href="/reviews/movies/backfill" className="backfill-link">
+        Backfill metadata
+      </Link>
+
       <MasonryColumns
         items={movies}
         columnCount={columnCount}
@@ -85,6 +88,14 @@ export default function EditMovies() {
           </div>
         )}
       />
+
+      <style jsx>{`
+        .backfill-link {
+          display: inline-block;
+          margin-bottom: 1rem;
+          color: var(--color-accent-secondary);
+        }
+      `}</style>
     </div>
   );
 }
