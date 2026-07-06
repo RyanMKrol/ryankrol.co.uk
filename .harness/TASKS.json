@@ -7311,7 +7311,7 @@
     {
       "id": "T262",
       "title": "Fix Edit button overlapping the star rating on /reviews/books/edit (spine-cover cards)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
