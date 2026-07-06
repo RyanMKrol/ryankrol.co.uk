@@ -61,7 +61,7 @@ export default function EditPerfumes() {
 
       <div className="perfume-card-grid">
         {perfumes.map((perfume, index) => (
-          <div key={`${perfume.id}-${index}`} className="review-card-with-edit">
+          <div key={`${perfume.id}-${index}`} className="review-card-with-edit review-card-with-edit--perfume">
             <Variant6Hybrid item={perfume} />
             <Link
               href={`/reviews/perfumes/edit/${encodeURIComponent(perfume.id)}`}
