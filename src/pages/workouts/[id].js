@@ -260,13 +260,49 @@ export default function WorkoutDetailPage() {
                     setLabel = `set ${workingIndex + 1}`;
                   }
 
+                  const prBadges = [
+                    set.isWeightPR && { key: 'weight', label: 'weight PR' },
+                    set.is1RMPR && { key: '1rm', label: '1RM PR' },
+                    set.isVolumePR && { key: 'volume', label: 'volume PR' },
+                  ].filter(Boolean);
+
                   return (
                     <div
                       key={setIndex}
                       className={`workout-set-row ${isWarmup ? 'warmup' : ''}`}
                     >
                       <span className="workout-set-row-label">{setLabel}</span>
-                      <span className="workout-set-row-value">{formatSetDisplay(set)}</span>
+                      <span
+                        className="workout-set-row-value"
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                      >
+                        {formatSetDisplay(set)}
+                        {prBadges.map(({ key, label }) => (
+                          <Badge
+                            key={key}
+                            accentColor="var(--accent-workouts)"
+                            variant="soft"
+                            mono={false}
+                          >
+                            <span aria-hidden="true">🏅</span>
+                            <span
+                              style={{
+                                position: 'absolute',
+                                width: '1px',
+                                height: '1px',
+                                padding: 0,
+                                margin: '-1px',
+                                overflow: 'hidden',
+                                clip: 'rect(0, 0, 0, 0)',
+                                whiteSpace: 'nowrap',
+                                border: 0,
+                              }}
+                            >
+                              {' '}{label}
+                            </span>
+                          </Badge>
+                        ))}
+                      </span>
                     </div>
                   );
                 })}
