@@ -93,4 +93,41 @@ describe('MarkdownEditor', () => {
       target: { name: 'gist', value: '**hi**' },
     });
   });
+
+  it('restores the scroll position after a toolbar action on a long, scrolled textarea', async () => {
+    const user = userEvent.setup();
+    const longText = 'line\n'.repeat(500) + 'hello world';
+
+    function LongDemoForm() {
+      const [value, setValue] = useState(longText);
+      return (
+        <MarkdownEditor
+          id="review-text"
+          name="gist"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Write your thoughts"
+          className="collection-form-textarea"
+        />
+      );
+    }
+
+    render(<LongDemoForm />);
+    const textarea = screen.getByPlaceholderText('Write your thoughts');
+    const len = textarea.value.length;
+    textarea.focus();
+    textarea.setSelectionRange(len - 11, len);
+    textarea.scrollTop = 300;
+
+    const setSpy = jest.spyOn(Object.getPrototypeOf(textarea), 'scrollTop', 'set');
+    setSpy.mockClear();
+
+    await user.click(screen.getByRole('button', { name: 'Bold' }));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(setSpy).toHaveBeenCalledWith(300);
+    expect(textarea.scrollTop).toBe(300);
+
+    setSpy.mockRestore();
+  });
 });

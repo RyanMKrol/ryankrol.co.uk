@@ -28,12 +28,15 @@ export default function MarkdownEditor({
   const textareaRef = useRef(null);
 
   function applyChange(newValue, cursorStart, cursorEnd) {
+    const currentEl = textareaRef.current;
+    const scrollTop = currentEl ? currentEl.scrollTop : null;
     onChange({ target: { name, value: newValue } });
     requestAnimationFrame(() => {
       const el = textareaRef.current;
       if (el) {
         el.focus();
         el.setSelectionRange(cursorStart, cursorEnd);
+        el.scrollTop = scrollTop;
       }
     });
   }
