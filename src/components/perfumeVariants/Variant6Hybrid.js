@@ -38,9 +38,14 @@ export default function Variant6Hybrid({ item }) {
           <h3 className="perfume-v1-title">{item.title}</h3>
           <p className="perfume-v1-designer">{item.designer}</p>
         </div>
-        {item.type && (
-          <Badge accentColor="var(--accent-perfumes)">{item.type}</Badge>
-        )}
+        <div className="perfume-v1-header-badges">
+          {item.type && (
+            <Badge accentColor="var(--accent-perfumes)">{item.type}</Badge>
+          )}
+          {item.ownership && (
+            <Badge accentColor="var(--accent-perfumes)" variant="soft">{item.ownership}</Badge>
+          )}
+        </div>
       </div>
 
       {item.description && (
@@ -52,9 +57,6 @@ export default function Variant6Hybrid({ item }) {
       <div className="perfume-v1-rating-row">
         <PipMeter value={item.rating} readOnly />
         <span className="perfume-v1-rating-number">{item.rating}/10</span>
-        {item.ownership && (
-          <Badge accentColor="var(--accent-perfumes)" variant="soft">{item.ownership}</Badge>
-        )}
       </div>
 
       {hasSeasons && (
