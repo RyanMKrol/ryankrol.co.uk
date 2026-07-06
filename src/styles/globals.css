@@ -1443,20 +1443,6 @@ input[type='range'].form-input::-moz-range-thumb {
   background-color: var(--btn-secondary-hover-bg);
 }
 
-/* Edit button fix for movies/poster-banner: give the button an opaque, high-contrast
-   treatment so it stays legible against any of the poster banner's gradient colors
-   (see CoverTile.js's GRADIENT_PAIRS), instead of the shared secondary-accent colors
-   which have inconsistent contrast depending on the banner's own color. */
-.edit-button-overlay--movies-banner {
-  background-color: rgba(0, 0, 0, 0.55);
-  color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.85);
-}
-
-.edit-button-overlay--movies-banner:hover {
-  background-color: rgba(0, 0, 0, 0.75);
-}
-
 /* Edit button fix for tv/poster-banner: same fix as movies/poster-banner (shares the
    identical styleVariant and bug) but its own class so this task doesn't collide with
    the movies task editing the same CSS rule. */

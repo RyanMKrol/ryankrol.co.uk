@@ -68,19 +68,21 @@ export default function EditMovies() {
         className="poster-banner-grid"
         columnClassName="poster-banner-grid-col"
         renderItem={(movie) => (
-          <div key={movie.id} className="review-card-with-edit">
+          <div key={movie.id} className="review-edit-card">
+            <div className="review-edit-header">
+              <Link
+                href={`/reviews/movies/edit/${encodeURIComponent(movie.id)}`}
+                className="review-edit-button"
+              >
+                Edit
+              </Link>
+            </div>
             <ReviewCard
               item={movie}
               type="movie"
               isLast={false}
               styleVariant="poster-banner"
             />
-            <Link
-              href={`/reviews/movies/edit/${encodeURIComponent(movie.id)}`}
-              className="edit-button-overlay edit-button-overlay--movies-banner"
-            >
-              Edit
-            </Link>
           </div>
         )}
       />
