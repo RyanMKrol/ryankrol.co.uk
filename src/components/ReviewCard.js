@@ -1,5 +1,7 @@
+import { Fragment } from 'react';
 import CoverTile, { gradientForKey } from './CoverTile';
 import StarRating from './StarRating';
+import Markdown from './Markdown';
 import { formatReviewDate } from '../lib/dateFormat';
 
 function splitHighlights(highlights) {
@@ -34,7 +36,12 @@ function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts, gr
           <p className="square-cover-highlights">
             <span className="square-cover-highlights-label">HIGHLIGHTS</span>
             {' · '}
-            {tracks.join(' · ')}
+            {tracks.map((track, index) => (
+              <Fragment key={index}>
+                {index > 0 && ' · '}
+                <Markdown inline>{track}</Markdown>
+              </Fragment>
+            ))}
           </p>
         )}
       </div>
@@ -65,7 +72,9 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
           <p className="spine-cover-meta">{metaParts.join(' · ')}</p>
         )}
         {getThoughts() && (
-          <p className="spine-cover-snippet">{getThoughts()}</p>
+          <div className="spine-cover-snippet">
+            <Markdown>{getThoughts()}</Markdown>
+          </div>
         )}
       </div>
     </div>
@@ -163,7 +172,9 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant, g
             {item.date && <span className="poster-banner-date">{formatReviewDate(item.date)}</span>}
           </div>
           {getThoughts() && (
-            <p className="poster-banner-snippet">{getThoughts()}</p>
+            <div className="poster-banner-snippet">
+              <Markdown>{getThoughts()}</Markdown>
+            </div>
           )}
         </div>
       </div>
@@ -199,9 +210,10 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant, g
       </div>
       
       {getThoughts() && (
-        <p className="review-text">
-          {getThoughtsLabel() && <strong>{getThoughtsLabel()}: </strong>}{getThoughts()}
-        </p>
+        <div className="review-text">
+          {getThoughtsLabel() && <strong>{getThoughtsLabel()}: </strong>}
+          <Markdown>{getThoughts()}</Markdown>
+        </div>
       )}
       
       {item.date && (

@@ -1,5 +1,6 @@
 import Badge from '../Badge';
 import PipMeter from '../PipMeter';
+import Markdown from '../Markdown';
 import { formatReviewDate } from '../../lib/dateFormat';
 
 const LONGEVITY_MAX = 8;
@@ -41,7 +42,9 @@ export default function Variant6Hybrid({ item }) {
       </div>
 
       {item.description && (
-        <p className="perfume-v1-description">{item.description}</p>
+        <div className="perfume-v1-description">
+          <Markdown>{item.description}</Markdown>
+        </div>
       )}
 
       <div className="perfume-v1-rating-row">
