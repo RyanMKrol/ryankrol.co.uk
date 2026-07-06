@@ -64,3 +64,5 @@ next-env.d.ts
 # atomic-write temps for the owner-owned overlays + TASKS.json.
 .harness/tracking/TASKS.json.tmp
 .harness/tracking/reviews.json.tmp*
+# Visual-check screenshots (scripts/visual-check.mjs) — regenerated each run, never committed.
+scripts/visual-out/

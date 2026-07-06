@@ -13,6 +13,10 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   // Only treat *.test.js / *.spec.js as tests (co-located next to source).
   testMatch: ['**/?(*.)+(test|spec).[jt]s?(x)'],
+  // The harness ships its own standalone *.test.js files (e.g. .harness/dashboard/lib.test.js) that
+  // use Node's assert + a bespoke runner and call process.exit() — running them under jest crashes the
+  // worker. They're run directly via `node`, not jest, so exclude the whole harness tree from collection.
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/.harness/'],
 };
 
 module.exports = createJestConfig(customJestConfig);

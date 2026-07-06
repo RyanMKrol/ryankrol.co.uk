@@ -495,3 +495,24 @@ dated bullet when you defer something new.
   attempts), `T171` marked `done` by hand with one accurate `outcomes.jsonl` row (no bogus
   `failures.jsonl` rows existed yet for it — the timeout hadn't fired before the loop was stopped, so
   there was nothing to clean up, unlike the `T108` recovery earlier this session).
+
+## Visual verification — `scripts/visual-check.mjs` (wired as `VISUAL_VERIFY_HOOK`)
+
+This project has a hermetic Playwright visual check, wired as the loop's `VISUAL_VERIFY_HOOK`
+(`config/harness.env`). It **auto-fires** for any task whose `facets.layer` is `page`, `style`, or
+`ui` (or whose `workType` is `component`/`style`) — the loop then instructs the builder/auditor to
+run it and **actually LOOK at the screenshots** (via the Read tool) before a visual "## Done when"
+can be called satisfied. It exists because **T273** (Markdown review bodies) shipped with
+lint/tests/build all green yet never rendered on the live card — a text diff can't see pixels.
+
+- **What it does:** `node scripts/visual-check.mjs` runs `next build`, starts a hermetic `next start`
+  (every `/api/*` served from in-process fixtures, external images placeholdered — NO DynamoDB, NO
+  external APIs, NO network), and screenshots every page in `PAGES` to the gitignored
+  `scripts/visual-out/`. It fails only on hard errors (build/load/console-error), asserts no pixel
+  invariants (no golden images) — the visual judgment is done by whoever views the PNGs.
+- **⚠️ LIVING ARTIFACT:** `scripts/_visual-harness.mjs` owns the `PAGES` list + the synthetic
+  `/api/*` fixtures. When the UI surface changes (a page added/removed, an API response shape
+  changes, a card renders a new field), update `PAGES`/the fixtures in the SAME change — otherwise the
+  check screenshots a stale shape or fails on an intentionally-removed thing. `scripts/` is
+  `SCOPE_EXEMPT_GLOBS`-exempt so a UI task can update it without tripping the structural scope gate.
+- **Not in CI** (no browser there) and **local/loop-only** — it's an audit-time aid, not a gate.

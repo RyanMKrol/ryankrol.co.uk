@@ -110,6 +110,13 @@ Unit tests run on **Jest** (via `next/jest`) and are co-located next to source a
 `*.test.js`. The current suite covers the pure logic in `src/lib`
 (`workoutMetrics`, `apiCache`). New logic should ship with tests.
 
+**Visual check (local-only):** `node scripts/visual-check.mjs` renders every page in headless
+Chromium against fully-synthetic data (a hermetic `next start` with all `/api/*` served from
+in-process fixtures and external images placeholdered — no DynamoDB, no external APIs, no network)
+and writes a screenshot of each to the gitignored `scripts/visual-out/`. It's for eyeballing that a
+change actually renders (not just that the build passes); it needs Playwright's Chromium
+(`npx playwright install chromium`) and is **not** part of CI.
+
 ## Database Schema
 
 ### DynamoDB Tables
