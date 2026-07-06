@@ -8386,7 +8386,7 @@
     {
       "id": "T301",
       "title": "Add hover tooltips to perfume card Longevity and Projection scale bars",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T299"
       ],
