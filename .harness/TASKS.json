@@ -7712,7 +7712,7 @@
     {
       "id": "T277",
       "title": "Switch /reviews/albums to the shared round-robin masonry layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
