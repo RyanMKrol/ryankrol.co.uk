@@ -7591,7 +7591,7 @@
     {
       "id": "T273",
       "title": "Render full Markdown (bold/italic/lists/links) in review display components",
-      "status": "done",
+      "status": "failed",
       "dependsOn": [],
       "gate": null,
       "tags": [
