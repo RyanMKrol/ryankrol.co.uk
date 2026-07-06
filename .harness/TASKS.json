@@ -8757,7 +8757,7 @@
     {
       "id": "T314",
       "title": "Fix archived-tag corner not nestling into project card's rounded border",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
