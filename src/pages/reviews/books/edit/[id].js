@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
 import StarRating from '../../../../components/StarRating';
 import MetadataBackfillModal from '../../../../components/MetadataBackfillModal';
+import MarkdownEditor from '../../../../components/MarkdownEditor';
 
 export default function EditBookReview() {
   const router = useRouter();
@@ -281,7 +282,7 @@ export default function EditBookReview() {
 
           <div className="collection-form-group">
             <label className="collection-form-label" htmlFor="overview">Review</label>
-            <textarea
+            <MarkdownEditor
               id="overview"
               name="overview"
               value={formData.overview}

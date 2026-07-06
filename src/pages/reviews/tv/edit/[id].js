@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
 import StarRating from '../../../../components/StarRating';
 import MetadataBackfillModal from '../../../../components/MetadataBackfillModal';
+import MarkdownEditor from '../../../../components/MarkdownEditor';
 import { tmdbPosterUrl } from '../../../../lib/tmdb';
 
 export default function EditTVReview() {
@@ -274,7 +275,7 @@ export default function EditTVReview() {
 
           <div className="collection-form-group">
             <label className="collection-form-label" htmlFor="gist">Review</label>
-            <textarea
+            <MarkdownEditor
               id="gist"
               name="gist"
               value={formData.gist}

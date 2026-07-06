@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Header from '../../../../components/Header';
 import PipMeter from '../../../../components/PipMeter';
 import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes, ApplicationSpotsSprayer } from '../../../../components/PerfumeCharacteristics';
+import MarkdownEditor from '../../../../components/MarkdownEditor';
 
 const PERFUME_TYPES = ['EDP', 'EDT', 'Parfum'];
 
@@ -286,7 +287,7 @@ export default function EditPerfumeReview() {
 
           <div className="collection-form-group">
             <label className="collection-form-label" htmlFor="description">Description</label>
-            <textarea
+            <MarkdownEditor
               id="description"
               name="description"
               value={formData.description}
