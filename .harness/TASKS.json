@@ -7793,7 +7793,7 @@
     {
       "id": "T280",
       "title": "Remove the redundant mobile-only quicklinks section from the homepage",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
