@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Header from '../../components/Header';
@@ -6,10 +6,14 @@ import Badge from '../../components/Badge';
 import PillGroup from '../../components/PillGroup';
 import Pagination from '../../components/Pagination';
 import MasonryColumns from '../../components/MasonryColumns';
+import DateRangeFilter from '../../components/DateRangeFilter';
+import ProgrammeOverviewCharts from '../../components/ProgrammeOverviewCharts';
 import useResponsiveColumnCount from '../../hooks/useResponsiveColumnCount';
 import { paginate } from '../../lib/pagination';
 import { filterWorkouts } from '../../lib/workoutPagination';
 import { formatEnglishDate } from '../../lib/dateFormat';
+import { aggregateProgramme } from '../../lib/programmeStats';
+import { filterByDateRange } from '../../lib/dateRange';
 
 const PAGE_SIZE = 10;
 
@@ -77,6 +81,7 @@ export default function Workouts() {
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [dateRange, setDateRange] = useState('1y');
   const columnCount = useResponsiveColumnCount(2, 900);
 
   useEffect(() => {
@@ -102,6 +107,15 @@ export default function Workouts() {
 
   const filtered = filterWorkouts(allWorkouts, activeFilter);
   const { items: pageWorkouts, page, pageCount } = paginate(filtered, currentPage, PAGE_SIZE);
+
+  const statsWorkouts = useMemo(
+    () => filterByDateRange(allWorkouts, dateRange, (w) => w.start_time),
+    [allWorkouts, dateRange]
+  );
+  const statsData = useMemo(
+    () => aggregateProgramme(statsWorkouts, activeFilter),
+    [statsWorkouts, activeFilter]
+  );
 
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
@@ -145,8 +159,7 @@ export default function Workouts() {
           <div className="collection-review-title-group">
             <h1 className="page-title">workouts</h1>
             <p className="collection-review-meta">
-              {allWorkouts.length} sessions logged · via Hevy ·{' '}
-              <Link href="/programmes">view programme stats →</Link>
+              {allWorkouts.length} sessions logged · via Hevy
             </p>
           </div>
 
@@ -159,6 +172,34 @@ export default function Workouts() {
             />
           </div>
         </div>
+
+        <div className="search-container">
+          <div className="workout-filters">
+            <span className="filter-label">Period:</span>
+            <DateRangeFilter value={dateRange} onChange={setDateRange} />
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', margin: '1.5rem 0' }}>
+          <div className="chart-card" style={{ flex: '1', minWidth: '160px', textAlign: 'center' }}>
+            <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>{statsData.totals.workouts}</div>
+            <div className="text-secondary" style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Total Workouts</div>
+          </div>
+          <div className="chart-card" style={{ flex: '1', minWidth: '160px', textAlign: 'center' }}>
+            <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>
+              {statsData.totals.totalVolume.toLocaleString()}
+            </div>
+            <div className="text-secondary" style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Total Volume (kg)</div>
+          </div>
+          <div className="chart-card" style={{ flex: '1', minWidth: '160px', textAlign: 'center' }}>
+            <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>
+              {statsData.totals.avgVolumePerWorkout.toLocaleString()}
+            </div>
+            <div className="text-secondary" style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Avg Volume / Session (kg)</div>
+          </div>
+        </div>
+
+        <ProgrammeOverviewCharts data={statsData} />
 
         {pageWorkouts.length === 0 ? (
           <p>No workouts found matching your filter.</p>

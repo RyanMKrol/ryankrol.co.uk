@@ -139,7 +139,7 @@ src/lib (the data layer)
 | `src/pages/reviews/<type>/edit.js` | List of reviews with edit links |
 | `src/pages/reviews/<type>/edit/[id].js` | Edit detail form → update/delete API (`[id]` = URL-encoded title) |
 | `src/pages/api/reviews/perfumes/{index,add,update,delete}.js` | Perfume review CRUD; extra validation (rating/longevity/projection/seasons/application spots/Fragrantica URL) via `src/lib/perfumes.js` |
-| `src/pages/workouts/index.js` | Paginated workout list with All/Push/Pull/Legs filter |
+| `src/pages/workouts/index.js` | Paginated workout list, sharing a single All/Push/Pull/Legs filter with an inline programme stats/charts block above it (3 stat blocks + `ProgrammeOverviewCharts`, computed via `aggregateProgramme`); that stats block has its own `DateRangeFilter` (3 months/1 year/all-time) scoped only to itself — the paginated list stays unfiltered by date. Formerly a separate `/programmes` page, merged in here and deleted |
 | `src/pages/workouts/[id].js` | Single workout detail |
 | `src/pages/exercises/[exerciseName].js` | Per-exercise stats + progress charts |
 | `src/pages/dev/cache.js` | Cache-management dashboard (auto-auths on localhost) |
