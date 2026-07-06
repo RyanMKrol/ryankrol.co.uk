@@ -3,5 +3,10 @@
     "failed": true,
     "reason": "Script had two real bugs (wrong Exercises-table field names in reshapeExerciseRows: exercise_index/exercise_name instead of the real index/title, plus an unhandled older schema variant) that only surfaced against production data. Its own tests passed because the fixtures encoded the same wrong field names as the bug. Crashed on first live run, blocked since 2026-07-02. Fixed and the backfill completed successfully in a manual session on 2026-07-03 (see T083 worklog).",
     "at": "2026-07-03T00:06:25Z"
+  },
+  "T273": {
+    "failed": true,
+    "reason": "The Markdown does not appear to be rendering on the actual site under the Review card. When I updated a review to include Markdown, the Markdown does not actually display on the card, so clearly the testing was not adequate and we need to try this again.",
+    "at": "2026-07-06T09:08:35Z"
   }
 }
