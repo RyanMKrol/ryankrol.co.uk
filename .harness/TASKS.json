@@ -7515,7 +7515,7 @@
     {
       "id": "T270",
       "title": "Provision the HotTakes table (human step)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T269"
       ],
