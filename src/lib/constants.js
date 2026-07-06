@@ -7,6 +7,7 @@ const DYNAMO_TABLES = {
   WORKOUTS_TABLE: 'Workouts',
   EXERCISES_TABLE: 'Exercises',
   PERFUME_RATINGS_TABLE: 'PerfumeRatings',
+  HOT_TAKES_TABLE: 'HotTakes',
 };
 
 export { DYNAMO_TABLES };
