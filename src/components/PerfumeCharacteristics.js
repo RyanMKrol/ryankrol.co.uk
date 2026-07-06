@@ -1,4 +1,20 @@
 import { useState } from 'react';
+import PillGroup from './PillGroup';
+
+const OWNERSHIP_OPTIONS = [
+  { value: 'Sample', label: 'Sample' },
+  { value: 'Travel size', label: 'Travel size' },
+  { value: 'Full bottle', label: 'Full bottle' },
+];
+
+export function OwnershipPicker({ value, onChange }) {
+  return (
+    <div className="form-group">
+      <span className="form-label">What I own</span>
+      <PillGroup options={OWNERSHIP_OPTIONS} value={value} onChange={onChange} />
+    </div>
+  );
+}
 
 const SEASONS = ['Winter', 'Spring', 'Summer', 'Autumn', 'Day', 'Night'];
 

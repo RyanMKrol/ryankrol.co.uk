@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../../../components/Header';
 import PipMeter from '../../../components/PipMeter';
-import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes, ApplicationSpotsSprayer } from '../../../components/PerfumeCharacteristics';
+import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes, ApplicationSpotsSprayer, OwnershipPicker } from '../../../components/PerfumeCharacteristics';
 import MarkdownEditor from '../../../components/MarkdownEditor';
 
 const PERFUME_TYPES = ['EDP', 'EDT', 'Parfum'];
@@ -14,8 +14,7 @@ export default function AddPerfumeReview() {
     type: PERFUME_TYPES[0],
     rating: 0,
     description: '',
-    considerTravelSize: false,
-    considerFullBottle: false,
+    ownership: 'Sample',
     longevity: 0,
     projection: 1,
     seasons: [],
@@ -226,29 +225,7 @@ export default function AddPerfumeReview() {
             />
           </div>
 
-          <div className="collection-form-group">
-            <label className="collection-form-label">
-              <input
-                type="checkbox"
-                name="considerTravelSize"
-                checked={formData.considerTravelSize}
-                onChange={handleInputChange}
-              />
-              {' '}Consider travel size
-            </label>
-          </div>
-
-          <div className="collection-form-group">
-            <label className="collection-form-label">
-              <input
-                type="checkbox"
-                name="considerFullBottle"
-                checked={formData.considerFullBottle}
-                onChange={handleInputChange}
-              />
-              {' '}Consider full bottle
-            </label>
-          </div>
+          <OwnershipPicker value={formData.ownership} onChange={(ownership) => setFormData({ ...formData, ownership })} />
 
           <LongevitySlider value={formData.longevity} onChange={handleLongevityChange} />
 
