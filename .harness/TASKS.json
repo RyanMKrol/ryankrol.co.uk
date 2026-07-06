@@ -7927,7 +7927,7 @@
     {
       "id": "T285",
       "title": "Give the perfume Type select's caret proper breathing room",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
