@@ -7170,7 +7170,7 @@
     {
       "id": "T257",
       "title": "Build shared bulk metadata-backfill queue + list component",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
