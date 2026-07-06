@@ -61,19 +61,21 @@ export default function EditAlbums() {
 
       <div className="square-cover-grid">
         {albums.map((album) => (
-          <div key={album.id} className="review-card-with-edit review-card-with-edit--square-cover">
+          <div key={album.id} className="review-edit-card">
+            <div className="review-edit-header">
+              <Link
+                href={`/reviews/albums/edit/${encodeURIComponent(album.id)}`}
+                className="review-edit-button"
+              >
+                Edit
+              </Link>
+            </div>
             <ReviewCard
               item={album}
               type="album"
               isLast={false}
               styleVariant="square-cover"
             />
-            <Link
-              href={`/reviews/albums/edit/${encodeURIComponent(album.id)}`}
-              className="edit-button-overlay"
-            >
-              Edit
-            </Link>
           </div>
         ))}
       </div>

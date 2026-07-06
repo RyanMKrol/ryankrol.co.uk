@@ -1443,20 +1443,6 @@ input[type='range'].form-input::-moz-range-thumb {
   background-color: var(--btn-secondary-hover-bg);
 }
 
-/* Edit button fix for albums/square-cover: same root cause as books/spine-cover (the
-   shared .edit-button-overlay's absolute top-right position overlaps the square-cover
-   heading's star rating). Take this page's button out of absolute flow entirely. */
-.review-card-with-edit--square-cover {
-  display: flex;
-  flex-direction: column;
-}
-
-.review-card-with-edit--square-cover .edit-button-overlay {
-  position: static;
-  align-self: flex-end;
-  margin-top: 0.5rem;
-}
-
 /* Edit button fix for perfumes (Variant6Hybrid): the shared .edit-button-overlay's
    absolute top-right position overlaps perfume-v1-header's type Badge, which also sits
    at the card's top-right corner. Take this page's button out of absolute flow entirely. */
