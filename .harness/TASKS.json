@@ -8731,7 +8731,7 @@
     {
       "id": "T313",
       "title": "Fix /reviews/perfumes sort pills: switch PillGroup to SortButtons (flip-direction + hover)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
