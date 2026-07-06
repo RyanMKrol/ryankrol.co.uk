@@ -8516,7 +8516,7 @@
     {
       "id": "T306",
       "title": "Add shared 'edit header strip' CSS pattern (net-new, unused until applied per type)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
