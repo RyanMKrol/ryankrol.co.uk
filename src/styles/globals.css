@@ -3235,6 +3235,50 @@ body::before {
   transform: none;
 }
 
+.tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip-bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.4rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: var(--color-card, #FFFFFF);
+  color: var(--color-ink, #1A1714);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+  border: 1px solid var(--color-hairline-strong);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.tooltip-bubble--bottom {
+  bottom: auto;
+  top: 100%;
+  margin-bottom: 0;
+  margin-top: 0.4rem;
+}
+
+.tooltip-wrapper:hover .tooltip-bubble,
+.tooltip-wrapper:focus-within .tooltip-bubble {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip-bubble {
+    transition: none;
+  }
+}
+
 .home-sparkline-bar-wrap:nth-child(2)  .home-sparkline-bar { background: color-mix(in srgb, var(--accent-albums) 91%, var(--color-chart-coral) 9%); }
 .home-sparkline-bar-wrap:nth-child(3)  .home-sparkline-bar { background: color-mix(in srgb, var(--accent-albums) 82%, var(--color-chart-coral) 18%); }
 .home-sparkline-bar-wrap:nth-child(4)  .home-sparkline-bar { background: color-mix(in srgb, var(--accent-albums) 73%, var(--color-chart-coral) 27%); }

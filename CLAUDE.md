@@ -187,8 +187,10 @@ mode), `PipMeter` (discrete-step meter, used for perfume longevity/projection), 
 `src/lib/pagination.js`), `SortButtons`, `DateRangeFilter`, `MetadataBackfillModal`,
 `PerfumeCharacteristics`, `WorkoutCard`, `ExerciseProgressCharts` / `CardioProgressCharts` /
 `ProgrammeOverviewCharts` (chart.js), `TmdbSearch` / `BookSearch` / `LastfmAlbumSearch` (search
-widgets, see the cooldown convention below), `MatrixLayout` / `MatrixRain` / `CRTOverlay` (the
-easter egg — `MatrixLayout` just switches these on/off via the `active` prop, no other chrome).
+widgets, see the cooldown convention below), `Tooltip` (small hover/focus-shown label bubble;
+CSS-only, generalizes the home-sparkline tooltip idiom), `MatrixLayout` / `MatrixRain` /
+`CRTOverlay` (the easter egg — `MatrixLayout` just switches these on/off via the `active` prop, no
+other chrome).
 
 ## Data model (DynamoDB)
 
