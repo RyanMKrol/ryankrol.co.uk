@@ -7738,7 +7738,7 @@
     {
       "id": "T278",
       "title": "Switch /reviews/perfumes to the shared round-robin masonry layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
