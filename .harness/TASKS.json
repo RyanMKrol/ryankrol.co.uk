@@ -7954,7 +7954,7 @@
     {
       "id": "T286",
       "title": "Merge /programmes stats+charts into the top of /workouts (shared Push/Pull/Legs filter, own date-range), remove the separate page, and default the filter to 'all'",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
