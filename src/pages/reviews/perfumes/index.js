@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import Variant6Hybrid from '../../../components/perfumeVariants/Variant6Hybrid';
 import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
+import SortButtons from '../../../components/SortButtons';
 import MasonryColumns from '../../../components/MasonryColumns';
 import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 import { OWNERSHIP_OPTIONS } from '../../../components/PerfumeCharacteristics';
 
-const SORT_OPTIONS = [
-  { value: 'date', label: 'date ↓' },
-  { value: 'title', label: 'title' },
-  { value: 'score', label: 'score' },
+const SORT_FIELDS = [
+  { key: 'date', label: 'date', defaultValue: 'date', flippedValue: 'date-asc', defaultArrow: '↓', flippedArrow: '↑' },
+  { key: 'title', label: 'title', defaultValue: 'title', flippedValue: 'title-desc', defaultArrow: '↓', flippedArrow: '↑' },
+  { key: 'score', label: 'score', defaultValue: 'score', flippedValue: 'score-asc', defaultArrow: '↓', flippedArrow: '↑' },
 ];
 
 const OWNERSHIP_FILTER_OPTIONS = [
@@ -53,8 +54,18 @@ export default function Perfumes() {
 
     if (sortBy === 'title') {
       filtered = filtered.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortBy === 'title-desc') {
+      filtered = filtered.sort((a, b) => b.title.localeCompare(a.title));
     } else if (sortBy === 'score') {
       filtered = filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    } else if (sortBy === 'score-asc') {
+      filtered = filtered.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+    } else if (sortBy === 'date-asc') {
+      filtered = filtered.sort((a, b) => {
+        const dateA = new Date(a.date.split('-').reverse().join('-'));
+        const dateB = new Date(b.date.split('-').reverse().join('-'));
+        return dateA - dateB;
+      });
     } else {
       filtered = filtered.sort((a, b) => {
         const dateA = new Date(a.date.split('-').reverse().join('-'));
@@ -104,9 +115,9 @@ export default function Perfumes() {
             onChange={setSearchTerm}
             placeholder="search perfumes by title..."
           />
-          <PillGroup
-            options={SORT_OPTIONS}
-            value={sortBy}
+          <SortButtons
+            fields={SORT_FIELDS}
+            sortBy={sortBy}
             onChange={setSortBy}
           />
           <PillGroup
