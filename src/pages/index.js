@@ -16,13 +16,6 @@ const WALL_KIND_HREF = {
   vinyl: '/vinyl',
 }
 
-const QUICK_LINKS = [
-  { href: '/vinyl', label: '~/vinyl' },
-  { href: '/listening', label: '~/listening' },
-  { href: '/projects', label: '~/projects' },
-  { href: '/hot-takes', label: '~/hot-takes' },
-]
-
 function parseUkDate(dateString) {
   if (!dateString) return null
   const [day, month, year] = dateString.split('-').map(Number)
@@ -181,15 +174,6 @@ export default function Home() {
               </Link>
             ))}
           </div>
-        </section>
-
-        <section className="home-quicklinks">
-          {QUICK_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="home-quicklink">
-              {link.label}
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-          ))}
         </section>
 
         <section className="home-lower">

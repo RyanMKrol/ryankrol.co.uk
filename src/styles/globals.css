@@ -3035,26 +3035,6 @@ body::before {
   transform: translateY(-2px);
 }
 
-.home-quicklinks {
-  display: none;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin: 2rem 0;
-}
-
-.home-quicklink {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: var(--border-width) solid var(--color-ink);
-  border-radius: var(--radius-pill);
-  padding: 1rem 1.25rem;
-  font-family: var(--font-body);
-  font-weight: 700;
-  color: var(--color-ink);
-  text-decoration: none;
-}
-
 .home-lower {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
@@ -3313,10 +3293,6 @@ body::before {
 
   .home-wall {
     display: none;
-  }
-
-  .home-quicklinks {
-    display: flex;
   }
 
   .home-lower {
