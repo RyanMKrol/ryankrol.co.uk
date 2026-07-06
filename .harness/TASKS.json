@@ -8173,7 +8173,7 @@
     {
       "id": "T294",
       "title": "Show a personal-best medal next to the specific set that broke a personal best on the workout detail page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T290"
       ],
