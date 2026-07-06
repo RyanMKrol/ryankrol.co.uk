@@ -65,7 +65,7 @@ export default function EditAlbums() {
 
       <div className="square-cover-grid">
         {albums.map((album) => (
-          <div key={album.id} className="review-card-with-edit">
+          <div key={album.id} className="review-card-with-edit review-card-with-edit--square-cover">
             <ReviewCard
               item={album}
               type="album"

@@ -1429,6 +1429,20 @@ input[type='range'].form-input::-moz-range-thumb {
   background-color: rgba(0, 0, 0, 0.75);
 }
 
+/* Edit button fix for albums/square-cover: same root cause as books/spine-cover (the
+   shared .edit-button-overlay's absolute top-right position overlaps the square-cover
+   heading's star rating). Take this page's button out of absolute flow entirely. */
+.review-card-with-edit--square-cover {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-card-with-edit--square-cover .edit-button-overlay {
+  position: static;
+  align-self: flex-end;
+  margin-top: 0.5rem;
+}
+
 /* Workout Styling Variants */
 .workout-style-1 {
   background: var(--color-surface-alt);
