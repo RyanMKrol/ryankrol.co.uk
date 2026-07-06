@@ -7873,7 +7873,7 @@
     {
       "id": "T283",
       "title": "Replace the two 'consider' checkboxes with a single ownership picker on the perfume add/edit forms",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T281"
       ],
