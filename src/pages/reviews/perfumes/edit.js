@@ -64,14 +64,16 @@ export default function EditPerfumes() {
         className="perfume-card-grid"
         columnClassName="perfume-card-grid-col"
         renderItem={(perfume, index) => (
-          <div key={`${perfume.id}-${index}`} className="review-card-with-edit review-card-with-edit--perfume">
+          <div key={`${perfume.id}-${index}`} className="review-edit-card">
+            <div className="review-edit-header">
+              <Link
+                href={`/reviews/perfumes/edit/${encodeURIComponent(perfume.id)}`}
+                className="review-edit-button"
+              >
+                Edit
+              </Link>
+            </div>
             <Variant6Hybrid item={perfume} />
-            <Link
-              href={`/reviews/perfumes/edit/${encodeURIComponent(perfume.id)}`}
-              className="edit-button-overlay"
-            >
-              Edit
-            </Link>
           </div>
         )}
       />
