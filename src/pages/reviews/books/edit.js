@@ -72,7 +72,7 @@ export default function EditBooks() {
         className="spine-cover-list"
         columnClassName="spine-cover-list-col"
         renderItem={(book) => (
-          <div key={book.id} className="review-card-with-edit">
+          <div key={book.id} className="review-card-with-edit review-card-with-edit--spine-cover">
             <ReviewCard
               item={book}
               type="book"
