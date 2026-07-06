@@ -7764,7 +7764,7 @@
     {
       "id": "T279",
       "title": "Truncate long book review text with a Read more/Show less expand toggle (fixes masonry column-height imbalance)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
