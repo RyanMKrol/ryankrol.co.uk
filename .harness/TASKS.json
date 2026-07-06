@@ -8783,7 +8783,7 @@
     {
       "id": "T315",
       "title": "Make PR-type medal badges show a visible axis label on /workouts and /workouts/[id]",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
