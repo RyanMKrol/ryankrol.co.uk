@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PillGroup from './PillGroup';
 
-const OWNERSHIP_OPTIONS = [
+export const OWNERSHIP_OPTIONS = [
   { value: 'Sample', label: 'Sample' },
   { value: 'Travel size', label: 'Travel size' },
   { value: 'Full bottle', label: 'Full bottle' },

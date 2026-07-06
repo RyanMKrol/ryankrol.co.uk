@@ -4,6 +4,7 @@ import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
 import MasonryColumns from '../../../components/MasonryColumns';
 import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
+import { OWNERSHIP_OPTIONS } from '../../../components/PerfumeCharacteristics';
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'date ↓' },
@@ -11,11 +12,17 @@ const SORT_OPTIONS = [
   { value: 'score', label: 'score' },
 ];
 
+const OWNERSHIP_FILTER_OPTIONS = [
+  { value: 'all', label: 'all' },
+  ...OWNERSHIP_OPTIONS.map(o => ({ value: o.value, label: o.label })),
+];
+
 export default function Perfumes() {
   const [perfumes, setPerfumes] = useState([]);
   const [filteredPerfumes, setFilteredPerfumes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
+  const [ownershipFilter, setOwnershipFilter] = useState('all');
   const columnCount = useResponsiveColumnCount(2, 700);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,7 +47,8 @@ export default function Perfumes() {
 
   useEffect(() => {
     let filtered = perfumes.filter(perfume =>
-      perfume.title.toLowerCase().includes(searchTerm.toLowerCase())
+      perfume.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (ownershipFilter === 'all' || perfume.ownership === ownershipFilter)
     );
 
     if (sortBy === 'title') {
@@ -56,7 +64,7 @@ export default function Perfumes() {
     }
 
     setFilteredPerfumes(filtered);
-  }, [searchTerm, perfumes, sortBy]);
+  }, [searchTerm, perfumes, sortBy, ownershipFilter]);
 
   if (loading) {
     return (
@@ -101,10 +109,16 @@ export default function Perfumes() {
             value={sortBy}
             onChange={setSortBy}
           />
+          <PillGroup
+            options={OWNERSHIP_FILTER_OPTIONS}
+            value={ownershipFilter}
+            onChange={setOwnershipFilter}
+            accentColor="var(--accent-perfumes)"
+          />
         </div>
       </div>
 
-      {searchTerm && (
+      {(searchTerm || ownershipFilter !== 'all') && (
         <div className="search-results-count">
           Found {filteredPerfumes.length} perfume{filteredPerfumes.length !== 1 ? 's' : ''}
         </div>
