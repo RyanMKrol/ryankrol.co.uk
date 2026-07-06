@@ -129,7 +129,7 @@ src/lib (the data layer)
 | `public/favicon.svg` | Site favicon — SVG circle-and-"r" mark matching the nav wordmark's `.wordmark-avatar` |
 | `src/pages/_app.js` | Wraps every page in `MatrixLayout`; `useKonamiCode()` toggles matrix mode |
 | `src/pages/_document.js` | HTML scaffold; references `/favicon.svg`; loads Google font; boots matrix class from `sessionStorage` pre-paint |
-| `src/pages/index.js` | Home: tagline, `NowPlaying` widget, 'the collection wall' (a random 18-item mosaic sampled fresh from movies/tv/books/albums/vinyl on each page load, each tile linking to its content type's list page), link grid to all sections |
+| `src/pages/index.js` | Home: tagline, `NowPlaying` widget, 'the collection wall' (a random 18-item mosaic sampled fresh from movies/tv/books/albums/vinyl on each page load, each tile linking to its content type's list page), a 'Hot takes' preview panel in the rail column showing the 3 most recent hot takes with a link to the full `/hot-takes` list, link grid to all sections |
 | `src/pages/listening/index.js` | Last.fm top-50 albums (3-month) with playcount bars |
 | `src/pages/projects/index.js` | GitHub repo cards (stars/forks/last-push/topics), with client-side search (name + description) and multi-select OR tag filtering over the already-fetched repo list; the tag-filter pill row is frequency-ranked (most-tagged topic first) and capped at 12 by default with a `+N more`/`show less` toggle, keeping any currently-selected tag visible even while collapsed |
 | `src/pages/vinyl/{index,add}.js` | Vinyl list (grouped by artist surname) + gated add form |

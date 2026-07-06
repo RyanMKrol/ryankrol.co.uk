@@ -3309,6 +3309,78 @@ body::before {
   padding: 0.35rem 0;
 }
 
+.home-hot-takes-panel {
+  background: var(--accent-hot-takes);
+  color: #FFFFFF;
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+}
+
+.home-hot-takes-panel-header {
+  margin: 0 0 0.75rem;
+}
+
+.home-hot-takes-panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.home-hot-takes-panel-title.home-hot-takes-panel-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.home-hot-takes-panel-title.home-hot-takes-panel-link:hover {
+  text-decoration: underline;
+}
+
+.home-hot-takes-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.home-hot-takes-item:first-of-type {
+  border-top: none;
+}
+
+.home-hot-takes-text {
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+.home-hot-takes-date {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.home-hot-takes-empty {
+  font-family: var(--font-body);
+  opacity: 0.85;
+  margin: 0;
+}
+
+.home-hot-takes-viewall {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.home-hot-takes-viewall:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 768px) {
   .home-hero-row {
     flex-direction: column;

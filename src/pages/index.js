@@ -6,6 +6,7 @@ import StatBlock from '../components/StatBlock'
 import CoverTile, { assignGradients } from '../components/CoverTile'
 import { tmdbPosterUrl } from '../lib/tmdb'
 import { bookCoverUrl } from '../lib/openlibrary'
+import { formatReviewDate } from '../lib/dateFormat'
 
 const WALL_KIND_HREF = {
   movie: '/reviews/movies',
@@ -43,6 +44,7 @@ export default function Home() {
   const [vinyl, setVinyl] = useState([])
   const [workoutStats, setWorkoutStats] = useState(null)
   const [shelfItems, setShelfItems] = useState([])
+  const [hotTakes, setHotTakes] = useState([])
 
   useEffect(() => {
     async function fetchJson(url) {
@@ -52,13 +54,14 @@ export default function Home() {
     }
 
     async function fetchAll() {
-      const [moviesData, tvData, booksData, albumsData, vinylData, statsData] = await Promise.all([
+      const [moviesData, tvData, booksData, albumsData, vinylData, statsData, hotTakesData] = await Promise.all([
         fetchJson('/api/reviews/movies'),
         fetchJson('/api/reviews/tv'),
         fetchJson('/api/reviews/books'),
         fetchJson('/api/reviews/albums'),
         fetchJson('/api/vinyl'),
         fetchJson('/api/workouts/stats'),
+        fetchJson('/api/hot-takes'),
       ])
 
       setMovies(moviesData || [])
@@ -68,6 +71,7 @@ export default function Home() {
       setVinyl(vinylData || [])
       setShelfItems(pickRandomSample(vinylData || [], 5))
       setWorkoutStats(statsData)
+      setHotTakes(hotTakesData || [])
     }
 
     fetchAll()
@@ -116,6 +120,8 @@ export default function Home() {
         : { ...item, gradient: gradients[gradientIndex++] }
     ))
   }, [movies, tv, books, albums])
+
+  const latestHotTakes = hotTakes.slice(0, 3)
 
   const monthlyVolume = workoutStats?.monthlyVolume || []
   const maxMonthlyVolume = monthlyVolume.reduce((max, m) => Math.max(max, m.totalVolume || 0), 0)
@@ -251,6 +257,26 @@ export default function Home() {
                   <span>{record.artist}</span>
                 </div>
               ))}
+            </div>
+
+            <div className="home-hot-takes-panel">
+              <div className="home-hot-takes-panel-header">
+                <Link href="/hot-takes" className="home-hot-takes-panel-title home-hot-takes-panel-link">
+                  Hot takes
+                </Link>
+              </div>
+              {latestHotTakes.length === 0 && (
+                <p className="home-hot-takes-empty">No hot takes yet.</p>
+              )}
+              {latestHotTakes.map((take) => (
+                <div key={take.id} className="home-hot-takes-item">
+                  <span className="home-hot-takes-text">{take.text}</span>
+                  <span className="home-hot-takes-date">{formatReviewDate(take.date)}</span>
+                </div>
+              ))}
+              {latestHotTakes.length > 0 && (
+                <Link href="/hot-takes" className="home-hot-takes-viewall">View all &rarr;</Link>
+              )}
             </div>
           </div>
         </section>
