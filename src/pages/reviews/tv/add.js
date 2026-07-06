@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Header from '../../../components/Header';
 import StarRating from '../../../components/StarRating';
 import TmdbSearch from '../../../components/TmdbSearch';
+import MarkdownEditor from '../../../components/MarkdownEditor';
 
 export default function AddTVReview() {
   const [formData, setFormData] = useState({
@@ -130,7 +131,7 @@ export default function AddTVReview() {
 
           <div className="collection-form-group">
             <label className="collection-form-label" htmlFor="gist">Review</label>
-            <textarea
+            <MarkdownEditor
               id="gist"
               name="gist"
               value={formData.gist}

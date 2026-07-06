@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Header from '../../../components/Header';
 import StarRating from '../../../components/StarRating';
 import LastfmAlbumSearch from '../../../components/LastfmAlbumSearch';
+import MarkdownEditor from '../../../components/MarkdownEditor';
 
 export default function AddAlbumReview() {
   const router = useRouter();
@@ -166,7 +167,7 @@ export default function AddAlbumReview() {
 
           <div className="collection-form-group">
             <label className="collection-form-label" htmlFor="highlights">Highlights</label>
-            <textarea
+            <MarkdownEditor
               id="highlights"
               name="highlights"
               value={formData.highlights}

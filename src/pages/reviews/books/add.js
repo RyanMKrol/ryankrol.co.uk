@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Header from '../../../components/Header';
 import StarRating from '../../../components/StarRating';
 import BookSearch from '../../../components/BookSearch';
+import MarkdownEditor from '../../../components/MarkdownEditor';
 
 export default function AddBookReview() {
   const [formData, setFormData] = useState({
@@ -150,7 +151,7 @@ export default function AddBookReview() {
 
           <div className="collection-form-group">
             <label className="collection-form-label" htmlFor="overview">Review</label>
-            <textarea
+            <MarkdownEditor
               id="overview"
               name="overview"
               value={formData.overview}
