@@ -175,7 +175,7 @@ export default function AddPerfumeReview() {
               name="type"
               value={formData.type}
               onChange={handleInputChange}
-              className="collection-form-input"
+              className="collection-form-input collection-form-select"
               style={{ width: 'auto' }}
               required
             >
