@@ -8064,7 +8064,7 @@
     {
       "id": "T290",
       "title": "Wire personal-best detection into the shared storeExercises/storeWorkoutInDynamoDB write path (the core architectural change)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T289"
       ],
