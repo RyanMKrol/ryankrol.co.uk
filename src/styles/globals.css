@@ -1886,6 +1886,20 @@ input[type='range'].form-input::-moz-range-thumb {
   white-space: nowrap;
 }
 
+.project-card-top-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.project-card-commits-badge {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-ink-soft);
+  white-space: nowrap;
+}
+
 .project-card-description {
   color: var(--color-ink-soft);
   font-family: var(--font-body);

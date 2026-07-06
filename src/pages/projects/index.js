@@ -231,9 +231,16 @@ export default function ProjectsPage() {
                   >
                     {repo.name}
                   </a>
-                  <span className="project-card-stars">
-                    ★ {repo.stars || 0}
-                  </span>
+                  <div className="project-card-top-right">
+                    <span className="project-card-stars">
+                      ★ {repo.stars || 0}
+                    </span>
+                    {typeof repo.commitCount === 'number' && (
+                      <span className="project-card-commits-badge">
+                        ⎇ {repo.commitCount}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {repo.description && (
@@ -258,11 +265,6 @@ export default function ProjectsPage() {
                   {typeof repo.forks === 'number' && repo.forks > 0 && (
                     <span className="project-card-forks">
                       {repo.forks} {repo.forks === 1 ? 'fork' : 'forks'}
-                    </span>
-                  )}
-                  {typeof repo.commitCount === 'number' && (
-                    <span className="project-card-commits">
-                      {repo.commitCount} {repo.commitCount === 1 ? 'commit' : 'commits'}
                     </span>
                   )}
                   {repo.archived && (
