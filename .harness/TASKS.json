@@ -8464,7 +8464,7 @@
     {
       "id": "T304",
       "title": "Add single-select ownership filter to /reviews/perfumes",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
