@@ -37,17 +37,18 @@ next-env.d.ts
 !.env.vault
 
 # --- Ralph build harness: transient scratch only ---
-# The backlog (.harness/TASKS.json) and per-task worklog/specs ARE committed; only the loop's
+# The backlog (.harness/tracking/TASKS.json) and per-task worklog/specs ARE committed; only the loop's
 # transient per-run scratch + the private ideas inbox are ignored.
 .harness/worklog/.result
 .harness/worklog/.claude-out
+.harness/worklog/.current.json
 .harness/worklog/STATUS.md
 .harness/worklog/*.audit.md
 .harness/worklog/.failures.buf
 .harness/worklog/.last-push-ts
 # The ideas inbox is a PRIVATE, transient capture scratchpad (raw, unfleshed ideas). The mechanism
 # travels via .harness/CLAUDE.md; each repo grows its own private inbox.
-.harness/IDEAS.md
+.harness/tracking/IDEAS.md
 # /convert-ideas scratch: a per-unit agent writes its decided task(s) to its own uniquely-named
 # file here (zero lock contention during interview/shaping); the Stage 3 consolidation pass reads,
 # allocates ids, and deletes them. Never committed — see .harness/CLAUDE.md and
@@ -61,5 +62,5 @@ next-env.d.ts
 # Private seed data pasted alongside an idea (e.g. spreadsheet dumps) — same privacy as the inbox.
 .harness/perfume-seed-data.tsv
 # atomic-write temps for the owner-owned overlays + TASKS.json.
-.harness/TASKS.json.tmp
-.harness/reviews.json.tmp*
+.harness/tracking/TASKS.json.tmp
+.harness/tracking/reviews.json.tmp*

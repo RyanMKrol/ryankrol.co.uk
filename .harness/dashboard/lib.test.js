@@ -1,112 +1,287 @@
-const { isDone, deriveTask, computeBacklog, summarize } = require('./lib');
+// lib.test.js — a small, dependency-free test suite for lib.js (Node's built-in `assert` only,
+// matching the dashboard's own no-npm-dependency philosophy). Run standalone:
+//   node .harness/dashboard/lib.test.js
+'use strict';
 
-describe('isDone', () => {
-  it('is true when TASKS.json status is done', () => {
-    expect(isDone({ id: 'T1', status: 'done' }, {})).toBe(true);
-  });
-  it('is true when the human-done overlay marks it (mirrors loop task_done)', () => {
-    expect(isDone({ id: 'T1', status: 'pending' }, { T1: { done: true } })).toBe(true);
-  });
-  it('is false when neither status nor overlay say done', () => {
-    expect(isDone({ id: 'T1', status: 'pending' }, { T1: { done: false } })).toBe(false);
-    expect(isDone({ id: 'T1', status: 'pending' }, {})).toBe(false);
-  });
+const assert = require('assert');
+const { computeBacklog, harnessCells, recentActivity, coldTierIndex, parseJsonl, failureKinds, mdToHtml } = require('./lib');
+
+const EMPTY_OVERLAYS = { humanDone: {}, manualFail: {}, reviews: {} };
+let pass = 0;
+let fail = 0;
+
+function test(name, fn) {
+  try {
+    fn();
+    pass++;
+    console.log(`ok - ${name}`);
+  } catch (err) {
+    fail++;
+    console.error(`FAIL - ${name}`);
+    console.error(`       ${err.message}`);
+  }
+}
+
+test('a plain done task lands in done', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'done', gate: null, dependsOn: [] }] };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.done.length, 1);
+  assert.strictEqual(b.done[0].failed, false);
 });
 
-describe('computeBacklog', () => {
-  // T1 done. T2 ready (dep done). T_h needs-human. T_wh waits transitively on T_h (via T2b).
-  // T_wl waits only on a buildable task (ready, but with an unmet dep). T5 blocked via worklog.
-  const tasks = [
-    { id: 'T1', status: 'done', gate: null, dependsOn: [] },
-    { id: 'T2', status: 'pending', gate: null, dependsOn: ['T1'] }, // ready: dep done
-    { id: 'T_h', status: 'pending', gate: 'needs-human', dependsOn: [] }, // needsHuman
-    { id: 'T2b', status: 'pending', gate: null, dependsOn: ['T_h'] }, // waiting (direct human dep)
-    { id: 'T_wh', status: 'pending', gate: null, dependsOn: ['T2b'] }, // waiting (transitive)
-    { id: 'T_wl', status: 'pending', gate: null, dependsOn: ['T2'] }, // ready: unmet dep is itself buildable
-    { id: 'T5', status: 'pending', gate: null, dependsOn: [] }, // needsHuman via worklog-blocked
+test('a status:failed task lands in done, flagged failed', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'failed', gate: null, dependsOn: [] }] };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.done.length, 1);
+  assert.strictEqual(b.done[0].failed, true);
+});
+
+test('a failed task is implicitly reviewed (even with no reviews overlay)', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'failed', gate: null, dependsOn: [] }] };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.done[0].failed, true);
+  assert.strictEqual(b.done[0].reviewed, true);   // failure IS a review verdict — no separate mark-reviewed
+});
+
+test('a manual-fail task is implicitly reviewed', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'done', gate: null, dependsOn: [] }] };
+  const overlays = { ...EMPTY_OVERLAYS, manualFail: { T001: { failed: true } } };
+  const b = computeBacklog(tasks, overlays, new Set());
+  assert.strictEqual(b.done[0].reviewed, true);
+});
+
+test('human-done overlay promotes a needs-human task to done', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'pending', gate: 'needs-human', dependsOn: [] }] };
+  const overlays = { ...EMPTY_OVERLAYS, humanDone: { T001: { done: true } } };
+  const b = computeBacklog(tasks, overlays, new Set());
+  assert.strictEqual(b.done.length, 1);
+  assert.strictEqual(b.needsHuman.length, 0);
+});
+
+test('manual-fail overlay overturns a done task into done+failed (not needs-human)', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'done', gate: null, dependsOn: [] }] };
+  const overlays = { ...EMPTY_OVERLAYS, manualFail: { T001: { failed: true } } };
+  const b = computeBacklog(tasks, overlays, new Set());
+  assert.strictEqual(b.done.length, 1);
+  assert.strictEqual(b.done[0].failed, true);
+});
+
+test('needs-human tasks land in needsHuman (gate is only null | needs-human)', () => {
+  const tasks = {
+    tasks: [
+      { id: 'T001', status: 'pending', gate: 'needs-human', dependsOn: [] },
+      { id: 'T002', status: 'pending', gate: 'needs-human', dependsOn: [] },
+    ],
+  };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.needsHuman.length, 2);
+});
+
+test('a status:"blocked" task lands in needsHuman even with no worklog-grep hit', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'blocked', gate: null, dependsOn: [] }] };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.needsHuman.length, 1);
+});
+
+test('a worklog-blocked task lands in needsHuman', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'pending', gate: null, dependsOn: [] }] };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set(['T001']));
+  assert.strictEqual(b.needsHuman.length, 1);
+});
+
+test('a task depending on a needs-human task is waiting, not ready', () => {
+  const tasks = {
+    tasks: [
+      { id: 'T001', status: 'pending', gate: 'needs-human', dependsOn: [] },
+      { id: 'T002', status: 'pending', gate: null, dependsOn: ['T001'] },
+    ],
+  };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.waiting.length, 1);
+  assert.strictEqual(b.waiting[0].id, 'T002');
+  assert.deepStrictEqual(b.waiting[0].unmetDeps, ['T001']);
+});
+
+test('a task depending on an ordinary pending (buildable) task is READY, not hidden as waiting', () => {
+  const tasks = {
+    tasks: [
+      { id: 'T001', status: 'pending', gate: null, dependsOn: [] },
+      { id: 'T002', status: 'pending', gate: null, dependsOn: ['T001'] },
+    ],
+  };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.ready.length, 2);
+  const t002 = b.ready.find((t) => t.id === 'T002');
+  assert.deepStrictEqual(t002.unmetDeps, ['T001']);
+});
+
+test('waiting propagates transitively through a chain', () => {
+  const tasks = {
+    tasks: [
+      { id: 'T001', status: 'pending', gate: 'needs-human', dependsOn: [] },
+      { id: 'T002', status: 'pending', gate: null, dependsOn: ['T001'] },
+      { id: 'T003', status: 'pending', gate: null, dependsOn: ['T002'] },
+    ],
+  };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.waiting.length, 2);
+});
+
+test('a dependency cycle does not infinite-loop (cycle guard)', () => {
+  const tasks = {
+    tasks: [
+      { id: 'T001', status: 'pending', gate: null, dependsOn: ['T002'] },
+      { id: 'T002', status: 'pending', gate: null, dependsOn: ['T001'] },
+    ],
+  };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.strictEqual(b.ready.length + b.waiting.length, 2);
+});
+
+test('bucket sort order is stable input order within each bucket', () => {
+  const tasks = {
+    tasks: [
+      { id: 'T003', status: 'pending', gate: null, dependsOn: [] },
+      { id: 'T001', status: 'pending', gate: null, dependsOn: [] },
+      { id: 'T002', status: 'pending', gate: null, dependsOn: [] },
+    ],
+  };
+  const b = computeBacklog(tasks, EMPTY_OVERLAYS, new Set());
+  assert.deepStrictEqual(b.ready.map((t) => t.id), ['T003', 'T001', 'T002']);
+});
+
+test('done bucket sorts not-reviewed first, then ascending numeric id', () => {
+  const tasks = {
+    tasks: [
+      { id: 'T010', status: 'done', gate: null, dependsOn: [] },
+      { id: 'T002', status: 'done', gate: null, dependsOn: [] },
+      { id: 'T005', status: 'done', gate: null, dependsOn: [] },
+      { id: 'T001', status: 'done', gate: null, dependsOn: [] },
+    ],
+  };
+  const overlays = {
+    ...EMPTY_OVERLAYS,
+    reviews: { T010: { reviewed: true }, T001: { reviewed: true } },
+  };
+  const b = computeBacklog(tasks, overlays, new Set());
+  // not-reviewed (T002, T005) first in ascending id order, then reviewed (T001, T010) in ascending id order.
+  assert.deepStrictEqual(b.done.map((t) => t.id), ['T002', 'T005', 'T001', 'T010']);
+});
+
+test('reviewed flag is attached to tasks in every bucket, not just done', () => {
+  const tasks = { tasks: [{ id: 'T001', status: 'pending', gate: 'needs-human', dependsOn: [] }] };
+  const overlays = { ...EMPTY_OVERLAYS, reviews: { T001: { reviewed: true } } };
+  const b = computeBacklog(tasks, overlays, new Set());
+  assert.strictEqual(b.needsHuman[0].reviewed, true);
+});
+
+// ─── Internals-view helpers ──────────────────────────────────────────────────────────────────────
+
+test('parseJsonl skips blank + garbled lines', () => {
+  const rows = parseJsonl('{"a":1}\n\nnot json\n{"a":2}\n');
+  assert.deepStrictEqual(rows, [{ a: 1 }, { a: 2 }]);
+});
+
+test('coldTierIndex finds the tier, else 0', () => {
+  const ladder = [{ model: 's', effort: 'low' }, { model: 's', effort: 'high' }, { model: 'o', effort: 'medium' }];
+  assert.strictEqual(coldTierIndex(ladder, 'o', 'medium'), 2);
+  assert.strictEqual(coldTierIndex(ladder, 'nope', 'x'), 0);
+});
+
+test('harnessCells aggregates counts per (layer × workType)', () => {
+  const outcomes = [
+    { id: 'T1', facets: { layer: 'backend', workType: 'feature' }, blocked: false, verification: 'audited' },
+    { id: 'T2', facets: { layer: 'backend', workType: 'feature' }, blocked: false, verification: 'ci-only' },
+    { id: 'T3', facets: { layer: 'backend', workType: 'feature' }, blocked: true, verification: 'ci-only' },
+    { id: 'T4', facets: { layer: 'frontend', workType: 'component' }, blocked: false, verification: 'ci-only' },
   ];
-  const res = computeBacklog(tasks, { blockedIds: ['T5'] });
-  const by = Object.fromEntries(res.map((t) => [t.id, t]));
-
-  it('done bucket', () => expect(by.T1.bucket).toBe('done'));
-  it('ready when all deps done', () => expect(by.T2.bucket).toBe('ready'));
-  it('the needs-human task itself → needsHuman', () => expect(by.T_h.bucket).toBe('needsHuman'));
-  it('a task with a DIRECT needs-human dep → waiting', () => expect(by.T2b.bucket).toBe('waiting'));
-  it('a task TRANSITIVELY blocked by a needs-human → waiting', () => expect(by.T_wh.bucket).toBe('waiting'));
-  it('a task waiting only on a buildable dep is ready (not hidden), with the dep listed in unmetDeps', () => {
-    expect(by.T_wl.bucket).toBe('ready');
-    expect(by.T_wl.unmetDeps).toEqual(['T2']);
-  });
-  it('failed:blocked worklog task → needsHuman, flagged blocked:true', () => {
-    expect(by.T5.bucket).toBe('needsHuman');
-    expect(by.T5.blocked).toBe(true);
-  });
-
-  it('a human-done overlay entry counts as done and unblocks dependents', () => {
-    const r = computeBacklog(
-      [
-        { id: 'X', status: 'pending', gate: 'needs-human', dependsOn: [] },
-        { id: 'Y', status: 'pending', gate: null, dependsOn: ['X'] },
-      ],
-      { humanDone: { X: { done: true } } }
-    );
-    const m = Object.fromEntries(r.map((t) => [t.id, t]));
-    expect(m.X.bucket).toBe('done');
-    expect(m.Y.bucket).toBe('ready');
-  });
-
-  it('flags a manual-failed task', () => {
-    const r = computeBacklog([{ id: 'Z', status: 'done', gate: null, dependsOn: [] }], {
-      manualFail: { Z: { failed: true } },
-    });
-    expect(r[0].manualFailed).toBe(true);
-  });
-
-  it('a terminal status=failed task → done bucket alongside status=done, flagged failed:true', () => {
-    const r = computeBacklog([
-      { id: 'F', status: 'failed', gate: null, dependsOn: [] },
-      { id: 'H', status: 'done', gate: null, dependsOn: [] },
-      { id: 'G', status: 'pending', gate: null, dependsOn: ['F'] },
-    ]);
-    const m = Object.fromEntries(r.map((t) => [t.id, t]));
-    expect(m.F.bucket).toBe('done');
-    expect(m.F.failed).toBe(true);
-    expect(m.H.bucket).toBe('done');
-    expect(m.G.bucket).toBe('waiting'); // a failed dep needs the owner, so G waits on a human
-  });
-
-  it('flags a reviewed task from the reviews overlay', () => {
-    const r = computeBacklog(
-      [
-        { id: 'A', status: 'done', gate: null, dependsOn: [] },
-        { id: 'B', status: 'done', gate: null, dependsOn: [] },
-      ],
-      { reviewed: { A: { reviewed: true } } }
-    );
-    const m = Object.fromEntries(r.map((t) => [t.id, t]));
-    expect(m.A.reviewed).toBe(true);
-    expect(m.B.reviewed).toBe(false);
-  });
-
-  it('summarize counts every bucket in the four-bucket model', () => {
-    const s = summarize(res);
-    expect(s.done).toBe(1);
-    expect(s.ready).toBe(2); // T2 + T_wl
-    expect(s.needsHuman).toBe(2); // T_h + T5
-    expect(s.waiting).toBe(2); // T2b + T_wh
-    expect(s['waiting-loop']).toBeUndefined();
-  });
-
-  it('done bucket sorts not-reviewed first, then ascending numeric task id within each group', () => {
-    const r = computeBacklog(
-      [
-        { id: 'T005', status: 'done', gate: null, dependsOn: [] },
-        { id: 'T002', status: 'done', gate: null, dependsOn: [] },
-        { id: 'T010', status: 'done', gate: null, dependsOn: [] },
-      ],
-      { reviewed: { T005: { reviewed: true } } }
-    );
-    const doneIds = r.filter((t) => t.bucket === 'done').map((t) => t.id);
-    expect(doneIds).toEqual(['T002', 'T010', 'T005']);
-  });
+  const failures = [{ id: 'T3', facets: { layer: 'backend', workType: 'feature' }, kind: 'ci-red' }];
+  const cells = harnessCells(outcomes, failures, [], {});
+  const be = cells.find((c) => c.layer === 'backend' && c.workType === 'feature');
+  assert.strictEqual(be.builds, 3);
+  assert.strictEqual(be.successes, 2);
+  assert.strictEqual(be.blocked, 1);
+  assert.strictEqual(be.audited, 1);
+  assert.strictEqual(be.ciOnly, 1);
+  assert.strictEqual(be.failures, 1);
+  assert.strictEqual(cells.length, 2);   // one cell per distinct facet
 });
+
+test('harnessCells treats a manual-fail overturn as a failure, not a success', () => {
+  const outcomes = [{ id: 'T1', facets: { layer: 'backend', workType: 'feature' }, blocked: false, verification: 'audited' }];
+  const cells = harnessCells(outcomes, [], [], { T1: { failed: true } });
+  const be = cells[0];
+  assert.strictEqual(be.successes, 0);
+  assert.strictEqual(be.blocked, 1);
+  assert.strictEqual(be.audited, 0);   // overturned → not counted as an audited success
+});
+
+test('harnessCells surfaces a pending-task cell with no history yet', () => {
+  const tasks = [{ id: 'T9', status: 'pending', facets: { layer: 'data', workType: 'migration' } }];
+  const cells = harnessCells([], [], tasks, {});
+  assert.strictEqual(cells.length, 1);
+  assert.strictEqual(cells[0].pending, 1);
+  assert.strictEqual(cells[0].builds, 0);
+});
+
+test('harnessCells tallies failure kinds per cell', () => {
+  const failures = [
+    { id: 'T1', facets: { layer: 'backend', workType: 'feature' }, kind: 'ci-red' },
+    { id: 'T1', facets: { layer: 'backend', workType: 'feature' }, kind: 'ci-red' },
+    { id: 'T2', facets: { layer: 'backend', workType: 'feature' }, kind: 'audit-fail' },
+    { id: 'T3', facets: { layer: 'backend', workType: 'feature' } },   // no kind → 'unknown'
+  ];
+  const cells = harnessCells([], failures, [], {});
+  assert.deepStrictEqual(cells[0].kinds, { 'ci-red': 2, 'audit-fail': 1, unknown: 1 });
+  assert.strictEqual(cells[0].failures, 4);
+});
+
+test('failureKinds aggregates globally, sorted by count desc then kind asc', () => {
+  const failures = [
+    { id: 'T1', kind: 'audit-fail' }, { id: 'T2', kind: 'ci-red' }, { id: 'T3', kind: 'ci-red' },
+    { id: 'T4', kind: 'scope-creep' }, { id: 'T5', kind: 'audit-fail' }, { id: 'T6' },
+  ];
+  assert.deepStrictEqual(failureKinds(failures), [
+    { kind: 'audit-fail', count: 2 },
+    { kind: 'ci-red', count: 2 },
+    { kind: 'scope-creep', count: 1 },
+    { kind: 'unknown', count: 1 },
+  ]);
+  assert.deepStrictEqual(failureKinds([]), []);
+  assert.deepStrictEqual(failureKinds(null), []);
+});
+
+test('recentActivity merges + sorts by ts desc and honours the limit', () => {
+  const outcomes = [{ id: 'T1', ts: '2026-01-01T00:00:00Z', blocked: false, verification: 'audited', facets: { layer: 'backend', workType: 'feature' } }];
+  const failures = [{ id: 'T2', ts: '2026-01-03T00:00:00Z', kind: 'ci-red', detail: 'x' }, { id: 'T3', ts: '2026-01-02T00:00:00Z', kind: 'audit-fail' }];
+  const ev = recentActivity(outcomes, failures, 2);
+  assert.strictEqual(ev.length, 2);
+  assert.strictEqual(ev[0].id, 'T2');           // newest first
+  assert.strictEqual(ev[0].type, 'failure');
+  assert.strictEqual(ev[1].id, 'T3');
+});
+
+test('mdToHtml renders headings, lists, bold, inline code, links', () => {
+  const h = mdToHtml('# Title\n\n- one\n- two\n\n**bold** and `code` and [x](https://e.com)');
+  assert.ok(h.includes('<h1>Title</h1>'));
+  assert.ok(h.includes('<ul>') && h.includes('<li>one</li>'));
+  assert.ok(h.includes('<strong>bold</strong>'));
+  assert.ok(h.includes('<code>code</code>'));
+  assert.ok(h.includes('<a href="https://e.com"'));
+});
+
+test('mdToHtml is XSS-safe: raw HTML/script is escaped, never executed', () => {
+  const h = mdToHtml('<script>alert(1)</script>\n\n[x](javascript:alert(1))');
+  assert.ok(!/<script>/.test(h));                 // the tag is escaped
+  assert.ok(h.includes('&lt;script&gt;'));
+  assert.ok(!/href="javascript:/i.test(h));       // unsafe scheme dropped
+});
+
+test('mdToHtml strips HTML comments (authoring guidance)', () => {
+  const h = mdToHtml('before\n<!-- guidance\nmultiline -->\nafter');
+  assert.ok(!h.includes('guidance'));
+  assert.ok(h.includes('before') && h.includes('after'));
+});
+
+console.log(`\n${pass} passed, ${fail} failed`);
+process.exit(fail === 0 ? 0 : 1);

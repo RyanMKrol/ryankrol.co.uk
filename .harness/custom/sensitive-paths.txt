@@ -1,0 +1,8 @@
+# sensitive-paths.txt — extra pre-push secret-guard patterns for ryankrol.co.uk.
+# One ERE fragment per line; blank lines and #-comments ignored. OR-appended to the built-in guard
+# (which already blocks data/, .env*, chrome-profile, .pem/.key/.p12, service-account, credentials.json)
+# — these can only ADD protection, never remove it. Ported from the pre-canonical loop.sh SENSITIVE_RE,
+# which had been hardened for this project's Vercel + AWS/DynamoDB footprint.
+(^|/)\.vercel/
+(^|/)\.aws/
+aws-credentials
