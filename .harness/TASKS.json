@@ -7489,7 +7489,7 @@
     {
       "id": "T269",
       "title": "Register hot takes table + create-table script",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
