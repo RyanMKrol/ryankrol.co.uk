@@ -1,6 +1,52 @@
-import { bucketVolumeByMonth } from './workoutQueries';
+import { QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { docClient } from './dynamo';
+
+jest.mock('./dynamo', () => ({
+  ...jest.requireActual('./dynamo'),
+  docClient: { send: jest.fn() }
+}));
+
+import { bucketVolumeByMonth, getBestPriorMetrics } from './workoutQueries';
 
 const makeWorkout = (workoutDate, totalVolume) => ({ workoutDate, totalVolume });
+
+describe('getBestPriorMetrics', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it('returns null when there are no prior rows for the exercise', async () => {
+    docClient.send.mockResolvedValue({ Items: [] });
+    const result = await getBestPriorMetrics('Bench Press', '2026-06-01');
+    expect(result).toBeNull();
+  });
+
+  it('reduces multiple prior rows to the max of each axis, ignoring rows missing that field', async () => {
+    docClient.send.mockImplementation((cmd) => {
+      expect(cmd).toBeInstanceOf(QueryCommand);
+      return Promise.resolve({
+        Items: [
+          { heaviestWeight: 80, bestEstimated1RM: 100, bestSetVolume: 900 },
+          { heaviestWeight: 100, bestEstimated1RM: 90 }, // no bestSetVolume (pre-T289 row)
+          { heaviestWeight: 70, bestEstimated1RM: 120, bestSetVolume: 950 },
+        ]
+      });
+    });
+
+    const result = await getBestPriorMetrics('Bench Press', '2026-06-01');
+
+    expect(result).toEqual({ heaviestWeight: 100, bestEstimated1RM: 120, bestSetVolume: 950 });
+  });
+
+  it('paginates using ExclusiveStartKey until LastEvaluatedKey is absent', async () => {
+    docClient.send
+      .mockResolvedValueOnce({ Items: [{ heaviestWeight: 50 }], LastEvaluatedKey: { exercise_id: 'a' } })
+      .mockResolvedValueOnce({ Items: [{ heaviestWeight: 60 }] });
+
+    const result = await getBestPriorMetrics('Bench Press', '2026-06-01');
+
+    expect(docClient.send).toHaveBeenCalledTimes(2);
+    expect(result.heaviestWeight).toBe(60);
+  });
+});
 
 describe('bucketVolumeByMonth', () => {
   test('returns one bucket per trailing month, oldest first, ending on `now`', () => {

@@ -2,7 +2,8 @@ import { PutCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, buildSetUpdateParams } from './dynamo.js';
 import { DYNAMO_TABLES } from './constants.js';
 import { clearApiCache } from './apiCache.js';
-import { calculateExerciseMetrics, calculateWorkoutMetrics } from './workoutMetrics.js';
+import { calculateExerciseMetrics, calculateWorkoutMetrics, detectPersonalBests } from './workoutMetrics.js';
+import { getBestPriorMetrics } from './workoutQueries.js';
 
 // Rate limiting helper - 150ms between calls to be extra safe
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -14,6 +15,11 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
  */
 export async function storeWorkoutInDynamoDB(workout) {
   const metrics = calculateWorkoutMetrics(workout);
+
+  // storeExercises mutates workout.exercises[].sets with PR flags as a side effect, so it must
+  // run before workoutItem is built — both the embedded Workouts.exercises[] copy and the
+  // Exercises table row need to reflect the same flags from one computation.
+  await storeExercises(workout);
 
   const workoutItem = {
     id: workout.id,
@@ -41,9 +47,6 @@ export async function storeWorkoutInDynamoDB(workout) {
     const workoutStoreTime = Date.now() - workoutStartTime;
 
     console.log(`✅ [BACKFILL] Stored workout in ${workoutStoreTime}ms: ${workout.title}`);
-
-    await storeExercises(workout);
-
     console.log(`✅ [BACKFILL] Successfully stored workout and all exercises for ${workout.id}`);
     return true;
 
@@ -57,7 +60,6 @@ export async function storeWorkoutInDynamoDB(workout) {
 
       if (existingItem && existingItem.exercises) {
         console.log(`⚠️  [BACKFILL] Workout ${workout.id} already exists, skipping`);
-        await storeExercises(workout);
         return false; // Signal that workout was not stored (already exists)
       }
 
@@ -68,8 +70,6 @@ export async function storeWorkoutInDynamoDB(workout) {
         { exercises: workout.exercises, ...metrics }
       )));
       console.log(`✅ [BACKFILL] Healed incomplete workout ${workout.id}`);
-
-      await storeExercises(workout);
 
       return true;
     } else {
@@ -89,6 +89,13 @@ export async function storeExercises(workout) {
     const exercise = workout.exercises[j];
     const exerciseMetrics = calculateExerciseMetrics(exercise);
     const workoutDate = new Date(workout.start_time).toISOString().split('T')[0];
+
+    const priorBest = await getBestPriorMetrics(exercise.title, workoutDate);
+    const { weightPRSetIndex, oneRepMaxPRSetIndex, volumePRSetIndex } = detectPersonalBests(exerciseMetrics, priorBest);
+
+    if (weightPRSetIndex != null) exercise.sets[weightPRSetIndex].isWeightPR = true;
+    if (oneRepMaxPRSetIndex != null) exercise.sets[oneRepMaxPRSetIndex].is1RMPR = true;
+    if (volumePRSetIndex != null) exercise.sets[volumePRSetIndex].isVolumePR = true;
 
     const exerciseItem = {
       exercise_id: `${workout.id}_${j}`,

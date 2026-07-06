@@ -164,7 +164,7 @@ src/lib (the data layer)
 | `src/lib/rateLimit.js` | `checkRateLimit`, `getClientIp` — fixed-window rate limiter; **per-serverless-instance only**, does not coordinate across Vercel instances (same limitation as `apiCache.js`) |
 | `src/lib/tmdb.js` | `mapTmdbResult(raw, type)` normaliser + `tmdbPosterUrl(path)` helper |
 | `src/lib/constants.js` | `DYNAMO_TABLES` — the single source of table names |
-| `src/lib/workoutQueries.js` | All workout/exercise DynamoDB reads |
+| `src/lib/workoutQueries.js` | All workout/exercise DynamoDB reads, plus `getBestPriorMetrics(exerciseName, beforeDate)` — a write-time-only helper (queried from `storeExercises`, never from a page-load path) that returns the best-ever `{heaviestWeight, bestEstimated1RM, bestSetVolume}` strictly before a date, or `null` if the exercise has no prior rows |
 | `src/lib/workoutMetrics.js` | Pure metric math (`calculateEstimated1RM`, `calculate{Exercise,Workout}Metrics`) |
 | `src/lib/workoutBackfill.js` | Background fetch of missing workouts from Hevy → DynamoDB (on cache miss) |
 | `src/lib/pagination.js` | Pure pagination math (page slicing/bounds) shared by `Pagination` and the paginated pages |
@@ -205,7 +205,7 @@ Full workout/exercise schemas are in `README.md`; summary:
 | `PerfumeRatings` | `id` (random UUID) | `{ id, title, designer, type, description, rating(0–10), ownership?, longevity(0–8), projection(1–4), seasons[], applicationSpots[{spot,sprays}], fragranticaUrl, date, editedDate }` |
 | `HotTakes` | `id` (random UUID) | `{ id, text, date 'DD-MM-YYYY' }` — freeform short takes, not tied to any review |
 | `Workouts` | `id` | GSI `start_time-index`; computed metrics (volume, type, duration) |
-| `Exercises` | `exercise_id` | GSIs `workout_id-index`, `exercise_name-workout_date-index` |
+| `Exercises` | `exercise_id` | GSIs `workout_id-index`, `exercise_name-workout_date-index`; each `sets[]` entry may carry `isWeightPR` / `is1RMPR` / `isVolumePR` (booleans, present only on the specific working set(s) that set a new all-time personal best on that axis in that session — a single set can carry more than one) |
 
 **Review field quirks to know:** the form field is `gist` for movies/tv, `overview` for books,
 `highlights` for albums — all map to the stored review text. Ratings are **0–5** (migrated down
@@ -339,6 +339,10 @@ harness:**
 - **DynamoDB region is hardcoded** `us-east-2` in `dynamo.js`.
 - **Matrix mode** persists in `sessionStorage('matrix-active')` and is re-applied pre-paint in
   `_document.js`; it toggles the `matrix-active` class on `<html>`.
+- **Personal-best (PR) detection lives inside the shared `storeExercises()`/`storeWorkoutInDynamoDB()`
+  write path** — any new script that (re)builds `Exercises` table rows MUST go through
+  `storeExercises`, never hand-roll a `PutCommand`, or personal-best tracking silently breaks for
+  that path.
 
 ## Autonomous build harness (Ralph loop)
 

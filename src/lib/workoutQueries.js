@@ -156,6 +156,43 @@ export async function getExerciseHistory(exerciseName) {
   }
 }
 
+/**
+ * Get the best-ever prior metrics for an exercise, strictly before a given date.
+ * Used at write time to detect whether a newly-logged session sets a personal best.
+ * @param {string} exerciseName - The name of the exercise
+ * @param {string} beforeDate - 'YYYY-MM-DD'; only rows strictly before this date are considered
+ * @returns {Object|null} { heaviestWeight, bestEstimated1RM, bestSetVolume } (each the max across
+ *   prior rows that have that field), or null if there are no prior rows at all
+ */
+export async function getBestPriorMetrics(exerciseName, beforeDate) {
+  const params = {
+    TableName: DYNAMO_TABLES.EXERCISES_TABLE,
+    IndexName: 'exercise_name-workout_date-index',
+    KeyConditionExpression: 'exercise_name = :exerciseName AND workout_date < :beforeDate',
+    ExpressionAttributeValues: {
+      ':exerciseName': exerciseName,
+      ':beforeDate': beforeDate
+    }
+  };
+
+  const items = [];
+  let lastKey;
+  do {
+    if (lastKey) params.ExclusiveStartKey = lastKey;
+    const result = await docClient.send(new QueryCommand(params));
+    items.push(...(result.Items || []));
+    lastKey = result.LastEvaluatedKey;
+  } while (lastKey);
+
+  if (items.length === 0) return null;
+
+  return items.reduce((best, item) => ({
+    heaviestWeight: item.heaviestWeight != null ? Math.max(best.heaviestWeight ?? -Infinity, item.heaviestWeight) : best.heaviestWeight,
+    bestEstimated1RM: item.bestEstimated1RM != null ? Math.max(best.bestEstimated1RM ?? -Infinity, item.bestEstimated1RM) : best.bestEstimated1RM,
+    bestSetVolume: item.bestSetVolume != null ? Math.max(best.bestSetVolume ?? -Infinity, item.bestSetVolume) : best.bestSetVolume,
+  }), { heaviestWeight: null, bestEstimated1RM: null, bestSetVolume: null });
+}
+
 const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 /**

@@ -351,7 +351,11 @@ Individual exercise records with detailed metrics for each exercise within a wor
   workout_title: "Push Day",             // Parent workout title
   start_time: "2024-01-15T10:00:00Z",    // Workout start
   end_time: "2024-01-15T11:30:00Z",      // Workout end
-  sets: [...],                           // Complete Hevy set data
+  sets: [...],                           // Complete Hevy set data; a set may carry
+                                          // isWeightPR / is1RMPR / isVolumePR (booleans, only on
+                                          // the specific set(s) that set a new all-time personal
+                                          // best on that axis this session — set at write time via
+                                          // getBestPriorMetrics(), never hand-computed elsewhere)
   exercise_index: 0,                     // Position in workout
   
   // Computed metrics
