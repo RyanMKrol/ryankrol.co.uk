@@ -8195,6 +8195,664 @@
         "risk": []
       },
       "expectsTest": false
+    },
+    {
+      "id": "T295",
+      "title": "Strengthen /convert-ideas' Stage 2 interview to demand a high-rigor, verifiable Definition of Done",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "harness",
+        "docs",
+        "needs-human"
+      ],
+      "scope": [
+        ".claude/commands/convert-ideas.md"
+      ],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T295.md",
+      "expectsTest": false
+    },
+    {
+      "id": "T296",
+      "title": "Promote Header into _app.js as a persistent layout so nav scroll position survives navigation",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/_app.js",
+        "src/pages/dev/cache.js",
+        "src/pages/exercises/[exerciseName].js",
+        "src/pages/hot-takes/add.js",
+        "src/pages/hot-takes/index.js",
+        "src/pages/index.js",
+        "src/pages/listening/index.js",
+        "src/pages/projects/index.js",
+        "src/pages/reviews/albums/add.js",
+        "src/pages/reviews/albums/backfill.js",
+        "src/pages/reviews/albums/edit.js",
+        "src/pages/reviews/albums/edit/[id].js",
+        "src/pages/reviews/albums/index.js",
+        "src/pages/reviews/books/add.js",
+        "src/pages/reviews/books/backfill.js",
+        "src/pages/reviews/books/edit.js",
+        "src/pages/reviews/books/edit/[id].js",
+        "src/pages/reviews/books/index.js",
+        "src/pages/reviews/movies/add.js",
+        "src/pages/reviews/movies/backfill.js",
+        "src/pages/reviews/movies/edit.js",
+        "src/pages/reviews/movies/edit/[id].js",
+        "src/pages/reviews/movies/index.js",
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit.js",
+        "src/pages/reviews/perfumes/edit/[id].js",
+        "src/pages/reviews/perfumes/index.js",
+        "src/pages/reviews/tv/add.js",
+        "src/pages/reviews/tv/backfill.js",
+        "src/pages/reviews/tv/edit.js",
+        "src/pages/reviews/tv/edit/[id].js",
+        "src/pages/reviews/tv/index.js",
+        "src/pages/vinyl/add.js",
+        "src/pages/vinyl/index.js",
+        "src/pages/workouts/[id].js",
+        "src/pages/workouts/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T296.md",
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T297",
+      "title": "Add a hot-takes pill to the header nav",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix",
+        "nav"
+      ],
+      "scope": [
+        "src/components/Header.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T297.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T298",
+      "title": "Add a Hot takes preview panel to the homepage",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "feature",
+        "homepage"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T298.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T299",
+      "title": "Build a shared Tooltip component (CSS-only hover/focus, generalizing the home-sparkline tooltip idiom)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "tooltip"
+      ],
+      "scope": [
+        "src/components/Tooltip.js",
+        "src/styles/globals.css",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T299.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T300",
+      "title": "Add hover tooltips to /projects card star and commit-count badges",
+      "status": "pending",
+      "dependsOn": [
+        "T299"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "tooltip"
+      ],
+      "scope": [
+        "src/pages/projects/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T300.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T301",
+      "title": "Add hover tooltips to perfume card Longevity and Projection scale bars",
+      "status": "pending",
+      "dependsOn": [
+        "T299"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "tooltip"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "src/components/PerfumeCharacteristics.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T301.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T302",
+      "title": "Fix MarkdownEditor losing scroll position when applying a toolbar action to a scrolled textarea",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bug"
+      ],
+      "scope": [
+        "src/components/MarkdownEditor.js",
+        "src/components/MarkdownEditor.test.js"
+      ],
+      "design": "EMPIRICALLY CONFIRMED before this task was authored (do not re-litigate — re-derive only if you have a reason to distrust it): jsdom does NOT reproduce the real-browser quirk this bug is about. Three throwaway jsdom experiments were run in this repo's actual jest environment (via `npx jest`, then deleted — nothing committed): (1) a long-content controlled textarea inside jsdom reports `scrollHeight === 0` and `clientHeight === 0` always (jsdom performs no real layout, so there is no 'overflow' for it to compute) — `scrollTop` is just a freely-settable numeric property with no clamping or side effects tied to it; (2) directly reassigning `textarea.value = ...` (the exact operation React performs on a controlled re-render) left a manually-set `scrollTop` completely untouched (250 before, 250 after) — the native browser reset-to-0-on-value-reassignment quirk this bug is about simply does not exist in jsdom; (3) running a full real toolbar click via `userEvent` against a scrolled textarea (scrollTop=300) left `scrollTop` at 300 immediately after the click, before the fix even exists. CONCLUSION: a naive test of the shape 'set scrollTop, click a toolbar button, assert scrollTop unchanged' would pass TRIVIALLY today, on the current buggy code, with NO fix applied at all — because jsdom never introduces the regression in the first place. Such a test would be a false-passing test and must NOT be the chosen strategy — it provides zero regression protection. INSTEAD, test the fix's own explicit save/restore mechanism directly, which IS observable in jsdom: `scrollTop` is implemented as an accessor (getter/setter pair) on `Element.prototype` in jsdom (confirmed via `Object.getOwnPropertyDescriptor` walking the prototype chain from the textarea instance — found at `Element.prototype`, not as an own property on `HTMLTextAreaElement.prototype` or the instance), so `jest.spyOn(Element.prototype, 'scrollTop', 'set')` successfully intercepts every assignment to `el.scrollTop` — this was verified empirically too: with today's (unfixed) code, clicking a toolbar button on a scrolled textarea produces ZERO calls to that spied setter (confirming the current code never touches scrollTop at all, the actual bug). Use this spy as the test's core assertion mechanism (see '## Done when' for the exact shape required) so the test fails on today's code and passes once the fix lands — a real regression guard, not an environment-quirk-dependent one.",
+      "verify": [],
+      "spec": ".harness/tasks/T302.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": true
+    },
+    {
+      "id": "T303",
+      "title": "Move perfume ownership pill into the card header, next to the type pill",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T303.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T304",
+      "title": "Add single-select ownership filter to /reviews/perfumes",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js",
+        "src/components/PerfumeCharacteristics.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T304.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T305",
+      "title": "Fix /reviews/perfumes/edit column count to match the view page (2 columns via MasonryColumns)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "bugfix",
+        "perfumes"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/edit.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T305.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T306",
+      "title": "Add shared 'edit header strip' CSS pattern (net-new, unused until applied per type)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "edit-page",
+        "component-library"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "npm run build"
+      ],
+      "spec": ".harness/tasks/T306.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T307",
+      "title": "Apply the edit header-strip pattern to /reviews/books/edit (spine-cover cards)",
+      "status": "pending",
+      "dependsOn": [
+        "T306"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "edit-page",
+        "books"
+      ],
+      "scope": [
+        "src/pages/reviews/books/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T307.md",
+      "facets": {
+        "layer": "style",
+        "workType": "refactor",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T308",
+      "title": "Apply the edit header-strip pattern to /reviews/movies/edit (poster-banner cards)",
+      "status": "pending",
+      "dependsOn": [
+        "T306"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "edit-page",
+        "movies"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T308.md",
+      "facets": {
+        "layer": "style",
+        "workType": "refactor",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T309",
+      "title": "Apply the edit header-strip pattern to /reviews/tv/edit (poster-banner cards)",
+      "status": "pending",
+      "dependsOn": [
+        "T306"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "edit-page",
+        "tv"
+      ],
+      "scope": [
+        "src/pages/reviews/tv/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T309.md",
+      "facets": {
+        "layer": "style",
+        "workType": "refactor",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T310",
+      "title": "Apply the edit header-strip pattern to /reviews/albums/edit (square-cover cards)",
+      "status": "pending",
+      "dependsOn": [
+        "T306"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "edit-page",
+        "albums"
+      ],
+      "scope": [
+        "src/pages/reviews/albums/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T310.md",
+      "facets": {
+        "layer": "style",
+        "workType": "refactor",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T311",
+      "title": "Apply the edit header-strip pattern to /reviews/perfumes/edit (Variant6Hybrid cards)",
+      "status": "pending",
+      "dependsOn": [
+        "T306",
+        "T305"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "edit-page",
+        "perfumes"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/edit.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T311.md",
+      "facets": {
+        "layer": "style",
+        "workType": "refactor",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T312",
+      "title": "Remove now-fully-dead shared .edit-button-overlay/.review-card-with-edit CSS + final cross-type consistency check",
+      "status": "pending",
+      "dependsOn": [
+        "T307",
+        "T308",
+        "T309",
+        "T310",
+        "T311"
+      ],
+      "gate": null,
+      "tags": [
+        "ui",
+        "reviews",
+        "edit-page",
+        "cleanup"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T312.md",
+      "facets": {
+        "layer": "style",
+        "workType": "refactor",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T313",
+      "title": "Fix /reviews/perfumes sort pills: switch PillGroup to SortButtons (flip-direction + hover)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "bugfix",
+        "sort"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T313.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T314",
+      "title": "Fix archived-tag corner not nestling into project card's rounded border",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bug",
+        "style"
+      ],
+      "scope": [
+        "src/pages/projects/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T314.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T315",
+      "title": "Make PR-type medal badges show a visible axis label on /workouts and /workouts/[id]",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "ui",
+        "workouts"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/pages/workouts/[id].js",
+        "src/styles/globals.css",
+        "src/components/Badge.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "spec": ".harness/tasks/T315.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "expectsTest": false
+    },
+    {
+      "id": "T316",
+      "title": "Deploy pending site changes to production",
+      "status": "pending",
+      "dependsOn": [
+        "T295",
+        "T296",
+        "T297",
+        "T298",
+        "T299",
+        "T300",
+        "T301",
+        "T302",
+        "T303",
+        "T304",
+        "T305",
+        "T306",
+        "T307",
+        "T308",
+        "T309",
+        "T310",
+        "T311",
+        "T312",
+        "T313",
+        "T314",
+        "T315"
+      ],
+      "gate": null,
+      "tags": [
+        "deploy"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "spec": ".harness/tasks/T316.md",
+      "expectsTest": false,
+      "facets": {
+        "layer": "harness",
+        "workType": "config",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
     }
   ]
 }
