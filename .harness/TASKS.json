@@ -8414,7 +8414,7 @@
     {
       "id": "T302",
       "title": "Fix MarkdownEditor losing scroll position when applying a toolbar action to a scrolled textarea",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
