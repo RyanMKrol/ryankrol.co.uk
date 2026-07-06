@@ -20,6 +20,7 @@ const QUICK_LINKS = [
   { href: '/vinyl', label: '~/vinyl' },
   { href: '/listening', label: '~/listening' },
   { href: '/projects', label: '~/projects' },
+  { href: '/hot-takes', label: '~/hot-takes' },
 ]
 
 function parseUkDate(dateString) {

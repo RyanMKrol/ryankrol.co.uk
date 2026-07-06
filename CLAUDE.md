@@ -133,6 +133,7 @@ src/lib (the data layer)
 | `src/pages/listening/index.js` | Last.fm top-50 albums (3-month) with playcount bars |
 | `src/pages/projects/index.js` | GitHub repo cards (stars/forks/last-push/topics), with client-side search (name + description) and multi-select OR tag filtering over the already-fetched repo list; the tag-filter pill row is frequency-ranked (most-tagged topic first) and capped at 12 by default with a `+N more`/`show less` toggle, keeping any currently-selected tag visible even while collapsed |
 | `src/pages/vinyl/{index,add}.js` | Vinyl list (grouped by artist surname) + gated add form |
+| `src/pages/hot-takes/{index,add}.js` | Full newest-first bulleted list of hot takes (no cover art/rating) + gated add form |
 | `src/pages/reviews/<type>/index.js` | Public list view for a review type (sort by date/title/score) |
 | `src/pages/reviews/<type>/add.js` | Gated add form → POST add API |
 | `src/pages/reviews/<type>/edit.js` | List of reviews with edit links |
@@ -144,6 +145,7 @@ src/lib (the data layer)
 | `src/pages/dev/cache.js` | Cache-management dashboard (auto-auths on localhost) |
 | `src/pages/api/reviews/<type>/{index,add,update,delete}.js` | CRUD for each review type |
 | `src/pages/api/vinyl/{index,add}.js` | Vinyl read + gated add |
+| `src/pages/api/hot-takes/{index,add}.js` | Hot takes read (sorted newest first) + gated add; validation via `src/lib/hotTakes.js` |
 | `src/pages/api/workouts.js`, `workouts/[id].js`, `workouts/[id]/exercises.js`, `workouts/stats.js`, `workouts/backfill.js` | Workout reads + Hevy backfill trigger |
 | `src/pages/api/exercises/[workoutId].js`, `exercises/history/[exerciseName].js` | Exercise reads |
 | `src/pages/api/github/repos.js` | GitHub repos proxy; rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
@@ -201,6 +203,7 @@ Full workout/exercise schemas are in `README.md`; summary:
 | `AlbumRatingsV3` | `id` (random UUID, assigned once, never regenerated) | `{ id, title, artist, rating, highlights, date, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` — replaces the old title+artist-keyed `AlbumRatingsV2` (left at rest, unused, for rollback) |
 | `VinylCollectionV2` | `id` (random UUID, assigned once, never regenerated) | `{ id, title, artist, thumbnail (Last.fm cover URL or ''), lastfm? { mbid, url, listeners, playcount, tags, trackCount, summary, releaseDate, images } }` — replaces the old title+artist-keyed `VinylCollection` (left at rest, unused, for rollback) |
 | `PerfumeRatings` | `id` (random UUID) | `{ id, title, designer, type, description, rating(0–10), considerTravelSize, considerFullBottle, longevity(0–8), projection(1–4), seasons[], applicationSpots[{spot,sprays}], fragranticaUrl, date, editedDate }` |
+| `HotTakes` | `id` (random UUID) | `{ id, text, date 'DD-MM-YYYY' }` — freeform short takes, not tied to any review |
 | `Workouts` | `id` | GSI `start_time-index`; computed metrics (volume, type, duration) |
 | `Exercises` | `exercise_id` | GSIs `workout_id-index`, `exercise_name-workout_date-index` |
 

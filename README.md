@@ -287,6 +287,20 @@ Perfume reviews. Validation for the fields below lives in `src/lib/perfumes.js`.
 }
 ```
 
+#### HotTakes Table
+Short freeform takes, independent of the review types — just text and a date.
+
+**Primary Key:** `id` (String, random UUID)
+
+**Schema:**
+```javascript
+{
+  id: "b3f1c2e0-...",  // Partition key — random UUID
+  text: "...",         // Non-empty, max 500 chars — validated by src/lib/hotTakes.js
+  date: "15-01-2024"   // DD-MM-YYYY, set server-side on add
+}
+```
+
 #### Workouts Table
 Complete workout records with computed metrics.
 
