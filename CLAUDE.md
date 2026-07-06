@@ -318,10 +318,11 @@ vercel --prod      # deploys the current local working tree directly, no Git int
 triggering a deploy when that body of work is actually done, whether or not it went through the
 harness:**
 - **Inside the autonomous harness**: this is fully automatic, no task authoring involved. Per
-  `.harness/CLAUDE.md`, `.harness/loop.sh` deploys on its own whenever it finds nothing eligible left
+  `.harness/CLAUDE.md`, `.harness/scripts/loop.sh` deploys on its own — via the `on-drained` lifecycle
+  hook (`.harness/custom/hooks/on-drained.sh`) — whenever it finds nothing eligible left
   to build (backlog exhausted, spanning as many `supervise.sh`-restarted sessions as it takes; a
   terminally failed/blocked task doesn't stop it) — tracked via a small git-tracked marker file,
-  `.harness/last-deploy.json`, not a backlog task. A `supervise.sh` run naturally culminates in
+  `.harness/custom/last-deploy.json`, not a backlog task. A `supervise.sh` run naturally culminates in
   shipping what it built, not leaving it stranded on `main`.
 - **Outside the harness** (an interactive Claude Code session, whether or not `.harness/` is
   involved): if you've pushed a change to `main` that affects the live site and you're at a natural
@@ -346,8 +347,8 @@ harness:**
 
 ## Autonomous build harness (Ralph loop)
 
-This repo has the `.harness/` autonomous builder (see `.harness/HARNESS.md`). When you are invoked
+This repo has the `.harness/` autonomous builder (see `.harness/docs/HARNESS.md`). When you are invoked
 by the loop, obey `.harness/CLAUDE.md` in addition to everything above. Key points: you work
 directly on `main`, build ONE task, commit, and stop (the loop handles push + CI); never hand-edit
-a task's `status` in `.harness/TASKS.json`; add backlog tasks via the `ralph-loop-add-to-backlog`
-skill. The `.harness/IDEAS.md` inbox + `perfume-seed-data.tsv` are gitignored and private.
+a task's `status` in `.harness/tracking/TASKS.json`; add backlog tasks via the `ralph-loop-add-to-backlog`
+skill. The `.harness/tracking/IDEAS.md` inbox + `.harness/perfume-seed-data.tsv` are gitignored and private.
