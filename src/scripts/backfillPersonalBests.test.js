@@ -72,6 +72,24 @@ describe('computePersonalBestUpdates', () => {
     // s1 (100kg first ever) and b1/b2 (each higher than the last) are PRs; s2 (90 < 100) is not.
     expect(updatedIds).toEqual(['b1', 'b2', 's1']);
   });
+
+  it('never produces a -1 set index and never crashes applyFlagsToSets, even for a row with weight logged but no reps (regression: this crashed a real production run)', () => {
+    const rows = [
+      // weight_kg present but reps null -> volume stays 0 for every set on this row, so
+      // calculateExerciseMetrics's *SetIndex trackers never get assigned a real index.
+      makeRow({ exercise_name: 'Cable Twist', workout_date: '2026-02-09', exercise_id: 'c1', weight: 20, reps: null }),
+    ];
+
+    const updates = computePersonalBestUpdates(rows);
+
+    updates.forEach((u) => {
+      expect(u.weightPRSetIndex).not.toBe(-1);
+      expect(u.oneRepMaxPRSetIndex).not.toBe(-1);
+      expect(u.volumePRSetIndex).not.toBe(-1);
+      // Must not throw — this is the exact call that crashed in production.
+      expect(() => applyFlagsToSets(u.row.sets, u)).not.toThrow();
+    });
+  });
 });
 
 describe('applyFlagsToSets', () => {

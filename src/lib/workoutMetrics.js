@@ -92,9 +92,15 @@ export function calculateExerciseMetrics(exercise) {
     heaviestWeight: hasWeightData ? heaviestWeight : null,
     bestEstimated1RM: hasWeightData && bestEstimated1RM > 0 ? bestEstimated1RM : null,
     bestSetVolume: hasWeightData && bestSetVolume > 0 ? bestSetVolume : null,
-    heaviestWeightSetIndex,
-    bestEstimated1RMSetIndex,
-    bestSetVolumeSetIndex,
+    // -1 is an internal "not found yet" sentinel during the scan above — never leak it out raw.
+    // A set can set `hasWeightData` true (weight_kg present) without ever satisfying `volume > 0`
+    // (e.g. weight logged with 0/null reps), in which case the corresponding *SetIndex never gets
+    // assigned a real index. Every consumer of this field (detectPersonalBests -> applyFlagsToSets)
+    // treats `!= null` as "there's a real index to flag" — a raw -1 passes that check and then
+    // crashes on `sets[-1]`, which is `undefined` in JS (unlike a real negative-index language).
+    heaviestWeightSetIndex: heaviestWeightSetIndex === -1 ? null : heaviestWeightSetIndex,
+    bestEstimated1RMSetIndex: bestEstimated1RMSetIndex === -1 ? null : bestEstimated1RMSetIndex,
+    bestSetVolumeSetIndex: bestSetVolumeSetIndex === -1 ? null : bestSetVolumeSetIndex,
     averageWeight: hasWeightData && totalReps > 0 ? Math.round((workingSetVolume / totalReps) * 10) / 10 : null,
     // Add cardio metrics
     totalDistance: totalDistance > 0 ? Math.round(totalDistance * 10) / 10 : null,

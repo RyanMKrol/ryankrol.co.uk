@@ -94,9 +94,9 @@ describe('calculateExerciseMetrics', () => {
     expect(m.totalDistance).toBe(5000);
     expect(m.totalDuration).toBe(1800);
     expect(m.bestSetVolume).toBeNull();
-    expect(m.heaviestWeightSetIndex).toBe(-1);
-    expect(m.bestEstimated1RMSetIndex).toBe(-1);
-    expect(m.bestSetVolumeSetIndex).toBe(-1);
+    expect(m.heaviestWeightSetIndex).toBeNull();
+    expect(m.bestEstimated1RMSetIndex).toBeNull();
+    expect(m.bestSetVolumeSetIndex).toBeNull();
   });
 
   it('classifies a reps-only exercise as bodyweight', () => {
@@ -108,9 +108,22 @@ describe('calculateExerciseMetrics', () => {
     expect(m.sessionVolume).toBe(0);
     expect(m.heaviestWeight).toBeNull();
     expect(m.bestSetVolume).toBeNull();
-    expect(m.heaviestWeightSetIndex).toBe(-1);
-    expect(m.bestEstimated1RMSetIndex).toBe(-1);
-    expect(m.bestSetVolumeSetIndex).toBe(-1);
+    expect(m.heaviestWeightSetIndex).toBeNull();
+    expect(m.bestEstimated1RMSetIndex).toBeNull();
+    expect(m.bestSetVolumeSetIndex).toBeNull();
+  });
+
+  it('never returns a raw -1 sentinel set index even when weight is logged with no reps (regression: this crashed backfillPersonalBests.js on a real production row)', () => {
+    // weight_kg present (so hasWeightData=true) but reps null -> volume stays 0 for every set,
+    // so the *SetIndex trackers never get assigned a real index during the scan.
+    const exercise = { sets: [set({ weight: 20 })] };
+
+    const m = calculateExerciseMetrics(exercise);
+
+    expect(m.heaviestWeight).toBe(0);
+    expect(m.heaviestWeightSetIndex).toBeNull();
+    expect(m.bestEstimated1RMSetIndex).toBeNull();
+    expect(m.bestSetVolumeSetIndex).toBeNull();
   });
 });
 
