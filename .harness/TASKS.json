@@ -8332,7 +8332,7 @@
     {
       "id": "T299",
       "title": "Build a shared Tooltip component (CSS-only hover/focus, generalizing the home-sparkline tooltip idiom)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
