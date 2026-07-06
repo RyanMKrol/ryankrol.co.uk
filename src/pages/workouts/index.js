@@ -55,9 +55,16 @@ function getDuration(startTime, endTime) {
 }
 
 export function getExercisePreview(exercises = [], maxShown = 3) {
-  const names = exercises.map((exercise) => exercise.title).filter(Boolean);
-  const shown = names.slice(0, maxShown);
-  const remaining = names.length - shown.length;
+  const previews = exercises
+    .filter((exercise) => exercise.title)
+    .map((exercise) => ({
+      name: exercise.title,
+      hasPersonalBest: (exercise.sets || []).some(
+        (set) => set.isWeightPR || set.is1RMPR || set.isVolumePR
+      ),
+    }));
+  const shown = previews.slice(0, maxShown);
+  const remaining = previews.length - shown.length;
   return { shown, remaining };
 }
 
@@ -233,9 +240,33 @@ export default function Workouts() {
                   {shown.length > 0 && (
                     <div className="workout-session-exercise-row">
                       <ul className="workout-session-exercise-list">
-                        {shown.map((name) => (
+                        {shown.map(({ name, hasPersonalBest }) => (
                           <li key={name} className="workout-session-exercise-item">
                             {name}
+                            {hasPersonalBest && (
+                              <Badge
+                                accentColor="var(--accent-workouts)"
+                                variant="soft"
+                                mono={false}
+                              >
+                                <span aria-hidden="true">🏅</span>
+                                <span
+                                  style={{
+                                    position: 'absolute',
+                                    width: '1px',
+                                    height: '1px',
+                                    padding: 0,
+                                    margin: '-1px',
+                                    overflow: 'hidden',
+                                    clip: 'rect(0, 0, 0, 0)',
+                                    whiteSpace: 'nowrap',
+                                    border: 0,
+                                  }}
+                                >
+                                  {' '}personal best
+                                </span>
+                              </Badge>
+                            )}
                           </li>
                         ))}
                         {remaining > 0 && (
