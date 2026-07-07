@@ -128,15 +128,16 @@ Tasks are NOT authored directly from a raw thought. A backlog task carries a hig
 idea dumped straight in — especially several at once — produces rushed, low-quality specs. We split
 capture from planning into **two deliberate steps**, with **ideas as a first-class harness concept**.
 
-### Step 1 — capture: the ideas inbox (`.harness/tracking/IDEAS.md`)
+### Step 1 — capture: the ideas inbox (`.harness/tracking/IDEAS.jsonl`)
 
-A **gitignored**, zero-ceremony scratchpad: a single `## Inbox` list, one bullet per idea, as detailed
-as needed (the full idea + any helpful context), no schema and no planning. It is the low-friction
-place to dump a thought so it isn't lost and isn't interrupting in-flight work — capture is
-**non-interactive** (it enriches from what's already known, never by asking) precisely so it doesn't
-derail whatever Claude is mid-task on. Capture two ways:
-- **`/idea <the idea, in as much detail as you like>`** — appends a bullet to the Inbox.
-- Or just **hand-edit** `.harness/tracking/IDEAS.md`, or tell Claude "add an idea: …".
+A **gitignored**, zero-ceremony scratchpad: one JSON object per line (`{id, title, description,
+capturedAt}`), `id` local to the current inbox contents (next integer after the highest one present),
+as detailed as needed (the full idea + any helpful context in `description`), no further schema and
+no planning. It is the low-friction place to dump a thought so it isn't lost and isn't interrupting
+in-flight work — capture is **non-interactive** (it enriches from what's already known, never by
+asking) precisely so it doesn't derail whatever Claude is mid-task on. Capture two ways:
+- **`/idea <the idea, in as much detail as you like>`** — appends a row to the inbox.
+- Or just **hand-edit** `.harness/tracking/IDEAS.jsonl`, or tell Claude "add an idea: …".
 
 It is **gitignored on purpose** (like `data/` folders): raw, unfleshed ideas — which may reference
 private jobs — stay local and never hit the public repo. The *mechanism* travels with the harness via
@@ -155,8 +156,8 @@ commit directly) is now avoided by construction: each per-idea agent writes ONLY
 uniquely-named scratch file under `.harness/.pending-tasks/` (no shared resource touched at all during
 interview/shaping), and a **single consolidation pass** — `.harness/scripts/consolidate-ideas.sh` /
 `.mjs`, run once after every agent reports back — allocates every task id, resolves cross-idea
-`dependsOn` links, writes `TASKS.json` + spec files, commits, pushes, and cleans up `IDEAS.md` — all in
-one locked step instead of one per idea. Full mechanics (the pending-file schema, the consolidation
+`dependsOn` links, writes `TASKS.json` + spec files, commits, pushes, and cleans up `IDEAS.jsonl` — all
+in one locked step instead of one per idea. Full mechanics (the pending-file schema, the consolidation
 script, the recovery check for an interrupted prior sweep) live in the skill itself — the
 `implementation-harness` plugin's `/implementation-harness:implementation-harness-convert-ideas` —
 this section is just the model summary.
@@ -181,14 +182,14 @@ Other key points, in brief (full detail in the skill):
   (a tempId scheme resolves the real link at consolidation time).
 - **Shape → write to a scratch file, not `TASKS.json` directly.** Once an agent is satisfied, it writes
   its decided task(s) (title, scope, facets, spec content, everything except a real id) to its own
-  `.harness/.pending-tasks/<slug>.json` and stops. No lock, no git, no `IDEAS.md` edit at this stage.
+  `.harness/.pending-tasks/<slug>.json` and stops. No lock, no git, no `IDEAS.jsonl` edit at this stage.
 - **Consolidate once, at the end.** After every launched agent reports back,
   `.harness/scripts/consolidate-ideas.sh` (a permanent, tested script — see `.harness/scripts/consolidate-ideas.mjs`
   for the id-allocation/spec-write/merge logic) reads all pending files, allocates ids, resolves
   temp-id `dependsOn` references, writes `tasks/TNNN.md` specs, updates `TASKS.json`, commits +
-  pushes, removes every converted idea's bullet from `.harness/tracking/IDEAS.md` (by FUZZY text match —
-  normalized/reflowed comparison, re-read fresh under the lock, since a pending file's recorded
-  bullet text won't byte-match the hand-wrapped markdown), and deletes the consumed pending files.
+  pushes, removes every converted idea's row from `.harness/tracking/IDEAS.jsonl` by `id` (an id with
+  no matching row is simply a no-op — e.g. review-failed units, which have no real idea id at all),
+  and deletes the consumed pending files.
   This runs under `loop.sh`'s own shared lock (`LOOP_SOURCE_ONLY=1 source loop.sh` — the same pattern
   `mark-done.sh`/`mark-failed.sh` use), not a standalone lock file — this repo has no separate daemon
   process that would need to coordinate on the mutex from outside `loop.sh`, so it exits immediately
@@ -199,12 +200,12 @@ Other key points, in brief (full detail in the skill):
   first) AND leftover `.harness/.pending-questions/*.json` files (units blocked on an owner answer
   that never arrived — relay their recorded questions, then launch a fresh agent per unit to finish,
   seeded with what's on disk) from a prior interrupted run, before touching the current inbox; and
-  for `IDEAS.md` bullets that plausibly already became a task in a recent commit (confirm with the
+  for `IDEAS.jsonl` rows that plausibly already became a task in a recent commit (confirm with the
   owner rather than re-interviewing from scratch).
-- **Delete on convert.** As each idea's task lands (or resolves to "no action needed"), its bullet is
-  removed from `.harness/tracking/IDEAS.md` — during the consolidation pass, never earlier. The resulting
-  `TASKS.json` task (+ its spec MD) is the record; the inbox stays a clean, transient surface. (No
-  "converted" archive — the inbox is gitignored, so there'd be no history of it anyway.)
+- **Delete on convert.** As each idea's task lands (or resolves to "no action needed"), its row is
+  removed from `.harness/tracking/IDEAS.jsonl` — during the consolidation pass, never earlier. The
+  resulting `TASKS.json` task (+ its spec MD) is the record; the inbox stays a clean, transient
+  surface. (No "converted" archive — the inbox is gitignored, so there'd be no history of it anyway.)
 
 **Worked example.** Inbox bullet: *"The workouts page could show each exercise's best-ever lift."* →
 a per-unit agent explores (a badge or a small chart? is the best-1RM already on the exercise record —
@@ -213,7 +214,7 @@ PRs at a glance?), settles what it can itself, shapes a `page`/`feature` task sc
 `src/pages/exercises/[exerciseName].js` (+ any `api` task if a new field is needed) with a real
 `## Done when`, and writes it to its own `.harness/.pending-tasks/best-ever-lift.json`. Once every
 launched agent has reported back, the consolidation pass lands the real task(s) and deletes the
-bullet from `IDEAS.md`.
+row from `IDEAS.jsonl`.
 
 > Distribution: the `/idea`, `/convert-ideas`, `/pre-loop-checkin`, and `/loop-recover` commands are
 > provided by the `implementation-harness` plugin as `/implementation-harness:*` skills — invoke them

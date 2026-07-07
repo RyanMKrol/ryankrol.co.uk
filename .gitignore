@@ -48,7 +48,7 @@ next-env.d.ts
 .harness/worklog/.last-push-ts
 # The ideas inbox is a PRIVATE, transient capture scratchpad (raw, unfleshed ideas). The mechanism
 # travels via .harness/CLAUDE.md; each repo grows its own private inbox.
-.harness/tracking/IDEAS.md
+.harness/tracking/IDEAS.jsonl
 # /convert-ideas scratch: a per-unit agent writes its decided task(s) to its own uniquely-named
 # file here (zero lock contention during interview/shaping); the Stage 3 consolidation pass reads,
 # allocates ids, and deletes them. Never committed — see .harness/CLAUDE.md and the
