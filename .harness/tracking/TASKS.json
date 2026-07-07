@@ -8790,6 +8790,236 @@
         ]
       },
       "expectsTest": false
+    },
+    {
+      "id": "T316",
+      "title": "Fix archived-tag straight-edge gap on /projects (revert redundant top/left inset added by T314)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "projects",
+        "css",
+        "regression"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T316.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T317",
+      "title": "Add mouse click-and-drag scrolling to the header nav pill row",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "nav",
+        "accessibility",
+        "sitewide"
+      ],
+      "scope": [
+        "src/components/Header.js",
+        "src/components/Header.test.js",
+        "src/styles/globals.css",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T317.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T318",
+      "title": "Fix invisible Longevity/Projection bars on perfume review card (T301 Tooltip-wrap regression)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "bugfix",
+        "regression"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T318.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T319",
+      "title": "Give perfume ownership pill a white background + border, without affecting other Badge variant=\"soft\" usages",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "style",
+        "badge"
+      ],
+      "scope": [
+        "src/components/Badge.js",
+        "src/components/perfumeVariants/Variant6Hybrid.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T319.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T320",
+      "title": "Fix PR badge misaligning set-row numeric column on workout detail page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "pr-badge"
+      ],
+      "scope": [
+        "src/pages/workouts/[id].js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T320.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T321",
+      "title": "Make PR pill background/border always visible at rest (remove hover-only contrast)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "pr-badge",
+        "styling"
+      ],
+      "scope": [
+        "src/components/Badge.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T321.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T322",
+      "title": "Drop the 'PR' suffix from PR pill labels",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "pr-badge"
+      ],
+      "scope": [
+        "src/pages/workouts/[id].js",
+        "src/pages/workouts/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T322.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T323",
+      "title": "Normalize exercise-row height on workouts list regardless of PR pill",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "pr-badge",
+        "styling"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T323.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T324",
+      "title": "Standardize .collection-review-header controls to always stack left-aligned below the title",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "review-header-alignment",
+        "collection-redesign",
+        "ui-consistency"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T324.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
     }
   ]
 }
