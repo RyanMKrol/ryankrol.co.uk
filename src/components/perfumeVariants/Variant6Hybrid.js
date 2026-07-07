@@ -80,7 +80,7 @@ export default function Variant6Hybrid({ item }) {
             <div className="perfume-v4-scale">
               <p className="perfume-v4-scale-heading">Longevity</p>
               <p className="perfume-v4-scale-label">Light ↔ All-day</p>
-              <Tooltip label={longevityLabel}>
+              <Tooltip label={longevityLabel} className="perfume-v4-scale-tooltip">
                 <div className="perfume-v4-scale-track">
                   <div
                     className="perfume-v4-scale-fill"
@@ -96,7 +96,7 @@ export default function Variant6Hybrid({ item }) {
           <div className="perfume-v4-scale">
             <p className="perfume-v4-scale-heading">Projection</p>
             <p className="perfume-v4-scale-label">Skin scent ↔ Room-filling</p>
-            <Tooltip label={PROJECTION_LABELS[item.projection]}>
+            <Tooltip label={PROJECTION_LABELS[item.projection]} className="perfume-v4-scale-tooltip">
               <div className="perfume-v4-scale-track">
                 <div
                   className="perfume-v4-scale-fill"
