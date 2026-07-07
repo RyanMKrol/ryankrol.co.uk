@@ -1952,10 +1952,15 @@ input[type='range'].form-input::-moz-range-thumb {
 .workout-session-exercise-item {
   font-family: var(--font-mono);
   font-size: 0.85rem;
+  line-height: 1.6rem;
   color: var(--color-ink-mute);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.workout-session-exercise-item .collection-badge {
+  vertical-align: middle;
 }
 
 .workout-session-exercise-more {
