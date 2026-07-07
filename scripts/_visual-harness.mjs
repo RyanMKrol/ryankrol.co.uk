@@ -291,6 +291,31 @@ const bespokeFlows = [
   { name: 'projects-search', path: '/projects', waitFor: ['.project-card'], flow: 'Search projects for "api"; cards narrow by name/description.', description: 'Projects filtered by search to "api".', covers: ['src/pages/projects/index.js', 'src/components/SearchInput.js'], actions: async (page) => { await page.fill('.collection-search-input input', 'api'); } },
   // Home — the on-the-shelf shuffle.
   { name: 'home-skim-shelf', path: '/', waitFor: ['.home-shelf-item'], flow: 'Click "Skim the shelf"; the random vinyl sample re-rolls.', description: 'Home on-the-shelf panel after a shuffle.', covers: ['src/pages/index.js'], actions: async (page) => { await page.click('button.home-shelf-refresh'); } },
+  // Header nav pills — click-and-drag fallback scrolling (T317) for pointers without horizontal
+  // scroll input. Shrink the viewport first so the pill row overflows even at "desktop" width.
+  {
+    name: 'header-nav-drag-scroll',
+    path: '/',
+    waitFor: ['.collection-nav-pills'],
+    flow: 'Shrink the viewport so the nav pill row overflows, then mousedown+move+mouseup drag it leftward.',
+    description: 'Header nav pill row scrolled via click-and-drag, mid-row.',
+    covers: ['src/components/Header.js', 'src/styles/globals.css'],
+    actions: async (page) => {
+      // Stay above the 768px mobile breakpoint (globals.css:2300) — below it this nav is
+      // display:none, replaced by the hamburger `.nav-mobile-menu` — while still narrow enough
+      // that the pill row overflows and needs drag-to-scroll.
+      await page.setViewportSize({ width: 900, height: 900 });
+      const nav = page.locator('.collection-nav-pills');
+      await nav.waitFor({ state: 'visible' });
+      const box = await nav.boundingBox();
+      const startX = box.x + box.width - 40;
+      const y = box.y + box.height / 2;
+      await page.mouse.move(startX, y);
+      await page.mouse.down();
+      await page.mouse.move(startX - 150, y, { steps: 10 });
+      await page.mouse.up();
+    },
+  },
 ];
 
 export const FLOWS = [...reviewFlows, ...bespokeFlows];

@@ -880,6 +880,12 @@ a:hover {
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
+  cursor: grab;
+}
+
+.collection-nav-pills.is-dragging {
+  cursor: grabbing;
+  user-select: none;
 }
 
 .collection-nav-pills.has-scroll-fade {
