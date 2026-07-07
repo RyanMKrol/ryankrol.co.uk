@@ -267,15 +267,12 @@ export default function WorkoutDetailPage() {
                       className={`workout-set-row ${isWarmup ? 'warmup' : ''}`}
                     >
                       <span className="workout-set-row-label">{setLabel}</span>
-                      <span
-                        className="workout-set-row-value"
-                        style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-                      >
-                        {formatSetDisplay(set)}
+                      <span className="workout-set-row-badges">
                         {prBadges.map(({ key, label }) => (
                           <PrBadge key={key} label={label} />
                         ))}
                       </span>
+                      <span className="workout-set-row-value">{formatSetDisplay(set)}</span>
                     </div>
                   );
                 })}
