@@ -454,6 +454,7 @@
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  flex-basis: 100%;
 }
 
 /* ===== Matrix Theme Override ===== */
