@@ -15,7 +15,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { execFile, execFileSync } = require('child_process');
-const { computeBacklog, parseJsonl, coldTierIndex, harnessCells, recentActivity, failureKinds, ideasFromJsonl } = require('./lib');
+const { computeBacklog, parseJsonl, coldTierIndex, harnessCells, recentActivity, failureKinds, ideasFromJsonl, liveOutputFromJsonl } = require('./lib');
 
 const HARNESS_DIR = path.join(__dirname, '..');
 const ROOT = path.join(HARNESS_DIR, '..');
@@ -109,9 +109,23 @@ function buildFailures() {
   return out;
 }
 
+// buildOutcomesByTask() — { <taskId>: <latest ledgers/outcomes.jsonl row for that id> }, so a done
+// task can show which model/effort actually completed it (finalModel/finalEffort — the tier that
+// succeeded, after any escalation, as opposed to startModel/startEffort which is just the cold-start
+// floor it began at). Rows are append-order → last wins (a task id should only ever get one terminal
+// row, but this stays robust if that ever changes). Robust to a missing/garbled ledger (returns {}).
+function buildOutcomesByTask() {
+  const out = {};
+  for (const row of parseJsonl(readText(OUTCOMES_PATH))) {
+    if (row && row.id) out[row.id] = row;
+  }
+  return out;
+}
+
 function loadState() {
   const tasksJson = readJson(TASKS_PATH, { tasks: [] });
   const failures = buildFailures();
+  const outcomesByTask = buildOutcomesByTask();
   const overlays = {
     humanDone: readJson(OVERLAY_PATHS.humanDone, {}),
     manualFail: readJson(OVERLAY_PATHS.manualFail, {}),
@@ -126,6 +140,11 @@ function loadState() {
       // Attach failed-attempt history to NON-done tasks (a done task's past soft-fails aren't
       // interesting; a still-open task with failures is the signal worth surfacing).
       if (!task.failed && failures[task.id]) task.buildFailures = failures[task.id];
+      // Which model/effort actually completed this task, once it has a terminal outcome.
+      const oc = outcomesByTask[task.id];
+      if (oc && (oc.finalModel || oc.finalEffort)) {
+        task.completedWith = { model: oc.finalModel || null, effort: oc.finalEffort || null };
+      }
     }
   }
   return {
@@ -281,23 +300,31 @@ function lockState() {
   return { held: true, pid, alive };
 }
 
-// claudeOutTail() — the last ~40 lines of the builder/auditor's live output. The worktree variant
-// writes it inside the loop worktree (../<name>-loop/.harness/worklog/), the in-place variant in the
-// primary checkout — read whichever was touched most recently.
+// claudeOutTail() — the builder/auditor's live output, reconstructed from whichever worklog was
+// touched most recently (the worktree variant writes inside the loop worktree,
+// ../<name>-loop/.harness/worklog/; the in-place variant writes in the primary checkout). Since
+// loop.sh/loop.in-place.sh invoke claude with --output-format stream-json, the raw transcript lives
+// in `.claude-out.jsonl` (streamed incrementally — see run_claude()); `.claude-out` is that same
+// invocation's plain-text reconstruction, kept for installs that haven't upgraded loop.sh yet (an old
+// loop.sh only ever writes `.claude-out`, so this falls back to it automatically — no `.jsonl` sibling
+// ever gets created for such an install, so it's simply never a candidate).
 function claudeOutTail() {
-  const candidates = [
-    path.join(WORKLOG_DIR, '.claude-out'),
-    path.join(path.dirname(ROOT), `${NAME}-loop`, '.harness', 'worklog', '.claude-out'),
-  ];
+  const dirs = [WORKLOG_DIR, path.join(path.dirname(ROOT), `${NAME}-loop`, '.harness', 'worklog')];
+  const candidates = [];
+  for (const d of dirs) { candidates.push(path.join(d, '.claude-out.jsonl'), path.join(d, '.claude-out')); }
   let best = null, bestM = 0;
   for (const p of candidates) {
     try { const m = fs.statSync(p).mtimeMs; if (m > bestM) { bestM = m; best = p; } } catch (_err) { /* absent */ }
   }
-  if (!best) return null;
+  if (!best) return { text: null, tool: null };
   const text = readText(best);
-  if (!text) return null;
+  if (!text) return { text: null, tool: null };
+  if (best.endsWith('.jsonl')) {
+    const live = liveOutputFromJsonl(text);
+    return { text: live.text ? live.text.slice(-8000) : null, tool: live.tool };
+  }
   const lines = text.split('\n');
-  return lines.slice(-40).join('\n').slice(-8000);
+  return { text: lines.slice(-40).join('\n').slice(-8000), tool: null };
 }
 
 // freshness() — how stale is what this dashboard renders? Age of the last `git fetch` (FETCH_HEAD
@@ -324,10 +351,12 @@ function freshness() {
 }
 
 function activityState() {
+  const live = claudeOutTail();
   return {
     lock: lockState(),
     current: readJson(HEARTBEAT_PATH, null),
-    logTail: claudeOutTail(),
+    logTail: live.text,
+    toolNow: live.tool,
     freshness: freshness(),
     fetchEverySec: parseInt(envKnob('HARNESS_DASHBOARD_FETCH_SECONDS', '0'), 10) || 0,
   };
@@ -552,7 +581,9 @@ function renderPage() {
   .ftable td{padding:7px 10px;border-bottom:1px solid var(--border)} .ftable tr:last-child td{border-bottom:none}
   .ftable td.num,.ftable th.num{text-align:right;font-variant-numeric:tabular-nums}
   .qtip{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--panel-2);border:1px solid var(--border);color:var(--muted);font-size:9px;font-weight:700;line-height:1;cursor:help;text-transform:none;letter-spacing:normal;vertical-align:1px}
-  .qtip:hover{border-color:var(--accent);color:var(--accent)}
+  .qtip:hover,.qtip:focus{border-color:var(--accent);color:var(--accent)}
+  .qtip:focus{outline:2px solid var(--accent);outline-offset:2px}
+  #qtip-popup{position:fixed;z-index:50;max-width:260px;background:var(--text);color:var(--panel);padding:7px 10px;border-radius:7px;font-size:11.5px;font-weight:400;line-height:1.4;text-transform:none;letter-spacing:normal;box-shadow:0 4px 14px rgba(0,0,0,.2);pointer-events:none;display:none}
   .facet-name{font-weight:600}
   .model-tag{font-family:ui-monospace,Menlo,monospace;font-size:12px}
   .cold-tag{font-size:10px;color:var(--muted);margin-left:5px}
@@ -660,6 +691,9 @@ function renderNow(data) {
     h += '<span class="nowpill warn" title="The lock dir exists but its PID is dead — a loop was interrupted. Run the loop-recover skill.">⚠ stale lock (PID ' + esc(String(lock.pid || '?')) + ' dead) — run loop-recover</span>';
   } else {
     h += '<span class="nowpill idle">◼ loop idle</span>';
+  }
+  if (lock.held && lock.alive && data.toolNow) {
+    h += '<span class="nowpill run" title="From the live output stream — the tool call most recently started, with no response text after it yet">▶ running ' + esc(data.toolNow) + '…</span>';
   }
   if (fr.known && !fr.inSync) {
     h += '<span class="nowpill bad" title="The local checkout this dashboard reads is not on the same commit as origin/' + esc(fr.mainBranch || 'main') + ' — what you see may be stale or ahead.">local ≠ origin/' + esc(fr.mainBranch || 'main') + '</span>';
@@ -777,14 +811,14 @@ function renderHarness(data) {
     h += '<p class="note">No calibration data yet — the harness records an outcome each time it builds a task.</p>';
   } else {
     h += '<table class="ftable"><thead><tr>'
-       + '<th>Facet <span class="qtip" title="The layer × work-type combination this row\\'s stats are calibrated for (e.g. backend/feature).">?</span></th>'
-       + '<th>Start model <span class="qtip" title="The model/effort the policy would pick to START a task in this cell right now (it only escalates from here on real failure). \\'cold\\' = no build history yet, using the cold-start prior.">?</span></th>'
-       + '<th class="num">Audit (policy) <span class="qtip" title="The sampling probability the policy will use for the NEXT build in this cell">?</span></th>'
-       + '<th class="num">Audited (observed) <span class="qtip" title="What actually happened: audited successes / all successes recorded in the ledger">?</span></th>'
-       + '<th class="num">Builds <span class="qtip" title="Total tasks in this cell that reached a terminal outcome (success or blocked), per the outcomes ledger.">?</span></th>'
-       + '<th class="num">✓ <span class="qtip" title="Successful builds in this cell that the owner did NOT overturn.">?</span></th>'
-       + '<th class="num">✗ <span class="qtip" title="Builds the owner overturned as a false success, or that the loop itself gave up on (blocked).">?</span></th>'
-       + '<th class="num">⚠ fails <span class="qtip" title="Failed attempts recorded before a task in this cell eventually succeeded or was blocked — see Failure health below for a kind breakdown.">?</span></th>'
+       + '<th>Facet <span class="qtip" tabindex="0" data-tip="The layer × work-type combination this row\\'s stats are calibrated for (e.g. backend/feature).">?</span></th>'
+       + '<th>Start model <span class="qtip" tabindex="0" data-tip="The model/effort the policy would pick to START a task in this cell right now (it only escalates from here on real failure). \\'cold\\' = no build history yet, using the cold-start prior.">?</span></th>'
+       + '<th class="num">Audit (policy) <span class="qtip" tabindex="0" data-tip="The sampling probability the policy will use for the NEXT build in this cell">?</span></th>'
+       + '<th class="num">Audited (observed) <span class="qtip" tabindex="0" data-tip="What actually happened: audited successes / all successes recorded in the ledger">?</span></th>'
+       + '<th class="num">Builds <span class="qtip" tabindex="0" data-tip="Total tasks in this cell that reached a terminal outcome (success or blocked), per the outcomes ledger.">?</span></th>'
+       + '<th class="num">✓ <span class="qtip" tabindex="0" data-tip="Successful builds in this cell that the owner did NOT overturn.">?</span></th>'
+       + '<th class="num">✗ <span class="qtip" tabindex="0" data-tip="Builds the owner overturned as a false success, or that the loop itself gave up on (blocked).">?</span></th>'
+       + '<th class="num">⚠ fails <span class="qtip" tabindex="0" data-tip="Failed attempts recorded before a task in this cell eventually succeeded or was blocked — see Failure health below for a kind breakdown.">?</span></th>'
        + '</tr></thead><tbody>';
     for (const c of cells) {
       const model = c.chosenModel ? esc(c.chosenModel) + ' / ' + esc(c.chosenEffort) : '—';
@@ -855,6 +889,11 @@ function pillsFor(task, bucketName) {
   } else if (bucketName === 'done') {
     pills += task.reviewed ? '<span class="pill reviewed">👁 reviewed</span>' : '<span class="pill">not reviewed</span>';
     pills += task.failed ? '<span class="pill failed">✗ failed</span>' : '<span class="pill done">✓ done</span>';
+    if (task.completedWith) {
+      const cw = task.completedWith;
+      const label = esc(cw.model || '?') + (cw.effort ? '/' + esc(cw.effort) : '');
+      pills += '<span class="pill model-tag" title="The model/effort that completed this task, from ledgers/outcomes.jsonl">' + label + '</span>';
+    }
   }
   pills += failPill(task, bucketName);
   return pills;
@@ -1056,6 +1095,40 @@ function initBgPicker() {
   markActiveSwatch(saved || '#fbf3dd');
 }
 initBgPicker();
+
+// Instant tooltips for .qtip icons — the native title= attribute has a browser-enforced ~1-1.5s
+// hover delay that CSS can't shorten. One popup element, positioned via getBoundingClientRect and
+// clamped to the viewport (so it's never clipped by a table's own overflow:hidden, unlike a
+// CSS-only ::after pinned to the icon would be), shown/hidden via event delegation on document so
+// it keeps working across re-renders (the Internals tab rebuilds its innerHTML on every poll).
+function initQtips() {
+  let popup = document.getElementById('qtip-popup');
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.id = 'qtip-popup';
+    document.body.appendChild(popup);
+  }
+  function show(el) {
+    const tip = el.getAttribute('data-tip');
+    if (!tip) return;
+    popup.textContent = tip;
+    popup.style.display = 'block';
+    const r = el.getBoundingClientRect();
+    const pr = popup.getBoundingClientRect();
+    let left = r.left + r.width / 2 - pr.width / 2;
+    left = Math.max(6, Math.min(left, window.innerWidth - pr.width - 6));
+    let top = r.bottom + 7;
+    if (top + pr.height > window.innerHeight - 6) top = r.top - pr.height - 7;
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+  }
+  function hide() { popup.style.display = 'none'; }
+  document.addEventListener('mouseover', function (e) { const q = e.target.closest('.qtip'); if (q) show(q); });
+  document.addEventListener('mouseout', function (e) { const q = e.target.closest('.qtip'); if (q) hide(); });
+  document.addEventListener('focusin', function (e) { const q = e.target.closest('.qtip'); if (q) show(q); });
+  document.addEventListener('focusout', function (e) { const q = e.target.closest('.qtip'); if (q) hide(); });
+}
+initQtips();
 
 refreshActive();
 setInterval(refreshActive, 5000);   // one poll → the active view (each keeps its own change-guard)

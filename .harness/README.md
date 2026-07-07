@@ -121,6 +121,8 @@ deliberately *not* parallel).
 
 - **Backlog** — the live task buckets (ready / waiting / needs-you / done) with per-task detail (spec,
   worklog, audit log) and buttons that call the same `mark-*.sh` scripts a human would run by hand.
+  Each done task also shows the model/effort that actually completed it (`finalModel`/`finalEffort`
+  from `ledgers/outcomes.jsonl` — the tier that succeeded, after any escalation).
 - **Ideas** — `tracking/IDEAS.jsonl` rendered as a one-line-per-idea list (id, title, captured date);
   click a row to expand its full description (rendered markdown), so the inbox is scannable without
   opening the file or wading through every idea's full text at once. An "Expand all"/"Collapse all"
@@ -134,7 +136,10 @@ deliberately *not* parallel).
 
 Every tab also carries a live **"Now" strip**: whether the loop is running (from its own repo lock —
 including a ⚠ stale-lock warning after an interrupt), the current task/phase/rung/attempt from the loop's
-`worklog/.current.json` heartbeat, a collapsible tail of the builder's live output, and a freshness badge
+`worklog/.current.json` heartbeat, a collapsible tail of the builder/auditor's *genuinely* live output
+(the loop invokes `claude` with `--output-format stream-json`, so this updates incrementally as it's
+generated rather than dumping everything at once when the process exits — plus a `▶ running <Tool>…`
+pill when a tool call is in flight with no response text after it yet), and a freshness badge
 ("origin seen Xm ago" / "local ≠ origin") — the dashboard renders LOCAL files, so this surfaces when
 nothing has fetched recently. Set `HARNESS_DASHBOARD_FETCH_SECONDS` (harness.env) to have the dashboard
 `git fetch` on an interval itself (fetch-only; it never touches the working tree). The ⚙ next to the
