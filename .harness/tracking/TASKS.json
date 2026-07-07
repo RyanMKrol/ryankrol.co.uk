@@ -8925,7 +8925,7 @@
     {
       "id": "T321",
       "title": "Make PR pill background/border always visible at rest (remove hover-only contrast)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
