@@ -9053,7 +9053,7 @@
     {
       "id": "T326",
       "title": "Fix /reviews/albums/edit to use MasonryColumns instead of a plain map",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
