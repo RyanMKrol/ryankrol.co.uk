@@ -27,15 +27,133 @@
 > ryankrol.co.uk@1.0.0 test
 > jest
 
-PASS src/components/StarRating.test.js
 PASS src/tests/workoutsIndex.test.js
-PASS src/components/SortButtons.test.js
+PASS src/components/StarRating.test.js
 PASS src/components/Markdown.test.js
+PASS src/components/SortButtons.test.js
 PASS src/components/Pagination.test.js
 PASS src/components/MarkdownEditor.test.js
-PASS src/pages/api/reviews/perfumes/update.test.js
-PASS src/components/NowPlaying.test.js
+PASS src/scripts/auditWorkouts.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 2 stored, 0 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 0 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Workout already exists, skipping
+
+      at log (src/scripts/auditWorkouts.js:142:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 1 stored, 1 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 1 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/1] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
 PASS src/components/PillGroup.test.js
+PASS src/pages/api/reviews/movies/update.test.js
+PASS src/scripts/migrateTvToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/backfillPersonalBests.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS test/pages/workouts/index.test.js
+PASS src/scripts/migrateLegacyExerciseRows.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/__tests__/pages/reviews/tv/add.test.js
+PASS src/__tests__/pages/reviews/albums/edit.test.js
+PASS src/pages/api/reviews/tv/add.test.js
+PASS src/components/perfumeVariants/Variant6Hybrid.test.js
 PASS src/__tests__/pages/projects/index.test.js
   ● Console
 
@@ -62,17 +180,22 @@ PASS src/__tests__/pages/projects/index.test.js
       at performWorkUntilDeadline (node_modules/scheduler/cjs/scheduler.development.js:45:48)
       at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
 
-PASS src/scripts/migrateBooksToIdTable.test.js
+PASS src/pages/api/reviews/tv/update.test.js
+PASS src/__tests__/pages/reviews/perfumes/add.test.js
+PASS src/__tests__/pages/reviews/books/edit.test.js
+PASS src/components/NowPlaying.test.js
+PASS src/scripts/backfillMissingExerciseRows.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS test/pages/workouts/index.test.js
-PASS src/lib/scrollFade.test.js
-PASS src/pages/api/reviews/movies/update.test.js
+PASS src/pages/api/reviews/perfumes/update.test.js
+PASS src/__tests__/pages/reviews/movies/edit.test.js
+PASS src/__tests__/pages/reviews/tv/edit.test.js
+PASS src/__tests__/pages/reviews/books/add.test.js
 PASS src/components/Header.test.js
   ● Console
 
@@ -300,155 +423,121 @@ PASS src/components/Header.test.js
       at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:6927:7)
       at setLoading (src/components/NowPlaying.js:22:9)
 
-PASS src/pages/api/reviews/tv/add.test.js
-PASS src/scripts/auditWorkouts.test.js
+PASS src/lib/apiCache.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+      Cleared cache for key: api-test-hit-id:1
+
+      at log (src/lib/apiCache.js:115:13)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-test-hit-id:1
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-test-hit-id:1 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      💰 [CACHE] HIT for key: api-test-hit-id:1
+
+      at log (src/lib/apiCache.js:35:13)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-test-clear-id:2
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-test-clear-id:2 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      Cleared cache for key: api-test-clear-id:2
+
+      at log (src/lib/apiCache.js:115:13)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-test-clear-id:2
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-test-clear-id:2 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-movies-a:1
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-movies-a:1 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-movies-a:2
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-movies-a:2 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      Cleared cache for key: api-movies-a:1
+
+      at log (src/lib/apiCache.js:109:17)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Cleared cache for key: api-movies-a:2
+
+      at log (src/lib/apiCache.js:109:17)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-movies-a:1
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-movies-a:1 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-movies-a:2
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-movies-a:2 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+PASS src/scripts/migrateVinylToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-    console.log
-      Backfilling 2 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at log (src/scripts/auditWorkouts.js:146:11)
-
-    console.log
-      Workouts: 2 stored, 0 skipped
-
-      at log (src/scripts/auditWorkouts.js:147:11)
-
-    console.log
-      Backfilling 2 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 0 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Workout already exists, skipping
-
-      at log (src/scripts/auditWorkouts.js:142:15)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at log (src/scripts/auditWorkouts.js:146:11)
-
-    console.log
-      Workouts: 1 stored, 1 skipped
-
-      at log (src/scripts/auditWorkouts.js:147:11)
-
-    console.log
-      Backfilling 1 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/1] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-PASS src/__tests__/pages/reviews/movies/edit.test.js
-PASS src/scripts/backfillPersonalBests.test.js
+PASS src/scripts/migrateOpenLibraryBooksToGoogleBooks.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/__tests__/pages/reviews/books/edit.test.js
-PASS src/__tests__/pages/reviews/perfumes/edit.test.js
-PASS src/scripts/migratePerfumeOwnership.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/components/perfumeVariants/Variant6Hybrid.test.js
-PASS src/scripts/backfillMissingExerciseRows.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 version env with Radar: https://dotenvx.com/radar
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/lib/backfillQueue.test.js
-PASS src/__tests__/pages/reviews/albums/edit.test.js
-PASS src/lib/workoutQueries.test.js
-PASS src/pages/api/vinyl/add.test.js
-PASS src/__tests__/pages/reviews/books/add.test.js
-PASS src/__tests__/pages/reviews/perfumes/add.test.js
-PASS src/pages/api/books/search.test.js
-  ● Console
-
-    console.warn
-      ⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production
-
-      47 |     url.searchParams.set('key', apiKey);
-      48 |   } else {
-    > 49 |     console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
-         |             ^
-      50 |   }
-      51 |
-      52 |   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
-
-      at warn (src/pages/api/books/search.js:49:13)
-      at searchGoogleBooks (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:37:18)
-
-    console.log
-      📚 [GoogleBooks] Searching books: title="Dune"
-
-      at log (src/pages/api/books/search.js:52:11)
 
 PASS src/lib/workoutPagination.test.js
 PASS src/lib/workoutBackfill.test.js
@@ -515,7 +604,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 160ms
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 154ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -590,7 +679,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 155ms
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 159ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -660,7 +749,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 151ms
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 152ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -735,7 +824,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 151ms
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 153ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -820,7 +909,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:86:11)
 
     console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (1ms)
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
 
       at log (src/lib/workoutBackfill.js:127:15)
 
@@ -855,7 +944,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 318ms
+      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 306ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -874,28 +963,8 @@ PASS src/lib/workoutBackfill.test.js
 
       at log (src/lib/workoutBackfill.js:246:15)
 
-PASS src/__tests__/pages/reviews/tv/add.test.js
-PASS src/lib/googlebooks.test.js
-PASS src/__tests__/pages/reviews/albums/add.test.js
-PASS src/scripts/migrateTvToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/lib/chartTime.test.js
-PASS src/scripts/migrateMoviesToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/pages/api/reviews/albums/add.test.js
-PASS src/scripts/migrateVinylToIdTable.test.js
+PASS src/__tests__/pages/reviews/perfumes/edit.test.js
+PASS src/scripts/migrateAlbumsToIdTable.test.js
   ● Console
 
     console.log
@@ -903,9 +972,39 @@ PASS src/scripts/migrateVinylToIdTable.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/lib/programmeStats.test.js
-PASS src/pages/api/reviews/movies/add.test.js
-PASS src/pages/api/reviews/books/add.test.js
+PASS src/lib/perfumes.test.js
+PASS src/lib/pagination.test.js
+PASS src/lib/rateLimit.test.js
+  ● Console
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.5466587325915093 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-a-0.33729859036917476 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.12442861440786701 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.12442861440786701 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
 PASS src/pages/api/github/repos.test.js
   ● Console
 
@@ -1022,17 +1121,31 @@ PASS src/pages/api/github/repos.test.js
       at handler (src/pages/api/github/repos.js:39:19)
       at Object.<anonymous> (src/pages/api/github/repos.test.js:197:7)
 
-PASS src/__tests__/pages/reviews/tv/edit.test.js
-PASS src/scripts/migrateLegacyExerciseRows.test.js
+PASS src/scripts/migrateMoviesToIdTable.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
+PASS src/pages/api/reviews/books/update.test.js
+PASS src/__tests__/pages/reviews/albums/add.test.js
+PASS src/lib/backfillQueue.test.js
+PASS src/lib/backfillEligibility.test.js
 PASS src/__tests__/pages/reviews/movies/add.test.js
-PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
+PASS src/components/CoverTile.test.js
+PASS src/components/PerfumeCharacteristics.test.js
+PASS src/lib/workoutMetrics.test.js
+PASS src/pages/api/tmdb/search.test.js
+  ● Console
+
+    console.log
+      🎬 [TMDB] Searching movie: "Dune"
+
+      at log (src/pages/api/tmdb/search.js:41:15)
+
+PASS src/scripts/migratePerfumeOwnership.test.js
   ● Console
 
     console.log
@@ -1040,124 +1153,12 @@ PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
+PASS src/lib/programmeStats.test.js
+PASS src/pages/api/reviews/books/add.test.js
+PASS src/lib/workoutQueries.test.js
 PASS src/lib/dateRange.test.js
-PASS src/lib/perfumes.test.js
-PASS src/components/PerfumeCharacteristics.test.js
-PASS src/components/CoverTile.test.js
-PASS src/lib/dateFormat.test.js
-PASS src/lib/lastfm.test.js
-PASS src/pages/api/reviews/books/update.test.js
-PASS src/lib/dynamo.test.js
-PASS src/lib/apiCache.test.js
-  ● Console
-
-    console.log
-      Cleared cache for key: api-test-hit-id:1
-
-      at log (src/lib/apiCache.js:115:13)
-
-    console.log
-      ❄️  [CACHE] MISS for key: api-test-hit-id:1
-
-      at log (src/lib/apiCache.js:39:11)
-
-    console.log
-      💾 [CACHE] Stored key: api-test-hit-id:1 (TTL: 4h, fetch: 0ms)
-
-      at log (src/lib/apiCache.js:65:15)
-
-    console.log
-      💰 [CACHE] HIT for key: api-test-hit-id:1
-
-      at log (src/lib/apiCache.js:35:13)
-
-    console.log
-      ❄️  [CACHE] MISS for key: api-test-clear-id:2
-
-      at log (src/lib/apiCache.js:39:11)
-
-    console.log
-      💾 [CACHE] Stored key: api-test-clear-id:2 (TTL: 4h, fetch: 0ms)
-
-      at log (src/lib/apiCache.js:65:15)
-
-    console.log
-      Cleared cache for key: api-test-clear-id:2
-
-      at log (src/lib/apiCache.js:115:13)
-
-    console.log
-      ❄️  [CACHE] MISS for key: api-test-clear-id:2
-
-      at log (src/lib/apiCache.js:39:11)
-
-    console.log
-      💾 [CACHE] Stored key: api-test-clear-id:2 (TTL: 4h, fetch: 0ms)
-
-      at log (src/lib/apiCache.js:65:15)
-
-    console.log
-      ❄️  [CACHE] MISS for key: api-movies-a:1
-
-      at log (src/lib/apiCache.js:39:11)
-
-    console.log
-      💾 [CACHE] Stored key: api-movies-a:1 (TTL: 4h, fetch: 0ms)
-
-      at log (src/lib/apiCache.js:65:15)
-
-    console.log
-      ❄️  [CACHE] MISS for key: api-movies-a:2
-
-      at log (src/lib/apiCache.js:39:11)
-
-    console.log
-      💾 [CACHE] Stored key: api-movies-a:2 (TTL: 4h, fetch: 0ms)
-
-      at log (src/lib/apiCache.js:65:15)
-
-    console.log
-      Cleared cache for key: api-movies-a:1
-
-      at log (src/lib/apiCache.js:109:17)
-          at Array.forEach (<anonymous>)
-
-    console.log
-      Cleared cache for key: api-movies-a:2
-
-      at log (src/lib/apiCache.js:109:17)
-          at Array.forEach (<anonymous>)
-
-    console.log
-      ❄️  [CACHE] MISS for key: api-movies-a:1
-
-      at log (src/lib/apiCache.js:39:11)
-
-    console.log
-      💾 [CACHE] Stored key: api-movies-a:1 (TTL: 4h, fetch: 0ms)
-
-      at log (src/lib/apiCache.js:65:15)
-
-    console.log
-      ❄️  [CACHE] MISS for key: api-movies-a:2
-
-      at log (src/lib/apiCache.js:39:11)
-
-    console.log
-      💾 [CACHE] Stored key: api-movies-a:2 (TTL: 4h, fetch: 0ms)
-
-      at log (src/lib/apiCache.js:65:15)
-
-PASS src/scripts/migrateOpenLibraryBooksToGoogleBooks.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/lib/openlibrary.test.js
-PASS src/scripts/migrateAlbumsToIdTable.test.js
+PASS src/pages/api/reviews/albums/add.test.js
+PASS src/scripts/migrateBooksToIdTable.test.js
   ● Console
 
     console.log
@@ -1165,10 +1166,38 @@ PASS src/scripts/migrateAlbumsToIdTable.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/pages/api/reviews/tv/update.test.js
+PASS src/lib/chartTime.test.js
 PASS src/lib/reviewText.test.js
-PASS src/lib/hotTakes.test.js
-PASS src/lib/workoutMetrics.test.js
+PASS src/lib/dateFormat.test.js
+PASS src/pages/api/vinyl/add.test.js
+PASS src/lib/openlibrary.test.js
+PASS src/pages/api/books/search.test.js
+  ● Console
+
+    console.warn
+      ⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production
+
+      47 |     url.searchParams.set('key', apiKey);
+      48 |   } else {
+    > 49 |     console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
+         |             ^
+      50 |   }
+      51 |
+      52 |   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
+
+      at warn (src/pages/api/books/search.js:49:13)
+      at searchGoogleBooks (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:37:18)
+
+    console.log
+      📚 [GoogleBooks] Searching books: title="Dune"
+
+      at log (src/pages/api/books/search.js:52:11)
+
+PASS src/pages/api/reviews/movies/add.test.js
+PASS src/lib/lastfm.test.js
 PASS src/pages/api/lastfm/album-search.test.js
   ● Console
 
@@ -1182,46 +1211,15 @@ PASS src/pages/api/lastfm/album-search.test.js
 
       at log (src/pages/api/lastfm/album-search.js:48:15)
 
-PASS src/pages/api/tmdb/search.test.js
-  ● Console
-
-    console.log
-      🎬 [TMDB] Searching movie: "Dune"
-
-      at log (src/pages/api/tmdb/search.js:41:15)
-
-PASS src/lib/rateLimit.test.js
-  ● Console
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.1921326437799744 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-a-0.043198618740693195 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.7554853418915779 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.7554853418915779 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-PASS src/lib/masonryColumns.test.js
-PASS src/lib/backfillEligibility.test.js
+PASS src/lib/scrollFade.test.js
+PASS src/lib/dynamo.test.js
 PASS src/lib/tmdb.test.js
-PASS src/lib/pagination.test.js
+PASS src/lib/masonryColumns.test.js
 PASS src/scripts/migrateWorkoutData.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
@@ -1321,11 +1319,13 @@ PASS src/scripts/migrateWorkoutData.test.js
 
       at log (src/scripts/migrateWorkoutData.js:85:11)
 
+PASS src/lib/hotTakes.test.js
+PASS src/lib/googlebooks.test.js
 
 Test Suites: 73 passed, 73 total
 Tests:       401 passed, 401 total
 Snapshots:   0 total
-Time:        3.027 s
+Time:        3.08 s
 Ran all test suites.
 
 > ryankrol.co.uk@1.0.0 build
@@ -1356,7 +1356,7 @@ Ran all test suites.
 
 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
    Creating an optimized production build ...
- ✓ Compiled successfully in 1233ms
+ ✓ Compiled successfully in 1630ms
    Collecting page data ...
    Generating static pages (0/37) ...
    Generating static pages (9/37) 
@@ -1423,11 +1423,11 @@ Route (pages)                                 Size  First Load JS
 ├ ƒ /api/workouts/backfill                     0 B         102 kB
 ├ ƒ /api/workouts/stats                        0 B         102 kB
 ├ ○ /dev/cache                             1.94 kB         104 kB
-├ ○ /exercises/[exerciseName] (683 ms)     5.14 kB         188 kB
+├ ○ /exercises/[exerciseName] (766 ms)     5.14 kB         188 kB
 ├ ○ /hot-takes                             3.52 kB         106 kB
 ├ ○ /hot-takes/add                         1.02 kB         103 kB
 ├ ○ /listening                             1.65 kB         104 kB
-├ ○ /projects (683 ms)                     3.14 kB         105 kB
+├ ○ /projects                              3.14 kB         105 kB
 ├ ○ /reviews/albums                        4.61 kB         149 kB
 ├ ○ /reviews/albums/add                     2.3 kB         109 kB
 ├ ○ /reviews/albums/backfill               1.69 kB         109 kB
@@ -1436,30 +1436,30 @@ Route (pages)                                 Size  First Load JS
 ├ ○ /reviews/books                         4.58 kB         149 kB
 ├ ○ /reviews/books/add                     5.88 kB         108 kB
 ├ ○ /reviews/books/backfill                1.68 kB         109 kB
-├ ○ /reviews/books/edit (683 ms)           5.88 kB         150 kB
+├ ○ /reviews/books/edit (770 ms)           5.88 kB         150 kB
 ├ ○ /reviews/books/edit/[id]               2.27 kB         109 kB
-├ ○ /reviews/movies                        4.55 kB         149 kB
+├ ○ /reviews/movies (769 ms)               4.55 kB         149 kB
 ├ ○ /reviews/movies/add                    1.22 kB         108 kB
 ├ ○ /reviews/movies/backfill                1.7 kB         109 kB
-├ ○ /reviews/movies/edit                   5.89 kB         150 kB
+├ ○ /reviews/movies/edit (769 ms)          5.89 kB         150 kB
 ├ ○ /reviews/movies/edit/[id]              2.33 kB         109 kB
-├ ○ /reviews/perfumes (683 ms)             1.55 kB         149 kB
+├ ○ /reviews/perfumes                      1.55 kB         149 kB
 ├ ○ /reviews/perfumes/add                  3.38 kB         106 kB
-├ ○ /reviews/perfumes/edit (684 ms)          796 B         148 kB
+├ ○ /reviews/perfumes/edit                   796 B         148 kB
 ├ ○ /reviews/perfumes/edit/[id]            3.69 kB         106 kB
-├ ○ /reviews/tv (683 ms)                   4.55 kB         149 kB
-├ ○ /reviews/tv/add                        1.21 kB         108 kB
-├ ○ /reviews/tv/backfill (683 ms)           1.7 kB         109 kB
+├ ○ /reviews/tv                            4.55 kB         149 kB
+├ ○ /reviews/tv/add (770 ms)               1.21 kB         108 kB
+├ ○ /reviews/tv/backfill                    1.7 kB         109 kB
 ├ ○ /reviews/tv/edit                       5.89 kB         150 kB
 ├ ○ /reviews/tv/edit/[id]                  2.33 kB         109 kB
-├ ○ /vinyl                                 2.17 kB         105 kB
+├ ○ /vinyl (770 ms)                        2.17 kB         105 kB
 ├ ○ /vinyl/add                             1.51 kB         108 kB
-├ ○ /workouts (683 ms)                     5.52 kB         188 kB
-└ ○ /workouts/[id]                          2.3 kB         105 kB
+├ ○ /workouts (769 ms)                     5.52 kB         188 kB
+└ ○ /workouts/[id] (766 ms)                 2.3 kB         105 kB
 + First Load JS shared by all               113 kB
   ├ chunks/framework-b1e5f14688f9ffe6.js   57.7 kB
   ├ chunks/main-0e21001e2c71e4ad.js        36.8 kB
-  ├ css/0a6453f353f69343.css               10.5 kB
+  ├ css/0a8857759ac446c8.css               10.5 kB
   └ other shared chunks (total)            7.86 kB
 
 ○  (Static)   prerendered as static content

@@ -8998,7 +8998,7 @@
     {
       "id": "T324",
       "title": "Standardize .collection-review-header controls to always stack left-aligned below the title",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
