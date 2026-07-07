@@ -9049,6 +9049,318 @@
           "cross-cutting"
         ]
       }
+    },
+    {
+      "id": "T326",
+      "title": "Fix /reviews/albums/edit to use MasonryColumns instead of a plain map",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "albums",
+        "layout-bug",
+        "masonry"
+      ],
+      "scope": [
+        "src/pages/reviews/albums/edit.js"
+      ],
+      "design": "src/pages/reviews/albums/edit.js currently (lines 62-81) renders `{albums.map((album) => (<div key={album.id} className=\"review-edit-card\">...</div>))}` inside a bare `<div className=\"square-cover-grid\">` — no `MasonryColumns` import at all. That's the bug: `.square-cover-grid` (globals.css:402-412) is a non-wrapping flex row meant to hold exactly `columnCount` `.square-cover-grid-col` children, not one flex child per card, so every album becomes its own item in one never-wrapping row. Fix by matching src/pages/reviews/books/edit.js's already-correct pattern exactly: import `MasonryColumns` from `'../../../components/MasonryColumns'` and `useResponsiveColumnCount` from `'../../../hooks/useResponsiveColumnCount'`, add `const columnCount = useResponsiveColumnCount(2, 700);` inside the component, then replace the `<div className=\"square-cover-grid\">{albums.map(...)}</div>` block with `<MasonryColumns items={albums} columnCount={columnCount} className=\"square-cover-grid\" columnClassName=\"square-cover-grid-col\" renderItem={(album) => (<div key={album.id} className=\"review-edit-card\">...same Edit-link header + <ReviewCard item={album} type=\"album\" isLast={false} styleVariant=\"square-cover\" />...</div>)} />` — i.e. move the existing per-card JSX (Edit link header + ReviewCard) unchanged into `renderItem`, keeping `className=\"square-cover-grid\"`/`columnClassName=\"square-cover-grid-col\"` (albums' own grid classes — do NOT copy books' `spine-cover-list` classes). No other file needs to change; globals.css already defines the classes correctly (proven by albums/index.js using them correctly today).",
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T326.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T327",
+      "title": "Cap backfill candidates at 3 and add a page-level 'Apply all selections' button to BulkBackfillList",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "backfill",
+        "movies",
+        "tv",
+        "books",
+        "albums",
+        "component"
+      ],
+      "scope": [
+        "src/components/BulkBackfillList.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T327.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T328",
+      "title": "Re-fix: unify .review-edit-header + card body into one bordered box (T306's own defect never actually removed)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "review-edit-header",
+        "re-fix"
+      ],
+      "scope": [
+        "src/styles/globals.css",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": "Re-verified directly against current code (2026-07-07): globals.css:1390-1404 today still has exactly the defect idea #7 diagnosed — `.review-edit-card` (1390-1393) has no border/radius/background of its own (just a flex column), `.review-edit-header` (1395-1404) has `margin-bottom: 0.75rem` and ONLY rounds its top corners (`border-radius: var(--radius-card) var(--radius-card) 0 0`). Read ReviewCard.js and Variant6Hybrid.js plus their variant CSS: the four card bodies actually rendered under the header — `.spine-cover-card` (books, globals.css:257-265), `.square-cover-card` (albums, :339-347), `.poster-banner-card` (movies/tv, :184-193), `.perfume-v6-card` (perfumes, :3549-3557) — EACH independently declares its OWN full `border` + `border-radius: var(--radius-card)` (poster-banner and square-cover also add their own `box-shadow`), confirming the idea's hypothesis: the card's visible border comes entirely from the inner variant component, not from `.review-edit-card`. Confirmed the JSX nesting in all 5 edit.js pages is uniform: `<div class=\"review-edit-card\"><div class=\"review-edit-header\">...Edit link...</div><ReviewCard styleVariant=.../ or <Variant6Hybrid/></div>`. Important refinement beyond the idea's own text: simply deleting `margin-bottom` is NOT sufficient on its own. Because the header only rounds its TOP corners (bottom corners square) while the inner variant card below it rounds ALL FOUR of its own corners, removing just the margin would still produce a visible seam — a square-bottomed header sitting directly above a card whose top corners are independently rounded, plus two separate border lines meeting edge-to-edge (header's border-bottom immediately touching the card's own full top border) — which reads as a mismatched double-border/stepped-corner artifact, not a clean single box. That matches the screenshot's 'separate rounded corners' complaint, not just the gap.\n\nConcrete fix (CSS-only, no JS/component changes needed): make `.review-edit-card` itself the single unified box — give IT the `border`, `border-radius: var(--radius-card)`, a background, and `overflow: hidden` (so a rounded outer edge clips both the header strip and whatever the inner variant renders to follow one continuous rounded shape). On `.review-edit-header`: delete `margin-bottom: 0.75rem` entirely (flush against the content below) and drop its own `border-radius` (no longer needed — the parent's `overflow:hidden` + border-radius will clip the header's square top corners to match the outer shape); keep its `border-bottom` as the internal divider line between the header strip and the card body. Then add scoped descendant overrides so the nested variant card stops drawing its OWN competing border/radius/shadow (which would otherwise double up against the new outer border), e.g. a rule targeting `.review-edit-card .spine-cover-card, .review-edit-card .square-cover-card, .review-edit-card .poster-banner-card, .review-edit-card .perfume-v6-card` that resets `border: none; border-radius: 0; box-shadow: none;` — this is scoped strictly under `.review-edit-card` so it does NOT affect these same classes on the public (non-edit) review list pages, where they still need their own full border. This avoids touching ReviewCard.js/Variant6Hybrid.js at all — verified while reading them that neither needs a new prop; the override lives entirely in globals.css as a nesting-scoped selector.\n\nAlso in scope: `scripts/_visual-harness.mjs`'s `PAGES` array currently has ZERO entries for any `/reviews/<type>/edit` route (confirmed via grep — only the public `/reviews/<type>` index pages are screenshotted today). This is a second, previously-unnoticed gap: even a correct fix here could never have been visually confirmed by the harness because the harness never looked at these pages in the first place, which likely contributed to the original defect riding through unnoticed. Add 5 new `PAGES` entries (`reviews-movies-edit`, `reviews-tv-edit`, `reviews-books-edit`, `reviews-albums-edit`, `reviews-perfumes-edit`, paths `/reviews/<type>/edit`, each `waitFor: ['.review-edit-card']`, `covers` listing that page file + `globals.css`) so this fix (and any future change to this pattern) has an actual screenshot to check against, per this file's own documented convention ('a new page/API-shape → update PAGES/fixtures').",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T328.md",
+      "facets": {
+        "layer": "style",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T329",
+      "title": "Convert the 'Session volume' chart on exercise pages from a bar chart to a line chart",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "charts",
+        "exercise-page",
+        "ui"
+      ],
+      "scope": [
+        "src/components/ExerciseProgressCharts.js"
+      ],
+      "design": "In src/components/ExerciseProgressCharts.js, reshape `volumeChartData` (currently ~lines 172-183, Bar-shaped: `backgroundColor` as a per-point array highlighting the LAST bar in chartGrape vs chartIndigo for every other bar, plus `borderRadius: 4`) into the same Line shape already used by `oneRMChartData`/`maxWeightChartData` (~lines 146-170): flat `borderColor: chartIndigo`, `backgroundColor: gradientFill(chartIndigo)`, `borderWidth: 2`, `fill: true` — a plain single-color line with NO special treatment for the last point (the owner confirmed dropping the last-session highlight entirely, matching the two sibling charts exactly). Swap `<Bar data={volumeChartData} .../>` for `<Line data={volumeChartData} .../>` in the 'Session volume' `ChartCard` (~line 213). After this change `<Bar>`/`BarElement` may become unused in this file — remove the now-dead `Bar` import from 'react-chartjs-2' and the `BarElement` import/registration from 'chart.js' if nothing else in this file still needs them (double-check `oneRMChartData`/`maxWeightChartData` don't rely on `BarElement`; they don't — they're Line-only). Scope is confirmed as just the chart-shape conversion — no axis/tooltip formatting or insights-text changes. Do NOT touch src/components/ProgrammeOverviewCharts.js — its bar chart (the /workouts page's aggregated programme-stats block, e.g. workout frequency per month) is a DIFFERENT, intentionally-aggregated category-scale chart per this project's own documented convention (root CLAUDE.md: 'aggregated bar charts, e.g. frequency-by-month with string labels, stay as category scale' is an explicit exception to the sitewide time-scale rule) — it is out of scope for this task regardless of how similar 'a Bar chart in this codebase' sounds.",
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T329.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T330",
+      "title": "Add skeleton/wireframe loading state to the home page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "home",
+        "loading-state",
+        "ux"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/components/HomeSkeleton.js",
+        "src/styles/globals.css"
+      ],
+      "design": "OWNER-CONFIRMED: option B — true independent per-section loading, matching the owner's literal wording ('wireframe for each of the cards... loaded lazily into those wireframes'), not a single aggregate flag. Split the single batched `Promise.all` in src/pages/index.js's useEffect (currently ~lines 49-78, across 7 endpoints: movies/tv/books/albums/vinyl/workouts-stats/hot-takes) into 7 INDEPENDENT `fetch` calls, each firing immediately (not sequenced/awaited against each other) and each setting its own piece of state AND its own loading flag as soon as it resolves (e.g. `moviesLoading`/`tvLoading`/`booksLoading`/`albumsLoading`/`vinylLoading`/`workoutStatsLoading`/`hotTakesLoading`, default true, each flipped false independently in its own `.then()`/async fetch as it completes) — do not keep a single 'wait for everything' gate. Map each home-page SECTION to whichever fetch(es) it actually depends on, verified directly against the current code (do not guess): (a) each of the six stat blocks (Movies/TV/Books/Albums/Vinyl/Workouts counts) almost certainly depends on exactly ONE fetch each (e.g. the Movies stat block shows a skeleton only while `moviesLoading`, independent of the other five) — confirm this 1:1 mapping by reading how each stat block's count is actually computed before implementing; (b) 'The collection wall' mosaic samples from multiple review types (movies/tv/books/albums/vinyl per this repo's own docs) — read the current code to find its EXACT set of dependencies (likely all 5 review/vinyl fetches) and show its skeleton until ALL of them have resolved, since a valid random sample needs the full pool; (c) 'Latest takes' depends on the hot-takes fetch only; (d) the rail column's workout-stats panel depends on the workouts-stats fetch; the shelf panel and hot-takes panel's exact data source(s) must be read from the current code (don't assume — `shelfItems` may derive from vinyl, albums, or a combination) and mapped to the correct loading flag(s) accordingly. Each section shows ITS OWN skeleton independently and reveals its real content the instant its own dependency (or dependencies) resolve — sections do not wait for each other. The hero/tagline/NowPlaying section is unaffected (independent data flow, no fetch dependency here). Prefer a shared skeleton component (e.g. a generic shimmer/pulse block, `src/components/HomeSkeleton.js`, following the existing `StatBlock`/`CoverTile` presentational-component pattern) reused across shapes (stat-block skeleton, tile-grid skeleton, card-row skeleton) rather than one-off inline markup per section. Style from existing Collection CSS custom properties (globals.css, no new hardcoded colours) with a subtle pulse/shimmer animation guarded by `prefers-reduced-motion` (see CRTOverlay/MatrixRain for the existing guard pattern).",
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T330.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T331",
+      "title": "Build 2-4 visual style variants of the restyled PR medal pill on a dev-only comparison page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "badge",
+        "chooser"
+      ],
+      "scope": [
+        "src/pages/dev/pr-badge-variants.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T331.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T332",
+      "title": "Owner picks a winning PR-medal-pill variant from the chooser page",
+      "status": "pending",
+      "dependsOn": [
+        "T331"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T332.md"
+    },
+    {
+      "id": "T333",
+      "title": "Hardcode the chosen PR-medal-pill variant into PrBadge and remove the dev chooser page",
+      "status": "pending",
+      "dependsOn": [
+        "T332"
+      ],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "badge"
+      ],
+      "scope": [
+        "src/components/Badge.js",
+        "src/styles/globals.css",
+        "src/pages/workouts/index.js",
+        "src/pages/workouts/[id].js",
+        "src/pages/dev/pr-badge-variants.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T333.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T334",
+      "title": "Add 'What I own' tooltip above the perfume ownership pill",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "tooltip"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js"
+      ],
+      "design": "Wrap the existing ownership Badge (`<Badge accentColor=\"var(--accent-perfumes)\" variant=\"outline\">{item.ownership}</Badge>`, ~line 46, inside the `item.ownership && (...)` block) in the already-imported `Tooltip` component: `<Tooltip label=\"What I own\">...</Tooltip>`. Do NOT pass a `position` prop and do NOT add a new className — Tooltip's default `position=\"top\"` already renders the bubble above the wrapped element (see globals.css `.tooltip-bubble { position: absolute; bottom: 100%; }`, with `--bottom` as the only opt-in override, unused here), matching the two existing Tooltip usages in this same file (Longevity/Projection scale bars, ~lines 83 and 99) which also omit `position`. No change to Tooltip.js or globals.css is needed: the T318 width-collapse bug (a `width:100%` child collapsing inside `.tooltip-wrapper`'s indefinite-width `display:inline-flex`) does not apply here because the Badge (`.collection-badge`) is content-sized with no `width:100%` styling anywhere in its CSS.",
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T334.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T335",
+      "title": "Force filter-pill rows onto their own line below search+sort inside .collection-review-controls",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "style",
+        "collection-redesign",
+        "reviews",
+        "projects",
+        "vinyl",
+        "workouts"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T335.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T336",
+      "title": "Use shared formatEnglishDate on the workout detail page's date StatBlock",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "date-format"
+      ],
+      "scope": [
+        "src/pages/workouts/[id].js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T336.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T337",
+      "title": "Use shared formatEnglishDate on the per-exercise history table's session dates",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "exercises",
+        "date-format"
+      ],
+      "scope": [
+        "src/pages/exercises/[exerciseName].js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T337.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
     }
   ]
 }
