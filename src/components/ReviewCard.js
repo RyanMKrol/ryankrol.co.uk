@@ -77,7 +77,9 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
           <p className="spine-cover-meta">{metaParts.join(' · ')}</p>
         )}
         {fullText && (
-          <p className="spine-cover-snippet">{expanded ? fullText : previewText}</p>
+          <div className="spine-cover-snippet">
+            <Markdown>{expanded ? fullText : previewText}</Markdown>
+          </div>
         )}
         {truncated && (
           <button
