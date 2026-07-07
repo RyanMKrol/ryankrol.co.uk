@@ -4,14 +4,13 @@ import {
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   Title,
   Tooltip,
   Legend,
   Filler
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import { Line, Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import useChartTheme from '../hooks/useChartTheme';
 import { toTimeSeries, timeScaleOptions } from '../lib/chartTime';
 
@@ -20,7 +19,6 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -47,7 +45,7 @@ function gradientFill(hexColor) {
 export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }) {
   const {
     gridColor, textColor, fontFamily,
-    chartCoral, chartIndigo, chartGrape, chartMarigold,
+    chartCoral, chartIndigo, chartMarigold,
     tooltipBg, tooltipTitle, tooltipBody, tooltipBorder
   } = useChartTheme();
 
@@ -174,10 +172,10 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
       {
         label: 'Session Volume (kg)',
         data: volumeData,
-        backgroundColor: volumeData.map((_, index) =>
-          index === volumeData.length - 1 ? chartGrape : chartIndigo
-        ),
-        borderRadius: 4
+        borderColor: chartIndigo,
+        backgroundColor: gradientFill(chartIndigo),
+        borderWidth: 2,
+        fill: true
       }
     ]
   };
@@ -210,7 +208,7 @@ export default function ExerciseProgressCharts({ exerciseHistory, exerciseName }
         </ChartCard>
 
         <ChartCard title="Session volume">
-          <Bar data={volumeChartData} options={chartOptions} />
+          <Line data={volumeChartData} options={chartOptions} />
         </ChartCard>
 
         <ChartCard title="Max weight progress">
