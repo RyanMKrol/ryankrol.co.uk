@@ -9024,7 +9024,7 @@
     {
       "id": "T325",
       "title": "Re-fix: restore Markdown rendering on book review cards (spine-cover), broken by T279",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
