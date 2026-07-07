@@ -8874,7 +8874,7 @@
     {
       "id": "T319",
       "title": "Give perfume ownership pill a white background + border, without affecting other Badge variant=\"soft\" usages",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
