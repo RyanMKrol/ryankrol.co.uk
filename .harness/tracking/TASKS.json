@@ -8818,7 +8818,7 @@
     {
       "id": "T317",
       "title": "Add mouse click-and-drag scrolling to the header nav pill row",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
