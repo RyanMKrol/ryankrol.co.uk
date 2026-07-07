@@ -8847,7 +8847,7 @@
     {
       "id": "T318",
       "title": "Fix invisible Longevity/Projection bars on perfume review card (T301 Tooltip-wrap regression)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
