@@ -8950,7 +8950,7 @@
     {
       "id": "T322",
       "title": "Drop the 'PR' suffix from PR pill labels",
-      "status": "pending",
+      "status": "blocked",
       "dependsOn": [],
       "gate": null,
       "tags": [

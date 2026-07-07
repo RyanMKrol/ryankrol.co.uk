@@ -39,3 +39,4 @@
 {"id":"T318","ts":"2026-07-07T20:14:38Z","kind":"empty-diff","rung":1,"attempt":1,"model":"claude-sonnet-5","effort":"medium","facets":{"layer":"ui","workType":"bugfix","risk":[]},"detail":""}
 {"id":"T318","ts":"2026-07-07T20:17:56Z","kind":"empty-diff","rung":2,"attempt":0,"model":"claude-sonnet-5","effort":"high","facets":{"layer":"ui","workType":"bugfix","risk":[]},"detail":""}
 {"id":"T318","ts":"2026-07-07T20:22:04Z","kind":"empty-diff","rung":2,"attempt":1,"model":"claude-sonnet-5","effort":"high","facets":{"layer":"ui","workType":"bugfix","risk":[]},"detail":""}
+{"id":"T322","ts":"2026-07-07T20:43:04Z","kind":"agent-blocked","rung":0,"attempt":0,"model":"claude-sonnet-5","effort":"low","facets":{"layer":"page","workType":"bugfix","risk":[]},"detail":"needs src/components/Badge.js (out of scope) to add accessible aria-label passthrough on PrBadge"}
