@@ -9114,7 +9114,7 @@
     {
       "id": "T328",
       "title": "Re-fix: unify .review-edit-header + card body into one bordered box (T306's own defect never actually removed)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
