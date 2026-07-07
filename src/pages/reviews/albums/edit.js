@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReviewCard from '../../../components/ReviewCard';
+import MasonryColumns from '../../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 
 export default function EditAlbums() {
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnCount = useResponsiveColumnCount(2, 700);
 
   useEffect(() => {
     async function fetchAlbums() {
@@ -59,8 +62,12 @@ export default function EditAlbums() {
         Backfill metadata
       </Link>
 
-      <div className="square-cover-grid">
-        {albums.map((album) => (
+      <MasonryColumns
+        items={albums}
+        columnCount={columnCount}
+        className="square-cover-grid"
+        columnClassName="square-cover-grid-col"
+        renderItem={(album) => (
           <div key={album.id} className="review-edit-card">
             <div className="review-edit-header">
               <Link
@@ -77,8 +84,8 @@ export default function EditAlbums() {
               styleVariant="square-cover"
             />
           </div>
-        ))}
-      </div>
+        )}
+      />
 
       <style jsx>{`
         .backfill-link {
