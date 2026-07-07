@@ -43,7 +43,7 @@ export default function Variant6Hybrid({ item }) {
             <Badge accentColor="var(--accent-perfumes)">{item.type}</Badge>
           )}
           {item.ownership && (
-            <Badge accentColor="var(--accent-perfumes)" variant="soft">{item.ownership}</Badge>
+            <Badge accentColor="var(--accent-perfumes)" variant="outline">{item.ownership}</Badge>
           )}
         </div>
       </div>

@@ -3,6 +3,7 @@
  * chips (EDP/EDT), GitHub topic pills.
  *
  * variant: "solid" (filled, white text) | "soft" (tinted background, colored text)
+ *   | "outline" (white/card background, colored text, hairline border)
  * mono: use the Space Mono small-caps treatment (default) — GitHub topic pills
  * use lowercase Nunito instead, so pass mono={false} for those.
  */
@@ -10,9 +11,14 @@ export default function Badge({
   children, color, accentColor, variant = 'solid', mono = true, className = '', tabIndex,
 }) {
   const fill = accentColor || color;
-  const style = variant === 'soft'
-    ? { backgroundColor: `${fill}1A`, color: fill }
-    : { backgroundColor: fill, color: '#FFFFFF' };
+  let style;
+  if (variant === 'soft') {
+    style = { backgroundColor: `${fill}1A`, color: fill };
+  } else if (variant === 'outline') {
+    style = { backgroundColor: 'var(--color-card)', color: fill, border: '1px solid var(--color-border-strong)' };
+  } else {
+    style = { backgroundColor: fill, color: '#FFFFFF' };
+  }
 
   const baseClassName = mono ? 'collection-badge' : 'collection-badge collection-badge-plain';
 
