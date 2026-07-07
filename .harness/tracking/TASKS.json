@@ -8974,7 +8974,7 @@
     {
       "id": "T323",
       "title": "Normalize exercise-row height on workouts list regardless of PR pill",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
