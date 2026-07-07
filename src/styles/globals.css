@@ -2724,14 +2724,11 @@ body::before {
 
 .pr-badge {
   gap: 0.3rem;
-  border: 1px solid transparent;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  background-color: color-mix(in srgb, currentColor 22%, transparent);
+  border: 1px solid currentColor;
 }
 
-.pr-badge:hover,
 .pr-badge:focus-visible {
-  background-color: color-mix(in srgb, currentColor 22%, transparent);
-  border-color: currentColor;
   outline: none;
 }
 
