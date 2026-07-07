@@ -8794,7 +8794,7 @@
     {
       "id": "T316",
       "title": "Fix archived-tag straight-edge gap on /projects (revert redundant top/left inset added by T314)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [

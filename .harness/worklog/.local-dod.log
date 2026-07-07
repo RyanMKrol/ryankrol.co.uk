@@ -1,0 +1,1299 @@
+
+> ryankrol.co.uk@1.0.0 lint
+> eslint .
+
+
+/Users/ryankrol/Development/ryankrol.co.uk/src/components/CoverTile.js
+  59:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/ryankrol/Development/ryankrol.co.uk/src/pages/dev/cache.js
+  110:6  warning  React Hook useEffect has a missing dependency: 'fetchStats'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/ryankrol/Development/ryankrol.co.uk/src/pages/index.js
+  193:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/ryankrol/Development/ryankrol.co.uk/src/pages/listening/index.js
+  90:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/ryankrol/Development/ryankrol.co.uk/src/pages/reviews/movies/edit/[id].js
+  260:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/ryankrol/Development/ryankrol.co.uk/src/pages/reviews/tv/edit/[id].js
+  260:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+✖ 6 problems (0 errors, 6 warnings)
+
+
+> ryankrol.co.uk@1.0.0 test
+> jest
+
+PASS src/tests/workoutsIndex.test.js
+PASS src/components/Markdown.test.js
+PASS src/components/StarRating.test.js
+PASS src/components/SortButtons.test.js
+PASS src/components/Pagination.test.js
+PASS src/components/MarkdownEditor.test.js
+PASS src/pages/api/reviews/perfumes/update.test.js
+PASS src/__tests__/pages/reviews/albums/edit.test.js
+PASS src/scripts/migrateBooksToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/auditWorkouts.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 2 stored, 0 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 0 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Workout already exists, skipping
+
+      at log (src/scripts/auditWorkouts.js:142:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 1 stored, 1 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 1 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/1] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+PASS test/pages/workouts/index.test.js
+PASS src/pages/api/reviews/books/update.test.js
+PASS src/scripts/migrateAlbumsToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/migrateTvToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/__tests__/pages/projects/index.test.js
+  ● Console
+
+    console.error
+      Each child in a list should have a unique "key" prop.
+      
+      Check the render method of `MasonryColumns`. See https://react.dev/link/warning-keys for more information.
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:24030:21
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at warnForMissingKey (node_modules/react-dom/cjs/react-dom-client.development.js:24029:11)
+      at warnOnInvalidKey (node_modules/react-dom/cjs/react-dom-client.development.js:7550:13)
+      at reconcileChildrenArray (node_modules/react-dom/cjs/react-dom-client.development.js:7631:31)
+      at reconcileChildFibersImpl (node_modules/react-dom/cjs/react-dom-client.development.js:7952:30)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:8057:33
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom-client.development.js:8621:13)
+      at beginWork (node_modules/react-dom/cjs/react-dom-client.development.js:10793:13)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at performWorkUntilDeadline (node_modules/scheduler/cjs/scheduler.development.js:45:48)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
+
+PASS src/__tests__/pages/reviews/books/edit.test.js
+PASS src/scripts/migrateMoviesToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/vinyl/add.test.js
+PASS src/__tests__/pages/reviews/albums/add.test.js
+PASS src/components/PillGroup.test.js
+PASS src/__tests__/pages/reviews/tv/edit.test.js
+PASS src/pages/api/reviews/movies/add.test.js
+PASS src/__tests__/pages/reviews/perfumes/edit.test.js
+PASS src/__tests__/pages/reviews/books/add.test.js
+PASS src/pages/api/reviews/books/add.test.js
+PASS src/lib/workoutBackfill.test.js
+  ● Console
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 1 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ✅ [BACKFILL] Stored workout in 0ms: Push Day
+
+      at log (src/lib/workoutBackfill.js:49:13)
+
+    console.log
+      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-1
+
+      at log (src/lib/workoutBackfill.js:50:13)
+
+    console.log
+      📊 [BACKFILL] Progress: 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:201:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 155ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      🗑️  [BACKFILL] New workouts found, clearing workout caches...
+
+      at log (src/lib/workoutBackfill.js:241:15)
+
+    console.log
+      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
+
+      at log (src/lib/workoutBackfill.js:246:15)
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 1 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ⚠️  [BACKFILL] Workout workout-1 already exists, skipping
+
+      at log (src/lib/workoutBackfill.js:62:17)
+
+    console.log
+      ⏭️  [BACKFILL] Consecutive existing: 1/10
+
+      at log (src/lib/workoutBackfill.js:204:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 155ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 0 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      ℹ️  [BACKFILL] No new workouts found, keeping existing cache
+
+      at log (src/lib/workoutBackfill.js:248:15)
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 1 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ⚠️  [BACKFILL] Workout workout-1 already exists, skipping
+
+      at log (src/lib/workoutBackfill.js:62:17)
+
+    console.log
+      ⏭️  [BACKFILL] Consecutive existing: 1/10
+
+      at log (src/lib/workoutBackfill.js:204:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 153ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 0 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      ℹ️  [BACKFILL] No new workouts found, keeping existing cache
+
+      at log (src/lib/workoutBackfill.js:248:15)
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 1 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      🩹 [BACKFILL] Workout workout-1 exists but is incomplete (missing exercises), healing...
+
+      at log (src/lib/workoutBackfill.js:66:15)
+
+    console.log
+      ✅ [BACKFILL] Healed incomplete workout workout-1
+
+      at log (src/lib/workoutBackfill.js:72:15)
+
+    console.log
+      📊 [BACKFILL] Progress: 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:201:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 152ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      🗑️  [BACKFILL] New workouts found, clearing workout caches...
+
+      at log (src/lib/workoutBackfill.js:241:15)
+
+    console.log
+      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
+
+      at log (src/lib/workoutBackfill.js:246:15)
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 2 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ✅ [BACKFILL] Stored workout in 0ms: Push Day
+
+      at log (src/lib/workoutBackfill.js:49:13)
+
+    console.log
+      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-1
+
+      at log (src/lib/workoutBackfill.js:50:13)
+
+    console.log
+      📊 [BACKFILL] Progress: 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:201:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-08: Push Day (workout-2)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-2
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-2)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ✅ [BACKFILL] Stored workout in 0ms: Push Day
+
+      at log (src/lib/workoutBackfill.js:49:13)
+
+    console.log
+      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-2
+
+      at log (src/lib/workoutBackfill.js:50:13)
+
+    console.log
+      📊 [BACKFILL] Progress: 2 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:201:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 307ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 2 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      🗑️  [BACKFILL] New workouts found, clearing workout caches...
+
+      at log (src/lib/workoutBackfill.js:241:15)
+
+    console.log
+      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
+
+      at log (src/lib/workoutBackfill.js:246:15)
+
+PASS src/__tests__/pages/reviews/tv/add.test.js
+PASS src/__tests__/pages/reviews/perfumes/add.test.js
+PASS src/lib/backfillQueue.test.js
+PASS src/scripts/backfillMissingExerciseRows.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/backfillPersonalBests.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/components/NowPlaying.test.js
+PASS src/pages/api/github/repos.test.js
+  ● Console
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:81:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:106:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:128:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:165:20)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:181:20)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:20)
+
+    console.warn
+      ⚠️ [GitHub] commit-count fetch failed for testuser/public-repo: 403
+
+       98 |             const commitsResponse = await fetch(commitsUrl, { headers });
+       99 |             if (!commitsResponse.ok) {
+    > 100 |               console.warn(`⚠️ [GitHub] commit-count fetch failed for ${repo.full_name}: ${commitsResponse.status}`);
+          |                       ^
+      101 |               return { ...repo, commitCount: null };
+      102 |             }
+      103 |             const linkHeader = commitsResponse.headers.get('link');
+
+      at warn (src/pages/api/github/repos.js:100:23)
+          at async Promise.all (index 0)
+      at src/pages/api/github/repos.js:94:37
+      at handler (src/pages/api/github/repos.js:39:19)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:7)
+
+PASS src/pages/api/books/search.test.js
+  ● Console
+
+    console.warn
+      ⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production
+
+      47 |     url.searchParams.set('key', apiKey);
+      48 |   } else {
+    > 49 |     console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
+         |             ^
+      50 |   }
+      51 |
+      52 |   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
+
+      at warn (src/pages/api/books/search.js:49:13)
+      at searchGoogleBooks (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:37:18)
+
+    console.log
+      📚 [GoogleBooks] Searching books: title="Dune"
+
+      at log (src/pages/api/books/search.js:52:11)
+
+PASS src/pages/api/reviews/tv/update.test.js
+PASS src/components/Header.test.js
+  ● Console
+
+    console.error
+      An update to NowPlaying inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      13 |         if (response.ok) {
+      14 |           const data = await response.json();
+    > 15 |           setTrack(data);
+         |           ^
+      16 |         } else {
+      17 |           setError('Failed to fetch track');
+      18 |         }
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:16023:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:16022:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:14396:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:6969:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:6927:7)
+      at setTrack (src/components/NowPlaying.js:15:11)
+
+    console.error
+      An update to NowPlaying inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      20 |         setError('Error fetching current track');
+      21 |       } finally {
+    > 22 |         setLoading(false);
+         |         ^
+      23 |       }
+      24 |     }
+      25 |
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:16023:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:16022:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:14396:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:6969:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:6927:7)
+      at setLoading (src/components/NowPlaying.js:22:9)
+
+PASS src/lib/googlebooks.test.js
+PASS src/scripts/migratePerfumeOwnership.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/reviews/movies/update.test.js
+PASS src/lib/lastfm.test.js
+PASS src/components/CoverTile.test.js
+PASS src/pages/api/reviews/albums/add.test.js
+PASS src/lib/dateRange.test.js
+PASS src/scripts/migrateLegacyExerciseRows.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/tmdb/search.test.js
+  ● Console
+
+    console.log
+      🎬 [TMDB] Searching movie: "Dune"
+
+      at log (src/pages/api/tmdb/search.js:41:15)
+
+PASS src/__tests__/pages/reviews/movies/edit.test.js
+PASS src/scripts/migrateOpenLibraryBooksToGoogleBooks.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/__tests__/pages/reviews/movies/add.test.js
+PASS src/lib/programmeStats.test.js
+PASS src/pages/api/reviews/tv/add.test.js
+PASS src/lib/workoutPagination.test.js
+PASS src/components/perfumeVariants/Variant6Hybrid.test.js
+PASS src/lib/dateFormat.test.js
+PASS src/lib/reviewText.test.js
+PASS src/lib/hotTakes.test.js
+PASS src/lib/openlibrary.test.js
+PASS src/components/PerfumeCharacteristics.test.js
+PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/migrateWorkoutData.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+    console.log
+      💾 Starting to store 2 workouts in DynamoDB...
+
+      at log (src/scripts/migrateWorkoutData.js:67:11)
+
+    console.log
+      📝 Processing workout 1/2: "Push Day" (w1)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 1 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      📝 Processing workout 2/2: "Pull Day" (w2)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 1 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      
+      🎉 Migration completed!
+
+      at log (src/scripts/migrateWorkoutData.js:84:11)
+
+    console.log
+      📊 Summary: 2/2 workouts processed
+
+      at log (src/scripts/migrateWorkoutData.js:85:11)
+
+    console.log
+      💾 Starting to store 2 workouts in DynamoDB...
+
+      at log (src/scripts/migrateWorkoutData.js:67:11)
+
+    console.log
+      📝 Processing workout 1/2: "Push Day" (w1)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.error
+         ❌ Error processing workout w1: Error: boom
+          at Object.<anonymous> (/Users/ryankrol/Development/ryankrol.co.uk/src/scripts/migrateWorkoutData.test.js:28:30)
+          at Promise.then.completed (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at _runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:121:9)
+          at run (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:444:34)
+          at Object.worker (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/testWorker.js:106:12)
+
+      78 |       console.log(`   ✅ Processed workout with ${workout.exercises.length} exercises`);
+      79 |     } catch (error) {
+    > 80 |       console.error(`   ❌ Error processing workout ${workout.id}:`, error);
+         |               ^
+      81 |     }
+      82 |   }
+      83 |
+
+      at error (src/scripts/migrateWorkoutData.js:80:15)
+      at Object.<anonymous> (src/scripts/migrateWorkoutData.test.js:36:5)
+
+    console.log
+      📝 Processing workout 2/2: "Pull Day" (w2)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 0 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      
+      🎉 Migration completed!
+
+      at log (src/scripts/migrateWorkoutData.js:84:11)
+
+    console.log
+      📊 Summary: 1/2 workouts processed
+
+      at log (src/scripts/migrateWorkoutData.js:85:11)
+
+PASS src/pages/api/lastfm/album-search.test.js
+  ● Console
+
+    console.log
+      🎵 [Last.fm] Album search: "Dune"
+
+      at log (src/pages/api/lastfm/album-search.js:38:15)
+
+    console.log
+      ✅ [Last.fm] Album search done in 2ms
+
+      at log (src/pages/api/lastfm/album-search.js:48:15)
+
+PASS src/lib/backfillEligibility.test.js
+PASS src/lib/workoutQueries.test.js
+PASS src/lib/tmdb.test.js
+PASS src/lib/perfumes.test.js
+PASS src/lib/masonryColumns.test.js
+PASS src/lib/rateLimit.test.js
+  ● Console
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.3784206160916337 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-a-0.7382102499342427 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.6907365537003329 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.6907365537003329 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+PASS src/scripts/migrateVinylToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/lib/workoutMetrics.test.js
+PASS src/lib/apiCache.test.js
+  ● Console
+
+    console.log
+      Cleared cache for key: api-test-hit-id:1
+
+      at log (src/lib/apiCache.js:115:13)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-test-hit-id:1
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-test-hit-id:1 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      💰 [CACHE] HIT for key: api-test-hit-id:1
+
+      at log (src/lib/apiCache.js:35:13)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-test-clear-id:2
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-test-clear-id:2 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      Cleared cache for key: api-test-clear-id:2
+
+      at log (src/lib/apiCache.js:115:13)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-test-clear-id:2
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-test-clear-id:2 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-movies-a:1
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-movies-a:1 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-movies-a:2
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-movies-a:2 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      Cleared cache for key: api-movies-a:1
+
+      at log (src/lib/apiCache.js:109:17)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Cleared cache for key: api-movies-a:2
+
+      at log (src/lib/apiCache.js:109:17)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-movies-a:1
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-movies-a:1 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+    console.log
+      ❄️  [CACHE] MISS for key: api-movies-a:2
+
+      at log (src/lib/apiCache.js:39:11)
+
+    console.log
+      💾 [CACHE] Stored key: api-movies-a:2 (TTL: 4h, fetch: 0ms)
+
+      at log (src/lib/apiCache.js:65:15)
+
+PASS src/lib/chartTime.test.js
+PASS src/lib/dynamo.test.js
+PASS src/lib/scrollFade.test.js
+PASS src/lib/pagination.test.js
+
+Test Suites: 73 passed, 73 total
+Tests:       398 passed, 398 total
+Snapshots:   0 total
+Time:        3.609 s
+Ran all test suites.
+
+> ryankrol.co.uk@1.0.0 build
+> next build
+
+   ▲ Next.js 15.5.12
+   - Environments: .env.local
+
+   Linting and checking validity of types ...
+
+./src/components/CoverTile.js
+59:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/pages/dev/cache.js
+110:6  Warning: React Hook useEffect has a missing dependency: 'fetchStats'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/pages/index.js
+193:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/pages/listening/index.js
+90:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/pages/reviews/movies/edit/[id].js
+260:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/pages/reviews/tv/edit/[id].js
+260:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 1300ms
+   Collecting page data ...
+   Generating static pages (0/37) ...
+   Generating static pages (9/37) 
+   Generating static pages (18/37) 
+   Generating static pages (27/37) 
+ ✓ Generating static pages (37/37)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (pages)                                 Size  First Load JS
+┌ ○ /                                      3.52 kB         106 kB
+├   /_app                                      0 B         102 kB
+├ ○ /404                                     180 B         102 kB
+├ ƒ /api/books/search                          0 B         102 kB
+├ ƒ /api/books/search.test                     0 B         102 kB
+├ ƒ /api/dev/cache-bust                        0 B         102 kB
+├ ƒ /api/exercises/[workoutId]                 0 B         102 kB
+├ ƒ /api/exercises/history/[exerciseName]      0 B         102 kB
+├ ƒ /api/github/repos                          0 B         102 kB
+├ ƒ /api/github/repos.test                     0 B         102 kB
+├ ƒ /api/hot-takes                             0 B         102 kB
+├ ƒ /api/hot-takes/add                         0 B         102 kB
+├ ƒ /api/lastfm/album-info                     0 B         102 kB
+├ ƒ /api/lastfm/album-search                   0 B         102 kB
+├ ƒ /api/lastfm/album-search.test              0 B         102 kB
+├ ƒ /api/lastfm/now-playing                    0 B         102 kB
+├ ƒ /api/lastfm/top-albums                     0 B         102 kB
+├ ƒ /api/reviews/albums                        0 B         102 kB
+├ ƒ /api/reviews/albums/add                    0 B         102 kB
+├ ƒ /api/reviews/albums/add.test               0 B         102 kB
+├ ƒ /api/reviews/albums/delete                 0 B         102 kB
+├ ƒ /api/reviews/albums/update                 0 B         102 kB
+├ ƒ /api/reviews/books                         0 B         102 kB
+├ ƒ /api/reviews/books/add                     0 B         102 kB
+├ ƒ /api/reviews/books/add.test                0 B         102 kB
+├ ƒ /api/reviews/books/delete                  0 B         102 kB
+├ ƒ /api/reviews/books/update                  0 B         102 kB
+├ ƒ /api/reviews/books/update.test             0 B         102 kB
+├ ƒ /api/reviews/movies                        0 B         102 kB
+├ ƒ /api/reviews/movies/add                    0 B         102 kB
+├ ƒ /api/reviews/movies/add.test               0 B         102 kB
+├ ƒ /api/reviews/movies/delete                 0 B         102 kB
+├ ƒ /api/reviews/movies/update                 0 B         102 kB
+├ ƒ /api/reviews/movies/update.test            0 B         102 kB
+├ ƒ /api/reviews/perfumes                      0 B         102 kB
+├ ƒ /api/reviews/perfumes/add                  0 B         102 kB
+├ ƒ /api/reviews/perfumes/delete               0 B         102 kB
+├ ƒ /api/reviews/perfumes/update               0 B         102 kB
+├ ƒ /api/reviews/perfumes/update.test          0 B         102 kB
+├ ƒ /api/reviews/tv                            0 B         102 kB
+├ ƒ /api/reviews/tv/add                        0 B         102 kB
+├ ƒ /api/reviews/tv/add.test                   0 B         102 kB
+├ ƒ /api/reviews/tv/delete                     0 B         102 kB
+├ ƒ /api/reviews/tv/update                     0 B         102 kB
+├ ƒ /api/reviews/tv/update.test                0 B         102 kB
+├ ƒ /api/tmdb/search                           0 B         102 kB
+├ ƒ /api/tmdb/search.test                      0 B         102 kB
+├ ƒ /api/vinyl                                 0 B         102 kB
+├ ƒ /api/vinyl/add                             0 B         102 kB
+├ ƒ /api/vinyl/add.test                        0 B         102 kB
+├ ƒ /api/workouts                              0 B         102 kB
+├ ƒ /api/workouts/[id]                         0 B         102 kB
+├ ƒ /api/workouts/[id]/exercises               0 B         102 kB
+├ ƒ /api/workouts/backfill                     0 B         102 kB
+├ ƒ /api/workouts/stats                        0 B         102 kB
+├ ○ /dev/cache                             1.94 kB         104 kB
+├ ○ /exercises/[exerciseName] (749 ms)     5.14 kB         187 kB
+├ ○ /hot-takes                             3.52 kB         106 kB
+├ ○ /hot-takes/add                         1.02 kB         103 kB
+├ ○ /listening                             1.65 kB         104 kB
+├ ○ /projects                               3.1 kB         105 kB
+├ ○ /reviews/albums                        4.61 kB         148 kB
+├ ○ /reviews/albums/add                     2.3 kB         109 kB
+├ ○ /reviews/albums/backfill               1.69 kB         108 kB
+├ ○ /reviews/albums/edit                    5.6 kB         149 kB
+├ ○ /reviews/albums/edit/[id] (750 ms)     2.38 kB         109 kB
+├ ○ /reviews/books                         4.58 kB         148 kB
+├ ○ /reviews/books/add                     5.88 kB         108 kB
+├ ○ /reviews/books/backfill                1.68 kB         108 kB
+├ ○ /reviews/books/edit                    5.88 kB         150 kB
+├ ○ /reviews/books/edit/[id]               2.27 kB         109 kB
+├ ○ /reviews/movies (750 ms)               4.55 kB         148 kB
+├ ○ /reviews/movies/add                    1.22 kB         108 kB
+├ ○ /reviews/movies/backfill                1.7 kB         108 kB
+├ ○ /reviews/movies/edit (750 ms)          5.89 kB         150 kB
+├ ○ /reviews/movies/edit/[id]              2.33 kB         109 kB
+├ ○ /reviews/perfumes (750 ms)             1.55 kB         149 kB
+├ ○ /reviews/perfumes/add                  3.38 kB         105 kB
+├ ○ /reviews/perfumes/edit                   796 B         148 kB
+├ ○ /reviews/perfumes/edit/[id]            3.69 kB         106 kB
+├ ○ /reviews/tv (749 ms)                   4.55 kB         148 kB
+├ ○ /reviews/tv/add                        1.21 kB         108 kB
+├ ○ /reviews/tv/backfill                    1.7 kB         108 kB
+├ ○ /reviews/tv/edit                       5.89 kB         150 kB
+├ ○ /reviews/tv/edit/[id]                  2.33 kB         109 kB
+├ ○ /vinyl                                 2.17 kB         104 kB
+├ ○ /vinyl/add                             1.51 kB         108 kB
+├ ○ /workouts (750 ms)                     5.49 kB         188 kB
+└ ○ /workouts/[id] (749 ms)                2.27 kB         104 kB
++ First Load JS shared by all               112 kB
+  ├ chunks/framework-b1e5f14688f9ffe6.js   57.7 kB
+  ├ chunks/main-0e21001e2c71e4ad.js        36.8 kB
+  ├ css/0af33d68f8be8591.css               10.4 kB
+  └ other shared chunks (total)            7.55 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
