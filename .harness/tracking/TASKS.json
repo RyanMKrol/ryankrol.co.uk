@@ -8901,7 +8901,7 @@
     {
       "id": "T320",
       "title": "Fix PR badge misaligning set-row numeric column on workout detail page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
