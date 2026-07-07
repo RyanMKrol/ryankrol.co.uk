@@ -9142,7 +9142,7 @@
     {
       "id": "T329",
       "title": "Convert the 'Session volume' chart on exercise pages from a bar chart to a line chart",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
