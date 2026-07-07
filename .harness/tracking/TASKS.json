@@ -9020,6 +9020,35 @@
           "cross-cutting"
         ]
       }
+    },
+    {
+      "id": "T325",
+      "title": "Re-fix: restore Markdown rendering on book review cards (spine-cover), broken by T279",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "reviews"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/components/ReviewCard.test.js",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": "T273 (commit d4d5f3b) correctly wired `<Markdown>{getThoughts()}</Markdown>` into `SpineCoverCard` (the books variant). 26 minutes later, T279 (commit cea04e9, 'truncate long book review text with Read more/Show less toggle') rewrote that same JSX block to fix a different, legitimate problem (masonry column-height imbalance from long book reviews) and in doing so DROPPED the `<Markdown>` wrapper entirely, replacing it with plain-text interpolation: `<p className=\"spine-cover-snippet\">{expanded ? fullText : previewText}</p>`. This is the current, still-live state of the code — verified both by reading src/components/ReviewCard.js (no `<Markdown>` in `SpineCoverCard`) and by looking at the existing screenshot scripts/visual-out/reviews-books.png, which already shows 'Piranesi' and 'The Left Hand of Darkness' rendering literal unrendered syntax ('A **staggering** piece of work. What lands: - the _craft_ - the pacing - the ending') while the equivalent scripts/visual-out/reviews-movies.png screenshot shows the SAME fixture text rendering correctly as bold/italic/bulleted list via the poster-banner variant. So this is not a fresh bug to diagnose — it's a known regression to restore, with the fix constrained by an additional requirement T279 introduced: truncation. Fix: re-wrap the SpineCoverCard body in `<Markdown>` while preserving the Read more/Show less truncate behavior — i.e. `<Markdown>{expanded ? fullText : previewText}</Markdown>` (both `fullText` and `previewText` are still raw markdown strings from `truncateReviewText`, which truncates at a word boundary and appends '…'; react-markdown should degrade gracefully on a mid-syntax cut like an unclosed '**' or a truncated list item — verify this doesn't crash or look worse than plain text via the visual check, but do not attempt markdown-aware truncation, that is out of scope). Also add `src/components/ReviewCard.test.js` (did not exist before) with at least one test that renders a book/spine-cover item whose review_text contains `**bold**` and asserts a `<strong>` element appears in both collapsed and expanded (post Read-more-click) states — this specific gap (no ReviewCard-level test, only the isolated Markdown.test.js) is why the T279 regression shipped green and was never caught. Finally, add `Markdown.js` to the `reviews-books` PAGES entry's `covers` array in scripts/_visual-harness.mjs (it currently lists Markdown.js under reviews-movies/reviews-tv but not reviews-books, even though the books fixture already carries real Markdown bodies via mkBook(..., true) for Piranesi and The Left Hand of Darkness) so a future auditor matching task scope to screenshots doesn't miss this page again.",
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T325.md",
+      "visualVerify": true,
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
     }
   ]
 }
