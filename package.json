@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "harness:dashboard": "node .harness/dashboard/server.js",
+    "harness:start": "bash .harness/scripts/supervise.sh",
     "test": "jest",
     "test:watch": "jest --watch",
     "migrate:v2": "node src/scripts/migrateToV2Tables.js",
