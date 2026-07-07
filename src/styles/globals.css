@@ -1804,8 +1804,8 @@ input[type='range'].form-input::-moz-range-thumb {
 
 .project-card-archived-tag {
   position: absolute;
-  top: var(--border-width);
-  left: var(--border-width);
+  top: 0;
+  left: 0;
   padding: 0.25rem 0.6rem;
   background-color: var(--color-ink-mute);
   color: var(--color-bg);
