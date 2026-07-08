@@ -457,6 +457,10 @@
   flex-basis: 100%;
 }
 
+.collection-review-controls > .collection-pill-group {
+  flex-basis: 100%;
+}
+
 /* ===== Matrix Theme Override ===== */
 
 html.matrix-active {
