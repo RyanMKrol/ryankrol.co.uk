@@ -9263,7 +9263,7 @@
     {
       "id": "T334",
       "title": "Add 'What I own' tooltip above the perfume ownership pill",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
