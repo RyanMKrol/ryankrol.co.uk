@@ -2029,6 +2029,8 @@
       "scope": [
         "src/lib/openlibrary.js",
         "src/lib/openlibrary.test.js",
+        "src/components/BookSearch.js",
+        "src/pages/index.js",
         "CLAUDE.md",
         "README.md"
       ],
