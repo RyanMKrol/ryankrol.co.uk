@@ -9219,7 +9219,7 @@
     {
       "id": "T332",
       "title": "Owner picks a winning PR-medal-pill variant from the chooser page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T331"
       ],
@@ -9248,8 +9248,6 @@
       "scope": [
         "src/components/Badge.js",
         "src/styles/globals.css",
-        "src/pages/workouts/index.js",
-        "src/pages/workouts/[id].js",
         "src/pages/dev/pr-badge-variants.js"
       ],
       "design": null,
@@ -9421,6 +9419,55 @@
       "facets": {
         "layer": "page",
         "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T340",
+      "title": "Add trailing-12-month total session volume stat to home 'This year at the gym' panel",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "home",
+        "workouts",
+        "stats"
+      ],
+      "scope": [
+        "src/pages/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T340.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T341",
+      "title": "Add 'What it is' tooltip above the perfume type pill",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "tooltip",
+        "ui"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T341.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
         "risk": []
       }
     }
