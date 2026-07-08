@@ -9290,7 +9290,7 @@
     {
       "id": "T335",
       "title": "Force filter-pill rows onto their own line below search+sort inside .collection-review-controls",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
