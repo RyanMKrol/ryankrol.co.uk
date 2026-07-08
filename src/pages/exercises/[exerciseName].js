@@ -7,6 +7,7 @@ import CardioProgressCharts from '../../components/CardioProgressCharts';
 import PillGroup from '../../components/PillGroup';
 import StatBlock from '../../components/StatBlock';
 import { DATE_RANGES, filterByDateRange } from '../../lib/dateRange';
+import { formatEnglishDate } from '../../lib/dateFormat';
 
 const DATE_RANGE_OPTIONS = DATE_RANGES.map((range) => ({ value: range.key, label: range.label }));
 
@@ -296,7 +297,7 @@ export default function ExerciseDetailPage() {
                     <td>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', textAlign: 'left' }}>
                         <Link href={`/workouts/${session.workout_id}`} className="session-link">
-                          {new Date(session.workout_date).toLocaleDateString()}
+                          {formatEnglishDate(session.workout_date)}
                         </Link>
                         <span
                           className="text-muted"
