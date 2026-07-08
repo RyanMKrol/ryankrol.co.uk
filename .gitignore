@@ -40,8 +40,8 @@ next-env.d.ts
 # The backlog (.harness/tracking/TASKS.json) and per-task worklog/specs ARE committed; only the loop's
 # transient per-run scratch + the private ideas inbox are ignored.
 .harness/worklog/.result
-.harness/worklog/.claude-out
-.harness/worklog/.claude-out.jsonl
+# Per-phase live-output files: .claude-out.{build,audit}[.jsonl]
+.harness/worklog/.claude-out*
 .harness/worklog/.current.json
 .harness/worklog/STATUS.md
 .harness/worklog/*.audit.md

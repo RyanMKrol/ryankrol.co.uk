@@ -328,7 +328,43 @@ test('liveOutputFromJsonl reports the currently-running tool until text resumes'
   const finished = midFlight + '\n' + JSON.stringify({ type: 'stream_event', event: { type: 'content_block_delta', delta: { type: 'text_delta', text: 'Done.' } } });
   const r = liveOutputFromJsonl(finished);
   assert.strictEqual(r.tool, null);   // text resumed → the tool call is over
-  assert.strictEqual(r.text, "I'll check that. Done.");
+  assert.strictEqual(r.text, "I'll check that. \n▶ Bash\nDone.");
+});
+
+test('liveOutputFromJsonl inserts an in-order ▶ <tool> marker for every tool call, even a long silent stretch with no narration text at all', () => {
+  const lines = [
+    { type: 'stream_event', event: { type: 'content_block_start', content_block: { type: 'thinking' } } },
+    { type: 'stream_event', event: { type: 'content_block_start', content_block: { type: 'tool_use', name: 'Read' } } },
+    { type: 'stream_event', event: { type: 'content_block_stop' } },
+    { type: 'stream_event', event: { type: 'content_block_start', content_block: { type: 'tool_use', name: 'Bash' } } },
+    { type: 'stream_event', event: { type: 'content_block_stop' } },
+    { type: 'stream_event', event: { type: 'content_block_start', content_block: { type: 'text', text: '' } } },
+    { type: 'stream_event', event: { type: 'content_block_delta', delta: { type: 'text_delta', text: 'Now the render section.' } } },
+  ].map((r) => JSON.stringify(r)).join('\n');
+  const r = liveOutputFromJsonl(lines);
+  assert.strictEqual(r.text, '▶ Read\n▶ Bash\nNow the render section.');
+});
+
+test('liveOutputFromJsonl separates distinct text blocks with a newline (each narration round is its own block in the real stream, with no separator of its own)', () => {
+  const lines = [
+    { type: 'stream_event', event: { type: 'content_block_start', content_block: { type: 'text', text: '' } } },
+    { type: 'stream_event', event: { type: 'content_block_delta', delta: { type: 'text_delta', text: "I'll start by reading the files." } } },
+    { type: 'stream_event', event: { type: 'content_block_stop' } },
+    { type: 'stream_event', event: { type: 'content_block_start', content_block: { type: 'tool_use', name: 'Read' } } },
+    { type: 'stream_event', event: { type: 'content_block_stop' } },
+    { type: 'stream_event', event: { type: 'content_block_start', content_block: { type: 'text', text: '' } } },
+    { type: 'stream_event', event: { type: 'content_block_delta', delta: { type: 'text_delta', text: 'Now let me make the fix.' } } },
+    { type: 'stream_event', event: { type: 'content_block_stop' } },
+  ].map((r) => JSON.stringify(r)).join('\n');
+  assert.strictEqual(liveOutputFromJsonl(lines).text, "I'll start by reading the files.\n▶ Read\nNow let me make the fix.");
+});
+
+test('liveOutputFromJsonl does not add a leading newline before the very first text block', () => {
+  const lines = [
+    { type: 'stream_event', event: { type: 'content_block_start', content_block: { type: 'text', text: '' } } },
+    { type: 'stream_event', event: { type: 'content_block_delta', delta: { type: 'text_delta', text: 'First.' } } },
+  ].map((r) => JSON.stringify(r)).join('\n');
+  assert.strictEqual(liveOutputFromJsonl(lines).text, 'First.');
 });
 
 test('liveOutputFromJsonl skips a garbled line and keeps concatenating (mirrors parseJsonl tolerance)', () => {
