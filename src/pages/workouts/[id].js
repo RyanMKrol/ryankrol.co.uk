@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Badge, { PrBadge } from '../../components/Badge';
 import StatBlock from '../../components/StatBlock';
+import { formatEnglishDate } from '../../lib/dateFormat';
 
 const SPLIT_COLORS = {
   push: 'var(--split-push)',
@@ -64,13 +65,6 @@ export default function WorkoutDetailPage() {
 
     fetchWorkoutDetails();
   }, [id]);
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date
-      .toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      .replace(/\//g, '-');
-  };
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
@@ -215,7 +209,7 @@ export default function WorkoutDetailPage() {
 
         <div className="workout-detail-stats">
           <StatBlock
-            value={formatDate(workout.start_time)}
+            value={formatEnglishDate(workout.start_time)}
             label="date"
             accentColor="var(--accent-workouts)"
           />
