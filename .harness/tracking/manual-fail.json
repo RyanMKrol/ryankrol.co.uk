@@ -8,5 +8,10 @@
     "failed": true,
     "reason": "The Markdown does not appear to be rendering on the actual site under the Review card. When I updated a review to include Markdown, the Markdown does not actually display on the card, so clearly the testing was not adequate and we need to try this again.",
     "at": "2026-07-06T09:08:35Z"
+  },
+  "T322": {
+    "failed": true,
+    "reason": "review-failed: no follow-up needed — accessible-name/PR-suffix fix already landed on main via commit 15ab725, verified against current code (PrBadge ariaLabel prop, workouts pages' label arrays), matching the worklog's manual-fix narration exactly",
+    "at": "2026-07-08T21:03:04Z"
   }
 }
