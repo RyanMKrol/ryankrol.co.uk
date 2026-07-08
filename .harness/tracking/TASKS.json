@@ -9166,7 +9166,7 @@
     {
       "id": "T330",
       "title": "Add skeleton/wireframe loading state to the home page",
-      "status": "pending",
+      "status": "blocked",
       "dependsOn": [],
       "gate": null,
       "tags": [
