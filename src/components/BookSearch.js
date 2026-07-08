@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { bookCoverUrl } from '../lib/openlibrary';
 
 /**
  * Google Books search + confirm component for the book add flow.
@@ -67,11 +66,7 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
 
   const providerLabel = 'Google Books';
 
-  const getCoverSrc = (r) => {
-    if (r.coverUrl) return r.coverUrl;
-    if (r.coverId) return bookCoverUrl(r.coverId, 'S');
-    return null;
-  };
+  const getCoverSrc = (r) => r.coverUrl || null;
 
   return (
     <div className="book-search">

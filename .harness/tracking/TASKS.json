@@ -2013,7 +2013,7 @@
     {
       "id": "T078",
       "title": "Delete src/lib/openlibrary.js + update docs",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T077"
       ],

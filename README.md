@@ -256,11 +256,9 @@ random UUID assigned once on create and never regenerated. The old title+author-
   editedDate: "20-02-2024",          // DD-MM-YYYY — set on every edit
 
   // Optional — only present when a search match was selected
-  source: "googlebooks",             // 'openlibrary' | 'googlebooks'
-  coverUrl: "https://books.google…", // Google Books cover URL (when source='googlebooks')
-  volumeId: "abc123",                // Google Books volume ID (when source='googlebooks')
-  olid: "/works/OL123456W",          // Open Library work ID (when source='openlibrary')
-  coverId: 1234567,                  // Open Library cover ID (when source='openlibrary')
+  source: "googlebooks",             // 'googlebooks'
+  coverUrl: "https://books.google…", // Google Books cover URL
+  volumeId: "abc123",                // Google Books volume ID
   bookAuthors: ["Frank Herbert"],    // Author list from provider
   firstPublishedYear: 1965,
   isbn: "9780441013593",
@@ -269,6 +267,9 @@ random UUID assigned once on create and never regenerated. The old title+author-
   publisher: "Chilton Books"
 }
 ```
+
+Historical rows may still carry a legacy `olid`/`coverId`/`source:'openlibrary'` from before the
+Open Library search path was removed — new reviews never write them.
 
 #### PerfumeRatings Table
 Perfume reviews. Validation for the fields below lives in `src/lib/perfumes.js`.

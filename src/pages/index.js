@@ -5,7 +5,6 @@ import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
 import CoverTile, { assignGradients } from '../components/CoverTile'
 import { tmdbPosterUrl } from '../lib/tmdb'
-import { bookCoverUrl } from '../lib/openlibrary'
 import { formatReviewDate } from '../lib/dateFormat'
 
 const WALL_KIND_HREF = {
@@ -83,7 +82,7 @@ export default function Home() {
     const wallCandidates = [
       movies.map((m) => ({ key: `movie-${m.id}`, title: m.title, imageUrl: tmdbPosterUrl(m.posterPath), kind: 'movie', href: WALL_KIND_HREF.movie })),
       tv.map((t) => ({ key: `tv-${t.id}`, title: t.title, imageUrl: tmdbPosterUrl(t.posterPath), kind: 'tv', href: WALL_KIND_HREF.tv })),
-      books.map((b) => ({ key: `book-${b.id}`, title: b.title, imageUrl: b.coverUrl || (b.coverId ? bookCoverUrl(b.coverId) : null), kind: 'book', href: WALL_KIND_HREF.book, subtitle: b.author || null })),
+      books.map((b) => ({ key: `book-${b.id}`, title: b.title, imageUrl: b.coverUrl || null, kind: 'book', href: WALL_KIND_HREF.book, subtitle: b.author || null })),
       albums.map((a) => ({ key: `album-${a.id}`, title: a.title, imageUrl: a.thumbnail || null, kind: 'album', href: WALL_KIND_HREF.album, subtitle: a.artist || null })),
       vinyl.map((v) => ({ key: `vinyl-${v.id}`, title: v.title, imageUrl: v.thumbnail || null, kind: 'vinyl', href: WALL_KIND_HREF.vinyl, subtitle: v.artist || null })),
     ]
