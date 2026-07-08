@@ -9319,7 +9319,7 @@
     {
       "id": "T336",
       "title": "Use shared formatEnglishDate on the workout detail page's date StatBlock",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
