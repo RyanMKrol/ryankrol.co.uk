@@ -9192,7 +9192,7 @@
     {
       "id": "T331",
       "title": "Build 2-4 visual style variants of the restyled PR medal pill on a dev-only comparison page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
