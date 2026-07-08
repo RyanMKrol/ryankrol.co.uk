@@ -9363,6 +9363,66 @@
         "workType": "bugfix",
         "risk": []
       }
+    },
+    {
+      "id": "T338",
+      "title": "Cap backfill candidates at 3 and add a page-level 'Apply all selections' button to BulkBackfillList",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "backfill",
+        "movies",
+        "tv",
+        "books",
+        "albums",
+        "component"
+      ],
+      "scope": [
+        "src/components/BulkBackfillList.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T338.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T339",
+      "title": "Add skeleton/wireframe loading state to the home page (fixed scope)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "home",
+        "loading-state",
+        "ux"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/components/HomeSkeleton.js",
+        "src/styles/globals.css",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T339.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      }
     }
   ]
 }
