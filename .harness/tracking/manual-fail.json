@@ -18,5 +18,10 @@
     "failed": true,
     "reason": "review-failed: superseded by T338 — root cause was an upstream implementation-harness mechanism bug (SCOPE_EXEMPT_GLOBS's directory-prefix form silently exempts nothing in loop.sh's in_scope_exempt(), reproduced + written up as a fix proposal), not T327's own spec/scope; T338 is a verbatim duplicate to be attempted once the harness is upgraded with the fix",
     "at": "2026-07-08T21:03:11Z"
+  },
+  "T330": {
+    "failed": true,
+    "reason": "review-failed: superseded by T339 — same design/spec, scripts/_visual-harness.mjs added to scope (was missing, causing 14/14 attempts to fail identically on scope-creep); T339 also confirmed scope-complete via a dedicated research pass",
+    "at": "2026-07-08T21:03:18Z"
   }
 }
