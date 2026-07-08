@@ -9342,7 +9342,7 @@
     {
       "id": "T337",
       "title": "Use shared formatEnglishDate on the per-exercise history table's session dates",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
