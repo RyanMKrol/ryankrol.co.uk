@@ -64,9 +64,9 @@ describe('getExercisePreview', () => {
     const { shown } = getExercisePreview(exercises, 4);
 
     expect(shown).toEqual([
-      { name: 'Bench Press', prAxes: [{ key: 'weight', label: 'weight PR' }] },
-      { name: 'Squat', prAxes: [{ key: '1rm', label: '1RM PR' }] },
-      { name: 'Deadlift', prAxes: [{ key: 'volume', label: 'volume PR' }] },
+      { name: 'Bench Press', prAxes: [{ key: 'weight', label: 'Weight', ariaLabel: 'weight personal best' }] },
+      { name: 'Squat', prAxes: [{ key: '1rm', label: '1RM', ariaLabel: '1RM personal best' }] },
+      { name: 'Deadlift', prAxes: [{ key: 'volume', label: 'Volume', ariaLabel: 'volume personal best' }] },
       { name: 'Row', prAxes: [] },
     ]);
   });
@@ -88,9 +88,9 @@ describe('getExercisePreview', () => {
       {
         name: 'Squat',
         prAxes: [
-          { key: 'weight', label: 'weight PR' },
-          { key: '1rm', label: '1RM PR' },
-          { key: 'volume', label: 'volume PR' },
+          { key: 'weight', label: 'Weight', ariaLabel: 'weight personal best' },
+          { key: '1rm', label: '1RM', ariaLabel: '1RM personal best' },
+          { key: 'volume', label: 'Volume', ariaLabel: 'volume personal best' },
         ],
       },
     ]);

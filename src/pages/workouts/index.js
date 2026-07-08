@@ -59,9 +59,9 @@ export function getExercisePreview(exercises = [], maxShown = 3) {
     .map((exercise) => {
       const sets = exercise.sets || [];
       const prAxes = [
-        sets.some((set) => set.isWeightPR) && { key: 'weight', label: 'weight PR' },
-        sets.some((set) => set.is1RMPR) && { key: '1rm', label: '1RM PR' },
-        sets.some((set) => set.isVolumePR) && { key: 'volume', label: 'volume PR' },
+        sets.some((set) => set.isWeightPR) && { key: 'weight', label: 'Weight', ariaLabel: 'weight personal best' },
+        sets.some((set) => set.is1RMPR) && { key: '1rm', label: '1RM', ariaLabel: '1RM personal best' },
+        sets.some((set) => set.isVolumePR) && { key: 'volume', label: 'Volume', ariaLabel: 'volume personal best' },
       ].filter(Boolean);
       return { name: exercise.title, prAxes };
     });
@@ -242,8 +242,8 @@ export default function Workouts() {
                         {shown.map(({ name, prAxes }) => (
                           <li key={name} className="workout-session-exercise-item">
                             {name}
-                            {prAxes.map(({ key, label }) => (
-                              <PrBadge key={key} label={label} />
+                            {prAxes.map(({ key, label, ariaLabel }) => (
+                              <PrBadge key={key} label={label} ariaLabel={ariaLabel} />
                             ))}
                           </li>
                         ))}

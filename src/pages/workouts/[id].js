@@ -250,9 +250,9 @@ export default function WorkoutDetailPage() {
                   }
 
                   const prBadges = [
-                    set.isWeightPR && { key: 'weight', label: 'weight PR' },
-                    set.is1RMPR && { key: '1rm', label: '1RM PR' },
-                    set.isVolumePR && { key: 'volume', label: 'volume PR' },
+                    set.isWeightPR && { key: 'weight', label: 'Weight', ariaLabel: 'weight personal best' },
+                    set.is1RMPR && { key: '1rm', label: '1RM', ariaLabel: '1RM personal best' },
+                    set.isVolumePR && { key: 'volume', label: 'Volume', ariaLabel: 'volume personal best' },
                   ].filter(Boolean);
 
                   return (
@@ -262,8 +262,8 @@ export default function WorkoutDetailPage() {
                     >
                       <span className="workout-set-row-label">{setLabel}</span>
                       <span className="workout-set-row-badges">
-                        {prBadges.map(({ key, label }) => (
-                          <PrBadge key={key} label={label} />
+                        {prBadges.map(({ key, label, ariaLabel }) => (
+                          <PrBadge key={key} label={label} ariaLabel={ariaLabel} />
                         ))}
                       </span>
                       <span className="workout-set-row-value">{formatSetDisplay(set)}</span>
