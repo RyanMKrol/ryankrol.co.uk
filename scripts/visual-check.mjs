@@ -26,7 +26,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { chromium } from 'playwright';
-import { PAGES, FLOWS, routeApi, startServer, waitForServer, APP_DIR } from './_visual-harness.mjs';
+import { PAGES, FLOWS, routeApi, routeApiWithDelays, startServer, waitForServer, APP_DIR } from './_visual-harness.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = resolve(__dirname, 'visual-out');
@@ -58,7 +58,8 @@ async function capture(ctx, spec) {
   const file = resolve(OUT_DIR, `${spec.name}.png`);
   const meta = { name: spec.name, path: spec.path, file, description: spec.description ?? '', flow: spec.flow ?? '', covers: spec.covers ?? [] };
   try {
-    await page.goto(BASE + spec.path, { waitUntil: 'networkidle' });
+    if (spec.delayRoutes) await routeApiWithDelays(page, spec.delayRoutes);
+    await page.goto(BASE + spec.path, { waitUntil: spec.delayRoutes ? 'load' : 'networkidle' });
     for (const sel of spec.waitFor ?? []) await page.waitForSelector(sel, { state: 'visible', timeout: SELECTOR_TIMEOUT_MS });
     await page.waitForTimeout(SETTLE_MS);
     if (spec.actions) { await spec.actions(page); await page.waitForTimeout(SETTLE_MS); }

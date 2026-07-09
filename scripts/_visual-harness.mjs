@@ -242,6 +242,14 @@ export function fixtureFor(pathname) {
 const REVIEW_COMMON = ['src/components/ReviewCard.js', 'src/components/StarRating.js', 'src/components/SortButtons.js', 'src/components/SearchInput.js'];
 export const PAGES = [
   { name: 'home', path: '/', waitFor: ['.home-wall-tile-link'], description: 'Home — hero, now-playing, collection wall, on-the-shelf + hot-takes rail panels.', covers: ['src/pages/index.js', 'src/components/NowPlaying.js', 'src/components/StatBlock.js', 'src/components/CoverTile.js'] },
+  {
+    name: 'home-loading',
+    path: '/',
+    waitFor: ['.skeleton-shimmer'],
+    description: 'Home mid-load with hot-takes + vinyl artificially delayed (T339) — Movies/TV/Books/Albums stat blocks and Latest takes already show real data while the collection wall, on-the-shelf panel, and Hot takes panel still show skeleton placeholders (both depend on the delayed fetches), proving independent per-section reveal.',
+    covers: ['src/pages/index.js', 'src/components/HomeSkeleton.js', 'src/styles/globals.css'],
+    delayRoutes: { '/api/hot-takes': 6000, '/api/vinyl': 6000 },
+  },
   { name: 'listening', path: '/listening', waitFor: ['.listening-row'], description: 'Last.fm top albums (3-month) with playcount bars.', covers: ['src/pages/listening/index.js', 'src/components/CoverTile.js'] },
   { name: 'projects', path: '/projects', waitFor: ['.project-card'], description: 'GitHub repo cards with search + tag-filter pills + sort.', covers: ['src/pages/projects/index.js', 'src/components/Pill.js', 'src/components/Badge.js', 'src/components/Tooltip.js'] },
   { name: 'vinyl', path: '/vinyl', waitFor: ['.vinyl-letter-header'], description: 'Vinyl collection grouped by artist (covers view).', covers: ['src/pages/vinyl/index.js', 'src/components/PillGroup.js', 'src/components/CoverTile.js'] },
@@ -365,6 +373,29 @@ export async function routeApi(ctx) {
     const req = route.request();
     const url = new URL(req.url());
     if (url.pathname.startsWith('/api/')) {
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fixtureFor(url.pathname)) });
+    }
+    const isLocal = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+    if (!isLocal && req.resourceType() === 'image') {
+      return route.fulfill({ status: 200, contentType: 'image/png', body: PLACEHOLDER_PNG });
+    }
+    return route.continue();
+  });
+}
+
+/**
+ * Page-level route override that delays specific `/api/*` pathnames by a fixed amount before
+ * fulfilling from the same fixtures `routeApi` uses — everything else resolves immediately.
+ * Playwright's page-level routes take priority over the context-level `routeApi`, so this lets a
+ * single capture prove per-section independent reveal (T339) without touching every other spec.
+ */
+export async function routeApiWithDelays(page, delays) {
+  await page.route('**/*', async (route) => {
+    const req = route.request();
+    const url = new URL(req.url());
+    if (url.pathname.startsWith('/api/')) {
+      const delayMs = delays[url.pathname];
+      if (delayMs) await new Promise((r) => setTimeout(r, delayMs));
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fixtureFor(url.pathname)) });
     }
     const isLocal = url.hostname === 'localhost' || url.hostname === '127.0.0.1';

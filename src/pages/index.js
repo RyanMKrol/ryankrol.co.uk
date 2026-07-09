@@ -4,6 +4,7 @@ import Link from 'next/link'
 import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
 import CoverTile, { assignGradients } from '../components/CoverTile'
+import { StatBlockSkeleton, TileGridSkeleton, CardRowSkeleton, GymPanelStatsSkeleton, ListRowSkeleton } from '../components/HomeSkeleton'
 import { tmdbPosterUrl } from '../lib/tmdb'
 import { formatReviewDate } from '../lib/dateFormat'
 
@@ -45,6 +46,14 @@ export default function Home() {
   const [shelfItems, setShelfItems] = useState([])
   const [hotTakes, setHotTakes] = useState([])
 
+  const [moviesLoading, setMoviesLoading] = useState(true)
+  const [tvLoading, setTvLoading] = useState(true)
+  const [booksLoading, setBooksLoading] = useState(true)
+  const [albumsLoading, setAlbumsLoading] = useState(true)
+  const [vinylLoading, setVinylLoading] = useState(true)
+  const [workoutStatsLoading, setWorkoutStatsLoading] = useState(true)
+  const [hotTakesLoading, setHotTakesLoading] = useState(true)
+
   useEffect(() => {
     async function fetchJson(url) {
       const response = await fetch(url)
@@ -52,29 +61,22 @@ export default function Home() {
       return response.json()
     }
 
-    async function fetchAll() {
-      const [moviesData, tvData, booksData, albumsData, vinylData, statsData, hotTakesData] = await Promise.all([
-        fetchJson('/api/reviews/movies'),
-        fetchJson('/api/reviews/tv'),
-        fetchJson('/api/reviews/books'),
-        fetchJson('/api/reviews/albums'),
-        fetchJson('/api/vinyl'),
-        fetchJson('/api/workouts/stats'),
-        fetchJson('/api/hot-takes'),
-      ])
-
-      setMovies(moviesData || [])
-      setTv(tvData || [])
-      setBooks(booksData || [])
-      setAlbums(albumsData || [])
-      setVinyl(vinylData || [])
-      setShelfItems(pickRandomSample(vinylData || [], 5))
-      setWorkoutStats(statsData)
-      setHotTakes(hotTakesData || [])
-    }
-
-    fetchAll()
+    fetchJson('/api/reviews/movies').then((data) => { setMovies(data || []); setMoviesLoading(false) })
+    fetchJson('/api/reviews/tv').then((data) => { setTv(data || []); setTvLoading(false) })
+    fetchJson('/api/reviews/books').then((data) => { setBooks(data || []); setBooksLoading(false) })
+    fetchJson('/api/reviews/albums').then((data) => { setAlbums(data || []); setAlbumsLoading(false) })
+    fetchJson('/api/vinyl').then((data) => {
+      const vinylData = data || []
+      setVinyl(vinylData)
+      setShelfItems(pickRandomSample(vinylData, 5))
+      setVinylLoading(false)
+    })
+    fetchJson('/api/workouts/stats').then((data) => { setWorkoutStats(data); setWorkoutStatsLoading(false) })
+    fetchJson('/api/hot-takes').then((data) => { setHotTakes(data || []); setHotTakesLoading(false) })
   }, [])
+
+  const wallLoading = moviesLoading || tvLoading || booksLoading || albumsLoading || vinylLoading
+  const latestTakesLoading = moviesLoading || tvLoading || booksLoading || albumsLoading
 
   const totalRated = movies.length + tv.length + books.length + albums.length + vinyl.length + (workoutStats?.totalWorkouts || 0)
 
@@ -160,29 +162,34 @@ export default function Home() {
         </section>
 
         <section className="home-stats">
-          <StatBlock value={movies.length} label="movies" accentColor="var(--accent-movies)" />
-          <StatBlock value={tv.length} label="tv shows" accentColor="var(--accent-tv)" />
-          <StatBlock value={books.length} label="books" accentColor="var(--accent-books)" />
-          <StatBlock value={albums.length} label="albums" accentColor="var(--accent-albums)" />
-          <StatBlock value={vinyl.length} label="vinyl" accentColor="var(--accent-vinyl)" />
-          <StatBlock value={workoutStats?.totalWorkouts ?? 0} label="workouts" accentColor="var(--accent-workouts)" />
+          {moviesLoading ? <StatBlockSkeleton /> : <StatBlock value={movies.length} label="movies" accentColor="var(--accent-movies)" />}
+          {tvLoading ? <StatBlockSkeleton /> : <StatBlock value={tv.length} label="tv shows" accentColor="var(--accent-tv)" />}
+          {booksLoading ? <StatBlockSkeleton /> : <StatBlock value={books.length} label="books" accentColor="var(--accent-books)" />}
+          {albumsLoading ? <StatBlockSkeleton /> : <StatBlock value={albums.length} label="albums" accentColor="var(--accent-albums)" />}
+          {vinylLoading ? <StatBlockSkeleton /> : <StatBlock value={vinyl.length} label="vinyl" accentColor="var(--accent-vinyl)" />}
+          {workoutStatsLoading ? <StatBlockSkeleton /> : <StatBlock value={workoutStats?.totalWorkouts ?? 0} label="workouts" accentColor="var(--accent-workouts)" />}
         </section>
 
         <section className="home-wall">
           <h2 className="home-section-title">The collection wall</h2>
-          <div className="home-wall-grid">
-            {wallItems.map((item) => (
-              <Link key={item.key} href={{ pathname: item.href, query: { q: item.title } }} className="home-wall-tile-link">
-                <CoverTile title={item.title} imageUrl={item.imageUrl} id={item.key} subtitle={item.subtitle} gradient={item.gradient} />
-              </Link>
-            ))}
-          </div>
+          {wallLoading ? (
+            <TileGridSkeleton count={18} />
+          ) : (
+            <div className="home-wall-grid">
+              {wallItems.map((item) => (
+                <Link key={item.key} href={{ pathname: item.href, query: { q: item.title } }} className="home-wall-tile-link">
+                  <CoverTile title={item.title} imageUrl={item.imageUrl} id={item.key} subtitle={item.subtitle} gradient={item.gradient} />
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
 
         <section className="home-lower">
           <div className="home-latest">
             <h2 className="home-section-title">Latest takes</h2>
-            {latestTakes.map((item) => (
+            {latestTakesLoading && <CardRowSkeleton count={3} />}
+            {!latestTakesLoading && latestTakes.map((item) => (
               <div key={`${item.kind}-${item.id}`} className="home-latest-card">
                 <div
                   className="home-latest-thumb"
@@ -210,47 +217,55 @@ export default function Home() {
           <div className="home-rail">
             <div className="home-gym-panel">
               <p className="home-gym-panel-title">This year at the gym</p>
-              <div className="home-gym-stats">
-                <div>
-                  <div className="home-gym-stat-value">{workoutStats?.totalWorkouts ?? 0}</div>
-                  <div className="home-gym-stat-label">sessions</div>
-                </div>
-                <div>
-                  <div className="home-gym-stat-value">
-                    {bestSessionVolume ?? '—'}
-                    {bestSessionVolume && <span className="home-gym-stat-unit">kg</span>}
+              {workoutStatsLoading ? (
+                <GymPanelStatsSkeleton />
+              ) : (
+                <>
+                  <div className="home-gym-stats">
+                    <div>
+                      <div className="home-gym-stat-value">{workoutStats?.totalWorkouts ?? 0}</div>
+                      <div className="home-gym-stat-label">sessions</div>
+                    </div>
+                    <div>
+                      <div className="home-gym-stat-value">
+                        {bestSessionVolume ?? '—'}
+                        {bestSessionVolume && <span className="home-gym-stat-unit">kg</span>}
+                      </div>
+                      <div className="home-gym-stat-label">best session vol</div>
+                    </div>
                   </div>
-                  <div className="home-gym-stat-label">best session vol</div>
-                </div>
-              </div>
-              <div className="home-sparkline">
-                {monthlyVolume.map((m) => (
-                  <div key={m.month} className="home-sparkline-bar-wrap">
-                    <span className="home-sparkline-tooltip">{m.label} &middot; {m.totalVolume}kg</span>
-                    <div
-                      className="home-sparkline-bar"
-                      style={{ height: maxMonthlyVolume ? `${Math.max(8, (m.totalVolume / maxMonthlyVolume) * 100)}%` : '8%' }}
-                    />
+                  <div className="home-sparkline">
+                    {monthlyVolume.map((m) => (
+                      <div key={m.month} className="home-sparkline-bar-wrap">
+                        <span className="home-sparkline-tooltip">{m.label} &middot; {m.totalVolume}kg</span>
+                        <div
+                          className="home-sparkline-bar"
+                          style={{ height: maxMonthlyVolume ? `${Math.max(8, (m.totalVolume / maxMonthlyVolume) * 100)}%` : '8%' }}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
             </div>
 
             <div className="home-shelf-panel">
               <div className="home-shelf-panel-header">
                 <Link href="/vinyl" className="home-shelf-panel-title home-shelf-panel-link">
-                  On the shelf &middot; {vinyl.length} records
+                  On the shelf {!vinylLoading && <>&middot; {vinyl.length} records</>}
                 </Link>
                 <button
                   type="button"
                   className="home-shelf-refresh"
                   onClick={handleShelfRefresh}
                   aria-label="Skim through my collection — show a different random 5 records"
+                  disabled={vinylLoading}
                 >
                   &#8635; Skim the shelf
                 </button>
               </div>
-              {shelfItems.map((record, i) => (
+              {vinylLoading && <ListRowSkeleton count={5} />}
+              {!vinylLoading && shelfItems.map((record, i) => (
                 <div key={record.id || i} className="home-shelf-item">
                   <span>{record.title}</span>
                   <span>{record.artist}</span>
@@ -264,16 +279,17 @@ export default function Home() {
                   Hot takes
                 </Link>
               </div>
-              {latestHotTakes.length === 0 && (
+              {hotTakesLoading && <ListRowSkeleton count={3} />}
+              {!hotTakesLoading && latestHotTakes.length === 0 && (
                 <p className="home-hot-takes-empty">No hot takes yet.</p>
               )}
-              {latestHotTakes.map((take) => (
+              {!hotTakesLoading && latestHotTakes.map((take) => (
                 <div key={take.id} className="home-hot-takes-item">
                   <span className="home-hot-takes-text">{take.text}</span>
                   <span className="home-hot-takes-date">{formatReviewDate(take.date)}</span>
                 </div>
               ))}
-              {latestHotTakes.length > 0 && (
+              {!hotTakesLoading && latestHotTakes.length > 0 && (
                 <Link href="/hot-takes" className="home-hot-takes-viewall">View all &rarr;</Link>
               )}
             </div>
