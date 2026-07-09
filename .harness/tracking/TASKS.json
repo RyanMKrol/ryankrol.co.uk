@@ -9595,7 +9595,7 @@
     {
       "id": "T347",
       "title": "Add spacing between adjacent PR-medal pills on the same exercise row",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
