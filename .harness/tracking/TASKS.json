@@ -9474,7 +9474,7 @@
     {
       "id": "T342",
       "title": "Comma-format large numbers in home 'This year at the gym' panel",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
