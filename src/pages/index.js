@@ -127,6 +127,7 @@ export default function Home() {
   const monthlyVolume = workoutStats?.monthlyVolume || []
   const maxMonthlyVolume = monthlyVolume.reduce((max, m) => Math.max(max, m.totalVolume || 0), 0)
   const bestSessionVolume = workoutStats?.bestSessionVolume || null
+  const totalVolume = workoutStats?.totalVolume ?? null
 
   const handleShelfRefresh = () => {
     setShelfItems(pickRandomSample(vinyl, 5))
@@ -225,6 +226,13 @@ export default function Home() {
                     <div>
                       <div className="home-gym-stat-value">{workoutStats?.totalWorkouts ?? 0}</div>
                       <div className="home-gym-stat-label">sessions</div>
+                    </div>
+                    <div>
+                      <div className="home-gym-stat-value">
+                        {totalVolume ?? '—'}
+                        {totalVolume && <span className="home-gym-stat-unit">kg</span>}
+                      </div>
+                      <div className="home-gym-stat-label">total volume</div>
                     </div>
                     <div>
                       <div className="home-gym-stat-value">
