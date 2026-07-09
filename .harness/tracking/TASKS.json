@@ -9470,6 +9470,258 @@
         "workType": "style",
         "risk": []
       }
+    },
+    {
+      "id": "T342",
+      "title": "Comma-format large numbers in home 'This year at the gym' panel",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "home",
+        "workouts",
+        "formatting"
+      ],
+      "scope": [
+        "src/pages/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T342.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T343",
+      "title": "Build perfume card rating-size/Best-for-position variants on a dev preview page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants",
+        "ui",
+        "needs-human-precursor"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "src/styles/globals.css",
+        "src/pages/dev/perfume-card-variants.js",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T343.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T344",
+      "title": "Review perfume card rating/Best-for layout variants and record a decision",
+      "status": "pending",
+      "dependsOn": [
+        "T343"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "perfumes",
+        "perfume-variants",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T344.md"
+    },
+    {
+      "id": "T345",
+      "title": "Reword perfume type badge tooltip to \"What I've got\"",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "tooltip",
+        "copy"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T345.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T346",
+      "title": "Align PR-pill rendering context on /workouts (list) to match the already-correct /workouts/[id] (detail) context",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "badge"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T346.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T347",
+      "title": "Add spacing between adjacent PR-medal pills on the same exercise row",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "badge"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T347.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T348",
+      "title": "Add Top of Mind note storage (DynamoDB) + read/update API + dedicated edit page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "top-of-mind",
+        "markdown",
+        "api",
+        "storage"
+      ],
+      "scope": [
+        "src/lib/constants.js",
+        "src/lib/topOfMind.js",
+        "src/lib/topOfMind.test.js",
+        "src/pages/api/top-of-mind/index.js",
+        "src/pages/api/top-of-mind/update.js",
+        "src/pages/top-of-mind/edit.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T348.md",
+      "facets": {
+        "layer": "api",
+        "workType": "feature",
+        "risk": [
+          "touches-data",
+          "full-stack"
+        ]
+      }
+    },
+    {
+      "id": "T349",
+      "title": "Add 5-variant Top of Mind placement chooser to the homepage (dummy content, query-param switch)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "top-of-mind",
+        "home",
+        "chooser"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T349.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T350",
+      "title": "Owner picks a winning Top of Mind placement variant",
+      "status": "pending",
+      "dependsOn": [
+        "T349"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "top-of-mind",
+        "home",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T350.md"
+    },
+    {
+      "id": "T351",
+      "title": "Hardcode the chosen Top of Mind placement and wire it to real content",
+      "status": "pending",
+      "dependsOn": [
+        "T350",
+        "T348"
+      ],
+      "gate": null,
+      "tags": [
+        "top-of-mind",
+        "home",
+        "finalize"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T351.md",
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      }
     }
   ]
 }
