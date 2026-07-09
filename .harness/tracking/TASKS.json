@@ -9425,7 +9425,7 @@
     {
       "id": "T340",
       "title": "Add trailing-12-month total session volume stat to home 'This year at the gym' panel",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
