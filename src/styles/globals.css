@@ -3520,6 +3520,124 @@ body::before {
   text-decoration: underline;
 }
 
+/* T349 — Top of Mind placement comparison variants (?tom=1..5). Dummy-content only. */
+
+/* Variant 1: rail panel — sibling to home-shelf-panel / home-hot-takes-panel. */
+.tom-variant-rail-panel {
+  background: var(--color-card);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+}
+
+.tom-variant-rail-panel-header {
+  margin: 0 0 0.75rem;
+}
+
+.tom-variant-rail-panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  opacity: 0.75;
+}
+
+/* Variant 2: full-width hero band, distinct tint, sits under home-hero. */
+.tom-variant-hero-band {
+  background: var(--color-star-gold);
+  border-radius: var(--radius-card);
+  margin: 1.5rem 0;
+}
+
+.tom-variant-hero-band-inner {
+  padding: 1.5rem;
+}
+
+.tom-variant-hero-band-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  opacity: 0.75;
+  margin-bottom: 0.5rem;
+}
+
+/* Variant 3: collapsible <details>, collapsed by default, between home-wall and home-lower. */
+.tom-variant-collapsible {
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.tom-variant-collapsible-summary {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.tom-variant-collapsible-body {
+  margin-top: 0.75rem;
+}
+
+/* Variant 4: card woven into the Latest takes column, accent border to read as non-review. */
+.tom-variant-latest-card {
+  border-color: var(--accent-hot-takes);
+  border-width: calc(var(--border-width) * 2);
+}
+
+.tom-variant-latest-card-body {
+  font-family: var(--font-body);
+  color: var(--color-ink-soft);
+}
+
+/* Variant 5: compact inline strip inside home-hero, under the tagline/meta row. */
+.tom-variant-hero-strip {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-card);
+  border: var(--border-width) solid var(--color-ink);
+  max-width: fit-content;
+}
+
+.tom-variant-hero-strip-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.tom-variant-hero-strip-body {
+  font-family: var(--font-body);
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tom-variant-hero-strip-body p {
+  margin: 0;
+  display: inline;
+}
+
+.tom-variant-hero-strip-body ul,
+.tom-variant-hero-strip-body h2 {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .home-hero-row {
     flex-direction: column;

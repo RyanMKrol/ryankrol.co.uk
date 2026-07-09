@@ -269,6 +269,12 @@ export const PAGES = [
   { name: 'exercise', path: '/exercises/Chest%20Press%20(Machine)', waitFor: ['.chart-card canvas'], description: 'Per-exercise stats + progress charts (1RM / volume / max-weight) + recent sessions.', covers: ['src/pages/exercises/[exerciseName].js', 'src/components/ExerciseProgressCharts.js', 'src/components/CardioProgressCharts.js', 'src/components/PillGroup.js', 'src/components/StatBlock.js'] },
   { name: 'reviews-movies-backfill', path: '/reviews/movies/backfill', waitFor: ['.bbl-row'], description: 'Movie metadata backfill — rows awaiting TMDB search results, page-level "Apply all selections" button above the list.', covers: ['src/pages/reviews/movies/backfill.js', 'src/components/BulkBackfillList.js'] },
   { name: 'dev-perfume-card-variants', path: '/dev/perfume-card-variants', waitFor: ['.perfume-v6-card'], description: 'T343 dev-only comparison of perfume card rating/best-for layout variants (baseline, big-rating, header-rating, best-for-bottom), rendered with real fetched data.', covers: ['src/components/perfumeVariants/Variant6Hybrid.js', 'src/pages/dev/perfume-card-variants.js', 'src/styles/globals.css'] },
+  { name: 'home-tom-0', path: '/?tom=0', waitFor: ['.home-wall-tile-link'], description: 'T349 Top of Mind comparison — ?tom=0 baseline, no section rendered (identical to plain home).', covers: ['src/pages/index.js'] },
+  { name: 'home-tom-1', path: '/?tom=1', waitFor: ['.tom-variant-rail-panel'], description: 'T349 Top of Mind variant 1 — rail panel appended into the home-rail column, sibling to on-the-shelf/hot-takes panels.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
+  { name: 'home-tom-2', path: '/?tom=2', waitFor: ['.tom-variant-hero-band'], description: 'T349 Top of Mind variant 2 — full-width band under the hero, before the stat blocks.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
+  { name: 'home-tom-3', path: '/?tom=3', waitFor: ['.tom-variant-collapsible'], description: 'T349 Top of Mind variant 3 — collapsed <details> block between the collection wall and Latest takes, closed by default.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
+  { name: 'home-tom-4', path: '/?tom=4', waitFor: ['.tom-variant-latest-card'], description: 'T349 Top of Mind variant 4 — accent-bordered card woven into the top of the Latest takes column.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
+  { name: 'home-tom-5', path: '/?tom=5', waitFor: ['.tom-variant-hero-strip'], description: 'T349 Top of Mind variant 5 — compact single-line teaser strip inside the hero, under the tagline/meta row.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
 ];
 
 // ── FLOWS: states that only appear after an INTERACTION. capture() runs `actions(page)`. ────────
@@ -319,6 +325,8 @@ const bespokeFlows = [
   { name: 'projects-search', path: '/projects', waitFor: ['.project-card'], flow: 'Search projects for "api"; cards narrow by name/description.', description: 'Projects filtered by search to "api".', covers: ['src/pages/projects/index.js', 'src/components/SearchInput.js'], actions: async (page) => { await page.fill('.collection-search-input input', 'api'); } },
   // Home — the on-the-shelf shuffle.
   { name: 'home-skim-shelf', path: '/', waitFor: ['.home-shelf-item'], flow: 'Click "Skim the shelf"; the random vinyl sample re-rolls.', description: 'Home on-the-shelf panel after a shuffle.', covers: ['src/pages/index.js'], actions: async (page) => { await page.click('button.home-shelf-refresh'); } },
+  // Home — T349 Top of Mind variant 3, expanded via its <summary>.
+  { name: 'home-tom-3-expanded', path: '/?tom=3', waitFor: ['.tom-variant-collapsible'], flow: 'Click the collapsible summary; it expands to reveal the dummy heading/paragraph/list.', description: 'T349 Top of Mind variant 3 expanded.', covers: ['src/pages/index.js', 'src/styles/globals.css'], actions: async (page) => { await page.click('.tom-variant-collapsible-summary'); } },
   // Movie backfill — select a TMDB candidate on both awaiting rows, then apply all at once (T338).
   {
     name: 'reviews-movies-backfill-apply-all',

@@ -1,12 +1,24 @@
 import { useState, useEffect, useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
 import CoverTile, { assignGradients } from '../components/CoverTile'
+import Markdown from '../components/Markdown'
 import { StatBlockSkeleton, TileGridSkeleton, CardRowSkeleton, GymPanelStatsSkeleton, ListRowSkeleton } from '../components/HomeSkeleton'
 import { tmdbPosterUrl } from '../lib/tmdb'
 import { formatReviewDate } from '../lib/dateFormat'
+
+// T349 — dummy content used by every Top-of-Mind placement variant (?tom=1..5), for comparing
+// PLACEMENT only. Not real data; no fetch involved.
+const DUMMY_TOM_TEXT = `## Top of mind this week
+
+Been circling back to a few things that don't fit neatly into a review, but are worth noting down anyway before they slip.
+
+- Rewatched an old favourite and it held up better than expected
+- Started a new book that's already changing how I think about the next one
+- A record I keep putting on in the background without meaning to`
 
 const WALL_KIND_HREF = {
   movie: '/reviews/movies',
@@ -37,6 +49,10 @@ function pickRandomSample(items, count) {
 }
 
 export default function Home() {
+  const router = useRouter()
+  const tomRaw = router.query.tom
+  const tomVariant = ['1', '2', '3', '4', '5'].includes(tomRaw) ? tomRaw : (tomRaw === '0' ? '0' : '1')
+
   const [movies, setMovies] = useState([])
   const [tv, setTv] = useState([])
   const [books, setBooks] = useState([])
@@ -160,7 +176,25 @@ export default function Home() {
           <div className="home-hero-now-playing">
             <NowPlaying />
           </div>
+
+          {tomVariant === '5' && (
+            <div className="tom-variant-hero-strip">
+              <span className="tom-variant-hero-strip-label">Top of mind</span>
+              <div className="tom-variant-hero-strip-body">
+                <Markdown>{DUMMY_TOM_TEXT}</Markdown>
+              </div>
+            </div>
+          )}
         </section>
+
+        {tomVariant === '2' && (
+          <section className="tom-variant-hero-band">
+            <div className="tom-variant-hero-band-inner">
+              <span className="tom-variant-hero-band-label">Top of mind</span>
+              <Markdown>{DUMMY_TOM_TEXT}</Markdown>
+            </div>
+          </section>
+        )}
 
         <section className="home-stats">
           {moviesLoading ? <StatBlockSkeleton /> : <StatBlock value={movies.length} label="movies" accentColor="var(--accent-movies)" />}
@@ -186,9 +220,30 @@ export default function Home() {
           )}
         </section>
 
+        {tomVariant === '3' && (
+          <details className="tom-variant-collapsible">
+            <summary className="tom-variant-collapsible-summary">
+              Top of mind — a few things I&apos;ve been circling back to&hellip;
+            </summary>
+            <div className="tom-variant-collapsible-body">
+              <Markdown>{DUMMY_TOM_TEXT}</Markdown>
+            </div>
+          </details>
+        )}
+
         <section className="home-lower">
           <div className="home-latest">
             <h2 className="home-section-title">Latest takes</h2>
+            {tomVariant === '4' && (
+              <div className="home-latest-card tom-variant-latest-card">
+                <div className="home-latest-body">
+                  <h3 className="home-latest-title">Top of mind</h3>
+                  <div className="tom-variant-latest-card-body">
+                    <Markdown>{DUMMY_TOM_TEXT}</Markdown>
+                  </div>
+                </div>
+              </div>
+            )}
             {latestTakesLoading && <CardRowSkeleton count={3} />}
             {!latestTakesLoading && latestTakes.map((item) => (
               <div key={`${item.kind}-${item.id}`} className="home-latest-card">
@@ -301,6 +356,15 @@ export default function Home() {
                 <Link href="/hot-takes" className="home-hot-takes-viewall">View all &rarr;</Link>
               )}
             </div>
+
+            {tomVariant === '1' && (
+              <div className="tom-variant-rail-panel">
+                <div className="tom-variant-rail-panel-header">
+                  <span className="tom-variant-rail-panel-title">Top of mind</span>
+                </div>
+                <Markdown>{DUMMY_TOM_TEXT}</Markdown>
+              </div>
+            )}
           </div>
         </section>
       </div>
