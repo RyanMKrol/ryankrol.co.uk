@@ -60,3 +60,4 @@
 {"id":"T330","ts":"2026-07-08T04:12:01Z","kind":"scope-creep","rung":2,"attempt":1,"model":"claude-sonnet-5","effort":"high","facets":{"layer":"page","workType":"component","risk":[]},"detail":"scripts/_visual-harness.mjs"}
 {"id":"T330","ts":"2026-07-08T04:26:45Z","kind":"scope-creep","rung":3,"attempt":0,"model":"claude-opus-4-8","effort":"high","facets":{"layer":"page","workType":"component","risk":[]},"detail":"scripts/_visual-harness.mjs scripts/visual-check.mjs"}
 {"id":"T330","ts":"2026-07-08T04:37:47Z","kind":"scope-creep","rung":3,"attempt":1,"model":"claude-opus-4-8","effort":"high","facets":{"layer":"page","workType":"component","risk":[]},"detail":"scripts/_visual-harness.mjs scripts/visual-check.mjs"}
+{"id":"T333","ts":"2026-07-09T10:02:53Z","kind":"ci-red","rung":0,"attempt":0,"model":"claude-sonnet-5","effort":"low","facets":{"layer":"ui","workType":"component","risk":[]},"detail":"CI checks failed on the pushed commit"}

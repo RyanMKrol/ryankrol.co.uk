@@ -9236,7 +9236,7 @@
     {
       "id": "T333",
       "title": "Hardcode the chosen PR-medal-pill variant into PrBadge and remove the dev chooser page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T332"
       ],
