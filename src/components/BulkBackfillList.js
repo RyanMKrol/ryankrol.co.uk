@@ -30,6 +30,7 @@ export default function BulkBackfillList({
 }) {
   const [page, setPage] = useState(1);
   const [rowState, setRowState] = useState({});
+  const [applyingAll, setApplyingAll] = useState(false);
   const controllerRef = useRef(null);
 
   const { items: pageItems, pageCount } = paginate(items, page, pageSize);
@@ -59,7 +60,7 @@ export default function BulkBackfillList({
             [item.id]: {
               ...prev[item.id],
               status: error ? 'error' : 'found',
-              candidates: error ? null : candidates,
+              candidates: error ? null : candidates.slice(0, 3),
               error: error ? (error.message || 'Search failed') : '',
             },
           }));
@@ -102,12 +103,26 @@ export default function BulkBackfillList({
     }
   };
 
+  const confirmAll = async () => {
+    if (applyingAll) return;
+    const toApply = pageItems.filter((item) => {
+      const row = rowState[item.id];
+      return row && row.status === 'found' && row.selectedIndex !== null && row.selectedIndex !== undefined;
+    });
+    if (toApply.length === 0) return;
+    setApplyingAll(true);
+    for (const item of toApply) {
+      await confirmRow(item);
+    }
+    setApplyingAll(false);
+  };
+
   const statusLabel = (row) => {
     if (!row) return 'queued';
     switch (row.status) {
       case 'queued': return 'queued';
       case 'searching': return 'searching…';
-      case 'found': return row.candidates.length === 0 ? 'no matches' : `${row.candidates.length} candidate${row.candidates.length === 1 ? '' : 's'} found`;
+      case 'found': return row.error || (row.candidates.length === 0 ? 'no matches' : `${row.candidates.length} candidate${row.candidates.length === 1 ? '' : 's'} found`);
       case 'saving': return 'saving…';
       case 'saved': return 'saved';
       case 'error': return row.error || 'error';
@@ -117,11 +132,24 @@ export default function BulkBackfillList({
 
   return (
     <div className="bulk-backfill-list">
+      <div className="bbl-page-actions">
+        <button
+          type="button"
+          className="form-button"
+          disabled={applyingAll || !pageItems.some((item) => {
+            const row = rowState[item.id];
+            return row && row.status === 'found' && row.selectedIndex !== null && row.selectedIndex !== undefined;
+          })}
+          onClick={confirmAll}
+        >
+          {applyingAll ? 'Applying…' : 'Apply all selections'}
+        </button>
+      </div>
+
       {pageItems.map((item) => {
         const row = rowState[item.id];
         const candidates = row?.candidates || [];
         const isSaved = row?.status === 'saved';
-        const isSaving = row?.status === 'saving';
 
         return (
           <div key={item.id} className="bbl-row">
@@ -147,19 +175,6 @@ export default function BulkBackfillList({
                     </label>
                   );
                 })}
-              </div>
-            )}
-
-            {(row?.status === 'found' || isSaving || isSaved) && candidates.length > 0 && (
-              <div className="bbl-row-actions">
-                <button
-                  type="button"
-                  className="form-button"
-                  disabled={row?.selectedIndex === null || row?.selectedIndex === undefined || isSaving || isSaved}
-                  onClick={() => confirmRow(item)}
-                >
-                  {isSaving ? 'Saving…' : isSaved ? 'Saved' : 'Confirm'}
-                </button>
               </div>
             )}
           </div>
@@ -199,10 +214,10 @@ export default function BulkBackfillList({
         .bbl-candidate-item {
           padding: 0.4rem;
         }
-        .bbl-row-actions {
-          margin-top: 0.6rem;
+        .bbl-page-actions {
           display: flex;
           justify-content: flex-end;
+          margin-bottom: 0.75rem;
         }
       `}</style>
     </div>

@@ -60,6 +60,17 @@ const movies = [
   mkScreen('Parasite', 5, '21-05-2026'),
   mkScreen('The Social Network', 4, '09-02-2026'),
   mkScreen('Whiplash', 3, '11-12-2025'),
+  // Missing tmdbId — needsMovieBackfill(item) is true, so these surface on /reviews/movies/backfill.
+  { ...mkScreen('Blade Runner', 5, '01-08-2025'), tmdbId: null },
+  { ...mkScreen('Moon', 4, '15-02-2025'), tmdbId: null },
+];
+// TMDB search results for the backfill flow — more than 3 so the T338 cap-at-3 is visible.
+const tmdbSearchResults = [
+  { tmdbId: 201, title: 'Blade Runner', date: '1982-06-25', posterPath: '/synthetic.jpg', overview: 'A blade runner must pursue and terminate replicants.', mediaType: 'movie' },
+  { tmdbId: 202, title: 'Blade Runner 2049', date: '2017-10-06', posterPath: '/synthetic.jpg', overview: 'A young blade runner discovers a long-buried secret.', mediaType: 'movie' },
+  { tmdbId: 203, title: 'Blade Runner: Black Out 2022', date: '2017-08-27', posterPath: '/synthetic.jpg', overview: 'An anime short bridging the two films.', mediaType: 'movie' },
+  { tmdbId: 204, title: 'Blade Runner: Black Lotus', date: '2021-11-14', posterPath: '/synthetic.jpg', overview: 'A spin-off anime series.', mediaType: 'movie' },
+  { tmdbId: 205, title: 'Blade Runner (workprint)', date: '1982-01-01', posterPath: '/synthetic.jpg', overview: 'An early workprint cut.', mediaType: 'movie' },
 ];
 const tv = [
   mkScreen('Andor', 5, '20-05-2026', { mediaType: 'tv', md: true }),
@@ -222,6 +233,7 @@ export function fixtureFor(pathname) {
   if (/^\/api\/workouts\/[^/]+\/exercises$/.test(pathname)) return workoutExercisesDetail;
   if (/^\/api\/workouts\/[^/]+$/.test(pathname)) return workoutObj();
   if (pathname.startsWith('/api/exercises/history/')) return exerciseHistory;
+  if (pathname === '/api/tmdb/search') return tmdbSearchResults;
   console.warn(`[visual-harness] no fixture for ${pathname} — returning []`);
   return [];
 }
@@ -247,6 +259,7 @@ export const PAGES = [
   { name: 'workouts', path: '/workouts', waitFor: ['.workout-session-card'], description: 'Workout history list + programme stats block (split filter + date-range period filter).', covers: ['src/pages/workouts/index.js', 'src/components/ProgrammeOverviewCharts.js', 'src/components/DateRangeFilter.js', 'src/components/PillGroup.js', 'src/components/Badge.js'] },
   { name: 'workout-detail', path: '/workouts/w1', waitFor: ['.workout-exercise-card'], description: 'Single workout detail — per-exercise set breakdown with PR badges.', covers: ['src/pages/workouts/[id].js', 'src/components/StatBlock.js', 'src/components/Badge.js'] },
   { name: 'exercise', path: '/exercises/Chest%20Press%20(Machine)', waitFor: ['.chart-card canvas'], description: 'Per-exercise stats + progress charts (1RM / volume / max-weight) + recent sessions.', covers: ['src/pages/exercises/[exerciseName].js', 'src/components/ExerciseProgressCharts.js', 'src/components/CardioProgressCharts.js', 'src/components/PillGroup.js', 'src/components/StatBlock.js'] },
+  { name: 'reviews-movies-backfill', path: '/reviews/movies/backfill', waitFor: ['.bbl-row'], description: 'Movie metadata backfill — rows awaiting TMDB search results, page-level "Apply all selections" button above the list.', covers: ['src/pages/reviews/movies/backfill.js', 'src/components/BulkBackfillList.js'] },
 ];
 
 // ── FLOWS: states that only appear after an INTERACTION. capture() runs `actions(page)`. ────────
@@ -296,6 +309,26 @@ const bespokeFlows = [
   { name: 'projects-search', path: '/projects', waitFor: ['.project-card'], flow: 'Search projects for "api"; cards narrow by name/description.', description: 'Projects filtered by search to "api".', covers: ['src/pages/projects/index.js', 'src/components/SearchInput.js'], actions: async (page) => { await page.fill('.collection-search-input input', 'api'); } },
   // Home — the on-the-shelf shuffle.
   { name: 'home-skim-shelf', path: '/', waitFor: ['.home-shelf-item'], flow: 'Click "Skim the shelf"; the random vinyl sample re-rolls.', description: 'Home on-the-shelf panel after a shuffle.', covers: ['src/pages/index.js'], actions: async (page) => { await page.click('button.home-shelf-refresh'); } },
+  // Movie backfill — select a TMDB candidate on both awaiting rows, then apply all at once (T338).
+  {
+    name: 'reviews-movies-backfill-apply-all',
+    path: '/reviews/movies/backfill',
+    waitFor: ['.bbl-row'],
+    flow: 'Select the first TMDB candidate on each row awaiting a match, then click "Apply all selections".',
+    description: 'Movie backfill — both rows saved via the page-level "Apply all selections" button (capped at 3 candidates each).',
+    covers: ['src/components/BulkBackfillList.js', 'src/pages/reviews/movies/backfill.js'],
+    actions: async (page) => {
+      const rows = page.locator('.bbl-row');
+      const rowCount = await rows.count();
+      for (let i = 0; i < rowCount; i += 1) {
+        const radio = rows.nth(i).locator('.bbl-candidate-item input[type="radio"]').first();
+        await radio.waitFor({ state: 'visible', timeout: 15000 });
+        await radio.check();
+      }
+      await page.click('.bbl-page-actions button:has-text("Apply all selections")');
+      await page.waitForSelector('.bbl-row-status:has-text("saved")', { state: 'visible', timeout: 15000 });
+    },
+  },
   // Header nav pills — click-and-drag fallback scrolling (T317) for pointers without horizontal
   // scroll input. Shrink the viewport first so the pill row overflows even at "desktop" width.
   {
