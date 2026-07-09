@@ -9571,7 +9571,7 @@
     {
       "id": "T346",
       "title": "Align PR-pill rendering context on /workouts (list) to match the already-correct /workouts/[id] (detail) context",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
