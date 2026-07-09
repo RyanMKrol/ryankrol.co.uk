@@ -9651,7 +9651,7 @@
     {
       "id": "T349",
       "title": "Add 5-variant Top of Mind placement chooser to the homepage (dummy content, query-param switch)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
