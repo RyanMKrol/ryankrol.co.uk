@@ -268,6 +268,7 @@ export const PAGES = [
   { name: 'workout-detail', path: '/workouts/w1', waitFor: ['.workout-exercise-card'], description: 'Single workout detail — per-exercise set breakdown with PR badges.', covers: ['src/pages/workouts/[id].js', 'src/components/StatBlock.js', 'src/components/Badge.js'] },
   { name: 'exercise', path: '/exercises/Chest%20Press%20(Machine)', waitFor: ['.chart-card canvas'], description: 'Per-exercise stats + progress charts (1RM / volume / max-weight) + recent sessions.', covers: ['src/pages/exercises/[exerciseName].js', 'src/components/ExerciseProgressCharts.js', 'src/components/CardioProgressCharts.js', 'src/components/PillGroup.js', 'src/components/StatBlock.js'] },
   { name: 'reviews-movies-backfill', path: '/reviews/movies/backfill', waitFor: ['.bbl-row'], description: 'Movie metadata backfill — rows awaiting TMDB search results, page-level "Apply all selections" button above the list.', covers: ['src/pages/reviews/movies/backfill.js', 'src/components/BulkBackfillList.js'] },
+  { name: 'dev-perfume-card-variants', path: '/dev/perfume-card-variants', waitFor: ['.perfume-v6-card'], description: 'T343 dev-only comparison of perfume card rating/best-for layout variants (baseline, big-rating, header-rating, best-for-bottom), rendered with real fetched data.', covers: ['src/components/perfumeVariants/Variant6Hybrid.js', 'src/pages/dev/perfume-card-variants.js', 'src/styles/globals.css'] },
 ];
 
 // ── FLOWS: states that only appear after an INTERACTION. capture() runs `actions(page)`. ────────

@@ -24,12 +24,47 @@ export function formatApplicationSpotLine({ spot, sprays }) {
   return `${sprays} sprays — ${spot}`;
 }
 
-export default function Variant6Hybrid({ item }) {
+const VARIANTS = ['baseline', 'big-rating', 'header-rating', 'best-for-bottom'];
+
+export default function Variant6Hybrid({ item, variant = 'baseline' }) {
   const hasSeasons = Array.isArray(item.seasons) && item.seasons.length > 0;
   const hasApplicationSpots =
     Array.isArray(item.applicationSpots) && item.applicationSpots.length > 0;
   const hasLongevity = typeof item.longevity === 'number';
   const hasProjection = typeof item.projection === 'number';
+
+  const resolvedVariant = VARIANTS.includes(variant) ? variant : 'baseline';
+  const isHeaderRating = resolvedVariant === 'header-rating';
+  const isBigRating = resolvedVariant === 'big-rating';
+  const isBestForBottom = resolvedVariant === 'best-for-bottom';
+
+  const bestForBlock = hasSeasons && (
+    <div className="perfume-v4-best-for">
+      <p className="perfume-v4-best-for-label">Best for</p>
+      <div className="perfume-v4-season-chips">
+        {item.seasons.map((season) => (
+          <span key={season} className="perfume-v4-season-chip">
+            {season}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+
+  const ratingRow = (
+    <div className="perfume-v1-rating-row">
+      <PipMeter value={item.rating} readOnly />
+      <span
+        className={
+          isBigRating || isHeaderRating
+            ? 'perfume-v1-rating-number perfume-t343-rating-number-big'
+            : 'perfume-v1-rating-number'
+        }
+      >
+        {item.rating}/10
+      </span>
+    </div>
+  );
 
   return (
     <div className="perfume-v6-card">
@@ -37,6 +72,7 @@ export default function Variant6Hybrid({ item }) {
         <div>
           <h3 className="perfume-v1-title">{item.title}</h3>
           <p className="perfume-v1-designer">{item.designer}</p>
+          {isHeaderRating && ratingRow}
         </div>
         <div className="perfume-v1-header-badges">
           {item.type && (
@@ -58,23 +94,9 @@ export default function Variant6Hybrid({ item }) {
         </div>
       )}
 
-      <div className="perfume-v1-rating-row">
-        <PipMeter value={item.rating} readOnly />
-        <span className="perfume-v1-rating-number">{item.rating}/10</span>
-      </div>
+      {!isHeaderRating && ratingRow}
 
-      {hasSeasons && (
-        <div className="perfume-v4-best-for">
-          <p className="perfume-v4-best-for-label">Best for</p>
-          <div className="perfume-v4-season-chips">
-            {item.seasons.map((season) => (
-              <span key={season} className="perfume-v4-season-chip">
-                {season}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+      {!isBestForBottom && bestForBlock}
 
       <div className="perfume-v4-scales">
         {hasLongevity && (() => {
@@ -111,6 +133,8 @@ export default function Variant6Hybrid({ item }) {
           </div>
         )}
       </div>
+
+      {isBestForBottom && bestForBlock}
 
       {hasApplicationSpots && (
         <ul className="perfume-v4-checklist">
