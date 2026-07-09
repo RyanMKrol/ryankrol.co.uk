@@ -9398,7 +9398,7 @@
     {
       "id": "T339",
       "title": "Add skeleton/wireframe loading state to the home page (fixed scope)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
