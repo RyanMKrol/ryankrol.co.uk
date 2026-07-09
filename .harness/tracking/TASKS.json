@@ -9365,7 +9365,7 @@
     {
       "id": "T338",
       "title": "Cap backfill candidates at 3 and add a page-level 'Apply all selections' button to BulkBackfillList",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
