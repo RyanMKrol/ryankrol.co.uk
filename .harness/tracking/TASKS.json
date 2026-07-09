@@ -9498,7 +9498,7 @@
     {
       "id": "T343",
       "title": "Build perfume card rating-size/Best-for-position variants on a dev preview page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
