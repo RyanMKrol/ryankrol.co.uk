@@ -224,19 +224,19 @@ export default function Home() {
                 <>
                   <div className="home-gym-stats">
                     <div>
-                      <div className="home-gym-stat-value">{workoutStats?.totalWorkouts ?? 0}</div>
+                      <div className="home-gym-stat-value">{(workoutStats?.totalWorkouts ?? 0).toLocaleString()}</div>
                       <div className="home-gym-stat-label">sessions</div>
                     </div>
                     <div>
                       <div className="home-gym-stat-value">
-                        {totalVolume ?? '—'}
+                        {totalVolume?.toLocaleString() ?? '—'}
                         {totalVolume && <span className="home-gym-stat-unit">kg</span>}
                       </div>
                       <div className="home-gym-stat-label">total volume</div>
                     </div>
                     <div>
                       <div className="home-gym-stat-value">
-                        {bestSessionVolume ?? '—'}
+                        {bestSessionVolume?.toLocaleString() ?? '—'}
                         {bestSessionVolume && <span className="home-gym-stat-unit">kg</span>}
                       </div>
                       <div className="home-gym-stat-label">best session vol</div>
