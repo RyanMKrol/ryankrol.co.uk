@@ -40,7 +40,9 @@ export default function Variant6Hybrid({ item }) {
         </div>
         <div className="perfume-v1-header-badges">
           {item.type && (
-            <Badge accentColor="var(--accent-perfumes)">{item.type}</Badge>
+            <Tooltip label="What it is">
+              <Badge accentColor="var(--accent-perfumes)">{item.type}</Badge>
+            </Tooltip>
           )}
           {item.ownership && (
             <Tooltip label="What I own">
