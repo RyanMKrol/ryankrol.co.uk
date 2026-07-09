@@ -46,6 +46,7 @@
     "floor": 0.75,
     "minN": 6,
     "poorFitThreshold": 5,
+    "exploreProbabilityPM": 200,
     "_audit": "Verification-aware calibration (the blocking audit gate). Per facet-cell, the loop audits 100% until auditStartN audit-confirmed successes, tapering to auditFloor by auditFloorN. The auditor runs at max(auditorModel/auditorEffort, builder tier). Separate knobs from floor/minN (model selection).",
     "auditStartN": 3,
     "auditFloorN": 8,
