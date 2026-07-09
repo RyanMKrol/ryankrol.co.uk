@@ -8952,7 +8952,7 @@
     {
       "id": "T322",
       "title": "Drop the 'PR' suffix from PR pill labels",
-      "status": "blocked",
+      "status": "failed",
       "dependsOn": [],
       "gate": null,
       "tags": [
@@ -9083,7 +9083,7 @@
     {
       "id": "T327",
       "title": "Cap backfill candidates at 3 and add a page-level 'Apply all selections' button to BulkBackfillList",
-      "status": "blocked",
+      "status": "failed",
       "dependsOn": [],
       "gate": null,
       "tags": [
@@ -9168,7 +9168,7 @@
     {
       "id": "T330",
       "title": "Add skeleton/wireframe loading state to the home page",
-      "status": "blocked",
+      "status": "failed",
       "dependsOn": [],
       "gate": null,
       "tags": [
