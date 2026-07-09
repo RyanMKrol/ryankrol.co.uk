@@ -60,6 +60,10 @@ next-env.d.ts
 # turn, so the question survives even if the coordinating session ends before relaying it to the
 # owner. Deleted once the unit is unblocked and finishes shaping. Never committed.
 .harness/.pending-questions/
+# /fix-scope-gaps scratch: per-task dismissal records for scope-authoring WARNs judged false-positive
+# (path + spec content hash + reason), so a resolved warning doesn't re-flag on the next check-in.
+# Never committed — see the implementation-harness plugin's fix-scope-gaps skill.
+.harness/.scope-gap-ignores/
 # Private seed data pasted alongside an idea (e.g. spreadsheet dumps) — same privacy as the inbox.
 .harness/perfume-seed-data.tsv
 # atomic-write temps for the owner-owned overlays + TASKS.json.
