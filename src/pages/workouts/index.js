@@ -241,10 +241,14 @@ export default function Workouts() {
                       <ul className="workout-session-exercise-list">
                         {shown.map(({ name, prAxes }) => (
                           <li key={name} className="workout-session-exercise-item">
-                            {name}
-                            {prAxes.map(({ key, label, ariaLabel }) => (
-                              <PrBadge key={key} label={label} ariaLabel={ariaLabel} />
-                            ))}
+                            <span className="workout-session-exercise-name">{name}</span>
+                            {prAxes.length > 0 && (
+                              <span className="workout-session-exercise-badges">
+                                {prAxes.map(({ key, label, ariaLabel }) => (
+                                  <PrBadge key={key} label={label} ariaLabel={ariaLabel} />
+                                ))}
+                              </span>
+                            )}
                           </li>
                         ))}
                         {remaining > 0 && (

@@ -2003,6 +2003,25 @@ input[type='range'].form-input::-moz-range-thumb {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.workout-session-exercise-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.workout-session-exercise-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
 }
 
 .workout-session-exercise-item .collection-badge {
