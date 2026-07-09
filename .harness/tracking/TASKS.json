@@ -9449,7 +9449,7 @@
     {
       "id": "T341",
       "title": "Add 'What it is' tooltip above the perfume type pill",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
