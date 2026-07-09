@@ -9661,7 +9661,8 @@
       ],
       "scope": [
         "src/pages/index.js",
-        "src/styles/globals.css"
+        "src/styles/globals.css",
+        "scripts/_visual-harness.mjs"
       ],
       "design": null,
       "verify": [],
