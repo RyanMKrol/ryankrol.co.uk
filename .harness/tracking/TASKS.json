@@ -9870,7 +9870,7 @@
     {
       "id": "T357",
       "title": "Rename the home \"collection wall\" section heading to \"A slice of everything\"",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
