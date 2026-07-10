@@ -9946,7 +9946,7 @@
     {
       "id": "T360",
       "title": "Fix perfume-card-variants dev page to use the real perfume page's 2-column layout",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
