@@ -9723,6 +9723,149 @@
           "full-stack"
         ]
       }
+    },
+    {
+      "id": "T352",
+      "title": "Books search: propagate real upstream Google Books error status + log diagnostic detail",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "books",
+        "backfill",
+        "error-handling"
+      ],
+      "scope": [
+        "src/pages/api/books/search.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build"
+      ],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T352.md",
+      "facets": {
+        "layer": "api",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T353",
+      "title": "Raise Bulk Backfill candidate cap from 3 to 10 across all 4 review types",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "backfill",
+        "ui",
+        "all-review-types"
+      ],
+      "scope": [
+        "src/components/BulkBackfillList.js",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build",
+        "node scripts/visual-check.mjs"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T353.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T354",
+      "title": "Add a 1/3/6-month period filter to the Listening page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "listening",
+        "lastfm",
+        "filter"
+      ],
+      "scope": [
+        "src/pages/listening/index.js"
+      ],
+      "design": null,
+      "verify": [
+        "npm run lint",
+        "npm test",
+        "npm run build",
+        "node scripts/visual-check.mjs"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T354.md",
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": []
+      }
+    },
+    {
+      "id": "T355",
+      "title": "Hot Takes add form: swap plain textarea for MarkdownEditor (fixes styling too)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "hot-takes",
+        "markdown-editor",
+        "styling"
+      ],
+      "scope": [
+        "src/pages/hot-takes/add.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T355.md",
+      "facets": {
+        "layer": "page",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T356",
+      "title": "Add edit/delete flow for Hot Takes",
+      "status": "pending",
+      "dependsOn": [
+        "T355"
+      ],
+      "gate": null,
+      "tags": [
+        "hot-takes",
+        "feature",
+        "edit",
+        "delete"
+      ],
+      "scope": [
+        "src/pages/hot-takes/edit.js",
+        "src/pages/hot-takes/edit/[id].js",
+        "src/pages/api/hot-takes/update.js",
+        "src/pages/api/hot-takes/delete.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T356.md",
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      }
     }
   ]
 }
