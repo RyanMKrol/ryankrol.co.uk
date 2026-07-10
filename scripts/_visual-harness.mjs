@@ -64,13 +64,19 @@ const movies = [
   { ...mkScreen('Blade Runner', 5, '01-08-2025'), tmdbId: null },
   { ...mkScreen('Moon', 4, '15-02-2025'), tmdbId: null },
 ];
-// TMDB search results for the backfill flow — more than 3 so the T338 cap-at-3 is visible.
+// TMDB search results for the backfill flow — more than 10 so the T353 cap-at-10 is visible.
 const tmdbSearchResults = [
   { tmdbId: 201, title: 'Blade Runner', date: '1982-06-25', posterPath: '/synthetic.jpg', overview: 'A blade runner must pursue and terminate replicants.', mediaType: 'movie' },
   { tmdbId: 202, title: 'Blade Runner 2049', date: '2017-10-06', posterPath: '/synthetic.jpg', overview: 'A young blade runner discovers a long-buried secret.', mediaType: 'movie' },
   { tmdbId: 203, title: 'Blade Runner: Black Out 2022', date: '2017-08-27', posterPath: '/synthetic.jpg', overview: 'An anime short bridging the two films.', mediaType: 'movie' },
   { tmdbId: 204, title: 'Blade Runner: Black Lotus', date: '2021-11-14', posterPath: '/synthetic.jpg', overview: 'A spin-off anime series.', mediaType: 'movie' },
   { tmdbId: 205, title: 'Blade Runner (workprint)', date: '1982-01-01', posterPath: '/synthetic.jpg', overview: 'An early workprint cut.', mediaType: 'movie' },
+  { tmdbId: 206, title: 'Blade Runner (final cut)', date: '2007-10-05', posterPath: '/synthetic.jpg', overview: "Ridley Scott's final cut of the original film.", mediaType: 'movie' },
+  { tmdbId: 207, title: "Blade Runner: The Director's Cut", date: '1992-09-11', posterPath: '/synthetic.jpg', overview: 'The 1992 director\'s cut re-release.', mediaType: 'movie' },
+  { tmdbId: 208, title: 'Blade Runner: Black Out 2036', date: '2036-01-01', posterPath: '/synthetic.jpg', overview: 'A fictional future tie-in short.', mediaType: 'movie' },
+  { tmdbId: 209, title: 'Blade Runner: Origins', date: '2023-01-01', posterPath: '/synthetic.jpg', overview: 'A prequel comic adaptation.', mediaType: 'movie' },
+  { tmdbId: 210, title: 'Blade Runner: 2099', date: '2026-01-01', posterPath: '/synthetic.jpg', overview: 'An upcoming sequel series.', mediaType: 'movie' },
+  { tmdbId: 211, title: 'Blade Runner: The Musical', date: '1999-01-01', posterPath: '/synthetic.jpg', overview: 'A fan-made parody stage adaptation.', mediaType: 'movie' },
 ];
 const tv = [
   mkScreen('Andor', 5, '20-05-2026', { mediaType: 'tv', md: true }),
@@ -333,7 +339,7 @@ const bespokeFlows = [
     path: '/reviews/movies/backfill',
     waitFor: ['.bbl-row'],
     flow: 'Select the first TMDB candidate on each row awaiting a match, then click "Apply all selections".',
-    description: 'Movie backfill — both rows saved via the page-level "Apply all selections" button (capped at 3 candidates each).',
+    description: 'Movie backfill — both rows saved via the page-level "Apply all selections" button (capped at 10 candidates each).',
     covers: ['src/components/BulkBackfillList.js', 'src/pages/reviews/movies/backfill.js'],
     actions: async (page) => {
       const rows = page.locator('.bbl-row');

@@ -14,12 +14,12 @@ const baseProps = {
 
 const applyAllButton = () => screen.getByRole('button', { name: /apply all selections|applying…/i });
 
-test('caps candidates at 3 and the status label reflects the capped count', async () => {
-  const onSearch = jest.fn().mockResolvedValue(mkCandidates(5));
+test('caps candidates at 10 and the status label reflects the capped count', async () => {
+  const onSearch = jest.fn().mockResolvedValue(mkCandidates(15));
   render(<BulkBackfillList items={mkItems(1)} onSearch={onSearch} onConfirm={jest.fn()} {...baseProps} />);
 
-  await screen.findByText('3 candidates found');
-  expect(screen.getAllByRole('radio')).toHaveLength(3);
+  await screen.findByText('10 candidates found');
+  expect(screen.getAllByRole('radio')).toHaveLength(10);
 });
 
 test('"Apply all selections" is disabled until a row has a selection, and while applying', async () => {

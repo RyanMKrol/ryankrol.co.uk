@@ -60,7 +60,7 @@ export default function BulkBackfillList({
             [item.id]: {
               ...prev[item.id],
               status: error ? 'error' : 'found',
-              candidates: error ? null : candidates.slice(0, 3),
+              candidates: error ? null : candidates.slice(0, 10),
               error: error ? (error.message || 'Search failed') : '',
             },
           }));
