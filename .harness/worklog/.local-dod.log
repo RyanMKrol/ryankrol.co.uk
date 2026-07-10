@@ -27,8 +27,8 @@
 > ryankrol.co.uk@1.0.0 test
 > jest
 
-PASS src/components/SortButtons.test.js
 PASS src/components/Markdown.test.js
+PASS src/components/SortButtons.test.js
 PASS src/__tests__/pages/projects/index.test.js
   ● Console
 
@@ -55,23 +55,18 @@ PASS src/__tests__/pages/projects/index.test.js
       at performWorkUntilDeadline (node_modules/scheduler/cjs/scheduler.development.js:45:48)
       at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
 
-PASS src/components/ReviewCard.test.js
 PASS src/components/MarkdownEditor.test.js
-PASS src/scripts/backfillPersonalBests.test.js
+PASS src/components/ReviewCard.test.js
+PASS src/scripts/backfillMissingExerciseRows.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
 PASS src/tests/workoutsIndex.test.js
-PASS test/pages/workouts/index.test.js
-PASS src/pages/api/reviews/movies/update.test.js
-PASS src/components/Pagination.test.js
-PASS src/lib/workoutQueries.test.js
-PASS src/__tests__/pages/reviews/albums/add.test.js
-PASS src/scripts/migrateVinylToIdTable.test.js
+PASS src/scripts/migrateTvToIdTable.test.js
   ● Console
 
     console.log
@@ -79,552 +74,20 @@ PASS src/scripts/migrateVinylToIdTable.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/scripts/auditWorkouts.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-    console.log
-      Backfilling 2 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at log (src/scripts/auditWorkouts.js:146:11)
-
-    console.log
-      Workouts: 2 stored, 0 skipped
-
-      at log (src/scripts/auditWorkouts.js:147:11)
-
-    console.log
-      Backfilling 2 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 0 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Workout already exists, skipping
-
-      at log (src/scripts/auditWorkouts.js:142:15)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at log (src/scripts/auditWorkouts.js:146:11)
-
-    console.log
-      Workouts: 1 stored, 1 skipped
-
-      at log (src/scripts/auditWorkouts.js:147:11)
-
-    console.log
-      Backfilling 1 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/1] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-PASS src/components/PillGroup.test.js
-PASS src/scripts/migrateOpenLibraryBooksToGoogleBooks.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/components/NowPlaying.test.js
-PASS src/__tests__/pages/reviews/albums/edit.test.js
-PASS src/pages/api/reviews/books/add.test.js
-PASS src/lib/workoutBackfill.test.js
-  ● Console
-
-    console.log
-      🚀 [BACKFILL] Starting workout backfill from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:150:11)
-
-    console.log
-      📡 [BACKFILL] Fetching page 1 from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:163:15)
-
-    console.log
-      📝 [BACKFILL] Processing 1 workouts from page 1
-
-      at log (src/lib/workoutBackfill.js:190:17)
-
-    console.log
-      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:195:19)
-
-    console.log
-      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
-
-      at log (src/lib/workoutBackfill.js:86:11)
-
-    console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (1ms)
-
-      at log (src/lib/workoutBackfill.js:127:15)
-
-    console.log
-      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:44:13)
-
-    console.log
-      ✅ [BACKFILL] Stored workout in 0ms: Push Day
-
-      at log (src/lib/workoutBackfill.js:49:13)
-
-    console.log
-      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-1
-
-      at log (src/lib/workoutBackfill.js:50:13)
-
-    console.log
-      📊 [BACKFILL] Progress: 1 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:201:21)
-
-    console.log
-      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
-
-      at log (src/lib/workoutBackfill.js:214:19)
-
-    console.log
-      📄 Reached last page
-
-      at log (src/lib/workoutBackfill.js:220:19)
-
-    console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 167ms
-
-      at log (src/lib/workoutBackfill.js:236:13)
-
-    console.log
-      📊 [BACKFILL] Summary: 1 API calls, 1 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:237:13)
-
-    console.log
-      🗑️  [BACKFILL] New workouts found, clearing workout caches...
-
-      at log (src/lib/workoutBackfill.js:241:15)
-
-    console.log
-      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
-
-      at log (src/lib/workoutBackfill.js:246:15)
-
-    console.log
-      🚀 [BACKFILL] Starting workout backfill from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:150:11)
-
-    console.log
-      📡 [BACKFILL] Fetching page 1 from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:163:15)
-
-    console.log
-      📝 [BACKFILL] Processing 1 workouts from page 1
-
-      at log (src/lib/workoutBackfill.js:190:17)
-
-    console.log
-      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:195:19)
-
-    console.log
-      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
-
-      at log (src/lib/workoutBackfill.js:86:11)
-
-    console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
-
-      at log (src/lib/workoutBackfill.js:127:15)
-
-    console.log
-      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:44:13)
-
-    console.log
-      ⚠️  [BACKFILL] Workout workout-1 already exists, skipping
-
-      at log (src/lib/workoutBackfill.js:62:17)
-
-    console.log
-      ⏭️  [BACKFILL] Consecutive existing: 1/10
-
-      at log (src/lib/workoutBackfill.js:204:21)
-
-    console.log
-      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
-
-      at log (src/lib/workoutBackfill.js:214:19)
-
-    console.log
-      📄 Reached last page
-
-      at log (src/lib/workoutBackfill.js:220:19)
-
-    console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 153ms
-
-      at log (src/lib/workoutBackfill.js:236:13)
-
-    console.log
-      📊 [BACKFILL] Summary: 1 API calls, 0 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:237:13)
-
-    console.log
-      ℹ️  [BACKFILL] No new workouts found, keeping existing cache
-
-      at log (src/lib/workoutBackfill.js:248:15)
-
-    console.log
-      🚀 [BACKFILL] Starting workout backfill from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:150:11)
-
-    console.log
-      📡 [BACKFILL] Fetching page 1 from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:163:15)
-
-    console.log
-      📝 [BACKFILL] Processing 1 workouts from page 1
-
-      at log (src/lib/workoutBackfill.js:190:17)
-
-    console.log
-      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:195:19)
-
-    console.log
-      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
-
-      at log (src/lib/workoutBackfill.js:86:11)
-
-    console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
-
-      at log (src/lib/workoutBackfill.js:127:15)
-
-    console.log
-      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:44:13)
-
-    console.log
-      ⚠️  [BACKFILL] Workout workout-1 already exists, skipping
-
-      at log (src/lib/workoutBackfill.js:62:17)
-
-    console.log
-      ⏭️  [BACKFILL] Consecutive existing: 1/10
-
-      at log (src/lib/workoutBackfill.js:204:21)
-
-    console.log
-      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
-
-      at log (src/lib/workoutBackfill.js:214:19)
-
-    console.log
-      📄 Reached last page
-
-      at log (src/lib/workoutBackfill.js:220:19)
-
-    console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 155ms
-
-      at log (src/lib/workoutBackfill.js:236:13)
-
-    console.log
-      📊 [BACKFILL] Summary: 1 API calls, 0 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:237:13)
-
-    console.log
-      ℹ️  [BACKFILL] No new workouts found, keeping existing cache
-
-      at log (src/lib/workoutBackfill.js:248:15)
-
-    console.log
-      🚀 [BACKFILL] Starting workout backfill from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:150:11)
-
-    console.log
-      📡 [BACKFILL] Fetching page 1 from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:163:15)
-
-    console.log
-      📝 [BACKFILL] Processing 1 workouts from page 1
-
-      at log (src/lib/workoutBackfill.js:190:17)
-
-    console.log
-      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:195:19)
-
-    console.log
-      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
-
-      at log (src/lib/workoutBackfill.js:86:11)
-
-    console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
-
-      at log (src/lib/workoutBackfill.js:127:15)
-
-    console.log
-      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:44:13)
-
-    console.log
-      🩹 [BACKFILL] Workout workout-1 exists but is incomplete (missing exercises), healing...
-
-      at log (src/lib/workoutBackfill.js:66:15)
-
-    console.log
-      ✅ [BACKFILL] Healed incomplete workout workout-1
-
-      at log (src/lib/workoutBackfill.js:72:15)
-
-    console.log
-      📊 [BACKFILL] Progress: 1 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:201:21)
-
-    console.log
-      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
-
-      at log (src/lib/workoutBackfill.js:214:19)
-
-    console.log
-      📄 Reached last page
-
-      at log (src/lib/workoutBackfill.js:220:19)
-
-    console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 153ms
-
-      at log (src/lib/workoutBackfill.js:236:13)
-
-    console.log
-      📊 [BACKFILL] Summary: 1 API calls, 1 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:237:13)
-
-    console.log
-      🗑️  [BACKFILL] New workouts found, clearing workout caches...
-
-      at log (src/lib/workoutBackfill.js:241:15)
-
-    console.log
-      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
-
-      at log (src/lib/workoutBackfill.js:246:15)
-
-    console.log
-      🚀 [BACKFILL] Starting workout backfill from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:150:11)
-
-    console.log
-      📡 [BACKFILL] Fetching page 1 from Hevy API...
-
-      at log (src/lib/workoutBackfill.js:163:15)
-
-    console.log
-      📝 [BACKFILL] Processing 2 workouts from page 1
-
-      at log (src/lib/workoutBackfill.js:190:17)
-
-    console.log
-      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:195:19)
-
-    console.log
-      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
-
-      at log (src/lib/workoutBackfill.js:86:11)
-
-    console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
-
-      at log (src/lib/workoutBackfill.js:127:15)
-
-    console.log
-      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
-
-      at log (src/lib/workoutBackfill.js:44:13)
-
-    console.log
-      ✅ [BACKFILL] Stored workout in 0ms: Push Day
-
-      at log (src/lib/workoutBackfill.js:49:13)
-
-    console.log
-      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-1
-
-      at log (src/lib/workoutBackfill.js:50:13)
-
-    console.log
-      📊 [BACKFILL] Progress: 1 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:201:21)
-
-    console.log
-      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
-
-      at log (src/lib/workoutBackfill.js:214:19)
-
-    console.log
-      📅 [BACKFILL] Processing workout from 2026-06-08: Push Day (workout-2)
-
-      at log (src/lib/workoutBackfill.js:195:19)
-
-    console.log
-      🗄️  [BACKFILL] Storing 1 exercises for workout workout-2
-
-      at log (src/lib/workoutBackfill.js:86:11)
-
-    console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
-
-      at log (src/lib/workoutBackfill.js:127:15)
-
-    console.log
-      🗄️  [BACKFILL] Storing workout: Push Day (workout-2)
-
-      at log (src/lib/workoutBackfill.js:44:13)
-
-    console.log
-      ✅ [BACKFILL] Stored workout in 0ms: Push Day
-
-      at log (src/lib/workoutBackfill.js:49:13)
-
-    console.log
-      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-2
-
-      at log (src/lib/workoutBackfill.js:50:13)
-
-    console.log
-      📊 [BACKFILL] Progress: 2 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:201:21)
-
-    console.log
-      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
-
-      at log (src/lib/workoutBackfill.js:214:19)
-
-    console.log
-      📄 Reached last page
-
-      at log (src/lib/workoutBackfill.js:220:19)
-
-    console.log
-      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 307ms
-
-      at log (src/lib/workoutBackfill.js:236:13)
-
-    console.log
-      📊 [BACKFILL] Summary: 1 API calls, 2 new workouts stored
-
-      at log (src/lib/workoutBackfill.js:237:13)
-
-    console.log
-      🗑️  [BACKFILL] New workouts found, clearing workout caches...
-
-      at log (src/lib/workoutBackfill.js:241:15)
-
-    console.log
-      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
-
-      at log (src/lib/workoutBackfill.js:246:15)
-
-PASS src/pages/api/reviews/movies/add.test.js
+PASS src/pages/api/reviews/perfumes/update.test.js
 PASS src/components/StarRating.test.js
-PASS src/__tests__/pages/reviews/perfumes/add.test.js
-PASS src/__tests__/pages/reviews/books/edit.test.js
-PASS src/__tests__/pages/reviews/books/add.test.js
-PASS src/pages/api/reviews/albums/add.test.js
-PASS src/__tests__/pages/reviews/movies/add.test.js
-PASS src/components/HomeSkeleton.test.js
+PASS src/components/Pagination.test.js
 PASS src/pages/api/reviews/tv/update.test.js
-PASS src/components/perfumeVariants/Variant6Hybrid.test.js
-PASS src/pages/api/reviews/tv/add.test.js
-PASS src/__tests__/pages/reviews/perfumes/edit.test.js
-PASS src/__tests__/pages/reviews/tv/edit.test.js
-PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
+PASS src/scripts/backfillPersonalBests.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
+PASS test/pages/workouts/index.test.js
+PASS src/pages/api/reviews/movies/update.test.js
 PASS src/components/Header.test.js
   ● Console
 
@@ -852,15 +315,671 @@ PASS src/components/Header.test.js
       at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:6927:7)
       at setLoading (src/components/NowPlaying.js:22:9)
 
-PASS src/scripts/backfillMissingExerciseRows.test.js
+PASS src/__tests__/pages/reviews/books/add.test.js
+PASS src/__tests__/pages/reviews/perfumes/add.test.js
+PASS src/components/PillGroup.test.js
+PASS src/lib/googlebooks.test.js
+PASS src/components/perfumeVariants/Variant6Hybrid.test.js
+PASS src/__tests__/pages/reviews/tv/edit.test.js
+PASS src/pages/api/reviews/tv/add.test.js
+PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/scripts/migrateMoviesToIdTable.test.js
+PASS src/pages/api/books/search.test.js
+  ● Console
+
+    console.warn
+      ⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production
+
+      53 |     url.searchParams.set('key', apiKey);
+      54 |   } else {
+    > 55 |     console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
+         |             ^
+      56 |   }
+      57 |
+      58 |   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
+
+      at warn (src/pages/api/books/search.js:55:13)
+      at searchGoogleBooks (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:41:18)
+
+    console.log
+      📚 [GoogleBooks] Searching books: title="Dune"
+
+      at log (src/pages/api/books/search.js:58:11)
+
+    console.warn
+      ⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production
+
+      53 |     url.searchParams.set('key', apiKey);
+      54 |   } else {
+    > 55 |     console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
+         |             ^
+      56 |   }
+      57 |
+      58 |   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
+
+      at warn (src/pages/api/books/search.js:55:13)
+      at searchGoogleBooks (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:72:18)
+
+    console.log
+      📚 [GoogleBooks] Searching books: title="Dune"
+
+      at log (src/pages/api/books/search.js:58:11)
+
+    console.warn
+      ⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production
+
+      53 |     url.searchParams.set('key', apiKey);
+      54 |   } else {
+    > 55 |     console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
+         |             ^
+      56 |   }
+      57 |
+      58 |   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
+
+      at warn (src/pages/api/books/search.js:55:13)
+      at searchGoogleBooks (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:90:18)
+
+    console.log
+      📚 [GoogleBooks] Searching books: title="Dune" author="Frank Herbert"
+
+      at log (src/pages/api/books/search.js:58:11)
+
+    console.warn
+      ⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production
+
+      53 |     url.searchParams.set('key', apiKey);
+      54 |   } else {
+    > 55 |     console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
+         |             ^
+      56 |   }
+      57 |
+      58 |   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
+
+      at warn (src/pages/api/books/search.js:55:13)
+      at searchGoogleBooks (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:110:18)
+
+    console.log
+      📚 [GoogleBooks] Searching books: title="Dune" author="Frank Herbert"
+
+      at log (src/pages/api/books/search.js:58:11)
+
+PASS src/scripts/migratePerfumeOwnership.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/github/repos.test.js
+  ● Console
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      63 |       for (;;) {
+      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
+    > 65 |         const response = await fetch(githubUrl, { headers });
+         |                         ^
+      66 |
+      67 |         if (!response.ok) {
+      68 |           throw new Error(`GitHub API error: ${response.status}`);
+
+      at src/pages/api/github/repos.js:65:25
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:56:56)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:81:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      63 |       for (;;) {
+      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
+    > 65 |         const response = await fetch(githubUrl, { headers });
+         |                         ^
+      66 |
+      67 |         if (!response.ok) {
+      68 |           throw new Error(`GitHub API error: ${response.status}`);
+
+      at src/pages/api/github/repos.js:65:25
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:56:56)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:106:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      63 |       for (;;) {
+      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
+    > 65 |         const response = await fetch(githubUrl, { headers });
+         |                         ^
+      66 |
+      67 |         if (!response.ok) {
+      68 |           throw new Error(`GitHub API error: ${response.status}`);
+
+      at src/pages/api/github/repos.js:65:25
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:56:56)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:128:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      63 |       for (;;) {
+      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
+    > 65 |         const response = await fetch(githubUrl, { headers });
+         |                         ^
+      66 |
+      67 |         if (!response.ok) {
+      68 |           throw new Error(`GitHub API error: ${response.status}`);
+
+      at src/pages/api/github/repos.js:65:25
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:56:56)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:165:20)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      63 |       for (;;) {
+      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
+    > 65 |         const response = await fetch(githubUrl, { headers });
+         |                         ^
+      66 |
+      67 |         if (!response.ok) {
+      68 |           throw new Error(`GitHub API error: ${response.status}`);
+
+      at src/pages/api/github/repos.js:65:25
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:56:56)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:181:20)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      63 |       for (;;) {
+      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
+    > 65 |         const response = await fetch(githubUrl, { headers });
+         |                         ^
+      66 |
+      67 |         if (!response.ok) {
+      68 |           throw new Error(`GitHub API error: ${response.status}`);
+
+      at src/pages/api/github/repos.js:65:25
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:56:56)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:20)
+
+    console.warn
+      ⚠️ [GitHub] commit-count fetch failed for testuser/public-repo: 403
+
+      104 |             const fromLinkHeader = parseCommitCountFromLinkHeader(linkHeader);
+      105 |             if (fromLinkHeader !== null) {
+    > 106 |               return { ...repo, commitCount: fromLinkHeader };
+          |                                 ^
+      107 |             }
+      108 |             // No Link header means there's only one page of results (0 or 1 commits) —
+      109 |             // the response body's array length tells us which.
+
+      at src/pages/api/github/repos.js:106:33
+          at async Promise.all (index 0)
+      at src/pages/api/github/repos.js:99:43
+      at handler (src/pages/api/github/repos.js:56:23)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:7)
+
+PASS src/__tests__/pages/reviews/tv/add.test.js
+PASS src/lib/workoutBackfill.test.js
+  ● Console
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 1 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ✅ [BACKFILL] Stored workout in 0ms: Push Day
+
+      at log (src/lib/workoutBackfill.js:49:13)
+
+    console.log
+      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-1
+
+      at log (src/lib/workoutBackfill.js:50:13)
+
+    console.log
+      📊 [BACKFILL] Progress: 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:201:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 157ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      🗑️  [BACKFILL] New workouts found, clearing workout caches...
+
+      at log (src/lib/workoutBackfill.js:241:15)
+
+    console.log
+      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
+
+      at log (src/lib/workoutBackfill.js:246:15)
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 1 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ⚠️  [BACKFILL] Workout workout-1 already exists, skipping
+
+      at log (src/lib/workoutBackfill.js:62:17)
+
+    console.log
+      ⏭️  [BACKFILL] Consecutive existing: 1/10
+
+      at log (src/lib/workoutBackfill.js:204:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 153ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 0 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      ℹ️  [BACKFILL] No new workouts found, keeping existing cache
+
+      at log (src/lib/workoutBackfill.js:248:15)
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 1 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ⚠️  [BACKFILL] Workout workout-1 already exists, skipping
+
+      at log (src/lib/workoutBackfill.js:62:17)
+
+    console.log
+      ⏭️  [BACKFILL] Consecutive existing: 1/10
+
+      at log (src/lib/workoutBackfill.js:204:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 154ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 0 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      ℹ️  [BACKFILL] No new workouts found, keeping existing cache
+
+      at log (src/lib/workoutBackfill.js:248:15)
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 1 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      🩹 [BACKFILL] Workout workout-1 exists but is incomplete (missing exercises), healing...
+
+      at log (src/lib/workoutBackfill.js:66:15)
+
+    console.log
+      ✅ [BACKFILL] Healed incomplete workout workout-1
+
+      at log (src/lib/workoutBackfill.js:72:15)
+
+    console.log
+      📊 [BACKFILL] Progress: 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:201:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 152ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      🗑️  [BACKFILL] New workouts found, clearing workout caches...
+
+      at log (src/lib/workoutBackfill.js:241:15)
+
+    console.log
+      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
+
+      at log (src/lib/workoutBackfill.js:246:15)
+
+    console.log
+      🚀 [BACKFILL] Starting workout backfill from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:150:11)
+
+    console.log
+      📡 [BACKFILL] Fetching page 1 from Hevy API...
+
+      at log (src/lib/workoutBackfill.js:163:15)
+
+    console.log
+      📝 [BACKFILL] Processing 2 workouts from page 1
+
+      at log (src/lib/workoutBackfill.js:190:17)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-01: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-1
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-1)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ✅ [BACKFILL] Stored workout in 0ms: Push Day
+
+      at log (src/lib/workoutBackfill.js:49:13)
+
+    console.log
+      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-1
+
+      at log (src/lib/workoutBackfill.js:50:13)
+
+    console.log
+      📊 [BACKFILL] Progress: 1 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:201:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📅 [BACKFILL] Processing workout from 2026-06-08: Push Day (workout-2)
+
+      at log (src/lib/workoutBackfill.js:195:19)
+
+    console.log
+      🗄️  [BACKFILL] Storing 1 exercises for workout workout-2
+
+      at log (src/lib/workoutBackfill.js:86:11)
+
+    console.log
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+
+      at log (src/lib/workoutBackfill.js:127:15)
+
+    console.log
+      🗄️  [BACKFILL] Storing workout: Push Day (workout-2)
+
+      at log (src/lib/workoutBackfill.js:44:13)
+
+    console.log
+      ✅ [BACKFILL] Stored workout in 0ms: Push Day
+
+      at log (src/lib/workoutBackfill.js:49:13)
+
+    console.log
+      ✅ [BACKFILL] Successfully stored workout and all exercises for workout-2
+
+      at log (src/lib/workoutBackfill.js:50:13)
+
+    console.log
+      📊 [BACKFILL] Progress: 2 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:201:21)
+
+    console.log
+      ⏱️  [BACKFILL] Rate limiting: waiting 150ms...
+
+      at log (src/lib/workoutBackfill.js:214:19)
+
+    console.log
+      📄 Reached last page
+
+      at log (src/lib/workoutBackfill.js:220:19)
+
+    console.log
+      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 307ms
+
+      at log (src/lib/workoutBackfill.js:236:13)
+
+    console.log
+      📊 [BACKFILL] Summary: 1 API calls, 2 new workouts stored
+
+      at log (src/lib/workoutBackfill.js:237:13)
+
+    console.log
+      🗑️  [BACKFILL] New workouts found, clearing workout caches...
+
+      at log (src/lib/workoutBackfill.js:241:15)
+
+    console.log
+      ✅ [BACKFILL] Cache cleared for all workout-related endpoints
+
+      at log (src/lib/workoutBackfill.js:246:15)
+
+PASS src/scripts/migrateAlbumsToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/__tests__/pages/reviews/perfumes/edit.test.js
+PASS src/pages/api/reviews/movies/add.test.js
+PASS src/scripts/migrateVinylToIdTable.test.js
   ● Console
 
     console.log
@@ -868,149 +987,7 @@ PASS src/scripts/migrateMoviesToIdTable.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/__tests__/pages/reviews/movies/edit.test.js
-PASS src/lib/dateRange.test.js
-PASS src/scripts/migrateBooksToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/lib/topOfMind.test.js
-PASS src/scripts/migrateTvToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/__tests__/pages/reviews/tv/add.test.js
-PASS src/lib/workoutMetrics.test.js
-PASS src/pages/api/github/repos.test.js
-  ● Console
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
-      48 |       } else {
-    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
-         |                 ^
-      50 |       }
-      51 |
-      52 |       const PER_PAGE = 100;
-
-      at warn (src/pages/api/github/repos.js:49:17)
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:39:37)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:81:18)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
-      48 |       } else {
-    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
-         |                 ^
-      50 |       }
-      51 |
-      52 |       const PER_PAGE = 100;
-
-      at warn (src/pages/api/github/repos.js:49:17)
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:39:37)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:106:18)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
-      48 |       } else {
-    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
-         |                 ^
-      50 |       }
-      51 |
-      52 |       const PER_PAGE = 100;
-
-      at warn (src/pages/api/github/repos.js:49:17)
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:39:37)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:128:18)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
-      48 |       } else {
-    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
-         |                 ^
-      50 |       }
-      51 |
-      52 |       const PER_PAGE = 100;
-
-      at warn (src/pages/api/github/repos.js:49:17)
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:39:37)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:165:20)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
-      48 |       } else {
-    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
-         |                 ^
-      50 |       }
-      51 |
-      52 |       const PER_PAGE = 100;
-
-      at warn (src/pages/api/github/repos.js:49:17)
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:39:37)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:181:20)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
-      48 |       } else {
-    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
-         |                 ^
-      50 |       }
-      51 |
-      52 |       const PER_PAGE = 100;
-
-      at warn (src/pages/api/github/repos.js:49:17)
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:39:37)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:20)
-
-    console.warn
-      ⚠️ [GitHub] commit-count fetch failed for testuser/public-repo: 403
-
-       98 |             const commitsResponse = await fetch(commitsUrl, { headers });
-       99 |             if (!commitsResponse.ok) {
-    > 100 |               console.warn(`⚠️ [GitHub] commit-count fetch failed for ${repo.full_name}: ${commitsResponse.status}`);
-          |                       ^
-      101 |               return { ...repo, commitCount: null };
-      102 |             }
-      103 |             const linkHeader = commitsResponse.headers.get('link');
-
-      at warn (src/pages/api/github/repos.js:100:23)
-          at async Promise.all (index 0)
-      at src/pages/api/github/repos.js:94:37
-      at handler (src/pages/api/github/repos.js:39:19)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:7)
-
-PASS src/lib/workoutPagination.test.js
-PASS src/lib/perfumes.test.js
-PASS src/pages/api/reviews/books/update.test.js
-PASS src/lib/backfillQueue.test.js
-PASS src/lib/dynamo.test.js
-PASS src/scripts/migrateLegacyExerciseRows.test.js
+PASS src/scripts/auditWorkouts.test.js
   ● Console
 
     console.log
@@ -1018,7 +995,126 @@ PASS src/scripts/migrateLegacyExerciseRows.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/lib/reviewText.test.js
+    console.log
+      Backfilling 2 missing workouts...
+
+      at backfillMissing (src/scripts/auditWorkouts.js:104:13)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at backfillMissing (src/scripts/auditWorkouts.js:114:21)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at backfillMissing (src/scripts/auditWorkouts.js:114:21)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at backfillMissing (src/scripts/auditWorkouts.js:120:13)
+
+    console.log
+      Workouts: 2 stored, 0 skipped
+
+      at backfillMissing (src/scripts/auditWorkouts.js:121:13)
+
+    console.log
+      Backfilling 2 missing workouts...
+
+      at backfillMissing (src/scripts/auditWorkouts.js:104:13)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
+
+    console.log
+        Stored workout + 0 exercises
+
+      at backfillMissing (src/scripts/auditWorkouts.js:114:21)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
+
+    console.log
+        Workout already exists, skipping
+
+      at backfillMissing (src/scripts/auditWorkouts.js:117:21)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at backfillMissing (src/scripts/auditWorkouts.js:120:13)
+
+    console.log
+      Workouts: 1 stored, 1 skipped
+
+      at backfillMissing (src/scripts/auditWorkouts.js:121:13)
+
+    console.log
+      Backfilling 1 missing workouts...
+
+      at backfillMissing (src/scripts/auditWorkouts.js:104:13)
+
+    console.log
+      [1/1] 2026-06-01 - Push Day (w1)
+
+      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
+
+PASS src/__tests__/pages/reviews/books/edit.test.js
+PASS src/__tests__/pages/reviews/movies/edit.test.js
+PASS src/scripts/migrateMoviesToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/lib/workoutMetrics.test.js
+PASS src/components/HomeSkeleton.test.js
+PASS src/__tests__/pages/reviews/albums/add.test.js
+PASS src/__tests__/pages/reviews/movies/add.test.js
+PASS src/scripts/migrateBooksToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/vinyl/add.test.js
+PASS src/pages/api/lastfm/album-search.test.js
+  ● Console
+
+    console.log
+      🎵 [Last.fm] Album search: "Dune"
+
+      at log (src/pages/api/lastfm/album-search.js:38:15)
+
+    console.log
+      ✅ [Last.fm] Album search done in 0ms
+
+      at log (src/pages/api/lastfm/album-search.js:48:15)
+
+PASS src/pages/api/reviews/books/add.test.js
+PASS src/lib/workoutQueries.test.js
 PASS src/lib/apiCache.test.js
   ● Console
 
@@ -1119,68 +1215,67 @@ PASS src/lib/apiCache.test.js
 
       at log (src/lib/apiCache.js:65:15)
 
-PASS src/components/PerfumeCharacteristics.test.js
-PASS src/lib/tmdb.test.js
-PASS src/components/CoverTile.test.js
-PASS src/scripts/migrateAlbumsToIdTable.test.js
+PASS src/scripts/migrateLegacyExerciseRows.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/lib/backfillEligibility.test.js
-PASS src/pages/api/lastfm/album-search.test.js
-  ● Console
-
-    console.log
-      🎵 [Last.fm] Album search: "Dune"
-
-      at log (src/pages/api/lastfm/album-search.js:38:15)
-
-    console.log
-      ✅ [Last.fm] Album search done in 0ms
-
-      at log (src/pages/api/lastfm/album-search.js:48:15)
-
-PASS src/pages/api/books/search.test.js
-  ● Console
-
-    console.warn
-      ⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production
-
-      47 |     url.searchParams.set('key', apiKey);
-      48 |   } else {
-    > 49 |     console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
-         |             ^
-      50 |   }
-      51 |
-      52 |   console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
-
-      at warn (src/pages/api/books/search.js:49:13)
-      at searchGoogleBooks (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:37:18)
-
-    console.log
-      📚 [GoogleBooks] Searching books: title="Dune"
-
-      at log (src/pages/api/books/search.js:52:11)
-
-PASS src/scripts/migratePerfumeOwnership.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
+PASS src/lib/topOfMind.test.js
 PASS src/lib/hotTakes.test.js
-PASS src/lib/programmeStats.test.js
-PASS src/pages/api/vinyl/add.test.js
+PASS src/pages/api/reviews/books/update.test.js
+PASS src/pages/api/reviews/albums/add.test.js
+PASS src/lib/lastfm.test.js
+PASS src/components/CoverTile.test.js
+PASS src/lib/workoutPagination.test.js
+PASS src/lib/rateLimit.test.js
+  ● Console
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.8641623732508721 retryAfterSeconds=1
+
+      at checkRateLimit (src/lib/rateLimit.js:43:17)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-a-0.1576486850386032 retryAfterSeconds=1
+
+      at checkRateLimit (src/lib/rateLimit.js:43:17)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.023032558991364915 retryAfterSeconds=1
+
+      at checkRateLimit (src/lib/rateLimit.js:43:17)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.023032558991364915 retryAfterSeconds=1
+
+      at checkRateLimit (src/lib/rateLimit.js:43:17)
+
+PASS src/lib/perfumes.test.js
+PASS src/__tests__/pages/reviews/albums/edit.test.js
 PASS src/lib/scrollFade.test.js
+PASS src/lib/backfillQueue.test.js
+PASS src/components/NowPlaying.test.js
+PASS src/lib/pagination.test.js
+PASS src/lib/tmdb.test.js
+PASS src/lib/dateRange.test.js
+PASS src/components/PerfumeCharacteristics.test.js
+PASS src/scripts/migrateOpenLibraryBooksToGoogleBooks.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/lib/reviewText.test.js
+PASS src/lib/chartTime.test.js
+PASS src/lib/dateFormat.test.js
+PASS src/lib/dynamo.test.js
+PASS src/lib/backfillEligibility.test.js
+PASS src/lib/programmeStats.test.js
 PASS src/pages/api/tmdb/search.test.js
   ● Console
 
@@ -1189,11 +1284,12 @@ PASS src/pages/api/tmdb/search.test.js
 
       at log (src/pages/api/tmdb/search.js:41:15)
 
+PASS src/lib/masonryColumns.test.js
 PASS src/scripts/migrateWorkoutData.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+      [dotenv@17.2.1] injecting env (34) from .env.local -- tip: 📡 version env with Radar: https://dotenvx.com/radar
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
@@ -1245,7 +1341,7 @@ PASS src/scripts/migrateWorkoutData.test.js
 
     console.error
          ❌ Error processing workout w1: Error: boom
-          at Object.<anonymous> (/Users/ryankrol/Development/ryankrol.co.uk/src/scripts/migrateWorkoutData.test.js:28:30)
+          at Object.<anonymous> (/Users/ryankrol/Development/ryankrol.co.uk/src/scripts/migrateWorkoutData.test.js:41:71)
           at Promise.then.completed (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:298:28)
           at new Promise (<anonymous>)
           at callAsyncCircusFn (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:231:10)
@@ -1270,7 +1366,7 @@ PASS src/scripts/migrateWorkoutData.test.js
       83 |
 
       at error (src/scripts/migrateWorkoutData.js:80:15)
-      at Object.<anonymous> (src/scripts/migrateWorkoutData.test.js:36:5)
+      at Object.<anonymous> (src/scripts/migrateWorkoutData.test.js:54:9)
 
     console.log
       📝 Processing workout 2/2: "Pull Day" (w2)
@@ -1293,42 +1389,12 @@ PASS src/scripts/migrateWorkoutData.test.js
 
       at log (src/scripts/migrateWorkoutData.js:85:11)
 
-PASS src/pages/api/reviews/perfumes/update.test.js
-PASS src/lib/pagination.test.js
-PASS src/lib/dateFormat.test.js
-PASS src/lib/chartTime.test.js
-PASS src/lib/googlebooks.test.js
-PASS src/lib/rateLimit.test.js
-  ● Console
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.7220734577941641 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-a-0.04066792840530242 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.16493105357863302 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.16493105357863302 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-PASS src/lib/masonryColumns.test.js
-PASS src/lib/lastfm.test.js
 PASS src/components/BulkBackfillList.test.js
 
 Test Suites: 76 passed, 76 total
-Tests:       411 passed, 411 total
+Tests:       414 passed, 414 total
 Snapshots:   0 total
-Time:        5.696 s
+Time:        4.565 s, estimated 5 s
 Ran all test suites.
 
 > ryankrol.co.uk@1.0.0 build
@@ -1359,7 +1425,7 @@ Ran all test suites.
 
 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
    Creating an optimized production build ...
- ✓ Compiled successfully in 1475ms
+ ✓ Compiled successfully in 1431ms
    Collecting page data ...
    Generating static pages (0/39) ...
    Generating static pages (9/39) 
@@ -1428,18 +1494,18 @@ Route (pages)                                 Size  First Load JS
 ├ ƒ /api/workouts/backfill                     0 B         102 kB
 ├ ƒ /api/workouts/stats                        0 B         102 kB
 ├ ○ /dev/cache                             1.94 kB         104 kB
-├ ○ /dev/perfume-card-variants               987 B         148 kB
+├ ○ /dev/perfume-card-variants (678 ms)      987 B         148 kB
 ├ ○ /exercises/[exerciseName]              5.28 kB         188 kB
 ├ ○ /hot-takes                             3.52 kB         106 kB
 ├ ○ /hot-takes/add                         1.02 kB         103 kB
 ├ ○ /listening                             1.65 kB         104 kB
 ├ ○ /projects                              3.16 kB         106 kB
-├ ○ /reviews/albums                        2.25 kB         149 kB
+├ ○ /reviews/albums (678 ms)               2.25 kB         149 kB
 ├ ○ /reviews/albums/add                     2.3 kB         109 kB
 ├ ○ /reviews/albums/backfill                1.7 kB         109 kB
-├ ○ /reviews/albums/edit (959 ms)          3.42 kB         150 kB
+├ ○ /reviews/albums/edit                   3.42 kB         150 kB
 ├ ○ /reviews/albums/edit/[id]              2.39 kB         109 kB
-├ ○ /reviews/books                         2.21 kB         149 kB
+├ ○ /reviews/books (678 ms)                2.21 kB         149 kB
 ├ ○ /reviews/books/add                     5.78 kB         108 kB
 ├ ○ /reviews/books/backfill                1.68 kB         109 kB
 ├ ○ /reviews/books/edit                    3.41 kB         150 kB
@@ -1447,22 +1513,22 @@ Route (pages)                                 Size  First Load JS
 ├ ○ /reviews/movies                        2.18 kB         149 kB
 ├ ○ /reviews/movies/add                    1.22 kB         108 kB
 ├ ○ /reviews/movies/backfill                1.7 kB         109 kB
-├ ○ /reviews/movies/edit                   3.41 kB         150 kB
-├ ○ /reviews/movies/edit/[id] (959 ms)     2.33 kB         109 kB
+├ ○ /reviews/movies/edit (678 ms)          3.41 kB         150 kB
+├ ○ /reviews/movies/edit/[id]              2.33 kB         109 kB
 ├ ○ /reviews/perfumes                      1.79 kB         149 kB
 ├ ○ /reviews/perfumes/add                  3.38 kB         106 kB
 ├ ○ /reviews/perfumes/edit                 1.05 kB         148 kB
 ├ ○ /reviews/perfumes/edit/[id]            3.69 kB         106 kB
-├ ○ /reviews/tv (960 ms)                   2.19 kB         149 kB
-├ ○ /reviews/tv/add (959 ms)               1.22 kB         108 kB
+├ ○ /reviews/tv (678 ms)                   2.19 kB         149 kB
+├ ○ /reviews/tv/add                        1.22 kB         108 kB
 ├ ○ /reviews/tv/backfill                   1.71 kB         109 kB
 ├ ○ /reviews/tv/edit                       3.42 kB         150 kB
 ├ ○ /reviews/tv/edit/[id]                  2.33 kB         109 kB
 ├ ○ /top-of-mind/edit                      2.14 kB         146 kB
-├ ○ /vinyl (959 ms)                        2.17 kB         105 kB
-├ ○ /vinyl/add (959 ms)                    1.52 kB         108 kB
-├ ○ /workouts (959 ms)                     5.59 kB         188 kB
-└ ○ /workouts/[id] (959 ms)                2.48 kB         105 kB
+├ ○ /vinyl (678 ms)                        2.17 kB         105 kB
+├ ○ /vinyl/add                             1.52 kB         108 kB
+├ ○ /workouts (678 ms)                     5.59 kB         188 kB
+└ ○ /workouts/[id] (678 ms)                2.48 kB         105 kB
 + First Load JS shared by all               113 kB
   ├ chunks/framework-4a99af1472046e21.js   57.7 kB
   ├ chunks/main-68e6916c6a9fbbfe.js        36.8 kB
