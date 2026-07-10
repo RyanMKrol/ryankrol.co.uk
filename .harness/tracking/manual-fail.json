@@ -23,5 +23,10 @@
     "failed": true,
     "reason": "review-failed: superseded by T339 — same design/spec, scripts/_visual-harness.mjs added to scope (was missing, causing 14/14 attempts to fail identically on scope-creep); T339 also confirmed scope-complete via a dedicated research pass",
     "at": "2026-07-08T21:03:18Z"
+  },
+  "T356": {
+    "failed": true,
+    "reason": "review-failed: superseded by T359 — blocked by the harness's own scope_match bracket bug (fixed in implementation-harness 1.62.0), not a task-authoring problem; re-attempted with unchanged scope/spec",
+    "at": "2026-07-10T11:37:59Z"
   }
 }
