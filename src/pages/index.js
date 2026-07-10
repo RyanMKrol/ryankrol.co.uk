@@ -12,13 +12,7 @@ import { formatReviewDate } from '../lib/dateFormat'
 
 // T349 — dummy content used by every Top-of-Mind placement variant (?tom=1..5), for comparing
 // PLACEMENT only. Not real data; no fetch involved.
-const DUMMY_TOM_TEXT = `## Top of mind this week
-
-Been circling back to a few things that don't fit neatly into a review, but are worth noting down anyway before they slip.
-
-- Rewatched an old favourite and it held up better than expected
-- Started a new book that's already changing how I think about the next one
-- A record I keep putting on in the background without meaning to`
+const DUMMY_TOM_TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum`
 
 const WALL_KIND_HREF = {
   movie: '/reviews/movies',
