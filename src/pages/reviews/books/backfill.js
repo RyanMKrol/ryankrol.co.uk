@@ -66,6 +66,7 @@ export default function BackfillBooks() {
         subjects: candidate.subjects,
         pageCount: candidate.pageCount,
         publisher: candidate.publisher,
+        skipEditedDate: true,
       }),
     });
 

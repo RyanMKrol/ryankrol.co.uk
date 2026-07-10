@@ -61,6 +61,7 @@ export default function BackfillMovies() {
         posterPath: candidate.posterPath,
         tmdbOverview: candidate.overview,
         tmdbDate: candidate.date,
+        skipEditedDate: true,
       }),
     });
 

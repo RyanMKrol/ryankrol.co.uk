@@ -61,6 +61,7 @@ export default function BackfillTvShows() {
         posterPath: candidate.posterPath,
         tmdbOverview: candidate.overview,
         tmdbDate: candidate.date,
+        skipEditedDate: true,
       }),
     });
 

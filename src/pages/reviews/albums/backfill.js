@@ -82,6 +82,7 @@ export default function BackfillAlbums() {
         originalId: album.id,
         password,
         lastfm,
+        skipEditedDate: true,
       }),
     });
 

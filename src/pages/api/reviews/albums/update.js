@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { title, artist, rating, highlights, originalId, password, lastfm } = req.body;
+  const { title, artist, rating, highlights, originalId, password, lastfm, skipEditedDate } = req.body;
 
   // Validate password
   if (password !== process.env.RYANKROL_SITE_KEY) {
@@ -27,13 +27,20 @@ export default async function handler(req, res) {
 
   try {
     // Update the item in DynamoDB
-    const updateExpressionParts = ['#rating = :rating', 'highlights = :highlights', 'editedDate = :editedDate'];
+    const updateExpressionParts = ['#rating = :rating', 'highlights = :highlights'];
     const expressionAttributeNames = { '#rating': 'rating' };
     const expressionAttributeValues = {
       ':rating': Number(rating),
       ':highlights': highlights,
-      ':editedDate': new Date().toLocaleDateString('en-GB').replace(/\//g, '-')
     };
+
+    // A backfill apply attaches metadata only — it's never a genuine content edit, so it must not
+    // stamp editedDate. Simply omitting it from the SET expression leaves the existing value (or
+    // absence) untouched.
+    if (!skipEditedDate) {
+      updateExpressionParts.push('editedDate = :editedDate');
+      expressionAttributeValues[':editedDate'] = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+    }
 
     if (lastfm) {
       updateExpressionParts.push('thumbnail = :thumbnail', 'lastfm = :lastfm');

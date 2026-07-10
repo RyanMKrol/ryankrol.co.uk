@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   const {
     title, author, rating, overview, password, originalId,
     source, olid, coverId, coverUrl, volumeId,
-    bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher
+    bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher, skipEditedDate
   } = req.body;
 
   // Verify password
@@ -43,7 +43,11 @@ export default async function handler(req, res) {
 
     // If no original date found, use current date (shouldn't happen for updates)
     const preservedDate = originalDate || new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
-    const editedDate = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+    // A backfill apply attaches metadata only — it's never a genuine content edit, so it must not
+    // stamp editedDate. Preserve whatever editedDate (if any) the record already had instead.
+    const editedDate = skipEditedDate
+      ? existingReview.Item?.editedDate
+      : new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
 
     // Update the item in place with preserved original date and id
     const reviewData = {
@@ -53,7 +57,7 @@ export default async function handler(req, res) {
       rating,
       review_text: overview,
       date: preservedDate,
-      editedDate,
+      ...(editedDate && { editedDate }),
       ...(source !== undefined && { source }),
       ...(olid !== undefined && { olid }),
       ...(coverId !== undefined && { coverId }),

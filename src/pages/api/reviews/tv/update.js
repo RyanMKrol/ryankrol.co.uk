@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const {
     title, rating, gist, password, originalId,
-    tmdbId, mediaType, posterPath, tmdbOverview, tmdbDate
+    tmdbId, mediaType, posterPath, tmdbOverview, tmdbDate, skipEditedDate
   } = req.body;
 
   // Verify password
@@ -42,7 +42,11 @@ export default async function handler(req, res) {
 
     // If no original date found, use current date (shouldn't happen for updates)
     const preservedDate = originalDate || new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
-    const editedDate = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+    // A backfill apply attaches metadata only — it's never a genuine content edit, so it must not
+    // stamp editedDate. Preserve whatever editedDate (if any) the record already had instead.
+    const editedDate = skipEditedDate
+      ? existingReview.Item?.editedDate
+      : new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
 
     // Update the item in place, keyed by the stable id
     const reviewData = {
@@ -51,7 +55,7 @@ export default async function handler(req, res) {
       rating,
       review_text: gist,
       date: preservedDate,
-      editedDate,
+      ...(editedDate && { editedDate }),
       ...(tmdbId !== undefined && { tmdbId }),
       ...(mediaType !== undefined && { mediaType }),
       ...(posterPath !== undefined && { posterPath }),
