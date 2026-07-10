@@ -26,6 +26,12 @@ export default async function handler(req, res) {
 
     return res.status(200).json(results);
   } catch (error) {
+    // If upstream returned 429, propagate it with a Retry-After header
+    if (error.message.includes('429')) {
+      res.setHeader('Retry-After', '60');
+      return res.status(429).json({ message: 'Google Books API rate limited — please retry after a moment' });
+    }
+
     console.error('❌ [Books] Search error:', error);
     return res.status(500).json({ message: 'Error searching books', error: error.message });
   }
@@ -57,7 +63,15 @@ async function searchGoogleBooks(title, author) {
 
   if (!response.ok) {
     const body = await response.text().catch(() => '');
-    console.error(`❌ [GoogleBooks] API error ${response.status}: ${body.slice(0, 300)}`);
+    const bodySnippet = body.slice(0, 300);
+    const diagnostics = `status=${response.status} statusText="${response.statusText}" body="${bodySnippet}" query_title="${title}" query_author="${author || 'N/A'}"`;
+    console.error(`❌ [GoogleBooks] API error — ${diagnostics}`);
+
+    // Propagate 429 upstream to the client so backfill retry logic can trigger
+    if (response.status === 429) {
+      throw new Error(`Google Books API 429 — rate limited`);
+    }
+
     throw new Error(`Google Books API error: ${response.status}`);
   }
 
