@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import Variant6Hybrid from '../../components/perfumeVariants/Variant6Hybrid';
+import MasonryColumns from '../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../hooks/useResponsiveColumnCount';
 
 const VARIANTS = [
   { key: 'baseline', label: 'Baseline (today\'s exact layout)' },
@@ -14,6 +16,7 @@ export default function PerfumeCardVariantsDevPage() {
   const [perfumes, setPerfumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnCount = useResponsiveColumnCount(2, 700);
 
   useEffect(() => {
     async function fetchPerfumes() {
@@ -64,17 +67,15 @@ export default function PerfumeCardVariantsDevPage() {
       {VARIANTS.map(({ key, label }) => (
         <section key={key} style={{ marginTop: '2rem' }}>
           <h2 className="page-title" style={{ fontSize: '1.1rem' }}>{label}</h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '1rem',
-            }}
-          >
-            {perfumes.map((perfume, index) => (
+          <MasonryColumns
+            items={perfumes}
+            columnCount={columnCount}
+            className="perfume-card-grid"
+            columnClassName="perfume-card-grid-col"
+            renderItem={(perfume, index) => (
               <Variant6Hybrid key={`${key}-${perfume.id}-${index}`} item={perfume} variant={key} />
-            ))}
-          </div>
+            )}
+          />
         </section>
       ))}
     </div>
