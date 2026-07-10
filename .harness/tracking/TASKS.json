@@ -9866,6 +9866,52 @@
           "full-stack"
         ]
       }
+    },
+    {
+      "id": "T357",
+      "title": "Rename the home \"collection wall\" section heading to \"A slice of everything\"",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "home",
+        "copy"
+      ],
+      "scope": [
+        "src/pages/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T357.md",
+      "facets": {
+        "layer": "page",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T358",
+      "title": "Replace Top-of-Mind DUMMY_TOM_TEXT placeholder with Lorem Ipsum",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "home",
+        "copy"
+      ],
+      "scope": [
+        "src/pages/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T358.md",
+      "facets": {
+        "layer": "page",
+        "workType": "style",
+        "risk": []
+      }
     }
   ]
 }
