@@ -10000,7 +10000,7 @@
     {
       "id": "T362",
       "title": "Wire Hardcover search into BookSearch.js (add/edit book review forms)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T361"
       ],
