@@ -3656,6 +3656,13 @@ body::before {
   gap: 0.4rem;
 }
 
+.perfume-v1-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
 .perfume-v1-title {
   margin: 0;
   font-size: 1.1rem;
@@ -3685,15 +3692,6 @@ body::before {
   font-size: 0.85rem;
   color: var(--color-ink-mute);
   line-height: 1.5;
-}
-
-/* T343: perfume card layout variants (dev-only comparison, see /dev/perfume-card-variants) */
-.perfume-t343-rating-number-big {
-  font-size: 1.35rem;
-}
-
-.perfume-v1-header .perfume-v1-rating-row {
-  margin-top: 0.3rem;
 }
 
 .perfume-v6-card {

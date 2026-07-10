@@ -24,19 +24,12 @@ export function formatApplicationSpotLine({ spot, sprays }) {
   return `${sprays} sprays — ${spot}`;
 }
 
-const VARIANTS = ['baseline', 'big-rating', 'header-rating', 'best-for-bottom'];
-
-export default function Variant6Hybrid({ item, variant = 'baseline' }) {
+export default function Variant6Hybrid({ item }) {
   const hasSeasons = Array.isArray(item.seasons) && item.seasons.length > 0;
   const hasApplicationSpots =
     Array.isArray(item.applicationSpots) && item.applicationSpots.length > 0;
   const hasLongevity = typeof item.longevity === 'number';
   const hasProjection = typeof item.projection === 'number';
-
-  const resolvedVariant = VARIANTS.includes(variant) ? variant : 'baseline';
-  const isHeaderRating = resolvedVariant === 'header-rating';
-  const isBigRating = resolvedVariant === 'big-rating';
-  const isBestForBottom = resolvedVariant === 'best-for-bottom';
 
   const bestForBlock = hasSeasons && (
     <div className="perfume-v4-best-for">
@@ -54,13 +47,7 @@ export default function Variant6Hybrid({ item, variant = 'baseline' }) {
   const ratingRow = (
     <div className="perfume-v1-rating-row">
       <PipMeter value={item.rating} readOnly />
-      <span
-        className={
-          isBigRating || isHeaderRating
-            ? 'perfume-v1-rating-number perfume-t343-rating-number-big'
-            : 'perfume-v1-rating-number'
-        }
-      >
+      <span className="perfume-v1-rating-number">
         {item.rating}/10
       </span>
     </div>
@@ -70,9 +57,11 @@ export default function Variant6Hybrid({ item, variant = 'baseline' }) {
     <div className="perfume-v6-card">
       <div className="perfume-v1-header">
         <div>
-          <h3 className="perfume-v1-title">{item.title}</h3>
+          <div className="perfume-v1-title-row">
+            <h3 className="perfume-v1-title">{item.title}</h3>
+            {ratingRow}
+          </div>
           <p className="perfume-v1-designer">{item.designer}</p>
-          {isHeaderRating && ratingRow}
         </div>
         <div className="perfume-v1-header-badges">
           {item.type && (
@@ -94,9 +83,7 @@ export default function Variant6Hybrid({ item, variant = 'baseline' }) {
         </div>
       )}
 
-      {!isHeaderRating && ratingRow}
-
-      {!isBestForBottom && bestForBlock}
+      {bestForBlock}
 
       <div className="perfume-v4-scales">
         {hasLongevity && (() => {
@@ -133,8 +120,6 @@ export default function Variant6Hybrid({ item, variant = 'baseline' }) {
           </div>
         )}
       </div>
-
-      {isBestForBottom && bestForBlock}
 
       {hasApplicationSpots && (
         <ul className="perfume-v4-checklist">
