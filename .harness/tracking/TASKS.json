@@ -3423,7 +3423,7 @@
     {
       "id": "T129",
       "title": "Decide whether TMDB / Google Books search need result re-ranking beyond what they already do",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "needs-human",
       "tags": [
@@ -9528,7 +9528,7 @@
     {
       "id": "T344",
       "title": "Review perfume card rating/Best-for layout variants and record a decision",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T343"
       ],
@@ -10054,7 +10054,7 @@
     {
       "id": "T364",
       "title": "Investigate: confirm Hardcover API is callable from deployed Vercel production (not just localhost)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T361"
       ],
