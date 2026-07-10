@@ -9916,7 +9916,7 @@
     {
       "id": "T359",
       "title": "Add edit/delete flow for Hot Takes",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
