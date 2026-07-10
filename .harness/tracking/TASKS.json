@@ -9785,7 +9785,7 @@
     {
       "id": "T354",
       "title": "Add a 1/3/6-month period filter to the Listening page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
