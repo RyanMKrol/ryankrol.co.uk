@@ -221,6 +221,14 @@ const workoutStats = {
   totalWorkouts: 142, totalVolume: 982340, averageDuration: 63, workoutTypes: { Push: 48, Pull: 47, Legs: 47 }, bestSessionVolume: 11200,
   monthlyVolume: Array.from({ length: 6 }, (_, i) => ({ month: `2026-0${i + 1}`, label: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][i]} 2026`, totalVolume: 120000 + i * 8000 })),
 };
+// Top of Mind (T351) — default fixture is a FRESH note (a few days old, well inside the 90-day
+// TTL) so the baseline `home` capture shows the hero-band panel. The `home-top-of-mind-absent`
+// capture below overrides this per-page to prove the section renders NOTHING when there's no
+// saved note / the note has expired.
+const topOfMindFresh = {
+  text: 'Rewatching **Twin Peaks** from the start and reading _The Overstory_ in parallel — funny how both are about things that outlast us.',
+  updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+};
 
 // ── fixtureFor: map a request pathname → a synthetic response ──────────────────────────────────
 export function fixtureFor(pathname) {
@@ -240,6 +248,7 @@ export function fixtureFor(pathname) {
   if (/^\/api\/workouts\/[^/]+$/.test(pathname)) return workoutObj();
   if (pathname.startsWith('/api/exercises/history/')) return exerciseHistory;
   if (pathname === '/api/tmdb/search') return tmdbSearchResults;
+  if (pathname === '/api/top-of-mind') return topOfMindFresh;
   console.warn(`[visual-harness] no fixture for ${pathname} — returning []`);
   return [];
 }
@@ -247,7 +256,7 @@ export function fixtureFor(pathname) {
 // ── PAGES: one baseline screenshot per route. `waitFor` doubles as a presence gate. ────────────
 const REVIEW_COMMON = ['src/components/ReviewCard.js', 'src/components/StarRating.js', 'src/components/SortButtons.js', 'src/components/SearchInput.js'];
 export const PAGES = [
-  { name: 'home', path: '/', waitFor: ['.home-wall-tile-link'], description: 'Home — hero, now-playing, collection wall, on-the-shelf + hot-takes rail panels.', covers: ['src/pages/index.js', 'src/components/NowPlaying.js', 'src/components/StatBlock.js', 'src/components/CoverTile.js'] },
+  { name: 'home', path: '/', waitFor: ['.home-wall-tile-link', '.home-top-of-mind-panel'], description: 'Home — hero, now-playing, Top of Mind hero-band panel (T351, fresh saved note), collection wall, on-the-shelf + hot-takes rail panels.', covers: ['src/pages/index.js', 'src/styles/globals.css', 'src/components/NowPlaying.js', 'src/components/StatBlock.js', 'src/components/CoverTile.js'] },
   {
     name: 'home-loading',
     path: '/',
@@ -276,12 +285,7 @@ export const PAGES = [
   { name: 'exercise', path: '/exercises/Chest%20Press%20(Machine)', waitFor: ['.chart-card canvas'], description: 'Per-exercise stats + progress charts (1RM / volume / max-weight) + recent sessions.', covers: ['src/pages/exercises/[exerciseName].js', 'src/components/ExerciseProgressCharts.js', 'src/components/CardioProgressCharts.js', 'src/components/PillGroup.js', 'src/components/StatBlock.js'] },
   { name: 'reviews-movies-backfill', path: '/reviews/movies/backfill', waitFor: ['.bbl-row'], description: 'Movie metadata backfill — rows awaiting TMDB search results, page-level "Apply all selections" button above the list.', covers: ['src/pages/reviews/movies/backfill.js', 'src/components/BulkBackfillList.js'] },
   { name: 'dev-perfume-card-variants', path: '/dev/perfume-card-variants', waitFor: ['.perfume-v6-card'], description: 'T343 dev-only comparison of perfume card rating/best-for layout variants (baseline, big-rating, header-rating, best-for-bottom), rendered with real fetched data.', covers: ['src/components/perfumeVariants/Variant6Hybrid.js', 'src/pages/dev/perfume-card-variants.js', 'src/styles/globals.css'] },
-  { name: 'home-tom-0', path: '/?tom=0', waitFor: ['.home-wall-tile-link'], description: 'T349 Top of Mind comparison — ?tom=0 baseline, no section rendered (identical to plain home).', covers: ['src/pages/index.js'] },
-  { name: 'home-tom-1', path: '/?tom=1', waitFor: ['.tom-variant-rail-panel'], description: 'T349 Top of Mind variant 1 — rail panel appended into the home-rail column, sibling to on-the-shelf/hot-takes panels.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
-  { name: 'home-tom-2', path: '/?tom=2', waitFor: ['.tom-variant-hero-band'], description: 'T349 Top of Mind variant 2 — full-width band under the hero, before the stat blocks.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
-  { name: 'home-tom-3', path: '/?tom=3', waitFor: ['.tom-variant-collapsible'], description: 'T349 Top of Mind variant 3 — collapsed <details> block between the collection wall and Latest takes, closed by default.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
-  { name: 'home-tom-4', path: '/?tom=4', waitFor: ['.tom-variant-latest-card'], description: 'T349 Top of Mind variant 4 — accent-bordered card woven into the top of the Latest takes column.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
-  { name: 'home-tom-5', path: '/?tom=5', waitFor: ['.tom-variant-hero-strip'], description: 'T349 Top of Mind variant 5 — compact single-line teaser strip inside the hero, under the tagline/meta row.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
+  { name: 'home-top-of-mind-absent', path: '/', waitFor: ['.home-wall-tile-link'], delayRoutes: { '/api/top-of-mind': { body: {} } }, description: 'T351 Top of Mind — no note saved (or expired): the hero-band section renders NOTHING, not an empty/placeholder box.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
 ];
 
 // ── FLOWS: states that only appear after an INTERACTION. capture() runs `actions(page)`. ────────
@@ -333,8 +337,6 @@ const bespokeFlows = [
   { name: 'projects-search', path: '/projects', waitFor: ['.project-card'], flow: 'Search projects for "api"; cards narrow by name/description.', description: 'Projects filtered by search to "api".', covers: ['src/pages/projects/index.js', 'src/components/SearchInput.js'], actions: async (page) => { await page.fill('.collection-search-input input', 'api'); } },
   // Home — the on-the-shelf shuffle.
   { name: 'home-skim-shelf', path: '/', waitFor: ['.home-shelf-item'], flow: 'Click "Skim the shelf"; the random vinyl sample re-rolls.', description: 'Home on-the-shelf panel after a shuffle.', covers: ['src/pages/index.js'], actions: async (page) => { await page.click('button.home-shelf-refresh'); } },
-  // Home — T349 Top of Mind variant 3, expanded via its <summary>.
-  { name: 'home-tom-3-expanded', path: '/?tom=3', waitFor: ['.tom-variant-collapsible'], flow: 'Click the collapsible summary; it expands to reveal the dummy heading/paragraph/list.', description: 'T349 Top of Mind variant 3 expanded.', covers: ['src/pages/index.js', 'src/styles/globals.css'], actions: async (page) => { await page.click('.tom-variant-collapsible-summary'); } },
   // Movie backfill — select a TMDB candidate on both awaiting rows, then apply all at once (T338).
   {
     name: 'reviews-movies-backfill-apply-all',
@@ -406,15 +408,21 @@ export async function routeApi(ctx) {
  * fulfilling from the same fixtures `routeApi` uses — everything else resolves immediately.
  * Playwright's page-level routes take priority over the context-level `routeApi`, so this lets a
  * single capture prove per-section independent reveal (T339) without touching every other spec.
+ *
+ * A `delays` entry may also be `{ delayMs?, body }` to additionally REPLACE that pathname's
+ * fixture body for this one capture (e.g. `home-top-of-mind-absent` below), instead of just
+ * delaying the default fixture.
  */
 export async function routeApiWithDelays(page, delays) {
   await page.route('**/*', async (route) => {
     const req = route.request();
     const url = new URL(req.url());
     if (url.pathname.startsWith('/api/')) {
-      const delayMs = delays[url.pathname];
+      const cfg = delays[url.pathname];
+      const delayMs = typeof cfg === 'number' ? cfg : cfg?.delayMs;
+      const body = (cfg && typeof cfg === 'object' && 'body' in cfg) ? cfg.body : fixtureFor(url.pathname);
       if (delayMs) await new Promise((r) => setTimeout(r, delayMs));
-      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fixtureFor(url.pathname)) });
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
     }
     const isLocal = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
     if (!isLocal && req.resourceType() === 'image') {
