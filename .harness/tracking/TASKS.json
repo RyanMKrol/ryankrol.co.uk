@@ -9942,6 +9942,33 @@
           "full-stack"
         ]
       }
+    },
+    {
+      "id": "T360",
+      "title": "Fix perfume-card-variants dev page to use the real perfume page's 2-column layout",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "perfume-variants",
+        "ui",
+        "style"
+      ],
+      "scope": [
+        "src/pages/dev/perfume-card-variants.js"
+      ],
+      "design": null,
+      "verify": [
+        "run-app"
+      ],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T360.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
     }
   ]
 }
