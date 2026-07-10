@@ -1,5 +1,5 @@
 import { withApiCache, generateCacheKey } from '../../../lib/apiCache';
-import { mapGoogleBooksResult } from '../../../lib/googlebooks';
+import { mapHardcoverResult } from '../../../lib/hardcover';
 import { checkRateLimit, getClientIp } from '../../../lib/rateLimit';
 
 export default async function handler(req, res) {
@@ -22,14 +22,14 @@ export default async function handler(req, res) {
   try {
     const cacheKey = generateCacheKey('book-search', { title, author });
 
-    const results = await withApiCache(cacheKey, () => searchGoogleBooks(title, author));
+    const results = await withApiCache(cacheKey, () => searchHardcover(title, author));
 
     return res.status(200).json(results);
   } catch (error) {
     // If upstream returned 429, propagate it with a Retry-After header
     if (error.message.includes('429')) {
       res.setHeader('Retry-After', '60');
-      return res.status(429).json({ message: 'Google Books API rate limited — please retry after a moment' });
+      return res.status(429).json({ message: 'Hardcover API rate limited — please retry after a moment' });
     }
 
     console.error('❌ [Books] Search error:', error);
@@ -37,46 +37,74 @@ export default async function handler(req, res) {
   }
 }
 
-async function searchGoogleBooks(title, author) {
-  let q = `intitle:${title}`;
-  if (author) q += ` inauthor:${author}`;
+async function searchHardcover(title, author) {
+  const query = `${title}${author ? ` ${author}` : ''}`.trim();
 
-  const url = new URL('https://www.googleapis.com/books/v1/volumes');
-  url.searchParams.set('q', q);
-  url.searchParams.set('maxResults', '20');
+  const graphqlQuery = `
+    query Search($q: String!) {
+      search(query: $q, query_type: "Book", per_page: 20) {
+        results {
+          hits {
+            document {
+              id
+              title
+              author_names
+              release_year
+              image {
+                url
+              }
+              isbns
+              genres
+              pages
+            }
+          }
+        }
+      }
+    }
+  `;
 
-  // Without a key, Google buckets all requests by source IP into a shared anonymous
-  // quota that is perpetually exhausted from datacenter IPs (Vercel) → 429s in prod.
-  // A key bills against our own per-project quota instead.
-  const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
-  if (apiKey) {
-    url.searchParams.set('key', apiKey);
-  } else {
-    console.warn('⚠️ [GoogleBooks] GOOGLE_BOOKS_API_KEY not set — using shared anonymous quota, expect 429s in production');
+  const token = process.env.HARDCOVER_API_TOKEN;
+  if (!token) {
+    console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
   }
 
-  console.log(`📚 [GoogleBooks] Searching books: title="${title}"${author ? ` author="${author}"` : ''}`);
+  console.log(`📚 [Hardcover] Searching books: query="${query}"`);
 
-  const response = await fetch(url.toString(), {
-    headers: { accept: 'application/json' },
+  const response = await fetch('https://api.hardcover.app/v1/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token && { authorization: `Bearer ${token}` }),
+    },
+    body: JSON.stringify({
+      query: graphqlQuery,
+      variables: { q: query },
+    }),
   });
 
   if (!response.ok) {
     const body = await response.text().catch(() => '');
     const bodySnippet = body.slice(0, 300);
-    const diagnostics = `status=${response.status} statusText="${response.statusText}" body="${bodySnippet}" query_title="${title}" query_author="${author || 'N/A'}"`;
-    console.error(`❌ [GoogleBooks] API error — ${diagnostics}`);
+    const diagnostics = `status=${response.status} statusText="${response.statusText}" body="${bodySnippet}" query="${query}"`;
+    console.error(`❌ [Hardcover] API error — ${diagnostics}`);
 
     // Propagate 429 upstream to the client so backfill retry logic can trigger
     if (response.status === 429) {
-      throw new Error(`Google Books API 429 — rate limited`);
+      throw new Error(`Hardcover API 429 — rate limited`);
     }
 
-    throw new Error(`Google Books API error: ${response.status}`);
+    throw new Error(`Hardcover API error: ${response.status}`);
   }
 
   const data = await response.json();
-  const items = data.items ?? [];
 
-  return items.map(mapGoogleBooksResult);
+  // Check for GraphQL errors
+  if (data.errors) {
+    console.error(`❌ [Hardcover] GraphQL error — ${JSON.stringify(data.errors)}`);
+    throw new Error(`Hardcover GraphQL error`);
+  }
+
+  const hits = data.data?.search?.results?.hits ?? [];
+
+  return hits.map(mapHardcoverResult);
 }
