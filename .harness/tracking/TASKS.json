@@ -9973,7 +9973,7 @@
     {
       "id": "T361",
       "title": "Add Hardcover.app normaliser + rewrite /api/books/search.js to call Hardcover",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [

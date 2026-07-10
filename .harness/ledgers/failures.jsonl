@@ -70,3 +70,5 @@
 {"id":"T356","ts":"2026-07-10T10:33:20Z","kind":"scope-creep","rung":2,"attempt":1,"model":"claude-sonnet-5","effort":"high","facets":{"layer":"page","workType":"feature","risk":["full-stack"]},"detail":"src/pages/hot-takes/edit/[id].js"}
 {"id":"T356","ts":"2026-07-10T10:38:27Z","kind":"scope-creep","rung":3,"attempt":0,"model":"claude-opus-4-8","effort":"high","facets":{"layer":"page","workType":"feature","risk":["full-stack"]},"detail":"src/pages/hot-takes/edit/[id].js"}
 {"id":"T356","ts":"2026-07-10T10:43:36Z","kind":"scope-creep","rung":3,"attempt":1,"model":"claude-opus-4-8","effort":"high","facets":{"layer":"page","workType":"feature","risk":["full-stack"]},"detail":"src/pages/hot-takes/edit/[id].js"}
+{"id":"T361","ts":"2026-07-10T21:16:19Z","kind":"empty-diff","rung":0,"attempt":0,"model":"claude-haiku-4-5","effort":"","facets":{"layer":"api","workType":"feature","risk":[]},"detail":""}
+{"id":"T365","ts":"2026-07-10T21:21:06Z","kind":"audit-fail","rung":0,"attempt":0,"model":"claude-sonnet-5","effort":"low","facets":{"layer":"db","workType":"data-migration","risk":["touches-data"]},"detail":""}
