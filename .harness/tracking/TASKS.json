@@ -9677,7 +9677,7 @@
     {
       "id": "T350",
       "title": "Owner picks a winning Top of Mind placement variant",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T349"
       ],
@@ -9838,7 +9838,7 @@
     {
       "id": "T356",
       "title": "Add edit/delete flow for Hot Takes",
-      "status": "blocked",
+      "status": "failed",
       "dependsOn": [
         "T355"
       ],
