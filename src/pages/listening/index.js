@@ -1,16 +1,31 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { assignGradients } from '../../components/CoverTile';
+import PillGroup from '../../components/PillGroup';
+
+const PERIOD_OPTIONS = [
+  { value: '1month', label: '1 month' },
+  { value: '3month', label: '3 months' },
+  { value: '6month', label: '6 months' },
+];
+
+const PERIOD_SUBTITLES = {
+  '1month': 'last 1 month',
+  '3month': 'last 3 months',
+  '6month': 'last 6 months',
+};
 
 export default function ListeningPage() {
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [period, setPeriod] = useState('1month');
 
   useEffect(() => {
     async function fetchTopAlbums() {
+      setLoading(true);
       try {
-        const response = await fetch('/api/lastfm/top-albums?period=3month&limit=50');
+        const response = await fetch(`/api/lastfm/top-albums?period=${period}&limit=50`);
         if (response.ok) {
           const data = await response.json();
           setAlbums(data.albums || []);
@@ -25,7 +40,7 @@ export default function ListeningPage() {
     }
 
     fetchTopAlbums();
-  }, []);
+  }, [period]);
 
   const maxPlaycount = albums.length > 0
     ? Math.max(...albums.map(a => Number(a.playcount) || 0))
@@ -50,8 +65,16 @@ export default function ListeningPage() {
           <div className="collection-review-title-group">
             <h1 className="page-title">listening</h1>
             <p className="collection-review-meta">
-              top 50 albums · last 90 days · via last.fm
+              top 50 albums · {PERIOD_SUBTITLES[period]} · via last.fm
             </p>
+          </div>
+
+          <div className="collection-review-controls">
+            <PillGroup
+              options={PERIOD_OPTIONS}
+              value={period}
+              onChange={setPeriod}
+            />
           </div>
         </div>
 
