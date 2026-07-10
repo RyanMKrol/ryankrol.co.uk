@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import MarkdownEditor from '../../components/MarkdownEditor';
 
 export default function AddHotTake() {
   const router = useRouter();
@@ -79,14 +80,13 @@ export default function AddHotTake() {
           <form onSubmit={handleSubmit}>
             <div className="collection-form-group">
               <label className="collection-form-label" htmlFor="text">Take *</label>
-              <textarea
+              <MarkdownEditor
                 id="text"
                 name="text"
                 value={formData.text}
                 onChange={handleInputChange}
-                className="collection-form-input"
+                className="collection-form-textarea"
                 placeholder="What's your hot take..."
-                rows={4}
                 required
               />
             </div>
