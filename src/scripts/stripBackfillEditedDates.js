@@ -13,10 +13,11 @@ require('dotenv').config({ path: '.env.local' });
 
 const { DYNAMO_TABLES } = require('../lib/constants');
 
-// The one exact value confirmed (via the live production API) to be the backfill artifact —
-// every row across all 4 tables that has an editedDate has this value, with a single deliberate
-// exception (one TV row dated 06-07-2026, left alone on purpose).
-const BACKFILL_EDITED_DATE = '09-07-2026';
+// The exact values confirmed to be backfill artifacts (not genuine edits) — 09-07-2026 was the
+// original mass-backfill date; 10-07-2026 caught 2 more books backfilled (via the still-undeployed
+// pre-fix code) between the first pass of this script and the fix actually shipping to production.
+// A single deliberate exception (one TV row dated 06-07-2026) is left alone on purpose.
+const BACKFILL_EDITED_DATES = ['09-07-2026', '10-07-2026'];
 
 const TABLES = [
   DYNAMO_TABLES.MOVIE_RATINGS_TABLE,
@@ -37,9 +38,9 @@ const client = new DynamoDBClient({
 
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
-/** True if this row's editedDate is the known backfill artifact and should be stripped. */
+/** True if this row's editedDate is a known backfill artifact and should be stripped. */
 function shouldStrip(item) {
-  return item.editedDate === BACKFILL_EDITED_DATE;
+  return BACKFILL_EDITED_DATES.includes(item.editedDate);
 }
 
 async function scanRowsToStrip(tableName) {
@@ -56,7 +57,7 @@ async function stripRow(tableName, row) {
 }
 
 async function migrateTable(tableName) {
-  console.log(`\n📼 Scanning ${tableName} for rows with editedDate=${BACKFILL_EDITED_DATE}...`);
+  console.log(`\n📼 Scanning ${tableName} for rows with editedDate in [${BACKFILL_EDITED_DATES.join(', ')}]...`);
   const rows = await scanRowsToStrip(tableName);
   console.log(`✅ Found ${rows.length} row(s) to strip`);
 
@@ -103,5 +104,5 @@ module.exports = {
   main,
   migrate,
   shouldStrip,
-  BACKFILL_EDITED_DATE,
+  BACKFILL_EDITED_DATES,
 };

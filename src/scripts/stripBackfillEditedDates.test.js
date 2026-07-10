@@ -1,8 +1,8 @@
-const { shouldStrip, BACKFILL_EDITED_DATE } = require('./stripBackfillEditedDates');
+const { shouldStrip, BACKFILL_EDITED_DATES } = require('./stripBackfillEditedDates');
 
 describe('shouldStrip', () => {
-  it('returns true when editedDate matches the known backfill artifact date', () => {
-    expect(shouldStrip({ id: '1', editedDate: BACKFILL_EDITED_DATE })).toBe(true);
+  it.each(BACKFILL_EDITED_DATES)('returns true when editedDate is the known backfill artifact date %s', (date) => {
+    expect(shouldStrip({ id: '1', editedDate: date })).toBe(true);
   });
 
   it('returns false when editedDate is a different date (a genuine edit to preserve)', () => {
