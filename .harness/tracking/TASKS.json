@@ -9912,6 +9912,36 @@
         "workType": "style",
         "risk": []
       }
+    },
+    {
+      "id": "T359",
+      "title": "Add edit/delete flow for Hot Takes",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "hot-takes",
+        "feature",
+        "edit",
+        "delete"
+      ],
+      "scope": [
+        "src/pages/hot-takes/edit.js",
+        "src/pages/hot-takes/edit/[id].js",
+        "src/pages/api/hot-takes/update.js",
+        "src/pages/api/hot-takes/delete.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T359.md",
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      }
     }
   ]
 }
