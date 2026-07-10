@@ -206,7 +206,7 @@ export default function Home() {
         </section>
 
         <section className="home-wall">
-          <h2 className="home-section-title">The collection wall</h2>
+          <h2 className="home-section-title">A slice of everything</h2>
           {wallLoading ? (
             <TileGridSkeleton count={18} />
           ) : (
