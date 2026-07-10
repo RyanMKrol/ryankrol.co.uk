@@ -9969,6 +9969,251 @@
         "workType": "bugfix",
         "risk": []
       }
+    },
+    {
+      "id": "T361",
+      "title": "Add Hardcover.app normaliser + rewrite /api/books/search.js to call Hardcover",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "books",
+        "hardcover",
+        "provider-migration"
+      ],
+      "scope": [
+        "src/lib/hardcover.js",
+        "src/lib/hardcover.test.js",
+        "src/pages/api/books/search.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T361.md",
+      "facets": {
+        "layer": "api",
+        "workType": "feature",
+        "risk": []
+      }
+    },
+    {
+      "id": "T362",
+      "title": "Wire Hardcover search into BookSearch.js (add/edit book review forms)",
+      "status": "pending",
+      "dependsOn": [
+        "T361"
+      ],
+      "gate": null,
+      "tags": [
+        "books",
+        "hardcover",
+        "provider-migration"
+      ],
+      "scope": [
+        "src/components/BookSearch.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T362.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T363",
+      "title": "Wire Hardcover into Bulk Backfill + tune bulk-search pacing for Hardcover's rate limit",
+      "status": "pending",
+      "dependsOn": [
+        "T361"
+      ],
+      "gate": null,
+      "tags": [
+        "books",
+        "hardcover",
+        "provider-migration",
+        "bulk-backfill"
+      ],
+      "scope": [
+        "src/pages/reviews/books/backfill.js",
+        "src/components/BulkBackfillList.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T363.md",
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": []
+      }
+    },
+    {
+      "id": "T364",
+      "title": "Investigate: confirm Hardcover API is callable from deployed Vercel production (not just localhost)",
+      "status": "pending",
+      "dependsOn": [
+        "T361"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "books",
+        "hardcover",
+        "investigation",
+        "production-risk",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T364.md"
+    },
+    {
+      "id": "T365",
+      "title": "Migration script: strip Google Books / Open Library metadata fields from BookRatingsV4",
+      "status": "pending",
+      "dependsOn": [
+        "T364"
+      ],
+      "gate": null,
+      "tags": [
+        "books",
+        "hardcover",
+        "data-migration",
+        "provider-migration"
+      ],
+      "scope": [
+        "src/scripts/stripOldBookProviderMetadata.js",
+        "src/scripts/stripOldBookProviderMetadata.test.js",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T365.md",
+      "facets": {
+        "layer": "db",
+        "workType": "data-migration",
+        "risk": [
+          "touches-data"
+        ]
+      }
+    },
+    {
+      "id": "T366",
+      "title": "Fetch + store extra Hardcover book fields on BookRatingsV4 (synopsis, series, slug, rating)",
+      "status": "pending",
+      "dependsOn": [
+        "T361"
+      ],
+      "gate": null,
+      "tags": [
+        "books",
+        "hardcover",
+        "schema"
+      ],
+      "scope": [
+        "src/lib/hardcover.js",
+        "src/lib/hardcover.test.js",
+        "src/pages/api/reviews/books/add.js",
+        "src/pages/api/reviews/books/update.js",
+        "README.md",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T366.md",
+      "facets": {
+        "layer": "api",
+        "workType": "feature",
+        "risk": []
+      }
+    },
+    {
+      "id": "T367",
+      "title": "Remove Google Books provider (dead code + config cleanup)",
+      "status": "pending",
+      "dependsOn": [
+        "T361",
+        "T362",
+        "T363"
+      ],
+      "gate": null,
+      "tags": [
+        "books",
+        "hardcover",
+        "cleanup"
+      ],
+      "scope": [
+        "src/lib/googlebooks.js",
+        "src/lib/googlebooks.test.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T367.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "refactor",
+        "risk": []
+      }
+    },
+    {
+      "id": "T368",
+      "title": "Fix Last.fm thumbnail never saving for albums/vinyl (images shape bug)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "bugfix"
+      ],
+      "scope": [
+        "src/lib/lastfm.js",
+        "src/pages/api/reviews/albums/add.js",
+        "src/pages/api/reviews/albums/update.js",
+        "src/pages/api/vinyl/add.js",
+        "src/pages/api/reviews/albums/add.test.js",
+        "src/pages/api/vinyl/add.test.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T368.md",
+      "visualVerify": true,
+      "facets": {
+        "layer": "api",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T369",
+      "title": "Perfume search: match designer as well as title",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "search"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T369.md",
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
     }
   ]
 }
