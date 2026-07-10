@@ -9696,7 +9696,7 @@
     {
       "id": "T351",
       "title": "Hardcode the chosen Top of Mind placement and wire it to real content",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T350",
         "T348"
