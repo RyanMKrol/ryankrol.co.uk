@@ -9727,7 +9727,7 @@
     {
       "id": "T352",
       "title": "Books search: propagate real upstream Google Books error status + log diagnostic detail",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
