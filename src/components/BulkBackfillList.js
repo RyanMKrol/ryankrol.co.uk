@@ -23,6 +23,7 @@ export default function BulkBackfillList({
   items,
   pageSize = 15,
   onSearch,
+  minSpacingMs = 1500,
   renderItemLabel,
   renderCandidate,
   getCandidateKey,
@@ -48,6 +49,7 @@ export default function BulkBackfillList({
       pageItems,
       onSearch,
       {
+        minSpacingMs,
         onItemStart: (item) => {
           setRowState((prev) => ({
             ...prev,

@@ -29,7 +29,6 @@ export default function BackfillBooks() {
   const handleSearch = async (book) => {
     const params = new URLSearchParams({
       title: stripSeriesPrefix(book.title.trim()),
-      provider: 'googlebooks',
     });
     if (book.author && book.author.trim()) params.set('author', book.author.trim());
     const res = await fetch(`/api/books/search?${params}`);
@@ -123,6 +122,9 @@ export default function BackfillBooks() {
         <BulkBackfillList
           items={books}
           pageSize={15}
+          // Hardcover's search API caps at 60 req/min; 1200ms spacing keeps
+          // comfortable headroom under that ceiling.
+          minSpacingMs={1200}
           onSearch={handleSearch}
           renderItemLabel={(book) => book.title}
           getCandidateKey={(candidate, i) => candidate.volumeId ?? i}
