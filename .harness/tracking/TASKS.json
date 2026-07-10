@@ -9814,7 +9814,7 @@
     {
       "id": "T355",
       "title": "Hot Takes add form: swap plain textarea for MarkdownEditor (fixes styling too)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
