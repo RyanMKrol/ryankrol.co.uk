@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import BulkBackfillList from '../../../components/BulkBackfillList';
 import { needsBookBackfill } from '../../../lib/backfillEligibility';
+import { stripSeriesPrefix } from '../../../lib/bookSearchQuery';
 
 export default function BackfillBooks() {
   const [books, setBooks] = useState([]);
@@ -27,7 +28,7 @@ export default function BackfillBooks() {
 
   const handleSearch = async (book) => {
     const params = new URLSearchParams({
-      title: book.title.trim(),
+      title: stripSeriesPrefix(book.title.trim()),
       provider: 'googlebooks',
     });
     if (book.author && book.author.trim()) params.set('author', book.author.trim());
