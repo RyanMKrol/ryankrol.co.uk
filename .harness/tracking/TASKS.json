@@ -10026,7 +10026,7 @@
     {
       "id": "T363",
       "title": "Wire Hardcover into Bulk Backfill + tune bulk-search pacing for Hardcover's rate limit",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T361"
       ],
