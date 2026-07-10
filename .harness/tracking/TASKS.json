@@ -9893,7 +9893,7 @@
     {
       "id": "T358",
       "title": "Replace Top-of-Mind DUMMY_TOM_TEXT placeholder with Lorem Ipsum",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
