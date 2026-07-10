@@ -9838,7 +9838,7 @@
     {
       "id": "T356",
       "title": "Add edit/delete flow for Hot Takes",
-      "status": "pending",
+      "status": "blocked",
       "dependsOn": [
         "T355"
       ],
