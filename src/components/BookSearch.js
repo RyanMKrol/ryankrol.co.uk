@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 /**
- * Google Books search + confirm component for the book add flow.
+ * Hardcover search + confirm component for the book add flow.
  *
  * Props:
  *   title    - the book title from the form (used as search param)
@@ -64,7 +64,7 @@ export default function BookSearch({ title = '', author = '', onSelect }) {
     if (onSelect) onSelect(null);
   };
 
-  const providerLabel = 'Google Books';
+  const providerLabel = 'Hardcover';
 
   const getCoverSrc = (r) => r.coverUrl || null;
 
