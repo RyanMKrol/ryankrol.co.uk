@@ -48,7 +48,8 @@ export default function Perfumes() {
 
   useEffect(() => {
     let filtered = perfumes.filter(perfume =>
-      perfume.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (perfume.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (perfume.designer || '').toLowerCase().includes(searchTerm.toLowerCase())) &&
       (ownershipFilter === 'all' || perfume.ownership === ownershipFilter)
     );
 
@@ -113,7 +114,7 @@ export default function Perfumes() {
           <SearchInput
             value={searchTerm}
             onChange={setSearchTerm}
-            placeholder="search perfumes by title..."
+            placeholder="search by title or designer..."
           />
           <SortButtons
             fields={SORT_FIELDS}
