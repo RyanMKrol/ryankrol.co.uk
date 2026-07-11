@@ -2,6 +2,7 @@ import { GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
+import { fetchHardcoverBookDetails } from '../../../../lib/hardcover';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -11,7 +12,8 @@ export default async function handler(req, res) {
   const {
     title, author, rating, overview, password, originalId,
     source, olid, coverId, coverUrl, volumeId,
-    bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher, skipEditedDate
+    bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher, skipEditedDate,
+    hardcoverSynopsis, hardcoverSlug, hardcoverRating, seriesName, seriesPosition
   } = req.body;
 
   // Verify password
@@ -49,6 +51,11 @@ export default async function handler(req, res) {
       ? existingReview.Item?.editedDate
       : new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
 
+    let enrichedData = {};
+    if (source === 'hardcover' && volumeId) {
+      enrichedData = await fetchHardcoverBookDetails(volumeId);
+    }
+
     // Update the item in place with preserved original date and id
     const reviewData = {
       id: originalId,
@@ -69,6 +76,12 @@ export default async function handler(req, res) {
       ...(subjects !== undefined && { subjects }),
       ...(pageCount !== undefined && { pageCount }),
       ...(publisher !== undefined && { publisher }),
+      ...(hardcoverSynopsis !== undefined && { hardcoverSynopsis }),
+      ...(hardcoverSlug !== undefined && { hardcoverSlug }),
+      ...(hardcoverRating !== undefined && { hardcoverRating }),
+      ...(seriesName !== undefined && { seriesName }),
+      ...(seriesPosition !== undefined && { seriesPosition }),
+      ...enrichedData,
     };
 
     const putParams = {

@@ -256,15 +256,22 @@ random UUID assigned once on create and never regenerated. The old title+author-
   editedDate: "20-02-2024",          // DD-MM-YYYY — set on every edit
 
   // Optional — only present when a search match was selected
-  source: "googlebooks",             // 'googlebooks'
-  coverUrl: "https://books.google…", // Google Books cover URL
-  volumeId: "abc123",                // Google Books volume ID
+  source: "googlebooks",             // 'googlebooks' or 'hardcover'
+  coverUrl: "https://books.google…", // Google Books or Hardcover cover URL
+  volumeId: "abc123",                // Google Books volume ID or Hardcover book id
   bookAuthors: ["Frank Herbert"],    // Author list from provider
   firstPublishedYear: 1965,
   isbn: "9780441013593",
   subjects: ["Science Fiction"],
   pageCount: 412,
-  publisher: "Chilton Books"
+  publisher: "Chilton Books",
+
+  // Optional Hardcover enrichment — fetched from Hardcover GraphQL API when source='hardcover'
+  hardcoverSynopsis: "...",          // Book description/synopsis
+  hardcoverSlug: "dune-frank-herbert", // Hardcover slug for canonical URL (https://hardcover.app/books/<slug>)
+  hardcoverRating: 4.5,              // Hardcover community rating (decimal)
+  seriesName: "Dune Chronicles",     // First series the book belongs to (if any)
+  seriesPosition: 1                  // Position in series (if any)
 }
 ```
 

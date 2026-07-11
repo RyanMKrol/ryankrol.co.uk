@@ -3,6 +3,7 @@ import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
+import { fetchHardcoverBookDetails } from '../../../../lib/hardcover';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -12,7 +13,8 @@ export default async function handler(req, res) {
   const {
     title, author, rating, overview, password,
     source, olid, coverId, coverUrl, volumeId,
-    bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher
+    bookAuthors, firstPublishedYear, isbn, subjects, pageCount, publisher,
+    hardcoverSynopsis, hardcoverSlug, hardcoverRating, seriesName, seriesPosition
   } = req.body;
 
   // Verify password
@@ -34,6 +36,11 @@ export default async function handler(req, res) {
     const now = new Date();
     const dateString = now.toLocaleDateString('en-GB').replace(/\//g, '-');
 
+    let enrichedData = {};
+    if (source === 'hardcover' && volumeId) {
+      enrichedData = await fetchHardcoverBookDetails(volumeId);
+    }
+
     const reviewData = {
       id: randomUUID(),
       title,
@@ -52,6 +59,12 @@ export default async function handler(req, res) {
       ...(subjects !== undefined && { subjects }),
       ...(pageCount !== undefined && { pageCount }),
       ...(publisher !== undefined && { publisher }),
+      ...(hardcoverSynopsis !== undefined && { hardcoverSynopsis }),
+      ...(hardcoverSlug !== undefined && { hardcoverSlug }),
+      ...(hardcoverRating !== undefined && { hardcoverRating }),
+      ...(seriesName !== undefined && { seriesName }),
+      ...(seriesPosition !== undefined && { seriesPosition }),
+      ...enrichedData,
     };
 
     const params = {
