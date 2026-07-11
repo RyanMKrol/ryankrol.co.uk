@@ -10152,7 +10152,8 @@
       "scope": [
         "src/lib/googlebooks.js",
         "src/lib/googlebooks.test.js",
-        "CLAUDE.md"
+        "CLAUDE.md",
+        "src/pages/reviews/books/edit/[id].js"
       ],
       "design": null,
       "verify": [],
