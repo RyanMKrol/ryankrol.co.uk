@@ -10075,7 +10075,7 @@
     {
       "id": "T365",
       "title": "Migration script: strip Google Books / Open Library metadata fields from BookRatingsV4",
-      "status": "blocked",
+      "status": "pending",
       "dependsOn": [
         "T364"
       ],
@@ -10214,6 +10214,28 @@
         "workType": "bugfix",
         "risk": []
       }
+    },
+    {
+      "id": "T370",
+      "title": "Run the LIVE=1 BookRatingsV4 old-provider-metadata strip against production + verify re-scan",
+      "status": "pending",
+      "dependsOn": [
+        "T365"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "books",
+        "hardcover",
+        "data-migration",
+        "provider-migration",
+        "production-risk",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T370.md"
     }
   ]
 }
