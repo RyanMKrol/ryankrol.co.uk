@@ -28,5 +28,10 @@
     "failed": true,
     "reason": "review-failed: superseded by T359 — blocked by the harness's own scope_match bracket bug (fixed in implementation-harness 1.62.0), not a task-authoring problem; re-attempted with unchanged scope/spec",
     "at": "2026-07-10T11:37:59Z"
+  },
+  "T367": {
+    "failed": true,
+    "reason": "review-failed: superseded by T371 — re-scoped with a satisfiable done-when (excludes legitimate test fixtures) and widened scope to delete the obsolete migration script blocking lib removal",
+    "at": "2026-07-11T22:47:02Z"
   }
 }
