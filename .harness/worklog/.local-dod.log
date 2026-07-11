@@ -56,9 +56,19 @@ PASS src/__tests__/pages/projects/index.test.js
       at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
 
 PASS src/components/MarkdownEditor.test.js
-PASS src/components/HomeSkeleton.test.js
 PASS src/components/ReviewCard.test.js
-PASS src/scripts/stripBackfillEditedDates.test.js
+PASS src/components/Pagination.test.js
+PASS test/pages/workouts/index.test.js
+PASS src/scripts/migratePerfumeOwnership.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/__tests__/pages/reviews/albums/edit.test.js
+PASS src/scripts/stripOldBookProviderMetadata.test.js
   ● Console
 
     console.log
@@ -66,12 +76,23 @@ PASS src/scripts/stripBackfillEditedDates.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/components/SortButtons.test.js
-PASS src/components/Pagination.test.js
-PASS src/__tests__/pages/reviews/perfumes/add.test.js
+PASS src/scripts/migrateBooksToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/reviews/tv/update.test.js
 PASS src/components/Markdown.test.js
-PASS src/lib/workoutQueries.test.js
-PASS src/lib/perfumes.test.js
+PASS src/pages/api/reviews/books/update.test.js
+PASS src/components/SortButtons.test.js
+PASS src/__tests__/pages/reviews/perfumes/edit.test.js
+PASS src/pages/api/reviews/movies/update.test.js
+PASS src/tests/workoutsIndex.test.js
+PASS src/components/StarRating.test.js
+PASS src/components/HomeSkeleton.test.js
 PASS src/components/Header.test.js
   ● Console
 
@@ -299,11 +320,96 @@ PASS src/components/Header.test.js
       at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:6927:7)
       at setLoading (src/components/NowPlaying.js:22:9)
 
-PASS src/scripts/migrateOpenLibraryBooksToGoogleBooks.test.js
+PASS src/components/NowPlaying.test.js
+PASS src/__tests__/pages/reviews/tv/add.test.js
+PASS src/lib/hardcover.test.js
+  ● Console
+
+    console.warn
+      ⚠️ HARDCOVER_API_TOKEN not set, skipping book details fetch
+
+      93 |   const token = process.env.HARDCOVER_API_TOKEN;
+      94 |   if (!token) {
+    > 95 |     console.warn('⚠️ HARDCOVER_API_TOKEN not set, skipping book details fetch');
+         |             ^
+      96 |     return {};
+      97 |   }
+      98 |
+
+      at warn (src/lib/hardcover.js:95:13)
+      at Object.<anonymous> (src/lib/hardcover.test.js:519:51)
+
+    console.log
+      ✅ Fetched Hardcover book details: hardcoverSynopsis, hardcoverSlug, hardcoverRating, seriesName, seriesPosition
+
+      at log (src/lib/hardcover.js:150:15)
+
+    console.error
+      🔴 Hardcover API error (401): Unauthorized
+
+      128 |
+      129 |     if (!response.ok) {
+    > 130 |       console.error(`🔴 Hardcover API error (${response.status}):`, response.statusText);
+          |               ^
+      131 |       return {};
+      132 |     }
+      133 |
+
+      at error (src/lib/hardcover.js:130:15)
+      at Object.<anonymous> (src/lib/hardcover.test.js:581:20)
+
+    console.error
+      🔴 Hardcover GraphQL errors: [ { message: 'Book not found' } ]
+
+      135 |
+      136 |     if (data.errors && data.errors.length > 0) {
+    > 137 |       console.error('🔴 Hardcover GraphQL errors:', data.errors);
+          |               ^
+      138 |       return {};
+      139 |     }
+      140 |
+
+      at error (src/lib/hardcover.js:137:15)
+      at Object.<anonymous> (src/lib/hardcover.test.js:596:20)
+
+    console.log
+      ℹ️ Hardcover book not found for id: book-id
+
+      at log (src/lib/hardcover.js:142:15)
+
+    console.log
+      ✅ Fetched Hardcover book details: hardcoverSlug
+
+      at log (src/lib/hardcover.js:150:15)
+
+    console.error
+      🔴 Error fetching Hardcover book details: Network error
+
+      153 |     return details;
+      154 |   } catch (error) {
+    > 155 |     console.error('🔴 Error fetching Hardcover book details:', error.message);
+          |             ^
+      156 |     return {};
+      157 |   }
+      158 | }
+
+      at error (src/lib/hardcover.js:155:13)
+      at Object.<anonymous> (src/lib/hardcover.test.js:648:20)
+
+    console.log
+      ℹ️ Hardcover book not found for id: book-xyz
+
+      at log (src/lib/hardcover.js:142:15)
+
+PASS src/lib/backfillQueue.test.js
+PASS src/__tests__/pages/reviews/tv/edit.test.js
+PASS src/__tests__/pages/reviews/movies/edit.test.js
+PASS src/__tests__/pages/reviews/books/edit.test.js
+PASS src/scripts/migrateVinylToIdTable.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
@@ -371,7 +477,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 162ms
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 158ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -446,7 +552,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 157ms
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 154ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -486,7 +592,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:86:11)
 
     console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (1ms)
 
       at log (src/lib/workoutBackfill.js:127:15)
 
@@ -516,7 +622,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 153ms
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 158ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -591,7 +697,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 152ms
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 160ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -711,7 +817,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 307ms
+      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 305ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -730,20 +836,167 @@ PASS src/lib/workoutBackfill.test.js
 
       at log (src/lib/workoutBackfill.js:246:15)
 
-PASS src/__tests__/pages/reviews/books/edit.test.js
-PASS test/pages/workouts/index.test.js
-PASS src/components/StarRating.test.js
-PASS src/__tests__/pages/reviews/books/add.test.js
+PASS src/__tests__/pages/reviews/perfumes/add.test.js
+PASS src/components/CoverTile.test.js
 PASS src/scripts/migrateTvToIdTable.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/components/NowPlaying.test.js
+PASS src/__tests__/pages/reviews/movies/add.test.js
+PASS src/components/perfumeVariants/Variant6Hybrid.test.js
+PASS src/scripts/migrateWorkoutData.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+    console.log
+      💾 Starting to store 2 workouts in DynamoDB...
+
+      at log (src/scripts/migrateWorkoutData.js:67:11)
+
+    console.log
+      📝 Processing workout 1/2: "Push Day" (w1)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 1 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      📝 Processing workout 2/2: "Pull Day" (w2)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 1 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      
+      🎉 Migration completed!
+
+      at log (src/scripts/migrateWorkoutData.js:84:11)
+
+    console.log
+      📊 Summary: 2/2 workouts processed
+
+      at log (src/scripts/migrateWorkoutData.js:85:11)
+
+    console.log
+      💾 Starting to store 2 workouts in DynamoDB...
+
+      at log (src/scripts/migrateWorkoutData.js:67:11)
+
+    console.log
+      📝 Processing workout 1/2: "Push Day" (w1)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.error
+         ❌ Error processing workout w1: Error: boom
+          at Object.<anonymous> (/Users/ryankrol/Development/ryankrol.co.uk/src/scripts/migrateWorkoutData.test.js:28:30)
+          at Promise.then.completed (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at _runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:121:9)
+          at run (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:444:34)
+          at Object.worker (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/testWorker.js:106:12)
+
+      78 |       console.log(`   ✅ Processed workout with ${workout.exercises.length} exercises`);
+      79 |     } catch (error) {
+    > 80 |       console.error(`   ❌ Error processing workout ${workout.id}:`, error);
+         |               ^
+      81 |     }
+      82 |   }
+      83 |
+
+      at error (src/scripts/migrateWorkoutData.js:80:15)
+      at Object.<anonymous> (src/scripts/migrateWorkoutData.test.js:36:5)
+
+    console.log
+      📝 Processing workout 2/2: "Pull Day" (w2)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 0 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      
+      🎉 Migration completed!
+
+      at log (src/scripts/migrateWorkoutData.js:84:11)
+
+    console.log
+      📊 Summary: 1/2 workouts processed
+
+      at log (src/scripts/migrateWorkoutData.js:85:11)
+
+PASS src/pages/api/reviews/albums/add.test.js
+PASS src/pages/api/reviews/movies/add.test.js
+PASS src/scripts/migrateAlbumsToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/__tests__/pages/reviews/books/add.test.js
 PASS src/scripts/migrateMoviesToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/backfillPersonalBests.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/vinyl/add.test.js
+PASS src/scripts/stripBackfillEditedDates.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/migrateOpenLibraryBooksToGoogleBooks.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/auditWorkouts.test.js
   ● Console
 
     console.log
@@ -751,15 +1004,217 @@ PASS src/scripts/migrateMoviesToIdTable.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/components/perfumeVariants/Variant6Hybrid.test.js
-PASS src/scripts/migrateAlbumsToIdTable.test.js
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 2 stored, 0 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 0 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Workout already exists, skipping
+
+      at log (src/scripts/auditWorkouts.js:142:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 1 stored, 1 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 1 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/1] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+PASS src/lib/perfumes.test.js
+PASS src/pages/api/github/repos.test.js
+  ● Console
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:81:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:106:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:128:18)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:165:20)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:181:20)
+
+    console.warn
+      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
+
+      47 |         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      48 |       } else {
+    > 49 |         console.warn('⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects');
+         |                 ^
+      50 |       }
+      51 |
+      52 |       const PER_PAGE = 100;
+
+      at warn (src/pages/api/github/repos.js:49:17)
+      at fn (src/pages/api/github/repos.test.js:10:38)
+      at handler (src/pages/api/github/repos.js:39:37)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:20)
+
+    console.warn
+      ⚠️ [GitHub] commit-count fetch failed for testuser/public-repo: 403
+
+       98 |             const commitsResponse = await fetch(commitsUrl, { headers });
+       99 |             if (!commitsResponse.ok) {
+    > 100 |               console.warn(`⚠️ [GitHub] commit-count fetch failed for ${repo.full_name}: ${commitsResponse.status}`);
+          |                       ^
+      101 |               return { ...repo, commitCount: null };
+      102 |             }
+      103 |             const linkHeader = commitsResponse.headers.get('link');
+
+      at warn (src/pages/api/github/repos.js:100:23)
+          at async Promise.all (index 0)
+      at src/pages/api/github/repos.js:94:37
+      at handler (src/pages/api/github/repos.js:39:19)
+      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:7)
+
+PASS src/pages/api/reviews/perfumes/update.test.js
+PASS src/scripts/backfillMissingExerciseRows.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 version env with Radar: https://dotenvx.com/radar
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
+PASS src/lib/workoutMetrics.test.js
+PASS src/lib/dateRange.test.js
+PASS src/__tests__/pages/reviews/albums/add.test.js
 PASS src/scripts/migrateLegacyExerciseRows.test.js
   ● Console
 
@@ -768,78 +1223,148 @@ PASS src/scripts/migrateLegacyExerciseRows.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/pages/api/reviews/perfumes/update.test.js
-PASS src/lib/backfillQueue.test.js
-PASS src/__tests__/pages/reviews/albums/edit.test.js
-PASS src/pages/api/vinyl/add.test.js
-PASS src/lib/googlebooks.test.js
-PASS src/scripts/migrateVinylToIdTable.test.js
+PASS src/lib/reviewText.test.js
+PASS src/pages/api/lastfm/album-search.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+      🎵 [Last.fm] Album search: "Dune"
 
-      at _log (node_modules/dotenv/lib/main.js:139:11)
+      at log (src/pages/api/lastfm/album-search.js:38:15)
 
-PASS src/scripts/backfillMissingExerciseRows.test.js
+    console.log
+      ✅ [Last.fm] Album search done in 0ms
+
+      at log (src/pages/api/lastfm/album-search.js:48:15)
+
+PASS src/lib/workoutPagination.test.js
+PASS src/pages/api/books/search.test.js
+  ● Console
+
+    console.warn
+      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
+
+      54 |   const token = process.env.HARDCOVER_API_TOKEN;
+      55 |   if (!token) {
+    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
+         |             ^
+      57 |   }
+      58 |
+      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
+
+      at warn (src/pages/api/books/search.js:56:13)
+      at searchHardcover (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:41:18)
+
+    console.log
+      📚 [Hardcover] Searching books: query="Dune"
+
+      at log (src/pages/api/books/search.js:59:11)
+
+    console.warn
+      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
+
+      54 |   const token = process.env.HARDCOVER_API_TOKEN;
+      55 |   if (!token) {
+    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
+         |             ^
+      57 |   }
+      58 |
+      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
+
+      at warn (src/pages/api/books/search.js:56:13)
+      at searchHardcover (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:72:18)
+
+    console.log
+      📚 [Hardcover] Searching books: query="Dune"
+
+      at log (src/pages/api/books/search.js:59:11)
+
+    console.warn
+      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
+
+      54 |   const token = process.env.HARDCOVER_API_TOKEN;
+      55 |   if (!token) {
+    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
+         |             ^
+      57 |   }
+      58 |
+      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
+
+      at warn (src/pages/api/books/search.js:56:13)
+      at searchHardcover (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:90:18)
+
+    console.log
+      📚 [Hardcover] Searching books: query="Dune Frank Herbert"
+
+      at log (src/pages/api/books/search.js:59:11)
+
+    console.warn
+      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
+
+      54 |   const token = process.env.HARDCOVER_API_TOKEN;
+      55 |   if (!token) {
+    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
+         |             ^
+      57 |   }
+      58 |
+      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
+
+      at warn (src/pages/api/books/search.js:56:13)
+      at searchHardcover (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:110:18)
+
+    console.log
+      📚 [Hardcover] Searching books: query="Dune Frank Herbert"
+
+      at log (src/pages/api/books/search.js:59:11)
+
+PASS src/pages/api/reviews/tv/add.test.js
+PASS src/lib/programmeStats.test.js
+PASS src/lib/dynamo.test.js
+PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/__tests__/pages/reviews/albums/add.test.js
-PASS src/scripts/migrateBooksToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/lib/dateFormat.test.js
-PASS src/__tests__/pages/reviews/tv/add.test.js
+PASS src/lib/lastfm.test.js
 PASS src/lib/rateLimit.test.js
   ● Console
 
     console.log
-      🚦 [RateLimit] Blocked key=test-key-0.0828657916123472 retryAfterSeconds=1
+      🚦 [RateLimit] Blocked key=test-key-0.8883204962729891 retryAfterSeconds=1
 
-      at checkRateLimit (src/lib/rateLimit.js:43:17)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-a-0.7653599414598307 retryAfterSeconds=1
-
-      at checkRateLimit (src/lib/rateLimit.js:43:17)
+      at log (src/lib/rateLimit.js:31:13)
 
     console.log
-      🚦 [RateLimit] Blocked key=test-key-0.005253383058718697 retryAfterSeconds=1
+      🚦 [RateLimit] Blocked key=test-key-a-0.7330992228713544 retryAfterSeconds=1
 
-      at checkRateLimit (src/lib/rateLimit.js:43:17)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.005253383058718697 retryAfterSeconds=1
-
-      at checkRateLimit (src/lib/rateLimit.js:43:17)
-
-PASS src/__tests__/pages/reviews/movies/edit.test.js
-PASS src/lib/reviewText.test.js
-PASS src/lib/tmdb.test.js
-PASS src/lib/bookSearchQuery.test.js
-PASS src/lib/workoutMetrics.test.js
-PASS src/__tests__/pages/reviews/tv/edit.test.js
-PASS src/tests/workoutsIndex.test.js
-PASS src/lib/lastfm.test.js
-PASS src/scripts/backfillPersonalBests.test.js
-  ● Console
+      at log (src/lib/rateLimit.js:31:13)
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+      🚦 [RateLimit] Blocked key=test-key-0.07868753771597636 retryAfterSeconds=1
 
-      at _log (node_modules/dotenv/lib/main.js:139:11)
+      at log (src/lib/rateLimit.js:31:13)
 
-PASS src/__tests__/pages/reviews/perfumes/edit.test.js
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.07868753771597636 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+PASS src/lib/dateFormat.test.js
 PASS src/lib/apiCache.test.js
   ● Console
 
@@ -940,130 +1465,7 @@ PASS src/lib/apiCache.test.js
 
       at log (src/lib/apiCache.js:65:15)
 
-PASS src/lib/pagination.test.js
-PASS src/pages/api/reviews/movies/update.test.js
-PASS src/pages/api/reviews/albums/add.test.js
-PASS src/lib/masonryColumns.test.js
-PASS src/pages/api/github/repos.test.js
-  ● Console
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      63 |       for (;;) {
-      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
-    > 65 |         const response = await fetch(githubUrl, { headers });
-         |                         ^
-      66 |
-      67 |         if (!response.ok) {
-      68 |           throw new Error(`GitHub API error: ${response.status}`);
-
-      at src/pages/api/github/repos.js:65:25
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:56:56)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:81:18)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      63 |       for (;;) {
-      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
-    > 65 |         const response = await fetch(githubUrl, { headers });
-         |                         ^
-      66 |
-      67 |         if (!response.ok) {
-      68 |           throw new Error(`GitHub API error: ${response.status}`);
-
-      at src/pages/api/github/repos.js:65:25
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:56:56)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:106:18)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      63 |       for (;;) {
-      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
-    > 65 |         const response = await fetch(githubUrl, { headers });
-         |                         ^
-      66 |
-      67 |         if (!response.ok) {
-      68 |           throw new Error(`GitHub API error: ${response.status}`);
-
-      at src/pages/api/github/repos.js:65:25
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:56:56)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:128:18)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      63 |       for (;;) {
-      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
-    > 65 |         const response = await fetch(githubUrl, { headers });
-         |                         ^
-      66 |
-      67 |         if (!response.ok) {
-      68 |           throw new Error(`GitHub API error: ${response.status}`);
-
-      at src/pages/api/github/repos.js:65:25
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:56:56)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:165:20)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      63 |       for (;;) {
-      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
-    > 65 |         const response = await fetch(githubUrl, { headers });
-         |                         ^
-      66 |
-      67 |         if (!response.ok) {
-      68 |           throw new Error(`GitHub API error: ${response.status}`);
-
-      at src/pages/api/github/repos.js:65:25
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:56:56)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:181:20)
-
-    console.warn
-      ⚠️ [GitHub] GITHUB_TOKEN not set — falling back to public-only /users/{username}/repos, private repos will be missing from /projects
-
-      63 |       for (;;) {
-      64 |         const githubUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}per_page=${PER_PAGE}&page=${page}`;
-    > 65 |         const response = await fetch(githubUrl, { headers });
-         |                         ^
-      66 |
-      67 |         if (!response.ok) {
-      68 |           throw new Error(`GitHub API error: ${response.status}`);
-
-      at src/pages/api/github/repos.js:65:25
-      at fn (src/pages/api/github/repos.test.js:10:38)
-      at handler (src/pages/api/github/repos.js:56:56)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:20)
-
-    console.warn
-      ⚠️ [GitHub] commit-count fetch failed for testuser/public-repo: 403
-
-      104 |             const fromLinkHeader = parseCommitCountFromLinkHeader(linkHeader);
-      105 |             if (fromLinkHeader !== null) {
-    > 106 |               return { ...repo, commitCount: fromLinkHeader };
-          |                                 ^
-      107 |             }
-      108 |             // No Link header means there's only one page of results (0 or 1 commits) —
-      109 |             // the response body's array length tells us which.
-
-      at src/pages/api/github/repos.js:106:33
-          at async Promise.all (index 0)
-      at src/pages/api/github/repos.js:99:43
-      at handler (src/pages/api/github/repos.js:56:23)
-      at Object.<anonymous> (src/pages/api/github/repos.test.js:197:7)
-
-PASS src/__tests__/pages/reviews/movies/add.test.js
-PASS src/components/CoverTile.test.js
 PASS src/lib/hotTakes.test.js
-PASS src/pages/api/reviews/books/update.test.js
 PASS src/pages/api/tmdb/search.test.js
   ● Console
 
@@ -1072,339 +1474,23 @@ PASS src/pages/api/tmdb/search.test.js
 
       at log (src/pages/api/tmdb/search.js:41:15)
 
-PASS src/scripts/migratePerfumeOwnership.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/pages/api/reviews/movies/add.test.js
-PASS src/scripts/auditWorkouts.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-    console.log
-      Backfilling 2 missing workouts...
-
-      at backfillMissing (src/scripts/auditWorkouts.js:104:13)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at backfillMissing (src/scripts/auditWorkouts.js:114:21)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at backfillMissing (src/scripts/auditWorkouts.js:114:21)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at backfillMissing (src/scripts/auditWorkouts.js:120:13)
-
-    console.log
-      Workouts: 2 stored, 0 skipped
-
-      at backfillMissing (src/scripts/auditWorkouts.js:121:13)
-
-    console.log
-      Backfilling 2 missing workouts...
-
-      at backfillMissing (src/scripts/auditWorkouts.js:104:13)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
-
-    console.log
-        Stored workout + 0 exercises
-
-      at backfillMissing (src/scripts/auditWorkouts.js:114:21)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
-
-    console.log
-        Workout already exists, skipping
-
-      at backfillMissing (src/scripts/auditWorkouts.js:117:21)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at backfillMissing (src/scripts/auditWorkouts.js:120:13)
-
-    console.log
-      Workouts: 1 stored, 1 skipped
-
-      at backfillMissing (src/scripts/auditWorkouts.js:121:13)
-
-    console.log
-      Backfilling 1 missing workouts...
-
-      at backfillMissing (src/scripts/auditWorkouts.js:104:13)
-
-    console.log
-      [1/1] 2026-06-01 - Push Day (w1)
-
-      at backfillMissing (src/scripts/auditWorkouts.js:110:17)
-
-PASS src/lib/dateRange.test.js
-PASS src/components/PerfumeCharacteristics.test.js
-PASS src/lib/topOfMind.test.js
-PASS src/lib/programmeStats.test.js
-PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 version env with Radar: https://dotenvx.com/radar
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/pages/api/lastfm/album-search.test.js
-  ● Console
-
-    console.log
-      🎵 [Last.fm] Album search: "Dune"
-
-      at log (src/pages/api/lastfm/album-search.js:38:15)
-
-    console.log
-      ✅ [Last.fm] Album search done in 0ms
-
-      at log (src/pages/api/lastfm/album-search.js:48:15)
-
-PASS src/pages/api/reviews/tv/add.test.js
-PASS src/lib/workoutPagination.test.js
-PASS src/pages/api/reviews/tv/update.test.js
-PASS src/lib/hardcover.test.js
-PASS src/pages/api/books/search.test.js
-  ● Console
-
-    console.warn
-      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
-
-      66 |   const token = process.env.HARDCOVER_API_TOKEN;
-      67 |   if (!token) {
-    > 68 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
-         |             ^
-      69 |   }
-      70 |
-      71 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
-
-      at warn (src/pages/api/books/search.js:68:13)
-      at searchHardcover (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:41:18)
-
-    console.log
-      📚 [Hardcover] Searching books: query="Dune"
-
-      at log (src/pages/api/books/search.js:71:11)
-
-    console.warn
-      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
-
-      66 |   const token = process.env.HARDCOVER_API_TOKEN;
-      67 |   if (!token) {
-    > 68 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
-         |             ^
-      69 |   }
-      70 |
-      71 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
-
-      at warn (src/pages/api/books/search.js:68:13)
-      at searchHardcover (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:72:18)
-
-    console.log
-      📚 [Hardcover] Searching books: query="Dune"
-
-      at log (src/pages/api/books/search.js:71:11)
-
-    console.warn
-      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
-
-      66 |   const token = process.env.HARDCOVER_API_TOKEN;
-      67 |   if (!token) {
-    > 68 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
-         |             ^
-      69 |   }
-      70 |
-      71 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
-
-      at warn (src/pages/api/books/search.js:68:13)
-      at searchHardcover (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:90:18)
-
-    console.log
-      📚 [Hardcover] Searching books: query="Dune Frank Herbert"
-
-      at log (src/pages/api/books/search.js:71:11)
-
-    console.warn
-      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
-
-      66 |   const token = process.env.HARDCOVER_API_TOKEN;
-      67 |   if (!token) {
-    > 68 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
-         |             ^
-      69 |   }
-      70 |
-      71 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
-
-      at warn (src/pages/api/books/search.js:68:13)
-      at searchHardcover (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:110:18)
-
-    console.log
-      📚 [Hardcover] Searching books: query="Dune Frank Herbert"
-
-      at log (src/pages/api/books/search.js:71:11)
-
+PASS src/lib/bookSearchQuery.test.js
 PASS src/lib/chartTime.test.js
-PASS src/scripts/migrateWorkoutData.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-    console.log
-      💾 Starting to store 2 workouts in DynamoDB...
-
-      at log (src/scripts/migrateWorkoutData.js:67:11)
-
-    console.log
-      📝 Processing workout 1/2: "Push Day" (w1)
-
-      at log (src/scripts/migrateWorkoutData.js:73:13)
-
-    console.log
-         ✅ Processed workout with 1 exercises
-
-      at log (src/scripts/migrateWorkoutData.js:78:15)
-
-    console.log
-      📝 Processing workout 2/2: "Pull Day" (w2)
-
-      at log (src/scripts/migrateWorkoutData.js:73:13)
-
-    console.log
-         ✅ Processed workout with 1 exercises
-
-      at log (src/scripts/migrateWorkoutData.js:78:15)
-
-    console.log
-      
-      🎉 Migration completed!
-
-      at log (src/scripts/migrateWorkoutData.js:84:11)
-
-    console.log
-      📊 Summary: 2/2 workouts processed
-
-      at log (src/scripts/migrateWorkoutData.js:85:11)
-
-    console.log
-      💾 Starting to store 2 workouts in DynamoDB...
-
-      at log (src/scripts/migrateWorkoutData.js:67:11)
-
-    console.log
-      📝 Processing workout 1/2: "Push Day" (w1)
-
-      at log (src/scripts/migrateWorkoutData.js:73:13)
-
-    console.error
-         ❌ Error processing workout w1: Error: boom
-          at Object.<anonymous> (/Users/ryankrol/Development/ryankrol.co.uk/src/scripts/migrateWorkoutData.test.js:41:71)
-          at Promise.then.completed (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:298:28)
-          at new Promise (<anonymous>)
-          at callAsyncCircusFn (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:231:10)
-          at _callCircusTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:316:40)
-          at processTicksAndRejections (node:internal/process/task_queues:105:5)
-          at _runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:252:3)
-          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:126:9)
-          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:121:9)
-          at run (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:71:3)
-          at runAndTransformResultsToJestFormat (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-          at jestAdapter (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-          at runTestInternal (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:367:16)
-          at runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:444:34)
-          at Object.worker (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/testWorker.js:106:12)
-
-      78 |       console.log(`   ✅ Processed workout with ${workout.exercises.length} exercises`);
-      79 |     } catch (error) {
-    > 80 |       console.error(`   ❌ Error processing workout ${workout.id}:`, error);
-         |               ^
-      81 |     }
-      82 |   }
-      83 |
-
-      at error (src/scripts/migrateWorkoutData.js:80:15)
-      at Object.<anonymous> (src/scripts/migrateWorkoutData.test.js:54:9)
-
-    console.log
-      📝 Processing workout 2/2: "Pull Day" (w2)
-
-      at log (src/scripts/migrateWorkoutData.js:73:13)
-
-    console.log
-         ✅ Processed workout with 0 exercises
-
-      at log (src/scripts/migrateWorkoutData.js:78:15)
-
-    console.log
-      
-      🎉 Migration completed!
-
-      at log (src/scripts/migrateWorkoutData.js:84:11)
-
-    console.log
-      📊 Summary: 1/2 workouts processed
-
-      at log (src/scripts/migrateWorkoutData.js:85:11)
-
-PASS src/lib/dynamo.test.js
 PASS src/lib/backfillEligibility.test.js
+PASS src/lib/topOfMind.test.js
+PASS src/lib/googlebooks.test.js
+PASS src/lib/tmdb.test.js
+PASS src/lib/pagination.test.js
+PASS src/lib/workoutQueries.test.js
+PASS src/components/PerfumeCharacteristics.test.js
+PASS src/lib/masonryColumns.test.js
 PASS src/lib/scrollFade.test.js
 PASS src/components/BulkBackfillList.test.js
 
-Test Suites: 79 passed, 79 total
-Tests:       441 passed, 441 total
+Test Suites: 80 passed, 80 total
+Tests:       480 passed, 480 total
 Snapshots:   0 total
-Time:        5.452 s
+Time:        4.582 s, estimated 5 s
 Ran all test suites.
 
 > ryankrol.co.uk@1.0.0 build
@@ -1435,7 +1521,7 @@ Ran all test suites.
 
 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
    Creating an optimized production build ...
- ✓ Compiled successfully in 1749ms
+ ✓ Compiled successfully in 1241ms
    Collecting page data ...
    Generating static pages (0/40) ...
    Generating static pages (10/40) 
@@ -1506,7 +1592,7 @@ Route (pages)                                 Size  First Load JS
 ├ ƒ /api/workouts/backfill                     0 B         102 kB
 ├ ƒ /api/workouts/stats                        0 B         102 kB
 ├ ○ /dev/cache                             1.94 kB         104 kB
-├ ○ /exercises/[exerciseName] (849 ms)     5.28 kB         188 kB
+├ ○ /exercises/[exerciseName] (642 ms)     5.28 kB         188 kB
 ├ ○ /hot-takes                             3.52 kB         106 kB
 ├ ○ /hot-takes/add                          1.6 kB         104 kB
 ├ ○ /hot-takes/edit                        3.67 kB         106 kB
@@ -1540,7 +1626,7 @@ Route (pages)                                 Size  First Load JS
 ├ ○ /top-of-mind/edit                      2.19 kB         146 kB
 ├ ○ /vinyl                                 2.17 kB         105 kB
 ├ ○ /vinyl/add                             1.52 kB         108 kB
-├ ○ /workouts (849 ms)                     5.59 kB         188 kB
+├ ○ /workouts (642 ms)                     5.59 kB         188 kB
 └ ○ /workouts/[id]                         2.48 kB         105 kB
 + First Load JS shared by all               113 kB
   ├ chunks/framework-4a99af1472046e21.js   57.7 kB

@@ -10075,7 +10075,7 @@
     {
       "id": "T365",
       "title": "Migration script: strip Google Books / Open Library metadata fields from BookRatingsV4",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T364"
       ],
