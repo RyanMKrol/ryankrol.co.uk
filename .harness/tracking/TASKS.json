@@ -10106,7 +10106,7 @@
     {
       "id": "T366",
       "title": "Fetch + store extra Hardcover book fields on BookRatingsV4 (synopsis, series, slug, rating)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T361"
       ],
