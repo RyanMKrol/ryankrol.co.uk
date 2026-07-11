@@ -10137,7 +10137,7 @@
     {
       "id": "T367",
       "title": "Remove Google Books provider (dead code + config cleanup)",
-      "status": "pending",
+      "status": "blocked",
       "dependsOn": [
         "T361",
         "T362",
