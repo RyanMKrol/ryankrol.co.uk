@@ -10237,6 +10237,35 @@
       "verify": [],
       "expectsTest": false,
       "spec": ".harness/tasks/T370.md"
+    },
+    {
+      "id": "T371",
+      "title": "Remove dead Google Books provider code + config (re-attempt of T367)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "cleanup",
+        "google-books-removal"
+      ],
+      "scope": [
+        "src/lib/googlebooks.js",
+        "src/lib/googlebooks.test.js",
+        "src/scripts/migrateOpenLibraryBooksToGoogleBooks.js",
+        "src/scripts/migrateOpenLibraryBooksToGoogleBooks.test.js",
+        "src/pages/reviews/books/edit/[id].js",
+        "package.json",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T371.md",
+      "facets": {
+        "layer": "lib",
+        "workType": "refactor",
+        "risk": []
+      }
     }
   ]
 }
