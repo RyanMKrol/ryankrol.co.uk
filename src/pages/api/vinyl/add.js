@@ -3,6 +3,7 @@ import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../lib/constants';
 import { clearApiCache } from '../../../lib/apiCache';
+import { pickLargestFromImageMap } from '../../../lib/lastfm';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
       id: randomUUID(),
       title,
       artist,
-      thumbnail: lastfm?.images?.[lastfm.images.length - 1]?.['#text'] || ''
+      thumbnail: pickLargestFromImageMap(lastfm?.images) || ''
     };
 
     if (lastfm) {

@@ -3,6 +3,7 @@ import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
+import { pickLargestFromImageMap } from '../../../../lib/lastfm';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
       rating: Number(rating),
       highlights,
       date: new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
-      thumbnail: lastfm?.images?.[lastfm.images.length - 1]?.['#text'] || ''
+      thumbnail: pickLargestFromImageMap(lastfm?.images) || ''
     };
 
     if (lastfm) {

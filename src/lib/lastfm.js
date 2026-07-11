@@ -15,6 +15,20 @@ function pickLargestImage(images) {
 }
 
 /**
+ * Pick the largest non-empty image URL from a Last.fm images map.
+ * @param {Object} images - e.g. { extralarge: '...', large: '...', ... }
+ * @returns {string|null}
+ */
+export function pickLargestFromImageMap(images) {
+  if (!images || typeof images !== 'object') return null;
+  for (const size of IMAGE_SIZE_ORDER) {
+    const url = images[size];
+    if (url) return url;
+  }
+  return null;
+}
+
+/**
  * Normalise a single Last.fm album.search result item.
  * @param {Object} raw - Raw item from results.albummatches.album[]
  * @returns {{ title, artist, mbid, url, image }}

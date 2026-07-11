@@ -63,7 +63,7 @@ describe('albums add API', () => {
           trackCount: 12,
           summary: 'Landmark album',
           releaseDate: '1997-05-21',
-          images: [{ '#text': 'https://last.fm/cover.jpg' }]
+          images: { extralarge: 'https://last.fm/cover.jpg', large: 'https://last.fm/cover-large.jpg' }
         }
       }
     };
@@ -74,6 +74,7 @@ describe('albums add API', () => {
     expect(res.status).toHaveBeenCalledWith(201);
     const putCall = docClient.send.mock.calls.find(([cmd]) => cmd.input?.Item);
     expect(putCall[0].input.Item).toMatchObject({ lastfm: { mbid: 'abc-123' } });
+    expect(putCall[0].input.Item.thumbnail).toBe('https://last.fm/cover.jpg');
     expect(putCall[0].input.Item.id).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
     );

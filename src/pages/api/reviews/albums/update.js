@@ -2,6 +2,7 @@ import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '../../../../lib/dynamo';
 import { DYNAMO_TABLES } from '../../../../lib/constants';
 import { clearApiCache } from '../../../../lib/apiCache';
+import { pickLargestFromImageMap } from '../../../../lib/lastfm';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -44,7 +45,7 @@ export default async function handler(req, res) {
 
     if (lastfm) {
       updateExpressionParts.push('thumbnail = :thumbnail', 'lastfm = :lastfm');
-      expressionAttributeValues[':thumbnail'] = lastfm?.images?.[lastfm.images.length - 1]?.['#text'] || '';
+      expressionAttributeValues[':thumbnail'] = pickLargestFromImageMap(lastfm?.images) || '';
       expressionAttributeValues[':lastfm'] = {
         mbid: lastfm.mbid || '',
         url: lastfm.url || '',
