@@ -40,25 +40,13 @@ export default async function handler(req, res) {
 async function searchHardcover(title, author) {
   const query = `${title}${author ? ` ${author}` : ''}`.trim();
 
+  // `results` is a `jsonb` scalar in Hardcover's schema (confirmed via introspection), not a
+  // nested GraphQL object — it must be requested as a leaf field, not subselected. The returned
+  // value is already the full `{ found, hits: [{ document: {...} }], ... }` JSON shape.
   const graphqlQuery = `
     query Search($q: String!) {
       search(query: $q, query_type: "Book", per_page: 20) {
-        results {
-          hits {
-            document {
-              id
-              title
-              author_names
-              release_year
-              image {
-                url
-              }
-              isbns
-              genres
-              pages
-            }
-          }
-        }
+        results
       }
     }
   `;
