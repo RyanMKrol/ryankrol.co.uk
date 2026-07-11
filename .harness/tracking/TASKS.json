@@ -10137,7 +10137,7 @@
     {
       "id": "T367",
       "title": "Remove Google Books provider (dead code + config cleanup)",
-      "status": "blocked",
+      "status": "failed",
       "dependsOn": [
         "T361",
         "T362",
@@ -10219,7 +10219,7 @@
     {
       "id": "T370",
       "title": "Run the LIVE=1 BookRatingsV4 old-provider-metadata strip against production + verify re-scan",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T365"
       ],
