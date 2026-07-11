@@ -10196,7 +10196,7 @@
     {
       "id": "T369",
       "title": "Perfume search: match designer as well as title",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
