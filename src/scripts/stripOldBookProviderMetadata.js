@@ -54,11 +54,28 @@ async function scanRowsToStrip(tableName) {
     .filter(({ fields }) => fields.length > 0);
 }
 
+/**
+ * Build a REMOVE UpdateExpression that aliases every attribute via ExpressionAttributeNames.
+ * Aliasing is required because several target fields (e.g. `source`) are DynamoDB reserved
+ * keywords and cannot appear literally in an UpdateExpression — a raw `REMOVE source` is
+ * rejected with a ValidationException. Returns `{ UpdateExpression, ExpressionAttributeNames }`.
+ */
+function buildRemoveExpression(fields) {
+  const names = {};
+  fields.forEach((field, i) => {
+    names[`#f${i}`] = field;
+  });
+  return {
+    UpdateExpression: `REMOVE ${fields.map((_, i) => `#f${i}`).join(', ')}`,
+    ExpressionAttributeNames: names,
+  };
+}
+
 async function stripRow(tableName, row, fields) {
   await dynamoDb.send(new UpdateCommand({
     TableName: tableName,
     Key: { id: row.id },
-    UpdateExpression: `REMOVE ${fields.join(', ')}`,
+    ...buildRemoveExpression(fields),
   }));
 }
 
@@ -107,5 +124,6 @@ module.exports = {
   main,
   migrate,
   fieldsToStrip,
+  buildRemoveExpression,
   TARGET_FIELDS,
 };
