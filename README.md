@@ -255,11 +255,12 @@ random UUID assigned once on create and never regenerated. The old title+author-
   date: "15-01-2024",                // DD-MM-YYYY
   editedDate: "20-02-2024",          // DD-MM-YYYY — set on every edit
 
-  // Optional — only present when a search match was selected
-  source: "googlebooks",             // 'googlebooks' or 'hardcover'
-  coverUrl: "https://books.google…", // Google Books or Hardcover cover URL
-  volumeId: "abc123",                // Google Books volume ID or Hardcover book id
-  bookAuthors: ["Frank Herbert"],    // Author list from provider
+  // Optional — only present when a search match was selected. Hardcover is now the sole search
+  // provider (source is always 'hardcover' going forward); these fields are only ever set from it.
+  source: "hardcover",               // always 'hardcover' now
+  coverUrl: "https://assets.hardcover.app/…", // Hardcover cover URL
+  volumeId: "abc123",                // Hardcover book id
+  bookAuthors: ["Frank Herbert"],    // Author list from Hardcover
   firstPublishedYear: 1965,
   isbn: "9780441013593",
   subjects: ["Science Fiction"],
@@ -275,8 +276,13 @@ random UUID assigned once on create and never regenerated. The old title+author-
 }
 ```
 
-Historical rows may still carry a legacy `olid`/`coverId`/`source:'openlibrary'` from before the
-Open Library search path was removed — new reviews never write them.
+Historical rows may still carry legacy Google-Books/Open-Library values (`source:'googlebooks'`
+or `'openlibrary'`, plus the Open-Library-era `olid`/`coverId`) from before Hardcover became the
+sole provider. `src/scripts/stripOldBookProviderMetadata.js` is a one-off migration (dry-run by
+default, `LIVE=1` for real writes — see its file header) that strips those legacy fields from
+every row once run for real; clearing `volumeId`/`olid` also makes the row eligible for a clean
+Hardcover-sourced re-backfill. Until that live pass is run, some rows may still carry the old
+values shown above.
 
 #### PerfumeRatings Table
 Perfume reviews. Validation for the fields below lives in `src/lib/perfumes.js`.
