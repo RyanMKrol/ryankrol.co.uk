@@ -10440,7 +10440,7 @@
     {
       "id": "T379",
       "title": "Remove the 'next →' button from Pagination (numbered pills only) + audit",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
