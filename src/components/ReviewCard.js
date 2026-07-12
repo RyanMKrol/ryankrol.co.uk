@@ -50,10 +50,11 @@ function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts, gr
   );
 }
 
-function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
+function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient, designVariant }) {
   const [expanded, setExpanded] = useState(false);
   const fullText = getThoughts();
   const { text: previewText, truncated } = truncateReviewText(fullText, 260);
+  const displayText = expanded ? fullText : previewText;
 
   const metaParts = [
     item.author,
@@ -62,40 +63,160 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
     item.editedDate ? `Updated ${formatReviewDate(item.editedDate)}` : (item.date ? formatReviewDate(item.date) : null),
   ].filter(Boolean);
 
+  const title = getTitle();
+  const rating = getRating();
+  const metaText = metaParts.join(' · ');
+  const tileStyle = { background: gradient || gradientForKey(item.id || title) };
+  const expandBtn = truncated && (
+    <button
+      type="button"
+      className="spine-cover-expand-btn"
+      onClick={() => setExpanded((e) => !e)}
+    >
+      {expanded ? 'Show less' : 'Read more'}
+    </button>
+  );
+
+  // Variant 1 — "Ledger": numeric rating sits above the title as a small mono label,
+  // metadata reads as one tight uppercase line.
+  if (designVariant === 1) {
+    return (
+      <div className="spine-cover-card spine-v1-card">
+        <div className="spine-cover-tile" style={tileStyle} />
+        <div className="spine-cover-body spine-v1-body">
+          <p className="spine-v1-rating">{rating}/5 ★</p>
+          <h3 className="spine-cover-title spine-v1-title">{title}</h3>
+          {metaText && <p className="spine-cover-meta spine-v1-meta">{metaText}</p>}
+          {fullText && (
+            <div className="spine-cover-snippet spine-v1-snippet">
+              <Markdown>{displayText}</Markdown>
+            </div>
+          )}
+          {expandBtn}
+        </div>
+      </div>
+    );
+  }
+
+  // Variant 2 — "Badge": a circular rating badge floats over the tile corner,
+  // title/meta stay stacked tight beneath it.
+  if (designVariant === 2) {
+    return (
+      <div className="spine-cover-card spine-v2-card">
+        <div className="spine-v2-tile-wrap">
+          <div className="spine-cover-tile" style={tileStyle} />
+          <span className="spine-v2-badge">{rating}</span>
+        </div>
+        <div className="spine-cover-body spine-v2-body">
+          <h3 className="spine-cover-title spine-v2-title">{title}</h3>
+          {metaText && <p className="spine-cover-meta spine-v2-meta">{metaText}</p>}
+          {fullText && (
+            <div className="spine-cover-snippet spine-v2-snippet">
+              <Markdown>{displayText}</Markdown>
+            </div>
+          )}
+          {expandBtn}
+        </div>
+      </div>
+    );
+  }
+
+  // Variant 3 — "Ribbon": an accent-coloured left rule replaces the tile border,
+  // stars sit inline with the title on one line.
+  if (designVariant === 3) {
+    return (
+      <div className="spine-cover-card spine-v3-card">
+        <div className="spine-cover-tile" style={tileStyle} />
+        <div className="spine-cover-body spine-v3-body">
+          <div className="spine-v3-heading">
+            <h3 className="spine-cover-title spine-v3-title">{title}</h3>
+            <StarRating rating={rating} readOnly />
+          </div>
+          {metaText && <p className="spine-cover-meta spine-v3-meta">{metaText}</p>}
+          {fullText && (
+            <div className="spine-cover-snippet spine-v3-snippet">
+              <Markdown>{displayText}</Markdown>
+            </div>
+          )}
+          {expandBtn}
+        </div>
+      </div>
+    );
+  }
+
+  // Variant 4 — "Mono Label": all-mono metadata rendered as label:value pairs,
+  // separated from the snippet by a thin rule.
+  if (designVariant === 4) {
+    return (
+      <div className="spine-cover-card spine-v4-card">
+        <div className="spine-cover-tile" style={tileStyle} />
+        <div className="spine-cover-body spine-v4-body">
+          <h3 className="spine-cover-title spine-v4-title">{title}</h3>
+          <p className="spine-v4-meta-line">
+            <span className="spine-v4-meta-label">rating</span>
+            <span className="spine-v4-meta-value">{rating}/5</span>
+            {metaText && (
+              <>
+                <span className="spine-v4-meta-label">details</span>
+                <span className="spine-v4-meta-value">{metaText}</span>
+              </>
+            )}
+          </p>
+          <hr className="spine-v4-rule" />
+          {fullText && (
+            <div className="spine-cover-snippet spine-v4-snippet">
+              <Markdown>{displayText}</Markdown>
+            </div>
+          )}
+          {expandBtn}
+        </div>
+      </div>
+    );
+  }
+
+  // Variant 5 — "Serif Feature": a larger serif title, stars demoted below the meta line.
+  if (designVariant === 5) {
+    return (
+      <div className="spine-cover-card spine-v5-card">
+        <div className="spine-cover-tile" style={tileStyle} />
+        <div className="spine-cover-body spine-v5-body">
+          <h3 className="spine-cover-title spine-v5-title">{title}</h3>
+          {metaText && <p className="spine-cover-meta spine-v5-meta">{metaText}</p>}
+          <StarRating rating={rating} readOnly />
+          {fullText && (
+            <div className="spine-cover-snippet spine-v5-snippet">
+              <Markdown>{displayText}</Markdown>
+            </div>
+          )}
+          {expandBtn}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="spine-cover-card">
-      <div
-        className="spine-cover-tile"
-        style={{ background: gradient || gradientForKey(item.id || getTitle()) }}
-      />
+      <div className="spine-cover-tile" style={tileStyle} />
       <div className="spine-cover-body">
         <div className="spine-cover-heading">
-          <h3 className="spine-cover-title">{getTitle()}</h3>
-          <StarRating rating={getRating()} readOnly />
+          <h3 className="spine-cover-title">{title}</h3>
+          <StarRating rating={rating} readOnly />
         </div>
-        {metaParts.length > 0 && (
-          <p className="spine-cover-meta">{metaParts.join(' · ')}</p>
+        {metaText && (
+          <p className="spine-cover-meta">{metaText}</p>
         )}
         {fullText && (
           <div className="spine-cover-snippet">
-            <Markdown>{expanded ? fullText : previewText}</Markdown>
+            <Markdown>{displayText}</Markdown>
           </div>
         )}
-        {truncated && (
-          <button
-            type="button"
-            className="spine-cover-expand-btn"
-            onClick={() => setExpanded((e) => !e)}
-          >
-            {expanded ? 'Show less' : 'Read more'}
-          </button>
-        )}
+        {expandBtn}
       </div>
     </div>
   );
 }
 
-export default function ReviewCard({ item, type, isLast = false, styleVariant, gradient }) {
+export default function ReviewCard({ item, type, isLast = false, styleVariant, gradient, designVariant }) {
   const getTitle = () => {
     if (type === 'movie' || type === 'tv') return item.title;
     return item.title; // For books and albums, return just the title
@@ -154,6 +275,7 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant, g
         getRating={getRating}
         getThoughts={getThoughts}
         gradient={gradient}
+        designVariant={designVariant}
       />
     );
   }

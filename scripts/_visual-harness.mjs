@@ -94,6 +94,17 @@ const mkBook = (title, author, rating, date, md) => ({
   bookAuthors: [author], firstPublishedYear: 2018, isbn: ['9780000000000'], subjects: ['Fiction'],
   pageCount: 300, publisher: ['Synthetic Press'], olid: null, coverId: null,
 });
+// Long body (>260 chars) so the spine-cover card truncates and shows "Read more" (T373).
+const ULTRA_PROCESSED_PEOPLE_TEXT = 'A genuinely unsettling read that reframes a huge share of the '
+  + 'modern food supply as something closer to an industrial product than a meal. The personal '
+  + 'experiment chapters land hardest — watching the author track his own appetite and mood on an '
+  + 'all-UPF diet makes the epidemiology feel real rather than abstract. Dense in places, but the '
+  + 'core claim is the kind of thing you cannot unread once you have read it.';
+// Markdown ORDERED list body so the spine-cover card's list-indent fix is visible (T373).
+const HORUS_HERESY_GARRO_TEXT = 'A tighter, more focused entry than most of the series. What works:\n\n'
+  + '1. Garro himself — one of the few characters in the whole saga who reads as an actual person\n'
+  + '2. The pacing, which never sags across the collected novellas\n'
+  + '3. The ending, which earns its weight instead of just gesturing at scale';
 const books = [
   mkBook('Piranesi', 'Susanna Clarke', 5, '10-04-2026', true),
   mkBook('The Overstory', 'Richard Powers', 4, '22-01-2026'),
@@ -104,6 +115,8 @@ const books = [
   mkBook('Circe', 'Madeline Miller', 5, '14-05-2026'),
   mkBook('Recursion', 'Blake Crouch', 3, '08-08-2025'),
   mkBook('Babel', 'R. F. Kuang', 4, '26-03-2026'),
+  { ...mkBook('Ultra-Processed People', 'Chris van Tulleken', 4, '12-03-2026'), review_text: ULTRA_PROCESSED_PEOPLE_TEXT },
+  { ...mkBook('The Horus Heresy 42: Garro', 'James Swallow', 4, '04-06-2025'), review_text: HORUS_HERESY_GARRO_TEXT },
 ];
 const mkAlbum = (title, artist, rating, date, md) => ({
   id: `al-${title.replace(/\W+/g, '-').toLowerCase()}`, title, artist, rating, highlights: md ? MD : PLAIN,
@@ -287,6 +300,7 @@ export const PAGES = [
   { name: 'exercise', path: '/exercises/Chest%20Press%20(Machine)', waitFor: ['.chart-card canvas'], description: 'Per-exercise stats + progress charts (1RM / volume / max-weight) + recent sessions.', covers: ['src/pages/exercises/[exerciseName].js', 'src/components/ExerciseProgressCharts.js', 'src/components/CardioProgressCharts.js', 'src/components/PillGroup.js', 'src/components/StatBlock.js'] },
   { name: 'reviews-movies-backfill', path: '/reviews/movies/backfill', waitFor: ['.bbl-row'], description: 'Movie metadata backfill — rows awaiting TMDB search results, page-level "Apply all selections" button above the list.', covers: ['src/pages/reviews/movies/backfill.js', 'src/components/BulkBackfillList.js'] },
   { name: 'home-top-of-mind-absent', path: '/', waitFor: ['.home-wall-tile-link'], delayRoutes: { '/api/top-of-mind': { body: {} } }, description: 'T351 Top of Mind — no note saved (or expired): the hero-band section renders NOTHING, not an empty/placeholder box.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
+  { name: 'book-card-designs', path: '/dev/book-card-designs', waitFor: ['.spine-cover-card'], description: 'Workshop-only preview of all 5 spine-cover book-card design variants (T373), against a Markdown-ordered-list book and a long-body truncated book (baseline collapsed state).', covers: ['src/pages/dev/book-card-designs.js', 'src/components/ReviewCard.js', 'src/components/Markdown.js', 'src/styles/globals.css'] },
 ];
 
 // ── FLOWS: states that only appear after an INTERACTION. capture() runs `actions(page)`. ────────
@@ -385,7 +399,25 @@ const bespokeFlows = [
   },
 ];
 
-export const FLOWS = [...reviewFlows, ...bespokeFlows];
+const bookCardDesignFlows = [
+  {
+    name: 'book-card-designs-read-more',
+    path: '/dev/book-card-designs',
+    waitFor: ['.spine-cover-card'],
+    flow: 'Click every "Read more" button; each variant\'s Ultra-Processed People card expands to its full body.',
+    description: 'All 5 spine-cover design variants in the expanded read-more state.',
+    covers: ['src/pages/dev/book-card-designs.js', 'src/components/ReviewCard.js'],
+    actions: async (page) => {
+      const buttons = page.locator('.spine-cover-expand-btn');
+      const count = await buttons.count();
+      for (let i = 0; i < count; i += 1) {
+        await buttons.nth(i).click();
+      }
+    },
+  },
+];
+
+export const FLOWS = [...reviewFlows, ...bespokeFlows, ...bookCardDesignFlows];
 
 // ── Request interception ───────────────────────────────────────────────────────────────────────
 /** Serve every `/api/*` from a fixture, replace every EXTERNAL image with a placeholder — fully hermetic. */
