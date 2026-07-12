@@ -10270,7 +10270,7 @@
     {
       "id": "T372",
       "title": "Fix album backfill eligibility to gate on lastfm.url, not lastfm.mbid",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
