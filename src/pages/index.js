@@ -233,7 +233,7 @@ export default function Home() {
 
           <div className="home-rail">
             <div className="home-gym-panel">
-              <p className="home-gym-panel-title">This year at the gym</p>
+              <Link href="/workouts" className="home-gym-panel-title home-gym-panel-link">This year at the gym</Link>
               {workoutStatsLoading ? (
                 <GymPanelStatsSkeleton />
               ) : (

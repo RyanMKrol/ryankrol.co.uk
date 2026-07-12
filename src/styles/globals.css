@@ -3404,6 +3404,16 @@ body::before {
   margin: 0 0 0.75rem;
 }
 
+.home-gym-panel-title.home-gym-panel-link {
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.home-gym-panel-title.home-gym-panel-link:hover {
+  text-decoration: underline;
+}
+
 .home-gym-stats {
   display: flex;
   gap: 2rem;
@@ -3623,8 +3633,13 @@ body::before {
 }
 
 .home-hot-takes-panel-title.home-hot-takes-panel-link {
+  color: #FFFFFF;
   text-decoration: none;
   cursor: pointer;
+}
+
+.home-hot-takes-panel-title.home-hot-takes-panel-link:visited {
+  color: #FFFFFF;
 }
 
 .home-hot-takes-panel-title.home-hot-takes-panel-link:hover {
@@ -3639,7 +3654,7 @@ body::before {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.home-hot-takes-item:first-of-type {
+.home-hot-takes-panel-header + .home-hot-takes-item {
   border-top: none;
 }
 
