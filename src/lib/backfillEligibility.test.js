@@ -44,11 +44,11 @@ describe('needsAlbumBackfill', () => {
     expect(needsAlbumBackfill({ title: 'X' })).toBe(true);
   });
 
-  test('true when lastfm present but mbid falsy', () => {
-    expect(needsAlbumBackfill({ title: 'X', lastfm: { mbid: '' } })).toBe(true);
+  test('true when lastfm present but url falsy', () => {
+    expect(needsAlbumBackfill({ title: 'X', lastfm: { url: '' } })).toBe(true);
   });
 
-  test('false when lastfm.mbid present', () => {
-    expect(needsAlbumBackfill({ title: 'X', lastfm: { mbid: 'mbid-1' } })).toBe(false);
+  test('false when lastfm.url present even if mbid empty', () => {
+    expect(needsAlbumBackfill({ title: 'X', lastfm: { mbid: '', url: 'https://last.fm/...' } })).toBe(false);
   });
 });

@@ -7,5 +7,5 @@ export const needsTvBackfill = (item) => !item.tmdbId;
 /** True when a book review has no rich source metadata from either provider. */
 export const needsBookBackfill = (item) => !item.volumeId && !item.olid;
 
-/** True when an album review is missing Last.fm metadata (no mbid). */
-export const needsAlbumBackfill = (item) => !item.lastfm || !item.lastfm.mbid;
+/** True when an album review is missing Last.fm metadata (no url). */
+export const needsAlbumBackfill = (item) => !item.lastfm || !item.lastfm.url;
