@@ -10488,7 +10488,7 @@
     {
       "id": "T381",
       "title": "Add a per-entry Vinyl edit page that re-searches Last.fm to fix album art",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
