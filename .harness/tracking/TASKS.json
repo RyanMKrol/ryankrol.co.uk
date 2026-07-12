@@ -10266,6 +10266,256 @@
         "workType": "refactor",
         "risk": []
       }
+    },
+    {
+      "id": "T372",
+      "title": "Fix album backfill eligibility to gate on lastfm.url, not lastfm.mbid",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "albums-backfill"
+      ],
+      "scope": [
+        "src/lib/backfillEligibility.js",
+        "src/lib/backfillEligibility.test.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T372.md",
+      "visualVerify": true,
+      "facets": {
+        "layer": "lib",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T373",
+      "title": "Workshop 5 alternate spine-cover book-card designs behind a preview switch (fix list indent + tighten title↔meta)",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "book-card-designs"
+      ],
+      "scope": [
+        "scripts/_visual-harness.mjs",
+        "src/components/Markdown.js",
+        "src/components/ReviewCard.js",
+        "src/pages/dev/book-card-designs.js",
+        "src/pages/reviews/books/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T373.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T374",
+      "title": "Review the 5 book-card designs and pick the one to ship",
+      "status": "pending",
+      "dependsOn": [
+        "T373"
+      ],
+      "gate": "needs-human",
+      "tags": [
+        "book-card-designs",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T374.md"
+    },
+    {
+      "id": "T375",
+      "title": "Hardcode the chosen book-card design and remove the variant switch",
+      "status": "pending",
+      "dependsOn": [
+        "T374"
+      ],
+      "gate": null,
+      "tags": [
+        "book-card-designs"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/styles/globals.css",
+        "src/components/Markdown.js",
+        "src/pages/reviews/books/index.js",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T375.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T376",
+      "title": "Make all three home rail-panel headers links, remove the stray hot-takes divider, and fix the hot-takes link colour",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "home-panels"
+      ],
+      "scope": [
+        "src/pages/index.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T376.md",
+      "facets": {
+        "layer": "page",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T377",
+      "title": "MarkdownEditor toolbar buttons toggle formatting on/off instead of stacking markers",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "markdown-editor",
+        "bugfix"
+      ],
+      "scope": [
+        "src/components/MarkdownEditor.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T377.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T378",
+      "title": "Polish MarkdownEditor chrome: matching corners + remove native textarea resize grip",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "markdown-editor",
+        "style"
+      ],
+      "scope": [
+        "src/components/MarkdownEditor.js",
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T378.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T379",
+      "title": "Remove the 'next →' button from Pagination (numbered pills only) + audit",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "pagination-next"
+      ],
+      "scope": [
+        "src/components/Pagination.js",
+        "src/components/Pagination.test.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T379.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "refactor",
+        "risk": []
+      }
+    },
+    {
+      "id": "T380",
+      "title": "Rename the Top-of-Mind edit page route to /tom",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "tom-rename"
+      ],
+      "scope": [
+        "src/pages/tom.js",
+        "src/pages/top-of-mind/edit.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T380.md",
+      "visualVerify": false,
+      "facets": {
+        "layer": "page",
+        "workType": "refactor",
+        "risk": []
+      }
+    },
+    {
+      "id": "T381",
+      "title": "Add a per-entry Vinyl edit page that re-searches Last.fm to fix album art",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "vinyl",
+        "lastfm",
+        "edit",
+        "album-art"
+      ],
+      "scope": [
+        "src/pages/vinyl/edit.js",
+        "src/pages/vinyl/edit/[id].js",
+        "src/pages/api/vinyl/update.js",
+        "src/pages/vinyl/index.js",
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T381.md",
+      "visualVerify": true,
+      "facets": {
+        "layer": "page",
+        "workType": "feature",
+        "risk": [
+          "full-stack"
+        ]
+      }
     }
   ]
 }
