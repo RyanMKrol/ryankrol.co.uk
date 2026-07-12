@@ -3061,6 +3061,12 @@ body::before {
 
 .markdown-editor .collection-form-textarea {
   margin: 0;
+  border-radius: var(--radius-stat);
+  resize: vertical;
+}
+
+.markdown-editor .collection-form-textarea::-webkit-resizer {
+  display: none;
 }
 
 .collection-form-button {
