@@ -10416,7 +10416,7 @@
     {
       "id": "T378",
       "title": "Polish MarkdownEditor chrome: matching corners + remove native textarea resize grip",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
