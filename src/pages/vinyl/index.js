@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 import SearchInput from '../../components/SearchInput';
 import PillGroup from '../../components/PillGroup';
 import CoverTile, { assignGradients } from '../../components/CoverTile';
@@ -100,6 +101,10 @@ export default function VinylPage() {
             </p>
           </div>
 
+          <Link href="/vinyl/edit" className="vinyl-edit-link">
+            Edit records
+          </Link>
+
           <div className="collection-review-controls">
             <SearchInput
               value={searchTerm}
@@ -182,6 +187,13 @@ export default function VinylPage() {
           </div>
         )}
       </div>
+
+      <style jsx>{`
+        .vinyl-edit-link {
+          color: var(--color-accent-secondary);
+          font-family: var(--font-body);
+        }
+      `}</style>
     </>
   );
 }
