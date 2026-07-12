@@ -10392,7 +10392,7 @@
     {
       "id": "T377",
       "title": "MarkdownEditor toolbar buttons toggle formatting on/off instead of stacking markers",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
