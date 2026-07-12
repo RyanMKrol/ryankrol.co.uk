@@ -142,6 +142,7 @@ src/lib (the data layer)
 | `src/pages/workouts/[id].js` | Single workout detail |
 | `src/pages/exercises/[exerciseName].js` | Per-exercise stats + progress charts |
 | `src/pages/dev/cache.js` | Cache-management dashboard (auto-auths on localhost) |
+| `src/pages/tom.js` | Password-gated Markdown editor for the home-page 'Top of mind' blurb — served at `/tom`, backed by `/api/top-of-mind` (read) + `/api/top-of-mind/update` (gated write) |
 | `src/pages/api/reviews/<type>/{index,add,update,delete}.js` | CRUD for each review type |
 | `src/pages/api/vinyl/{index,add}.js` | Vinyl read + gated add |
 | `src/pages/api/hot-takes/{index,add}.js` | Hot takes read (sorted newest first) + gated add; validation via `src/lib/hotTakes.js` |

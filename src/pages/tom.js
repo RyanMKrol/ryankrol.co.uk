@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import MarkdownEditor from '../../components/MarkdownEditor';
-import Markdown from '../../components/Markdown';
-import { isExpired, daysSinceUpdate, daysRemaining } from '../../lib/topOfMind';
+import MarkdownEditor from '../components/MarkdownEditor';
+import Markdown from '../components/Markdown';
+import { isExpired, daysSinceUpdate, daysRemaining } from '../lib/topOfMind';
 
 export default function EditTopOfMind() {
   const [formData, setFormData] = useState({ text: '', password: '' });
