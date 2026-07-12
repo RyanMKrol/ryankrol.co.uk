@@ -10400,7 +10400,8 @@
         "bugfix"
       ],
       "scope": [
-        "src/components/MarkdownEditor.js"
+        "src/components/MarkdownEditor.js",
+        "src/components/MarkdownEditor.test.js"
       ],
       "design": null,
       "verify": [],
