@@ -10241,7 +10241,7 @@
     {
       "id": "T371",
       "title": "Remove dead Google Books provider code + config (re-attempt of T367)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
