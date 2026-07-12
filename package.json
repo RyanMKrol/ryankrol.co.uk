@@ -24,8 +24,7 @@
     "workouts:backfill-personal-bests": "node src/scripts/backfillPersonalBests.js",
     "perfume:create-table": "node src/scripts/createPerfumeTable.js",
     "perfume:migrate-ownership": "node src/scripts/migratePerfumeOwnership.js",
-    "hot-takes:create-table": "node src/scripts/createHotTakesTable.js",
-    "books:migrate-openlibrary": "node src/scripts/migrateOpenLibraryBooksToGoogleBooks.js"
+    "hot-takes:create-table": "node src/scripts/createHotTakesTable.js"
   },
   "keywords": [],
   "author": "",

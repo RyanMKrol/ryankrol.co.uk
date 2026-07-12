@@ -76,7 +76,6 @@ export default function EditBookReview() {
   const handleBackfillSearch = async () => {
     const params = new URLSearchParams({
       title: formData.title.trim(),
-      provider: 'googlebooks',
     });
     if (formData.author.trim()) params.set('author', formData.author.trim());
     const res = await fetch(`/api/books/search?${params}`);

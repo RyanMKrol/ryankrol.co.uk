@@ -58,8 +58,7 @@ This repo is **public** (`github.com/RyanMKrol/ryankrol.co.uk`). Hard rules:
 | `HEVY_API_KEY` | Hevy workout API |
 | `GITHUB_TOKEN` | GitHub repo listing |
 | `TMDB_API_TOKEN` | TMDB v4 Read Access Token (JWT). Used **server-side only** in `/api/tmdb/search` — `Authorization: Bearer` header, never a query param, never sent to the client |
-| `GOOGLE_BOOKS_API_KEY` | Google Books API key. Used **server-side only** in `/api/books/search` (`?provider=googlebooks`) as the `key` query param. Without it, Google buckets requests into a shared per-IP anonymous quota that is perpetually exhausted from Vercel's datacenter IPs → 429s in production |
-| `HARDCOVER_API_TOKEN` | Hardcover GraphQL API bearer token. Used **server-side only** in `/api/books/search` for book search via the Hardcover provider (primary); supplies `Authorization: Bearer` header to `https://api.hardcover.app/v1/graphql` |
+| `HARDCOVER_API_TOKEN` | Hardcover GraphQL API bearer token. Used **server-side only** in `/api/books/search` for book search via the Hardcover provider; supplies `Authorization: Bearer` header to `https://api.hardcover.app/v1/graphql` |
 
 Before any commit: `git status` and confirm no `.env*`, no credentials are staged. The
 `.harness/` ideas inbox + seed data are gitignored on purpose — don't commit those either.
@@ -104,7 +103,6 @@ src/lib (the data layer)
    ├─ dynamo.js          docClient + paginatedScan + scanTable   ──▶ AWS DynamoDB (us-east-2)
    ├─ apiCache.js        withApiCache / generateCacheKey / clearApiCache
    ├─ tmdb.js            mapTmdbResult / tmdbPosterUrl — pure normalisation for TMDB results
-   ├─ googlebooks.js     mapGoogleBooksResult — pure normalisation for Google Books volumes items
    ├─ workoutQueries.js  all workout/exercise DynamoDB reads
    └─ workoutMetrics.js  pure metric math (volume, 1RM) — shared by scripts + backfill
 ```
@@ -157,7 +155,6 @@ src/lib (the data layer)
 | `src/pages/api/tmdb/search.js` | TMDB search proxy (`?query=&type=movie\|tv`); authenticates with `TMDB_API_TOKEN` server-side; rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
 | `src/pages/api/books/search.js` | Hardcover GraphQL search proxy (`?title=` required, `?author=` optional); authenticates with `HARDCOVER_API_TOKEN` server-side via `Authorization: Bearer` header; rate-limited 20 req/60s per IP via `src/lib/rateLimit.js` |
 | `src/lib/lastfm.js` | `mapAlbumSearchResult(raw)` + `mapAlbumInfo(raw)` — pure normalisers for Last.fm album search/info responses |
-| `src/lib/googlebooks.js` | `mapGoogleBooksResult(volume)` normaliser — maps Google Books `volumeInfo` to common shape with `source:'googlebooks'`, https `coverUrl`, ISBNs, year from `publishedDate` |
 | `src/lib/hardcover.js` | `mapHardcoverResult(hit)` normaliser — maps Hardcover search hit.document to the common book-result shape with `source:'hardcover'`, coverUrl from image.url, ISBNs, year from release_year, genres as subjects, pages as pageCount |
 | `src/lib/dynamo.js` | `docClient`, `paginatedScan`, `scanTable` (region hardcoded `us-east-2`) |
 | `src/lib/dateFormat.js` | `formatEnglishDate(date)` / `formatReviewDate(dateString)` — shared English-language date formatting (e.g. '17 May 2026'), for use by `ReviewCard.js` and the workouts list page (not wired in yet) |
