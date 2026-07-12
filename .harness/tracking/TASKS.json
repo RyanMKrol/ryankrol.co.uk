@@ -10294,7 +10294,7 @@
     {
       "id": "T373",
       "title": "Workshop 5 alternate spine-cover book-card designs behind a preview switch (fix list indent + tighten title↔meta)",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
