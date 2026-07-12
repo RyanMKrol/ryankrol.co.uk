@@ -22,7 +22,7 @@ function buildPageItems(currentPage, totalPages) {
 }
 
 /**
- * Numbered page pills + ellipsis + a "next →" pill. Controlled component —
+ * Numbered page pills + ellipsis. Controlled component —
  * the page state itself lives in the parent.
  */
 export default function Pagination({ currentPage, totalPages, onPageChange, accentColor }) {
@@ -48,12 +48,6 @@ export default function Pagination({ currentPage, totalPages, onPageChange, acce
           </Pill>
         )
       )}
-      <Pill
-        accentColor={accentColor}
-        onClick={() => onPageChange(currentPage + 1)}
-      >
-        next →
-      </Pill>
     </div>
   );
 }

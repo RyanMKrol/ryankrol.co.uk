@@ -14,14 +14,13 @@ test('keeps first, last, a window around current, and shows ellipsis for the gap
   expect(document.querySelectorAll('.collection-pagination-ellipsis')).toHaveLength(2);
 });
 
-test('clicking a numbered pill and "next" report the right page', async () => {
+test('clicking a numbered pill reports the right page and no next control renders', async () => {
   const onPageChange = jest.fn();
   const user = userEvent.setup();
   render(<Pagination currentPage={5} totalPages={10} onPageChange={onPageChange} />);
   await user.click(screen.getByRole('button', { name: '6' }));
   expect(onPageChange).toHaveBeenCalledWith(6);
-  await user.click(screen.getByRole('button', { name: 'next →' }));
-  expect(onPageChange).toHaveBeenCalledWith(6); // currentPage + 1
+  expect(screen.queryByRole('button', { name: /next/i })).toBeNull();
 });
 
 test('the current page pill is marked active', () => {
