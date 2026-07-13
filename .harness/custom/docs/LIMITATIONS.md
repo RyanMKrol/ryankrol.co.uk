@@ -94,3 +94,17 @@ Each row: what it is, *why* it was chosen, its **impact**, and *when to revisit*
   `package-lock.json` or `npm ci` fails CI. The loop auto-allows the lockfile in scope checks, but the
   builder must actually run `npm install` so the lockfile is updated.
   *Revisit:* n/a — standard npm behaviour, noted so a dependency task doesn't trip CI.
+
+- **Escalation ladder trimmed 5 rungs → 3 (Haiku → Sonnet-medium → Opus-medium), 2026-07-13 — reset most calibration.**
+  *Why:* the owner wanted to fail faster / not waste cycles climbing five tiers, and chose a
+  "medium everything" ladder. Was `haiku/null · sonnet/low · sonnet/medium · sonnet/high · opus/high`;
+  now `haiku/null · sonnet/medium · opus/medium` (Opus effort also dropped high→medium).
+  *Impact:* dropping `sonnet/low` — which held ~94% of the ledger (331 outcome + 334 start rows, +42
+  failures) — makes `policy.jq` treat all those rows as off-ladder (`tidx=-1`), so per-cell difficulty
+  calibration effectively cold-starts: the loop re-learns each `(layer × workType)` cell's tier from the
+  Haiku floor over the next runs. `sonnet/high` (1+11) and `opus/high` (4+6) rows drop too. No ledger
+  migration was done (a remove needs none — rows stay as accurate history, just unmatched to a live
+  rung). The auditor (opus-4.8/medium) now equals the ceiling tier, so a ceiling build audits at par
+  (no bump). A failed `sonnet/medium` now jumps straight to `opus/medium` — coarser, but fewer attempts.
+  *Revisit:* if the calibration reset costs too many wasted cheap-tier attempts, or the Sonnet-medium →
+  Opus-medium jump proves too coarse, re-add a rung via `/implementation-harness-update-ladder`.

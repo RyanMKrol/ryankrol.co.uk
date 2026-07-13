@@ -6,38 +6,95 @@
       "cardinality": "exactly-one",
       "desc": "WHERE the change lives — inferable largely from the task's scope file paths. This is a Next.js (pages-router) JavaScript app.",
       "values": {
-        "ui":      { "desc": "React components — visual layout / presentational logic (src/components/**)", "difficultyHint": "low-med" },
-        "page":    { "desc": "Next.js page routes / data-fetching for a page (src/pages/**, NOT api)", "difficultyHint": "med" },
-        "api":     { "desc": "Next.js API routes (src/pages/api/**)", "difficultyHint": "med" },
-        "hook":    { "desc": "custom React hooks (src/hooks/**)", "difficultyHint": "med" },
-        "lib":     { "desc": "shared utilities / data-access helpers (src/lib/**)", "difficultyHint": "med" },
-        "style":   { "desc": "global CSS / theming / design tokens (src/styles/**)", "difficultyHint": "low" },
-        "db":      { "desc": "DynamoDB access + table/migration scripts (src/lib/dynamo.js, src/scripts/**)", "difficultyHint": "high" },
-        "harness": { "desc": "the .harness/ loop + scaffolding, backlog authoring", "difficultyHint": "varies" }
+        "ui": {
+          "desc": "React components — visual layout / presentational logic (src/components/**)",
+          "difficultyHint": "low-med"
+        },
+        "page": {
+          "desc": "Next.js page routes / data-fetching for a page (src/pages/**, NOT api)",
+          "difficultyHint": "med"
+        },
+        "api": {
+          "desc": "Next.js API routes (src/pages/api/**)",
+          "difficultyHint": "med"
+        },
+        "hook": {
+          "desc": "custom React hooks (src/hooks/**)",
+          "difficultyHint": "med"
+        },
+        "lib": {
+          "desc": "shared utilities / data-access helpers (src/lib/**)",
+          "difficultyHint": "med"
+        },
+        "style": {
+          "desc": "global CSS / theming / design tokens (src/styles/**)",
+          "difficultyHint": "low"
+        },
+        "db": {
+          "desc": "DynamoDB access + table/migration scripts (src/lib/dynamo.js, src/scripts/**)",
+          "difficultyHint": "high"
+        },
+        "harness": {
+          "desc": "the .harness/ loop + scaffolding, backlog authoring",
+          "difficultyHint": "varies"
+        }
       }
     },
     "workType": {
       "cardinality": "exactly-one",
       "desc": "WHAT KIND of change it is — the main thing the authoring LLM reasons about.",
       "values": {
-        "style":          { "desc": "visual / CSS / layout only", "difficultyHint": "very-easy" },
-        "docs":           { "desc": "README / CLAUDE / spec text", "difficultyHint": "very-easy" },
-        "config":         { "desc": "env / build / config knobs (next.config.js, package.json)", "difficultyHint": "easy" },
-        "component":      { "desc": "new/changed UI component or page", "difficultyHint": "med" },
-        "endpoint":       { "desc": "new/changed API route", "difficultyHint": "med" },
-        "bugfix":         { "desc": "fix a specific defect", "difficultyHint": "med-varies" },
-        "feature":        { "desc": "multi-file new capability", "difficultyHint": "high" },
-        "data-migration": { "desc": "DynamoDB schema / data migration", "difficultyHint": "high" },
-        "refactor":       { "desc": "rename / move / restructure", "difficultyHint": "high" }
+        "style": {
+          "desc": "visual / CSS / layout only",
+          "difficultyHint": "very-easy"
+        },
+        "docs": {
+          "desc": "README / CLAUDE / spec text",
+          "difficultyHint": "very-easy"
+        },
+        "config": {
+          "desc": "env / build / config knobs (next.config.js, package.json)",
+          "difficultyHint": "easy"
+        },
+        "component": {
+          "desc": "new/changed UI component or page",
+          "difficultyHint": "med"
+        },
+        "endpoint": {
+          "desc": "new/changed API route",
+          "difficultyHint": "med"
+        },
+        "bugfix": {
+          "desc": "fix a specific defect",
+          "difficultyHint": "med-varies"
+        },
+        "feature": {
+          "desc": "multi-file new capability",
+          "difficultyHint": "high"
+        },
+        "data-migration": {
+          "desc": "DynamoDB schema / data migration",
+          "difficultyHint": "high"
+        },
+        "refactor": {
+          "desc": "rename / move / restructure",
+          "difficultyHint": "high"
+        }
       }
     },
     "risk": {
       "cardinality": "zero-or-more",
       "desc": "Danger modifiers; each pushes difficulty UP. Used by the policy only once a cell is dense.",
       "values": {
-        "touches-data":  { "desc": "scope includes DynamoDB access (src/lib/dynamo.js) or a migration/audit script (src/scripts/**) — real-data / data-loss risk" },
-        "full-stack":    { "desc": "spans page + api + lib in one task" },
-        "cross-cutting": { "desc": "many files / a shared convention (theming, the MatrixLayout wrapper, _app/_document)" }
+        "touches-data": {
+          "desc": "scope includes DynamoDB access (src/lib/dynamo.js) or a migration/audit script (src/scripts/**) — real-data / data-loss risk"
+        },
+        "full-stack": {
+          "desc": "spans page + api + lib in one task"
+        },
+        "cross-cutting": {
+          "desc": "many files / a shared convention (theming, the MatrixLayout wrapper, _app/_document)"
+        }
       }
     }
   },
@@ -57,11 +114,18 @@
   "tiers": {
     "_about": "The GLOBAL difficulty ladder, cheapest → most expensive. The policy chooses a START tier from here per task; escalation walks UP it. The authored model/effort is the cold-start start tier. Project-specific (override per project).",
     "ladder": [
-      { "model": "claude-haiku-4-5", "effort": null },
-      { "model": "claude-sonnet-5", "effort": "low" },
-      { "model": "claude-sonnet-5", "effort": "medium" },
-      { "model": "claude-sonnet-5", "effort": "high" },
-      { "model": "claude-opus-4-8", "effort": "high" }
+      {
+        "model": "claude-haiku-4-5",
+        "effort": null
+      },
+      {
+        "model": "claude-sonnet-5",
+        "effort": "medium"
+      },
+      {
+        "model": "claude-opus-4-8",
+        "effort": "medium"
+      }
     ]
   }
 }
