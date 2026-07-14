@@ -142,7 +142,11 @@ export default function Perfumes() {
         className="perfume-card-grid"
         columnClassName="perfume-card-grid-col"
         renderItem={(perfume, index) => (
-          <Variant6Hybrid key={`${perfume.id}-${index}`} item={perfume} />
+          <Variant6Hybrid
+            key={`${perfume.id}-${index}`}
+            item={perfume}
+            onDesignerClick={setSearchTerm}
+          />
         )}
       />
     </div>

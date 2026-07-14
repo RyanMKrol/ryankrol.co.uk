@@ -24,7 +24,7 @@ export function formatApplicationSpotLine({ spot, sprays }) {
   return `${sprays} sprays — ${spot}`;
 }
 
-export default function Variant6Hybrid({ item }) {
+export default function Variant6Hybrid({ item, onDesignerClick }) {
   const hasSeasons = Array.isArray(item.seasons) && item.seasons.length > 0;
   const hasApplicationSpots =
     Array.isArray(item.applicationSpots) && item.applicationSpots.length > 0;
@@ -61,7 +61,25 @@ export default function Variant6Hybrid({ item }) {
             <h3 className="perfume-v1-title">{item.title}</h3>
             {ratingRow}
           </div>
-          <p className="perfume-v1-designer">{item.designer}</p>
+          {item.designer && onDesignerClick ? (
+            <button
+              type="button"
+              className="perfume-v1-designer"
+              onClick={() => onDesignerClick(item.designer)}
+              aria-label={`Filter by designer: ${item.designer}`}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                font: 'inherit',
+                padding: 0,
+              }}
+            >
+              {item.designer}
+            </button>
+          ) : (
+            <p className="perfume-v1-designer">{item.designer}</p>
+          )}
         </div>
         <div className="perfume-v1-header-badges">
           {item.type && (
