@@ -73,7 +73,7 @@ export function getExercisePreview(exercises = [], maxShown = 3) {
 function getTotalVolume(exercises = []) {
   return exercises.reduce((total, exercise) => (
     total + exercise.sets.reduce((setTotal, set) => (
-      set.type !== 'warmup' && set.weight_kg && set.reps
+      set.weight_kg && set.reps
         ? setTotal + set.weight_kg * set.reps
         : setTotal
     ), 0)
