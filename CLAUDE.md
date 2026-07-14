@@ -187,7 +187,7 @@ status/accent labels, e.g. `variant="soft"`), `StarRating` (interactive or `read
 mode), `PipMeter` (discrete-step meter, used for perfume longevity/projection), `CoverTile`
 (square artwork tile), `StatBlock` (labelled stat callout), `Pagination` (page controls backed by
 `src/lib/pagination.js`), `SortButtons`, `DateRangeFilter`, `MetadataBackfillModal`,
-`PerfumeCharacteristics`, `WorkoutCard`, `ExerciseProgressCharts` / `CardioProgressCharts` /
+`PerfumeCharacteristics`, `ExerciseProgressCharts` / `CardioProgressCharts` /
 `ProgrammeOverviewCharts` (chart.js), `TmdbSearch` / `BookSearch` / `LastfmAlbumSearch` (search
 widgets, see the cooldown convention below), `Tooltip` (small hover/focus-shown label bubble;
 CSS-only, generalizes the home-sparkline tooltip idiom), `MatrixLayout` / `MatrixRain` /
