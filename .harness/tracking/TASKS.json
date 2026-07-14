@@ -10517,6 +10517,131 @@
           "full-stack"
         ]
       }
+    },
+    {
+      "id": "T382",
+      "title": "Preserve typed blank lines as visible gaps in Markdown rendering",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "markdown",
+        "tom",
+        "rendering"
+      ],
+      "scope": [
+        "src/components/Markdown.js",
+        "src/components/Markdown.test.js"
+      ],
+      "design": "Root cause: src/components/Markdown.js renders via react-markdown + remark-gfm, which follows CommonMark — any run of one-or-more blank lines between two blocks collapses to a single paragraph break, so a completely blank line typed by the user (in the /tom editor) is dropped in both the preview and the rendered site. Chosen mechanism: PREPROCESS the incoming `children` string BEFORE passing it to react-markdown, in BLOCK MODE ONLY. For each run of N (N>=2) consecutive blank lines in the source, keep the normal paragraph break AND emit (N-1) extra 'gap paragraphs' — each a line containing a single non-breaking space (\\u00A0) surrounded by blank lines so CommonMark renders it as its own <p>. This makes one typed blank line read as one visible extra gap and preserves multiple blank lines proportionally, while leaving normal single-paragraph spacing unchanged. Keep remark-gfm. CRITICAL: do NOT run this preprocessing in `inline` mode (the `inline` branch used by ReviewCard for album track highlights — INLINE_ELEMENTS/unwrapDisallowed path) so inline rendering is byte-for-byte unchanged; guard the transform behind `if (!inline)`. Only accept a string for `children` in the transform (if it's ever not a string, pass through untouched). Blast radius: this is the SHARED component (9 ReviewCard block call sites + perfume card + /tom preview + homepage), so the gap behaviour applies to all block-rendered review text too — this is intentional per the recommended approach; if the owner instead scopes it to /tom only, gate the transform behind a new opt-in boolean prop that only tom.js/index.js pass (adjust accordingly). Extract the preprocessing into a small pure helper (e.g. `preserveBlankLines(src)`) in the same file so it is unit-testable.",
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T382.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T383",
+      "title": "Make the whole Now Playing pill clickable when a track is playing",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "nowplaying",
+        "quality-of-life"
+      ],
+      "scope": [
+        "src/components/NowPlaying.js",
+        "src/styles/globals.css",
+        "src/components/NowPlaying.test.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T383.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T384",
+      "title": "Click perfume designer to filter list by that designer",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes"
+      ],
+      "scope": [
+        "src/components/perfumeVariants/Variant6Hybrid.js",
+        "src/components/perfumeVariants/Variant6Hybrid.test.js",
+        "src/pages/reviews/perfumes/index.js",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T384.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T385",
+      "title": "Include warm-up sets in the /workouts per-session card volume",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "bugfix"
+      ],
+      "scope": [
+        "src/pages/workouts/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T385.md",
+      "visualVerify": true,
+      "facets": {
+        "layer": "page",
+        "workType": "bugfix",
+        "risk": []
+      }
+    },
+    {
+      "id": "T386",
+      "title": "Delete the unused WorkoutCard.js dead component",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "workouts",
+        "cleanup"
+      ],
+      "scope": [
+        "src/components/WorkoutCard.js",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T386.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "refactor",
+        "risk": []
+      }
     }
   ]
 }
