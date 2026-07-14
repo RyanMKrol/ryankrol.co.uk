@@ -3338,10 +3338,24 @@ body::before {
   margin: 0;
   text-decoration: none;
   cursor: pointer;
+  color: #FFFFFF;
+}
+
+.home-gym-panel-title.home-gym-panel-link:link {
+  color: #FFFFFF;
+}
+
+.home-gym-panel-title.home-gym-panel-link:visited {
+  color: #FFFFFF;
+}
+
+.home-gym-panel-title.home-gym-panel-link:active {
+  color: #FFFFFF;
 }
 
 .home-gym-panel-title.home-gym-panel-link:hover {
   text-decoration: underline;
+  color: #FFFFFF;
 }
 
 .home-gym-stats {
