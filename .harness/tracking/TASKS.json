@@ -10341,7 +10341,7 @@
     {
       "id": "T375",
       "title": "Hardcode the chosen book-card design and remove the variant switch",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T374"
       ],
