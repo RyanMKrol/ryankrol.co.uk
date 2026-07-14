@@ -10646,7 +10646,7 @@
     {
       "id": "T387",
       "title": "Fix 'This year at the gym' heading picking up visited-link purple color",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
