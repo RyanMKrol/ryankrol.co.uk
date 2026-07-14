@@ -302,7 +302,6 @@ export const PAGES = [
   { name: 'exercise', path: '/exercises/Chest%20Press%20(Machine)', waitFor: ['.chart-card canvas'], description: 'Per-exercise stats + progress charts (1RM / volume / max-weight) + recent sessions.', covers: ['src/pages/exercises/[exerciseName].js', 'src/components/ExerciseProgressCharts.js', 'src/components/CardioProgressCharts.js', 'src/components/PillGroup.js', 'src/components/StatBlock.js'] },
   { name: 'reviews-movies-backfill', path: '/reviews/movies/backfill', waitFor: ['.bbl-row'], description: 'Movie metadata backfill — rows awaiting TMDB search results, page-level "Apply all selections" button above the list.', covers: ['src/pages/reviews/movies/backfill.js', 'src/components/BulkBackfillList.js'] },
   { name: 'home-top-of-mind-absent', path: '/', waitFor: ['.home-wall-tile-link'], delayRoutes: { '/api/top-of-mind': { body: {} } }, description: 'T351 Top of Mind — no note saved (or expired): the hero-band section renders NOTHING, not an empty/placeholder box.', covers: ['src/pages/index.js', 'src/styles/globals.css'] },
-  { name: 'book-card-designs', path: '/dev/book-card-designs', waitFor: ['.spine-cover-card'], description: 'Workshop-only preview of all 5 spine-cover book-card design variants (T373), against a Markdown-ordered-list book and a long-body truncated book (baseline collapsed state).', covers: ['src/pages/dev/book-card-designs.js', 'src/components/ReviewCard.js', 'src/components/Markdown.js', 'src/styles/globals.css'] },
 ];
 
 // ── FLOWS: states that only appear after an INTERACTION. capture() runs `actions(page)`. ────────
@@ -404,18 +403,29 @@ const bespokeFlows = [
 
 const bookCardDesignFlows = [
   {
-    name: 'book-card-designs-read-more',
-    path: '/dev/book-card-designs',
+    name: 'reviews-books-read-more',
+    path: '/reviews/books',
     waitFor: ['.spine-cover-card'],
-    flow: 'Click every "Read more" button; each variant\'s Ultra-Processed People card expands to its full body.',
-    description: 'All 5 spine-cover design variants in the expanded read-more state.',
-    covers: ['src/pages/dev/book-card-designs.js', 'src/components/ReviewCard.js'],
+    flow: 'Click the "Read more" button on Ultra-Processed People card; it expands to show the full body.',
+    description: 'Book spine-cover card (Mono Label) in expanded read-more state.',
+    covers: ['src/pages/reviews/books/index.js', 'src/components/ReviewCard.js'],
     actions: async (page) => {
       const buttons = page.locator('.spine-cover-expand-btn');
-      const count = await buttons.count();
-      for (let i = 0; i < count; i += 1) {
-        await buttons.nth(i).click();
+      if (await buttons.count() > 0) {
+        await buttons.first().click();
       }
+    },
+  },
+  {
+    name: 'reviews-books-ordered-list',
+    path: '/reviews/books',
+    waitFor: ['.spine-cover-card'],
+    flow: 'The Horus Heresy 42: Garro card renders with an ordered list in the body.',
+    description: 'Book spine-cover card (Mono Label) with Markdown ordered list body.',
+    covers: ['src/pages/reviews/books/index.js', 'src/components/ReviewCard.js', 'src/components/Markdown.js'],
+    actions: async (page) => {
+      // Just screenshot the page as-is; the Garro card fixture has an ordered list in its body
+      await page.waitForSelector('.spine-cover-card');
     },
   },
 ];
