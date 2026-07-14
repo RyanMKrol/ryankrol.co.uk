@@ -10717,7 +10717,7 @@
     {
       "id": "T390",
       "title": "Perfumes: add pagination, drop 'Found X' count, add empty-state card",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
