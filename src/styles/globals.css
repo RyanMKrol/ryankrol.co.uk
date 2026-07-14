@@ -944,6 +944,19 @@ a:hover {
   color: var(--color-text-muted);
 }
 
+/* ===== Perfume Empty State ===== */
+
+.perfume-empty-state {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
 .sort-buttons-container {
   display: flex;
   align-items: center;

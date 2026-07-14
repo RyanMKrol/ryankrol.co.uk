@@ -4,6 +4,8 @@ import SearchInput from '../../../components/SearchInput';
 import PillGroup from '../../../components/PillGroup';
 import SortButtons from '../../../components/SortButtons';
 import MasonryColumns from '../../../components/MasonryColumns';
+import Pagination from '../../../components/Pagination';
+import { paginate } from '../../../lib/pagination';
 import useResponsiveColumnCount from '../../../hooks/useResponsiveColumnCount';
 import { OWNERSHIP_OPTIONS } from '../../../components/PerfumeCharacteristics';
 
@@ -12,6 +14,8 @@ const SORT_FIELDS = [
   { key: 'title', label: 'title', defaultValue: 'title', flippedValue: 'title-desc', defaultArrow: '↓', flippedArrow: '↑' },
   { key: 'score', label: 'score', defaultValue: 'score', flippedValue: 'score-asc', defaultArrow: '↓', flippedArrow: '↑' },
 ];
+
+const PAGE_SIZE = 12;
 
 const OWNERSHIP_FILTER_OPTIONS = [
   { value: 'all', label: 'all' },
@@ -24,6 +28,7 @@ export default function Perfumes() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [ownershipFilter, setOwnershipFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
   const columnCount = useResponsiveColumnCount(2, 700);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -78,6 +83,10 @@ export default function Perfumes() {
     setFilteredPerfumes(filtered);
   }, [searchTerm, perfumes, sortBy, ownershipFilter]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, sortBy, ownershipFilter]);
+
   if (loading) {
     return (
       <div className="review-container">
@@ -98,6 +107,8 @@ export default function Perfumes() {
       </div>
     );
   }
+
+  const { items: pagedPerfumes, page, pageCount } = paginate(filteredPerfumes, currentPage, PAGE_SIZE);
 
   return (
     <div className="review-container">
@@ -130,25 +141,33 @@ export default function Perfumes() {
         </div>
       </div>
 
-      {(searchTerm || ownershipFilter !== 'all') && (
-        <div className="search-results-count">
-          Found {filteredPerfumes.length} perfume{filteredPerfumes.length !== 1 ? 's' : ''}
+      {filteredPerfumes.length === 0 ? (
+        <div className="perfume-empty-state">
+          No perfumes match your search.
         </div>
-      )}
-
-      <MasonryColumns
-        items={filteredPerfumes}
-        columnCount={columnCount}
-        className="perfume-card-grid"
-        columnClassName="perfume-card-grid-col"
-        renderItem={(perfume, index) => (
-          <Variant6Hybrid
-            key={`${perfume.id}-${index}`}
-            item={perfume}
-            onDesignerClick={setSearchTerm}
+      ) : (
+        <>
+          <MasonryColumns
+            items={pagedPerfumes}
+            columnCount={columnCount}
+            className="perfume-card-grid"
+            columnClassName="perfume-card-grid-col"
+            renderItem={(perfume, index) => (
+              <Variant6Hybrid
+                key={`${perfume.id}-${index}`}
+                item={perfume}
+                onDesignerClick={setSearchTerm}
+              />
+            )}
           />
-        )}
-      />
+
+          <Pagination
+            currentPage={page}
+            totalPages={pageCount}
+            onPageChange={setCurrentPage}
+          />
+        </>
+      )}
     </div>
   );
 }
