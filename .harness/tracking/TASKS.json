@@ -10598,7 +10598,7 @@
     {
       "id": "T385",
       "title": "Include warm-up sets in the /workouts per-session card volume",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
