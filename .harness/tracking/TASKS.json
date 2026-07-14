@@ -10548,7 +10548,7 @@
     {
       "id": "T383",
       "title": "Make the whole Now Playing pill clickable when a track is playing",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
