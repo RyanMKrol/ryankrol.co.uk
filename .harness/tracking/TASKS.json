@@ -10642,6 +10642,128 @@
         "workType": "refactor",
         "risk": []
       }
+    },
+    {
+      "id": "T387",
+      "title": "Fix 'This year at the gym' heading picking up visited-link purple color",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "style-fix"
+      ],
+      "scope": [
+        "src/styles/globals.css"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T387.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T388",
+      "title": "Decide the fix direction for single-newline markdown spacing",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": "needs-human",
+      "tags": [
+        "markdown",
+        "decision",
+        "needs-human"
+      ],
+      "scope": [],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T388.md"
+    },
+    {
+      "id": "T389",
+      "title": "Audit all <Markdown> call sites for rendering inaccuracies",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "markdown",
+        "audit"
+      ],
+      "scope": [
+        "src/components/Markdown.js",
+        "src/components/Markdown.test.js",
+        "src/components/ReviewCard.js",
+        "src/components/perfumeVariants/**",
+        "src/components/MarkdownEditor.js",
+        "src/styles/globals.css",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T389.md",
+      "visualVerify": true,
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T390",
+      "title": "Perfumes: add pagination, drop 'Found X' count, add empty-state card",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "pagination",
+        "empty-state"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js",
+        "src/styles/globals.css",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T390.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": []
+      }
+    },
+    {
+      "id": "T391",
+      "title": "Extend read-more/show-less truncation from book cards to movies/tv/albums cards",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "review-cards",
+        "masonry-grid"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/styles/globals.css",
+        "src/hooks/",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T391.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
     }
   ]
 }
