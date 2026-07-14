@@ -51,26 +51,31 @@ export default function NowPlaying() {
 
   const trackText = `${track.track.name} by ${track.track.artist}`;
 
+  if (track.track.lastFmUrl) {
+    return (
+      <a
+        href={track.track.lastFmUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="now-playing-chip track-link-single"
+      >
+        <span className="now-playing-dot playing" aria-hidden="true" />
+        <div className="now-playing-split">
+          <MarqueeText className="single-line-track">
+            {trackText}
+          </MarqueeText>
+        </div>
+      </a>
+    );
+  }
+
   return (
     <div className="now-playing-chip">
       <span className="now-playing-dot playing" aria-hidden="true" />
       <div className="now-playing-split">
-        {track.track.lastFmUrl ? (
-          <a
-            href={track.track.lastFmUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="track-link-single"
-          >
-            <MarqueeText className="single-line-track">
-              {trackText}
-            </MarqueeText>
-          </a>
-        ) : (
-          <MarqueeText className="single-line-track">
-            {trackText}
-          </MarqueeText>
-        )}
+        <MarqueeText className="single-line-track">
+          {trackText}
+        </MarqueeText>
       </div>
     </div>
   );

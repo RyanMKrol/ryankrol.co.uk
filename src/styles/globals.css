@@ -1709,12 +1709,27 @@ input[type='range'].form-input::-moz-range-thumb {
 .track-link-single {
   text-decoration: none;
   color: inherit;
-  flex: 1;
-  min-width: 0;
+}
+
+.now-playing-chip.track-link-single {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  background: var(--color-card);
+  padding: 0.4rem 0.9rem;
+  font-family: var(--font-body);
+  font-weight: 600;
 }
 
 .track-link-single:hover {
   text-decoration: underline;
+}
+
+.now-playing-chip.track-link-single:hover {
+  text-decoration: none;
 }
 
 .single-line-track {
@@ -1785,6 +1800,10 @@ input[type='range'].form-input::-moz-range-thumb {
   padding: 0.4rem 0.9rem;
   font-family: var(--font-body);
   font-weight: 600;
+}
+
+.now-playing-chip[href] {
+  cursor: pointer;
 }
 
 .now-playing-dot {

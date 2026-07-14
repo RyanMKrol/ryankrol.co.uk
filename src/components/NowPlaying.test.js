@@ -11,6 +11,10 @@ test('renders the current track (linked) when something is playing', async () =>
   render(<NowPlaying />);
   const link = await screen.findByRole('link', { name: /Time \(You and I\) by Khruangbin/ });
   expect(link).toHaveAttribute('href', 'https://www.last.fm/x');
+  expect(link).toHaveClass('now-playing-chip', 'track-link-single');
+  // Verify that the entire chip (including the dot) is inside the link
+  const dot = link.querySelector('.now-playing-dot');
+  expect(dot).toBeInTheDocument();
 });
 
 test('renders the idle state when nothing is playing', async () => {
