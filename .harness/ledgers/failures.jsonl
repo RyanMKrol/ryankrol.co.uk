@@ -77,3 +77,4 @@
 {"id":"T371","ts":"2026-07-12T01:18:20Z","kind":"empty-diff","rung":0,"attempt":0,"model":"claude-haiku-4-5","effort":"","facets":{"layer":"lib","workType":"refactor","risk":[]},"detail":""}
 {"id":"T371","ts":"2026-07-12T01:21:23Z","kind":"empty-diff","rung":0,"attempt":1,"model":"claude-haiku-4-5","effort":"","facets":{"layer":"lib","workType":"refactor","risk":[]},"detail":""}
 {"id":"T377","ts":"2026-07-12T22:53:56Z","kind":"ci-red","rung":0,"attempt":0,"model":"claude-haiku-4-5","effort":"","facets":{"layer":"ui","workType":"bugfix","risk":[]},"detail":"CI checks failed on the pushed commit"}
+{"id":"T391","ts":"2026-07-14T23:42:08Z","kind":"scope-creep","rung":0,"attempt":0,"model":"claude-haiku-4-5","effort":"","facets":{"layer":"ui","workType":"component","risk":[]},"detail":"CLAUDE.md"}
