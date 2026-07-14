@@ -10323,7 +10323,7 @@
     {
       "id": "T374",
       "title": "Review the 5 book-card designs and pick the one to ship",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [
         "T373"
       ],
