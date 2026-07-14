@@ -1,4 +1,6 @@
 import ReviewCard from '../../components/ReviewCard';
+import MasonryColumns from '../../components/MasonryColumns';
+import useResponsiveColumnCount from '../../hooks/useResponsiveColumnCount';
 
 // Workshop-only preview (T373) — NOT linked from the public nav. Renders all 5 candidate
 // spine-cover book-card designs stacked against two example books chosen to exercise the two
@@ -48,12 +50,17 @@ const VARIANTS = [
 ];
 
 export default function BookCardDesigns() {
+  // Mirror the real books page (src/pages/reviews/books/index.js): two columns on desktop,
+  // collapsing to one below 700px, so each design is evaluated in the same layout it ships into.
+  const columnCount = useResponsiveColumnCount(2, 700);
+
   return (
     <div className="review-container">
       <h1 className="page-title">book card design workshop</h1>
       <p className="collection-review-meta">
         Internal preview only (not linked from nav) — five candidate spine-cover designs, each
-        rendered against a long body (read-more) and a Markdown ordered-list body.
+        rendered against a long body (read-more) and a Markdown ordered-list body, in the same
+        two-column layout as the live books page.
       </p>
 
       {VARIANTS.map((variant) => (
@@ -62,9 +69,13 @@ export default function BookCardDesigns() {
             {`Variant ${variant.id} — ${variant.name}`}
           </h2>
           <p className="collection-review-meta">{variant.description}</p>
-          <div className="spine-cover-list" style={{ marginTop: '1rem' }}>
-            <div className="spine-cover-list-col">
-              {EXAMPLE_BOOKS.map((book, index) => (
+          <div style={{ marginTop: '1rem' }}>
+            <MasonryColumns
+              items={EXAMPLE_BOOKS}
+              columnCount={columnCount}
+              className="spine-cover-list"
+              columnClassName="spine-cover-list-col"
+              renderItem={(book, index) => (
                 <ReviewCard
                   key={book.id}
                   item={book}
@@ -73,8 +84,8 @@ export default function BookCardDesigns() {
                   styleVariant="spine-cover"
                   designVariant={variant.id}
                 />
-              ))}
-            </div>
+              )}
+            />
           </div>
         </section>
       ))}
