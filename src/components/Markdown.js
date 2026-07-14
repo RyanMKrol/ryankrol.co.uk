@@ -7,6 +7,40 @@ const inlineComponents = {
   p: ({ children }) => <>{children}</>,
 };
 
+// CommonMark collapses any run of blank lines down to a single paragraph
+// break, so a user's intentional extra blank line has no visible effect.
+// Turn each run of N>=2 consecutive blank lines into the normal paragraph
+// break plus (N-1) standalone "gap paragraphs" (a lone non-breaking space)
+// so the extra vertical space actually renders.
+export function preserveBlankLines(src) {
+  if (typeof src !== 'string') return src;
+
+  const lines = src.split('\n');
+  const result = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    if (lines[i].trim() === '') {
+      let j = i;
+      while (j < lines.length && lines[j].trim() === '') j += 1;
+      const blankCount = j - i;
+
+      result.push('');
+      for (let k = 1; k < blankCount; k += 1) {
+        result.push(' ');
+        result.push('');
+      }
+
+      i = j;
+    } else {
+      result.push(lines[i]);
+      i += 1;
+    }
+  }
+
+  return result.join('\n');
+}
+
 export default function Markdown({ children, inline = false }) {
   if (!children) return null;
 
@@ -18,5 +52,5 @@ export default function Markdown({ children, inline = false }) {
     );
   }
 
-  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>;
+  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{preserveBlankLines(children)}</ReactMarkdown>;
 }
