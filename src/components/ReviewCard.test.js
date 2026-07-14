@@ -44,3 +44,44 @@ describe('ReviewCard spine-cover variant', () => {
     expect(screen.getByRole('button', { name: 'Show less' })).toBeInTheDocument();
   });
 });
+
+describe('ReviewCard poster-banner variant', () => {
+  it('renders markdown (bold, italic, list) in the review text as real elements', () => {
+    const item = {
+      id: 'movie-1',
+      title: 'The Grand Budapest Hotel',
+      rating: 5,
+      review_text: '**Wes Anderson** at his most *precise*.\n\n- symmetry\n- pastel colours',
+      date: '01-01-2026',
+    };
+
+    render(<ReviewCard item={item} type="movie" styleVariant="poster-banner" />);
+
+    expect(screen.getByText('Wes Anderson').tagName).toBe('STRONG');
+    expect(screen.getByText('precise').tagName).toBe('EM');
+    const list = screen.getByText('symmetry').closest('ul');
+    expect(list).not.toBeNull();
+    expect(list.querySelectorAll('li')).toHaveLength(2);
+  });
+});
+
+describe('ReviewCard square-cover variant (inline mode)', () => {
+  it('renders bold/italic within a highlight but strips block-level list syntax to flat text', () => {
+    const item = {
+      id: 'album-1',
+      title: 'In Rainbows',
+      artist: 'Radiohead',
+      rating: 5,
+      highlights: '**Weird Fishes**, - 15 Step, _Reckoner_',
+      date: '01-01-2026',
+    };
+
+    render(<ReviewCard item={item} type="album" styleVariant="square-cover" />);
+
+    expect(screen.getByText('Weird Fishes').tagName).toBe('STRONG');
+    expect(screen.getByText('Reckoner').tagName).toBe('EM');
+    expect(screen.getByText(/15 Step/)).toBeInTheDocument();
+    expect(document.querySelector('ul')).toBeNull();
+    expect(document.querySelector('li')).toBeNull();
+  });
+});

@@ -239,6 +239,25 @@
   line-height: var(--line-height-body);
 }
 
+/* Scoped list-indent fix (T389), matching the .spine-cover-snippet fix from T373 — without this,
+   Markdown ordered/unordered lists here fall back to the browser's default 40px indent instead of
+   the design system's own list styling. */
+.poster-banner-snippet ol,
+.poster-banner-snippet ul {
+  margin: 0.3rem 0;
+  padding-left: 1.4rem;
+}
+
+.poster-banner-snippet ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+
+.poster-banner-snippet ul {
+  list-style-type: disc;
+  list-style-position: outside;
+}
+
 .poster-banner-grid {
   display: flex;
   gap: 1.5rem;
@@ -809,6 +828,25 @@ a:hover {
   color: var(--color-text-secondary);
   line-height: var(--line-height-body);
   margin-bottom: 0.75rem;
+}
+
+/* Scoped list-indent fix (T389), matching the .spine-cover-snippet fix from T373 — without this,
+   Markdown ordered/unordered lists here fall back to the browser's default 40px indent instead of
+   the design system's own list styling. */
+.review-text ol,
+.review-text ul {
+  margin: 0.3rem 0;
+  padding-left: 1.4rem;
+}
+
+.review-text ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+
+.review-text ul {
+  list-style-type: disc;
+  list-style-position: outside;
 }
 
 .review-date {
@@ -3806,6 +3844,25 @@ body::before {
   font-size: 0.85rem;
   color: var(--color-ink-mute);
   line-height: 1.5;
+}
+
+/* Scoped list-indent fix (T389), matching the .spine-cover-snippet fix from T373 — without this,
+   Markdown ordered/unordered lists here fall back to the browser's default 40px indent instead of
+   the design system's own list styling. */
+.perfume-v1-description ol,
+.perfume-v1-description ul {
+  margin: 0.3rem 0;
+  padding-left: 1.4rem;
+}
+
+.perfume-v1-description ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+
+.perfume-v1-description ul {
+  list-style-type: disc;
+  list-style-position: outside;
 }
 
 .perfume-v6-card {

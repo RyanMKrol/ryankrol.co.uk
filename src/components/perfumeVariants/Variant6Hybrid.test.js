@@ -76,4 +76,20 @@ describe('Variant6Hybrid', () => {
     const button = screen.queryByRole('button');
     expect(button).not.toBeInTheDocument();
   });
+
+  it('renders markdown (bold, italic, link) in the description as real elements, not raw syntax', () => {
+    const perfumeWithDescription = {
+      ...mockPerfume,
+      description:
+        'Opens with **bergamot** and dries down to something *warmer*. See [Fragrantica](https://www.fragrantica.com).',
+    };
+    render(<Variant6Hybrid item={perfumeWithDescription} />);
+
+    expect(screen.getByText('bergamot').tagName).toBe('STRONG');
+    expect(screen.getByText('warmer').tagName).toBe('EM');
+    const link = screen.getByText('Fragrantica');
+    expect(link.tagName).toBe('A');
+    expect(link.getAttribute('href')).toBe('https://www.fragrantica.com');
+    expect(screen.queryByText(/\*\*bergamot\*\*/)).toBeNull();
+  });
 });

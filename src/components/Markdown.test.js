@@ -67,4 +67,26 @@ describe('Markdown', () => {
     expect(container.querySelectorAll('p')).toHaveLength(0);
     expect(container.textContent).not.toContain(' ');
   });
+
+  it('renders strikethrough text inside a del element in block mode', () => {
+    render(<Markdown>{'~~struck~~'}</Markdown>);
+    const del = screen.getByText('struck');
+    expect(del.tagName).toBe('DEL');
+  });
+
+  it('renders strikethrough text inside a del element in inline mode', () => {
+    // Regression test (T389): inline mode allows `del` in INLINE_ELEMENTS but was missing
+    // remarkGfm, so `~~text~~` never parsed as strikethrough — it rendered as literal `~~text~~`.
+    render(<Markdown inline>{'~~struck~~'}</Markdown>);
+    const del = screen.getByText('struck');
+    expect(del.tagName).toBe('DEL');
+    expect(screen.queryByText(/~~struck~~/)).toBeNull();
+  });
+
+  it('renders a link with the correct href in inline mode', () => {
+    render(<Markdown inline>{'[link](https://example.com)'}</Markdown>);
+    const link = screen.getByText('link');
+    expect(link.tagName).toBe('A');
+    expect(link.getAttribute('href')).toBe('https://example.com');
+  });
 });

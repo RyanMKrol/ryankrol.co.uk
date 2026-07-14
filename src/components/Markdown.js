@@ -46,7 +46,12 @@ export default function Markdown({ children, inline = false }) {
 
   if (inline) {
     return (
-      <ReactMarkdown allowedElements={INLINE_ELEMENTS} unwrapDisallowed components={inlineComponents}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        allowedElements={INLINE_ELEMENTS}
+        unwrapDisallowed
+        components={inlineComponents}
+      >
         {children}
       </ReactMarkdown>
     );

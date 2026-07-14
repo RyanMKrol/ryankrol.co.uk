@@ -269,7 +269,7 @@ export function fixtureFor(pathname) {
 // ── PAGES: one baseline screenshot per route. `waitFor` doubles as a presence gate. ────────────
 const REVIEW_COMMON = ['src/components/ReviewCard.js', 'src/components/StarRating.js', 'src/components/SortButtons.js', 'src/components/SearchInput.js'];
 export const PAGES = [
-  { name: 'home', path: '/', waitFor: ['.home-wall-tile-link', '.home-top-of-mind-panel'], description: 'Home — hero, now-playing, Top of Mind hero-band panel (T351, fresh saved note), collection wall, on-the-shelf + hot-takes rail panels.', covers: ['src/pages/index.js', 'src/styles/globals.css', 'src/components/NowPlaying.js', 'src/components/StatBlock.js', 'src/components/CoverTile.js'] },
+  { name: 'home', path: '/', waitFor: ['.home-wall-tile-link', '.home-top-of-mind-panel'], description: 'Home — hero, now-playing, Top of Mind hero-band panel (T351, fresh saved note), collection wall, on-the-shelf + hot-takes rail panels.', covers: ['src/pages/index.js', 'src/styles/globals.css', 'src/components/NowPlaying.js', 'src/components/StatBlock.js', 'src/components/CoverTile.js', 'src/components/Markdown.js'] },
   {
     name: 'home-loading',
     path: '/',
@@ -278,6 +278,7 @@ export const PAGES = [
     covers: ['src/pages/index.js', 'src/components/HomeSkeleton.js', 'src/styles/globals.css'],
     delayRoutes: { '/api/hot-takes': 6000, '/api/vinyl': 6000 },
   },
+  { name: 'tom', path: '/tom', waitFor: ['.collection-form-card'], description: '/tom — Top of Mind editor: MarkdownEditor with B/I/List/Link toolbar plus a live Markdown preview pane of the saved note (T389).', covers: ['src/pages/tom.js', 'src/components/MarkdownEditor.js', 'src/components/Markdown.js', 'src/styles/globals.css'] },
   { name: 'listening', path: '/listening', waitFor: ['.listening-row'], description: 'Last.fm top albums (3-month) with playcount bars.', covers: ['src/pages/listening/index.js', 'src/components/CoverTile.js'] },
   { name: 'projects', path: '/projects', waitFor: ['.project-card'], description: 'GitHub repo cards with search + tag-filter pills + sort.', covers: ['src/pages/projects/index.js', 'src/components/Pill.js', 'src/components/Badge.js', 'src/components/Tooltip.js'] },
   { name: 'vinyl', path: '/vinyl', waitFor: ['.vinyl-letter-header'], description: 'Vinyl collection grouped by artist (covers view).', covers: ['src/pages/vinyl/index.js', 'src/components/PillGroup.js', 'src/components/CoverTile.js'] },
@@ -290,7 +291,7 @@ export const PAGES = [
   { name: 'reviews-movies', path: '/reviews/movies', waitFor: ['.poster-banner-card'], description: 'Movie reviews — poster-banner cards (Markdown bodies render here).', covers: ['src/pages/reviews/movies/index.js', 'src/components/Markdown.js', ...REVIEW_COMMON] },
   { name: 'reviews-tv', path: '/reviews/tv', waitFor: ['.poster-banner-card'], description: 'TV reviews — poster-banner cards.', covers: ['src/pages/reviews/tv/index.js', 'src/components/Markdown.js', ...REVIEW_COMMON] },
   { name: 'reviews-books', path: '/reviews/books', waitFor: ['.spine-cover-card'], description: 'Book reviews — spine-cover cards (Markdown bodies render here).', covers: ['src/pages/reviews/books/index.js', 'src/components/Markdown.js', ...REVIEW_COMMON] },
-  { name: 'reviews-albums', path: '/reviews/albums', waitFor: ['.square-cover-card'], description: 'Album reviews — square-cover cards.', covers: ['src/pages/reviews/albums/index.js', ...REVIEW_COMMON] },
+  { name: 'reviews-albums', path: '/reviews/albums', waitFor: ['.square-cover-card'], description: 'Album reviews — square-cover cards (Markdown-inline track highlights render here).', covers: ['src/pages/reviews/albums/index.js', 'src/components/Markdown.js', ...REVIEW_COMMON] },
   { name: 'reviews-perfumes', path: '/reviews/perfumes', waitFor: ['.perfume-v6-card'], description: 'Perfume shelf — hybrid cards with pip rating, longevity/projection scales, season chips, ownership pill.', covers: ['src/pages/reviews/perfumes/index.js', 'src/components/perfumeVariants/**', 'src/components/PipMeter.js', 'src/components/PerfumeCharacteristics.js'] },
   { name: 'reviews-movies-edit', path: '/reviews/movies/edit', waitFor: ['.review-edit-card'], description: 'Movie reviews edit list — Edit-button header strip should read as one unified box with the card below it (T328).', covers: ['src/pages/reviews/movies/edit.js', 'src/styles/globals.css'] },
   { name: 'reviews-tv-edit', path: '/reviews/tv/edit', waitFor: ['.review-edit-card'], description: 'TV reviews edit list — unified Edit-header/card box (T328).', covers: ['src/pages/reviews/tv/edit.js', 'src/styles/globals.css'] },
