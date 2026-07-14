@@ -10622,7 +10622,7 @@
     {
       "id": "T386",
       "title": "Delete the unused WorkoutCard.js dead component",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
