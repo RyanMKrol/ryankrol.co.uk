@@ -10521,7 +10521,7 @@
     {
       "id": "T382",
       "title": "Preserve typed blank lines as visible gaps in Markdown rendering",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [

@@ -56,6 +56,14 @@ PASS src/__tests__/pages/projects/index.test.js
       at performWorkUntilDeadline (node_modules/scheduler/cjs/scheduler.development.js:45:48)
       at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
 
+PASS src/scripts/backfillMissingExerciseRows.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
 PASS src/components/Header.test.js
   ● Console
 
@@ -283,20 +291,18 @@ PASS src/components/Header.test.js
       at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:6927:7)
       at setLoading (src/components/NowPlaying.js:22:9)
 
-PASS src/__tests__/pages/reviews/movies/add.test.js
+PASS test/pages/workouts/index.test.js
 PASS src/components/Pagination.test.js
+PASS src/components/Markdown.test.js
 PASS src/components/MarkdownEditor.test.js
-PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
+PASS src/scripts/migrateBooksToIdTable.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/__tests__/pages/reviews/movies/edit.test.js
-PASS src/lib/backfillQueue.test.js
-PASS src/pages/api/reviews/perfumes/update.test.js
 PASS src/lib/workoutBackfill.test.js
   ● Console
 
@@ -361,7 +367,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 156ms
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 153ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -436,7 +442,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 154ms
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 155ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -476,7 +482,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:86:11)
 
     console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (1ms)
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
 
       at log (src/lib/workoutBackfill.js:127:15)
 
@@ -581,7 +587,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 153ms
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 155ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -701,7 +707,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 305ms
+      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 304ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -720,98 +726,21 @@ PASS src/lib/workoutBackfill.test.js
 
       at log (src/lib/workoutBackfill.js:246:15)
 
+PASS src/__tests__/pages/reviews/albums/add.test.js
+PASS src/__tests__/pages/reviews/perfumes/add.test.js
+PASS src/__tests__/pages/reviews/perfumes/edit.test.js
+PASS src/pages/api/reviews/books/add.test.js
 PASS src/scripts/migratePerfumeOwnership.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
 PASS src/components/PillGroup.test.js
-PASS src/scripts/migrateVinylToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/scripts/migrateBooksToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/__tests__/pages/reviews/perfumes/add.test.js
-PASS src/scripts/migrateTvToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/components/Markdown.test.js
-PASS src/pages/api/reviews/books/update.test.js
-PASS src/pages/api/vinyl/add.test.js
-PASS src/lib/rateLimit.test.js
-  ● Console
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.1651050495909514 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-a-0.0557797397494495 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.22761631634350787 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.22761631634350787 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-PASS src/pages/api/reviews/tv/add.test.js
-PASS src/lib/perfumes.test.js
-PASS src/__tests__/pages/reviews/tv/add.test.js
-PASS test/pages/workouts/index.test.js
-PASS src/lib/hotTakes.test.js
-PASS src/components/StarRating.test.js
-PASS src/scripts/backfillPersonalBests.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/components/HomeSkeleton.test.js
-PASS src/components/perfumeVariants/Variant6Hybrid.test.js
-PASS src/scripts/backfillMissingExerciseRows.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/pages/api/reviews/tv/update.test.js
-PASS src/pages/api/reviews/movies/update.test.js
-PASS src/__tests__/pages/reviews/albums/add.test.js
-PASS src/__tests__/pages/reviews/perfumes/edit.test.js
-PASS src/__tests__/pages/reviews/albums/edit.test.js
-PASS src/__tests__/pages/reviews/tv/edit.test.js
-PASS src/components/NowPlaying.test.js
-PASS src/scripts/stripOldBookProviderMetadata.test.js
+PASS src/__tests__/pages/reviews/books/edit.test.js
+PASS src/scripts/auditWorkouts.test.js
   ● Console
 
     console.log
@@ -819,6 +748,121 @@ PASS src/scripts/stripOldBookProviderMetadata.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 2 stored, 0 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 0 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Workout already exists, skipping
+
+      at log (src/scripts/auditWorkouts.js:142:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 1 stored, 1 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 1 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/1] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+PASS src/components/StarRating.test.js
+PASS src/components/NowPlaying.test.js
+PASS src/__tests__/pages/reviews/tv/edit.test.js
+PASS src/pages/api/reviews/movies/update.test.js
+PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/reviews/perfumes/update.test.js
+PASS src/scripts/stripBackfillEditedDates.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/__tests__/pages/reviews/tv/add.test.js
+PASS src/pages/api/reviews/movies/add.test.js
+PASS src/components/HomeSkeleton.test.js
+PASS src/scripts/backfillPersonalBests.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/lib/perfumes.test.js
 PASS src/scripts/migrateLegacyExerciseRows.test.js
   ● Console
 
@@ -827,14 +871,7 @@ PASS src/scripts/migrateLegacyExerciseRows.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/scripts/migrateMoviesToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
+PASS src/components/CoverTile.test.js
 PASS src/lib/hardcover.test.js
   ● Console
 
@@ -914,9 +951,43 @@ PASS src/lib/hardcover.test.js
 
       at log (src/lib/hardcover.js:142:15)
 
-PASS src/__tests__/pages/reviews/books/edit.test.js
-PASS src/components/CoverTile.test.js
+PASS src/__tests__/pages/reviews/movies/edit.test.js
+PASS src/lib/backfillQueue.test.js
+PASS src/__tests__/pages/reviews/albums/edit.test.js
+PASS src/lib/rateLimit.test.js
+  ● Console
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.06686512621550489 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-a-0.38678258434065227 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.2661075784096225 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.2661075784096225 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+PASS src/components/perfumeVariants/Variant6Hybrid.test.js
+PASS src/scripts/migrateAlbumsToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
 PASS src/lib/workoutMetrics.test.js
+PASS src/lib/workoutQueries.test.js
 PASS src/lib/apiCache.test.js
   ● Console
 
@@ -1017,7 +1088,126 @@ PASS src/lib/apiCache.test.js
 
       at log (src/lib/apiCache.js:65:15)
 
-PASS src/lib/masonryColumns.test.js
+PASS src/scripts/migrateMoviesToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/lib/dateFormat.test.js
+PASS src/scripts/migrateTvToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/books/search.test.js
+  ● Console
+
+    console.warn
+      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
+
+      54 |   const token = process.env.HARDCOVER_API_TOKEN;
+      55 |   if (!token) {
+    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
+         |             ^
+      57 |   }
+      58 |
+      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
+
+      at warn (src/pages/api/books/search.js:56:13)
+      at searchHardcover (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:41:18)
+
+    console.log
+      📚 [Hardcover] Searching books: query="Dune"
+
+      at log (src/pages/api/books/search.js:59:11)
+
+    console.warn
+      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
+
+      54 |   const token = process.env.HARDCOVER_API_TOKEN;
+      55 |   if (!token) {
+    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
+         |             ^
+      57 |   }
+      58 |
+      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
+
+      at warn (src/pages/api/books/search.js:56:13)
+      at searchHardcover (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:72:18)
+
+    console.log
+      📚 [Hardcover] Searching books: query="Dune"
+
+      at log (src/pages/api/books/search.js:59:11)
+
+    console.warn
+      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
+
+      54 |   const token = process.env.HARDCOVER_API_TOKEN;
+      55 |   if (!token) {
+    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
+         |             ^
+      57 |   }
+      58 |
+      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
+
+      at warn (src/pages/api/books/search.js:56:13)
+      at searchHardcover (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:90:18)
+
+    console.log
+      📚 [Hardcover] Searching books: query="Dune Frank Herbert"
+
+      at log (src/pages/api/books/search.js:59:11)
+
+    console.warn
+      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
+
+      54 |   const token = process.env.HARDCOVER_API_TOKEN;
+      55 |   if (!token) {
+    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
+         |             ^
+      57 |   }
+      58 |
+      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
+
+      at warn (src/pages/api/books/search.js:56:13)
+      at searchHardcover (src/pages/api/books/search.js:25:56)
+      at fn (src/pages/api/books/search.test.js:10:38)
+      at handler (src/pages/api/books/search.js:25:39)
+      at Object.<anonymous> (src/pages/api/books/search.test.js:110:18)
+
+    console.log
+      📚 [Hardcover] Searching books: query="Dune Frank Herbert"
+
+      at log (src/pages/api/books/search.js:59:11)
+
+PASS src/__tests__/pages/reviews/books/add.test.js
+PASS src/scripts/stripOldBookProviderMetadata.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/reviews/books/update.test.js
+PASS src/pages/api/vinyl/add.test.js
+PASS src/__tests__/pages/reviews/movies/add.test.js
 PASS src/pages/api/tmdb/search.test.js
   ● Console
 
@@ -1026,6 +1216,8 @@ PASS src/pages/api/tmdb/search.test.js
 
       at log (src/pages/api/tmdb/search.js:41:15)
 
+PASS src/lib/reviewText.test.js
+PASS src/pages/api/reviews/tv/update.test.js
 PASS src/pages/api/github/repos.test.js
   ● Console
 
@@ -1142,218 +1334,15 @@ PASS src/pages/api/github/repos.test.js
       at handler (src/pages/api/github/repos.js:39:19)
       at Object.<anonymous> (src/pages/api/github/repos.test.js:197:7)
 
-PASS src/lib/topOfMind.test.js
-PASS src/scripts/migrateAlbumsToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/pages/api/reviews/books/add.test.js
-PASS src/lib/dateFormat.test.js
-PASS src/scripts/auditWorkouts.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-    console.log
-      Backfilling 2 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at log (src/scripts/auditWorkouts.js:146:11)
-
-    console.log
-      Workouts: 2 stored, 0 skipped
-
-      at log (src/scripts/auditWorkouts.js:147:11)
-
-    console.log
-      Backfilling 2 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 0 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Workout already exists, skipping
-
-      at log (src/scripts/auditWorkouts.js:142:15)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at log (src/scripts/auditWorkouts.js:146:11)
-
-    console.log
-      Workouts: 1 stored, 1 skipped
-
-      at log (src/scripts/auditWorkouts.js:147:11)
-
-    console.log
-      Backfilling 1 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/1] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-PASS src/scripts/stripBackfillEditedDates.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/lib/chartTime.test.js
-PASS src/pages/api/reviews/movies/add.test.js
-PASS src/lib/pagination.test.js
-PASS src/lib/workoutQueries.test.js
-PASS src/lib/workoutPagination.test.js
-PASS src/pages/api/books/search.test.js
-  ● Console
-
-    console.warn
-      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
-
-      54 |   const token = process.env.HARDCOVER_API_TOKEN;
-      55 |   if (!token) {
-    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
-         |             ^
-      57 |   }
-      58 |
-      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
-
-      at warn (src/pages/api/books/search.js:56:13)
-      at searchHardcover (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:41:18)
-
-    console.log
-      📚 [Hardcover] Searching books: query="Dune"
-
-      at log (src/pages/api/books/search.js:59:11)
-
-    console.warn
-      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
-
-      54 |   const token = process.env.HARDCOVER_API_TOKEN;
-      55 |   if (!token) {
-    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
-         |             ^
-      57 |   }
-      58 |
-      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
-
-      at warn (src/pages/api/books/search.js:56:13)
-      at searchHardcover (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:72:18)
-
-    console.log
-      📚 [Hardcover] Searching books: query="Dune"
-
-      at log (src/pages/api/books/search.js:59:11)
-
-    console.warn
-      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
-
-      54 |   const token = process.env.HARDCOVER_API_TOKEN;
-      55 |   if (!token) {
-    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
-         |             ^
-      57 |   }
-      58 |
-      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
-
-      at warn (src/pages/api/books/search.js:56:13)
-      at searchHardcover (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:90:18)
-
-    console.log
-      📚 [Hardcover] Searching books: query="Dune Frank Herbert"
-
-      at log (src/pages/api/books/search.js:59:11)
-
-    console.warn
-      ⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail
-
-      54 |   const token = process.env.HARDCOVER_API_TOKEN;
-      55 |   if (!token) {
-    > 56 |     console.warn('⚠️ [Hardcover] HARDCOVER_API_TOKEN not set — requests will fail');
-         |             ^
-      57 |   }
-      58 |
-      59 |   console.log(`📚 [Hardcover] Searching books: query="${query}"`);
-
-      at warn (src/pages/api/books/search.js:56:13)
-      at searchHardcover (src/pages/api/books/search.js:25:56)
-      at fn (src/pages/api/books/search.test.js:10:38)
-      at handler (src/pages/api/books/search.js:25:39)
-      at Object.<anonymous> (src/pages/api/books/search.test.js:110:18)
-
-    console.log
-      📚 [Hardcover] Searching books: query="Dune Frank Herbert"
-
-      at log (src/pages/api/books/search.js:59:11)
-
 PASS src/pages/api/reviews/albums/add.test.js
+PASS src/lib/dynamo.test.js
+PASS src/components/BulkBackfillList.test.js
 PASS src/lib/scrollFade.test.js
 PASS src/scripts/migrateWorkoutData.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
@@ -1453,12 +1442,20 @@ PASS src/scripts/migrateWorkoutData.test.js
 
       at log (src/scripts/migrateWorkoutData.js:85:11)
 
-PASS src/lib/reviewText.test.js
+PASS src/scripts/migrateVinylToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
 PASS src/lib/bookSearchQuery.test.js
-PASS src/lib/programmeStats.test.js
+PASS src/lib/masonryColumns.test.js
+PASS src/lib/dateRange.test.js
 PASS src/lib/lastfm.test.js
-PASS src/lib/dynamo.test.js
-PASS src/__tests__/pages/reviews/books/add.test.js
+PASS src/lib/chartTime.test.js
+PASS src/lib/hotTakes.test.js
 PASS src/pages/api/lastfm/album-search.test.js
   ● Console
 
@@ -1472,16 +1469,19 @@ PASS src/pages/api/lastfm/album-search.test.js
 
       at log (src/pages/api/lastfm/album-search.js:48:15)
 
-PASS src/lib/dateRange.test.js
-PASS src/components/PerfumeCharacteristics.test.js
-PASS src/lib/backfillEligibility.test.js
+PASS src/lib/programmeStats.test.js
 PASS src/lib/tmdb.test.js
-PASS src/components/BulkBackfillList.test.js
+PASS src/lib/topOfMind.test.js
+PASS src/components/PerfumeCharacteristics.test.js
+PASS src/lib/workoutPagination.test.js
+PASS src/lib/pagination.test.js
+PASS src/lib/backfillEligibility.test.js
+PASS src/pages/api/reviews/tv/add.test.js
 
 Test Suites: 78 passed, 78 total
-Tests:       477 passed, 477 total
+Tests:       481 passed, 481 total
 Snapshots:   0 total
-Time:        5.517 s
+Time:        6.373 s
 Ran all test suites.
 
 > ryankrol.co.uk@1.0.0 build
@@ -1512,7 +1512,7 @@ Ran all test suites.
 
 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
    Creating an optimized production build ...
- ✓ Compiled successfully in 2.4s
+ ✓ Compiled successfully in 3.3s
    Collecting page data ...
    Generating static pages (0/43) ...
    Generating static pages (10/43) 
@@ -1523,7 +1523,7 @@ info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/d
    Collecting build traces ...
 
 Route (pages)                                 Size  First Load JS
-┌ ○ /                                      4.26 kB         148 kB
+┌ ○ /                                      4.39 kB         149 kB
 ├   /_app                                      0 B         102 kB
 ├ ○ /404                                     183 B         103 kB
 ├ ƒ /api/books/search                          0 B         102 kB
@@ -1583,26 +1583,26 @@ Route (pages)                                 Size  First Load JS
 ├ ƒ /api/workouts/[id]/exercises               0 B         102 kB
 ├ ƒ /api/workouts/backfill                     0 B         102 kB
 ├ ƒ /api/workouts/stats                        0 B         102 kB
-├ ○ /dev/book-card-designs                 1.53 kB         149 kB
+├ ○ /dev/book-card-designs (2094 ms)       1.53 kB         149 kB
 ├ ○ /dev/cache                             1.94 kB         104 kB
-├ ○ /exercises/[exerciseName] (1176 ms)    5.28 kB         188 kB
+├ ○ /exercises/[exerciseName] (2094 ms)    5.28 kB         188 kB
 ├ ○ /hot-takes                             3.52 kB         106 kB
 ├ ○ /hot-takes/add                         1.81 kB         104 kB
 ├ ○ /hot-takes/edit                        3.67 kB         106 kB
 ├ ○ /hot-takes/edit/[id]                   2.16 kB         105 kB
 ├ ○ /listening                             1.87 kB         104 kB
 ├ ○ /projects                              3.16 kB         106 kB
-├ ○ /reviews/albums                        2.44 kB         149 kB
+├ ○ /reviews/albums                        2.44 kB         150 kB
 ├ ○ /reviews/albums/add                    2.52 kB         109 kB
 ├ ○ /reviews/albums/backfill               1.71 kB         109 kB
 ├ ○ /reviews/albums/edit                   3.66 kB         151 kB
 ├ ○ /reviews/albums/edit/[id]              2.39 kB         110 kB
-├ ○ /reviews/books                          2.4 kB         149 kB
+├ ○ /reviews/books                          2.4 kB         150 kB
 ├ ○ /reviews/books/add                        6 kB         108 kB
 ├ ○ /reviews/books/backfill                1.74 kB         109 kB
 ├ ○ /reviews/books/edit                    3.65 kB         151 kB
 ├ ○ /reviews/books/edit/[id]               2.25 kB         109 kB
-├ ○ /reviews/movies                        2.37 kB         149 kB
+├ ○ /reviews/movies                        2.37 kB         150 kB
 ├ ○ /reviews/movies/add                    1.22 kB         109 kB
 ├ ○ /reviews/movies/backfill               1.72 kB         109 kB
 ├ ○ /reviews/movies/edit                   3.65 kB         151 kB
@@ -1611,18 +1611,18 @@ Route (pages)                                 Size  First Load JS
 ├ ○ /reviews/perfumes/add                  3.59 kB         106 kB
 ├ ○ /reviews/perfumes/edit                   800 B         148 kB
 ├ ○ /reviews/perfumes/edit/[id]             3.9 kB         106 kB
-├ ○ /reviews/tv                            2.37 kB         149 kB
+├ ○ /reviews/tv                            2.37 kB         150 kB
 ├ ○ /reviews/tv/add                        1.22 kB         109 kB
 ├ ○ /reviews/tv/backfill                   1.72 kB         109 kB
 ├ ○ /reviews/tv/edit                       3.66 kB         151 kB
 ├ ○ /reviews/tv/edit/[id]                  2.33 kB         110 kB
-├ ○ /tom                                    2.4 kB         147 kB
+├ ○ /tom                                   2.53 kB         147 kB
 ├ ○ /vinyl                                 4.73 kB         107 kB
 ├ ○ /vinyl/add                             1.52 kB         108 kB
 ├ ○ /vinyl/edit                            1.34 kB         104 kB
 ├ ○ /vinyl/edit/[id]                       1.67 kB         108 kB
-├ ○ /workouts (1176 ms)                    5.55 kB         188 kB
-└ ○ /workouts/[id] (1177 ms)               2.48 kB         105 kB
+├ ○ /workouts (2094 ms)                    5.55 kB         188 kB
+└ ○ /workouts/[id]                         2.48 kB         105 kB
 + First Load JS shared by all               114 kB
   ├ chunks/framework-4a99af1472046e21.js   57.7 kB
   ├ chunks/main-68e6916c6a9fbbfe.js        36.8 kB
