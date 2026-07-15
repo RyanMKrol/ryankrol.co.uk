@@ -10833,7 +10833,7 @@
     {
       "id": "T394",
       "title": "Style GFM Markdown tables for the Collection design system",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
