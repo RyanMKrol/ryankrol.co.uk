@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import MarkdownEditor from '../../../components/MarkdownEditor';
+import Markdown from '../../../components/Markdown';
 
 export default function EditHotTake() {
   const router = useRouter();
@@ -181,6 +182,11 @@ export default function EditHotTake() {
                 className="collection-form-textarea"
                 required
               />
+            </div>
+
+            <div className="collection-form-group">
+              <label className="collection-form-label">Preview</label>
+              <Markdown>{formData.text}</Markdown>
             </div>
 
             <div className="collection-form-group">

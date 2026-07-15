@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import StarRating from '../../../../components/StarRating';
 import MetadataBackfillModal from '../../../../components/MetadataBackfillModal';
 import MarkdownEditor from '../../../../components/MarkdownEditor';
+import Markdown from '../../../../components/Markdown';
 
 export default function EditBookReview() {
   const router = useRouter();
@@ -287,6 +288,11 @@ export default function EditBookReview() {
               placeholder="Share your thoughts about this book..."
               required
             />
+          </div>
+
+          <div className="collection-form-group">
+            <label className="collection-form-label">Preview</label>
+            <Markdown>{formData.overview}</Markdown>
           </div>
 
           <div className="collection-form-group">

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import PipMeter from '../../../../components/PipMeter';
 import { LongevitySlider, ProjectionSlider, SeasonsCheckboxes, ApplicationSpotsSprayer, OwnershipPicker } from '../../../../components/PerfumeCharacteristics';
 import MarkdownEditor from '../../../../components/MarkdownEditor';
+import Markdown from '../../../../components/Markdown';
 
 const PERFUME_TYPES = ['EDP', 'EDT', 'Parfum'];
 
@@ -290,6 +291,11 @@ export default function EditPerfumeReview() {
               className="collection-form-textarea"
               required
             />
+          </div>
+
+          <div className="collection-form-group">
+            <label className="collection-form-label">Preview</label>
+            <Markdown>{formData.description}</Markdown>
           </div>
 
           <ApplicationSpotsSprayer value={formData.applicationSpots} onChange={handleApplicationSpotsChange} />

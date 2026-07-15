@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import StarRating from '../../../components/StarRating';
 import BookSearch from '../../../components/BookSearch';
 import MarkdownEditor from '../../../components/MarkdownEditor';
+import Markdown from '../../../components/Markdown';
 
 export default function AddBookReview() {
   const [formData, setFormData] = useState({
@@ -158,6 +159,11 @@ export default function AddBookReview() {
               placeholder="Share your thoughts about this book..."
               required
             />
+          </div>
+
+          <div className="collection-form-group">
+            <label className="collection-form-label">Preview</label>
+            <Markdown>{formData.overview}</Markdown>
           </div>
 
           <div className="collection-form-group">

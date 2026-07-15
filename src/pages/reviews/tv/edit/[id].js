@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import StarRating from '../../../../components/StarRating';
 import MetadataBackfillModal from '../../../../components/MetadataBackfillModal';
 import MarkdownEditor from '../../../../components/MarkdownEditor';
+import Markdown from '../../../../components/Markdown';
 import { tmdbPosterUrl } from '../../../../lib/tmdb';
 
 export default function EditTVReview() {
@@ -281,6 +282,11 @@ export default function EditTVReview() {
               placeholder="Share your thoughts about this TV show..."
               required
             />
+          </div>
+
+          <div className="collection-form-group">
+            <label className="collection-form-label">Preview</label>
+            <Markdown>{formData.gist}</Markdown>
           </div>
 
           <div className="collection-form-group">

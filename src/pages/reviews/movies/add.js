@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import StarRating from '../../../components/StarRating';
 import TmdbSearch from '../../../components/TmdbSearch';
 import MarkdownEditor from '../../../components/MarkdownEditor';
+import Markdown from '../../../components/Markdown';
 
 export default function AddMovieReview() {
   const [formData, setFormData] = useState({
@@ -138,6 +139,11 @@ export default function AddMovieReview() {
               placeholder="Share your thoughts about this movie..."
               required
             />
+          </div>
+
+          <div className="collection-form-group">
+            <label className="collection-form-label">Preview</label>
+            <Markdown>{formData.gist}</Markdown>
           </div>
 
           <div className="collection-form-group">

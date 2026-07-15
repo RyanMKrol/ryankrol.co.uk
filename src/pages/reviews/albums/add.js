@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import StarRating from '../../../components/StarRating';
 import LastfmAlbumSearch from '../../../components/LastfmAlbumSearch';
 import MarkdownEditor from '../../../components/MarkdownEditor';
+import Markdown from '../../../components/Markdown';
 
 export default function AddAlbumReview() {
   const router = useRouter();
@@ -174,6 +175,11 @@ export default function AddAlbumReview() {
               placeholder="Share your favorite tracks from this album..."
               required
             />
+          </div>
+
+          <div className="collection-form-group">
+            <label className="collection-form-label">Preview</label>
+            <Markdown>{formData.highlights}</Markdown>
           </div>
 
           <div className="collection-form-group">
