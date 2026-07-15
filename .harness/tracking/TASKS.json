@@ -10858,7 +10858,7 @@
     {
       "id": "T395",
       "title": "Reduce perfumes review page pagination from 12 to 4 per page",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
