@@ -28,6 +28,8 @@
 > jest
 
 PASS src/components/StarRating.test.js
+PASS src/components/Pagination.test.js
+PASS src/__tests__/pages/reviews/perfumes/edit.test.js
 PASS src/__tests__/pages/projects/index.test.js
   ● Console
 
@@ -54,104 +56,25 @@ PASS src/__tests__/pages/projects/index.test.js
       at performWorkUntilDeadline (node_modules/scheduler/cjs/scheduler.development.js:45:48)
       at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
 
-PASS src/components/SortButtons.test.js
+PASS src/lib/scrollFade.test.js
 PASS src/components/ReviewCard.test.js
-PASS src/components/Pagination.test.js
-PASS src/components/perfumeVariants/Variant6Hybrid.test.js
-PASS src/components/Markdown.test.js
-PASS src/scripts/auditWorkouts.test.js
+PASS src/components/SortButtons.test.js
+PASS src/components/MarkdownEditor.test.js
+PASS test/pages/workouts/index.test.js
+PASS src/tests/workoutsIndex.test.js
+PASS src/pages/api/reviews/movies/update.test.js
+PASS src/scripts/backfillPersonalBests.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-    console.log
-      Backfilling 2 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 1 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at log (src/scripts/auditWorkouts.js:146:11)
-
-    console.log
-      Workouts: 2 stored, 0 skipped
-
-      at log (src/scripts/auditWorkouts.js:147:11)
-
-    console.log
-      Backfilling 2 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/2] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Stored workout + 0 exercises
-
-      at log (src/scripts/auditWorkouts.js:139:15)
-
-    console.log
-      [2/2] 2026-06-02 - Pull Day (w2)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-    console.log
-        Workout already exists, skipping
-
-      at log (src/scripts/auditWorkouts.js:142:15)
-
-    console.log
-      
-      === Backfill Summary ===
-
-      at log (src/scripts/auditWorkouts.js:146:11)
-
-    console.log
-      Workouts: 1 stored, 1 skipped
-
-      at log (src/scripts/auditWorkouts.js:147:11)
-
-    console.log
-      Backfilling 1 missing workouts...
-
-      at log (src/scripts/auditWorkouts.js:126:11)
-
-    console.log
-      [1/1] 2026-06-01 - Push Day (w1)
-
-      at log (src/scripts/auditWorkouts.js:134:13)
-
-PASS test/pages/workouts/index.test.js
-PASS src/components/PillGroup.test.js
-PASS src/scripts/stripBackfillEditedDates.test.js
+PASS src/components/NowPlaying.test.js
+PASS src/__tests__/pages/reviews/tv/add.test.js
+PASS src/pages/api/reviews/books/update.test.js
+PASS src/scripts/migrateAlbumsToIdTable.test.js
   ● Console
 
     console.log
@@ -159,17 +82,38 @@ PASS src/scripts/stripBackfillEditedDates.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/__tests__/pages/reviews/tv/edit.test.js
-PASS src/components/MarkdownEditor.test.js
-PASS src/scripts/migrateAlbumsToIdTable.test.js
+PASS src/scripts/stripAlbumProviderMetadata.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/__tests__/pages/reviews/perfumes/edit.test.js
+PASS src/scripts/stripOldBookProviderMetadata.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/migrateMoviesToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/scripts/migrateVinylToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
 PASS src/components/Header.test.js
   ● Console
 
@@ -397,10 +341,6 @@ PASS src/components/Header.test.js
       at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:6927:7)
       at setLoading (src/components/NowPlaying.js:22:9)
 
-PASS src/pages/api/reviews/movies/update.test.js
-PASS src/components/NowPlaying.test.js
-PASS src/pages/api/vinyl/add.test.js
-PASS src/__tests__/pages/reviews/albums/edit.test.js
 PASS src/lib/workoutBackfill.test.js
   ● Console
 
@@ -430,7 +370,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:86:11)
 
     console.log
-         📝 [BACKFILL] Stored exercise 1/1: Bench Press (0ms)
+         📝 [BACKFILL] Stored exercise 1/1: Bench Press (1ms)
 
       at log (src/lib/workoutBackfill.js:127:15)
 
@@ -465,7 +405,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 164ms
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 156ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -540,7 +480,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 155ms
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 156ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -610,7 +550,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 152ms
+      🎉 [BACKFILL] Backfill complete! Added 0 new workouts in 153ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -685,7 +625,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 153ms
+      🎉 [BACKFILL] Backfill complete! Added 1 new workouts in 155ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -805,7 +745,7 @@ PASS src/lib/workoutBackfill.test.js
       at log (src/lib/workoutBackfill.js:220:19)
 
     console.log
-      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 311ms
+      🎉 [BACKFILL] Backfill complete! Added 2 new workouts in 306ms
 
       at log (src/lib/workoutBackfill.js:236:13)
 
@@ -824,51 +764,136 @@ PASS src/lib/workoutBackfill.test.js
 
       at log (src/lib/workoutBackfill.js:246:15)
 
-PASS src/scripts/migrateTvToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/__tests__/pages/reviews/books/edit.test.js
-PASS src/scripts/backfillMissingExerciseRows.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 version env with Radar: https://dotenvx.com/radar
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/scripts/migrateMoviesToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/lib/workoutQueries.test.js
-PASS src/tests/workoutsIndex.test.js
+PASS src/__tests__/pages/reviews/perfumes/add.test.js
+PASS src/lib/chartTime.test.js
+PASS src/lib/backfillQueue.test.js
 PASS src/scripts/backfillIncompleteWorkoutMetrics.test.js
   ● Console
 
     console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/lib/dynamo.test.js
+PASS src/__tests__/pages/reviews/tv/edit.test.js
+PASS src/components/PillGroup.test.js
+PASS src/scripts/migrateWorkoutData.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+    console.log
+      💾 Starting to store 2 workouts in DynamoDB...
+
+      at log (src/scripts/migrateWorkoutData.js:67:11)
+
+    console.log
+      📝 Processing workout 1/2: "Push Day" (w1)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 1 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      📝 Processing workout 2/2: "Pull Day" (w2)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 1 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      
+      🎉 Migration completed!
+
+      at log (src/scripts/migrateWorkoutData.js:84:11)
+
+    console.log
+      📊 Summary: 2/2 workouts processed
+
+      at log (src/scripts/migrateWorkoutData.js:85:11)
+
+    console.log
+      💾 Starting to store 2 workouts in DynamoDB...
+
+      at log (src/scripts/migrateWorkoutData.js:67:11)
+
+    console.log
+      📝 Processing workout 1/2: "Push Day" (w1)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.error
+         ❌ Error processing workout w1: Error: boom
+          at Object.<anonymous> (/Users/ryankrol/Development/ryankrol.co.uk/src/scripts/migrateWorkoutData.test.js:28:30)
+          at Promise.then.completed (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at _runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:121:9)
+          at run (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:444:34)
+          at Object.worker (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/testWorker.js:106:12)
+
+      78 |       console.log(`   ✅ Processed workout with ${workout.exercises.length} exercises`);
+      79 |     } catch (error) {
+    > 80 |       console.error(`   ❌ Error processing workout ${workout.id}:`, error);
+         |               ^
+      81 |     }
+      82 |   }
+      83 |
+
+      at error (src/scripts/migrateWorkoutData.js:80:15)
+      at Object.<anonymous> (src/scripts/migrateWorkoutData.test.js:36:5)
+
+    console.log
+      📝 Processing workout 2/2: "Pull Day" (w2)
+
+      at log (src/scripts/migrateWorkoutData.js:73:13)
+
+    console.log
+         ✅ Processed workout with 0 exercises
+
+      at log (src/scripts/migrateWorkoutData.js:78:15)
+
+    console.log
+      
+      🎉 Migration completed!
+
+      at log (src/scripts/migrateWorkoutData.js:84:11)
+
+    console.log
+      📊 Summary: 1/2 workouts processed
+
+      at log (src/scripts/migrateWorkoutData.js:85:11)
+
+PASS src/__tests__/pages/reviews/albums/add.test.js
+PASS src/components/Markdown.test.js
+PASS src/scripts/migrateLegacyExerciseRows.test.js
+  ● Console
+
+    console.log
       [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
-PASS src/__tests__/pages/reviews/perfumes/add.test.js
-PASS src/pages/api/reviews/albums/add.test.js
-PASS src/__tests__/pages/reviews/movies/add.test.js
-PASS src/pages/api/reviews/books/update.test.js
-PASS src/pages/api/reviews/perfumes/update.test.js
-PASS src/__tests__/pages/reviews/tv/add.test.js
-PASS src/lib/backfillQueue.test.js
+PASS src/components/perfumeVariants/Variant6Hybrid.test.js
 PASS src/__tests__/pages/reviews/books/add.test.js
-PASS src/__tests__/pages/reviews/movies/edit.test.js
-PASS src/components/HomeSkeleton.test.js
 PASS src/lib/hardcover.test.js
   ● Console
 
@@ -948,23 +973,9 @@ PASS src/lib/hardcover.test.js
 
       at log (src/lib/hardcover.js:142:15)
 
-PASS src/lib/lastfm.test.js
-PASS src/scripts/migrateLegacyExerciseRows.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/scripts/stripOldBookProviderMetadata.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
+PASS src/pages/api/vinyl/add.test.js
+PASS src/__tests__/pages/reviews/albums/edit.test.js
+PASS src/__tests__/pages/reviews/movies/edit.test.js
 PASS src/lib/apiCache.test.js
   ● Console
 
@@ -1065,25 +1076,6 @@ PASS src/lib/apiCache.test.js
 
       at log (src/lib/apiCache.js:65:15)
 
-PASS src/scripts/stripAlbumProviderMetadata.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/scripts/migrateBooksToIdTable.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/__tests__/pages/reviews/albums/add.test.js
-PASS src/lib/tmdb.test.js
-PASS src/lib/workoutPagination.test.js
 PASS src/pages/api/github/repos.test.js
   ● Console
 
@@ -1200,16 +1192,31 @@ PASS src/pages/api/github/repos.test.js
       at handler (src/pages/api/github/repos.js:39:19)
       at Object.<anonymous> (src/pages/api/github/repos.test.js:197:7)
 
-PASS src/scripts/backfillPersonalBests.test.js
+PASS src/lib/rateLimit.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+      🚦 [RateLimit] Blocked key=test-key-0.32832776574498923 retryAfterSeconds=1
 
-      at _log (node_modules/dotenv/lib/main.js:139:11)
+      at log (src/lib/rateLimit.js:31:13)
 
-PASS src/lib/workoutMetrics.test.js
-PASS src/scripts/migrateVinylToIdTable.test.js
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-a-0.36138353024195013 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.8827571977734123 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+    console.log
+      🚦 [RateLimit] Blocked key=test-key-0.8827571977734123 retryAfterSeconds=1
+
+      at log (src/lib/rateLimit.js:31:13)
+
+PASS src/lib/workoutQueries.test.js
+PASS src/scripts/auditWorkouts.test.js
   ● Console
 
     console.log
@@ -1217,164 +1224,149 @@ PASS src/scripts/migrateVinylToIdTable.test.js
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
 
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 1 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 2 stored, 0 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 2 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/2] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Stored workout + 0 exercises
+
+      at log (src/scripts/auditWorkouts.js:139:15)
+
+    console.log
+      [2/2] 2026-06-02 - Pull Day (w2)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+    console.log
+        Workout already exists, skipping
+
+      at log (src/scripts/auditWorkouts.js:142:15)
+
+    console.log
+      
+      === Backfill Summary ===
+
+      at log (src/scripts/auditWorkouts.js:146:11)
+
+    console.log
+      Workouts: 1 stored, 1 skipped
+
+      at log (src/scripts/auditWorkouts.js:147:11)
+
+    console.log
+      Backfilling 1 missing workouts...
+
+      at log (src/scripts/auditWorkouts.js:126:11)
+
+    console.log
+      [1/1] 2026-06-01 - Push Day (w1)
+
+      at log (src/scripts/auditWorkouts.js:134:13)
+
+PASS src/pages/api/reviews/tv/update.test.js
+PASS src/scripts/backfillMissingExerciseRows.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/lib/dateFormat.test.js
+PASS src/scripts/migrateTvToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/components/CoverTile.test.js
+PASS src/pages/api/reviews/albums/add.test.js
 PASS src/scripts/migratePerfumeOwnership.test.js
   ● Console
 
     console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
 
       at _log (node_modules/dotenv/lib/main.js:139:11)
-
-PASS src/lib/dynamo.test.js
-PASS src/components/CoverTile.test.js
-PASS src/lib/masonryColumns.test.js
-PASS src/lib/perfumes.test.js
-PASS src/pages/api/reviews/movies/add.test.js
-PASS src/pages/api/reviews/books/add.test.js
-PASS src/lib/rateLimit.test.js
-  ● Console
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.5945584321694486 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-a-0.43147188949594883 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.6993199518336752 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-    console.log
-      🚦 [RateLimit] Blocked key=test-key-0.6993199518336752 retryAfterSeconds=1
-
-      at log (src/lib/rateLimit.js:31:13)
-
-PASS src/lib/chartTime.test.js
-PASS src/pages/api/lastfm/album-search.test.js
-  ● Console
-
-    console.log
-      🎵 [Last.fm] Album search: "Dune"
-
-      at log (src/pages/api/lastfm/album-search.js:38:15)
-
-    console.log
-      ✅ [Last.fm] Album search done in 0ms
-
-      at log (src/pages/api/lastfm/album-search.js:48:15)
-
-PASS src/scripts/migrateWorkoutData.test.js
-  ● Console
-
-    console.log
-      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
-
-      at _log (node_modules/dotenv/lib/main.js:139:11)
-
-    console.log
-      💾 Starting to store 2 workouts in DynamoDB...
-
-      at log (src/scripts/migrateWorkoutData.js:67:11)
-
-    console.log
-      📝 Processing workout 1/2: "Push Day" (w1)
-
-      at log (src/scripts/migrateWorkoutData.js:73:13)
-
-    console.log
-         ✅ Processed workout with 1 exercises
-
-      at log (src/scripts/migrateWorkoutData.js:78:15)
-
-    console.log
-      📝 Processing workout 2/2: "Pull Day" (w2)
-
-      at log (src/scripts/migrateWorkoutData.js:73:13)
-
-    console.log
-         ✅ Processed workout with 1 exercises
-
-      at log (src/scripts/migrateWorkoutData.js:78:15)
-
-    console.log
-      
-      🎉 Migration completed!
-
-      at log (src/scripts/migrateWorkoutData.js:84:11)
-
-    console.log
-      📊 Summary: 2/2 workouts processed
-
-      at log (src/scripts/migrateWorkoutData.js:85:11)
-
-    console.log
-      💾 Starting to store 2 workouts in DynamoDB...
-
-      at log (src/scripts/migrateWorkoutData.js:67:11)
-
-    console.log
-      📝 Processing workout 1/2: "Push Day" (w1)
-
-      at log (src/scripts/migrateWorkoutData.js:73:13)
-
-    console.error
-         ❌ Error processing workout w1: Error: boom
-          at Object.<anonymous> (/Users/ryankrol/Development/ryankrol.co.uk/src/scripts/migrateWorkoutData.test.js:28:30)
-          at Promise.then.completed (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:298:28)
-          at new Promise (<anonymous>)
-          at callAsyncCircusFn (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/utils.js:231:10)
-          at _callCircusTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:316:40)
-          at processTicksAndRejections (node:internal/process/task_queues:105:5)
-          at _runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:252:3)
-          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:126:9)
-          at _runTestsForDescribeBlock (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:121:9)
-          at run (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/run.js:71:3)
-          at runAndTransformResultsToJestFormat (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-          at jestAdapter (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-          at runTestInternal (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:367:16)
-          at runTest (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/runTest.js:444:34)
-          at Object.worker (/Users/ryankrol/Development/ryankrol.co.uk/node_modules/jest-runner/build/testWorker.js:106:12)
-
-      78 |       console.log(`   ✅ Processed workout with ${workout.exercises.length} exercises`);
-      79 |     } catch (error) {
-    > 80 |       console.error(`   ❌ Error processing workout ${workout.id}:`, error);
-         |               ^
-      81 |     }
-      82 |   }
-      83 |
-
-      at error (src/scripts/migrateWorkoutData.js:80:15)
-      at Object.<anonymous> (src/scripts/migrateWorkoutData.test.js:36:5)
-
-    console.log
-      📝 Processing workout 2/2: "Pull Day" (w2)
-
-      at log (src/scripts/migrateWorkoutData.js:73:13)
-
-    console.log
-         ✅ Processed workout with 0 exercises
-
-      at log (src/scripts/migrateWorkoutData.js:78:15)
-
-    console.log
-      
-      🎉 Migration completed!
-
-      at log (src/scripts/migrateWorkoutData.js:84:11)
-
-    console.log
-      📊 Summary: 1/2 workouts processed
-
-      at log (src/scripts/migrateWorkoutData.js:85:11)
 
 PASS src/lib/programmeStats.test.js
-PASS src/lib/pagination.test.js
-PASS src/lib/reviewText.test.js
+PASS src/pages/api/reviews/perfumes/update.test.js
+PASS src/components/HomeSkeleton.test.js
+PASS src/lib/masonryColumns.test.js
+PASS src/pages/api/reviews/movies/add.test.js
+PASS src/pages/api/reviews/tv/add.test.js
+PASS src/scripts/migrateBooksToIdTable.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/pages/api/tmdb/search.test.js
+  ● Console
+
+    console.log
+      🎬 [TMDB] Searching movie: "Dune"
+
+      at log (src/pages/api/tmdb/search.js:41:15)
+
+PASS src/lib/perfumes.test.js
+PASS src/lib/lastfm.test.js
+PASS src/scripts/stripBackfillEditedDates.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.1] injecting env (35) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+PASS src/lib/backfillEligibility.test.js
 PASS src/pages/api/books/search.test.js
   ● Console
 
@@ -1466,30 +1458,38 @@ PASS src/pages/api/books/search.test.js
 
       at log (src/pages/api/books/search.js:59:11)
 
-PASS src/pages/api/tmdb/search.test.js
+PASS src/__tests__/pages/reviews/movies/add.test.js
+PASS src/lib/workoutMetrics.test.js
+PASS src/lib/reviewText.test.js
+PASS src/__tests__/pages/reviews/books/edit.test.js
+PASS src/pages/api/lastfm/album-search.test.js
   ● Console
 
     console.log
-      🎬 [TMDB] Searching movie: "Dune"
+      🎵 [Last.fm] Album search: "Dune"
 
-      at log (src/pages/api/tmdb/search.js:41:15)
+      at log (src/pages/api/lastfm/album-search.js:38:15)
 
-PASS src/pages/api/reviews/tv/add.test.js
-PASS src/pages/api/reviews/tv/update.test.js
-PASS src/lib/hotTakes.test.js
-PASS src/lib/bookSearchQuery.test.js
+    console.log
+      ✅ [Last.fm] Album search done in 0ms
+
+      at log (src/pages/api/lastfm/album-search.js:48:15)
+
 PASS src/components/PerfumeCharacteristics.test.js
-PASS src/lib/dateFormat.test.js
-PASS src/lib/dateRange.test.js
-PASS src/lib/backfillEligibility.test.js
+PASS src/lib/bookSearchQuery.test.js
+PASS src/lib/hotTakes.test.js
+PASS src/pages/api/reviews/books/add.test.js
+PASS src/lib/pagination.test.js
+PASS src/lib/workoutPagination.test.js
 PASS src/lib/topOfMind.test.js
-PASS src/lib/scrollFade.test.js
+PASS src/lib/tmdb.test.js
+PASS src/lib/dateRange.test.js
 PASS src/components/BulkBackfillList.test.js
 
 Test Suites: 79 passed, 79 total
-Tests:       499 passed, 499 total
+Tests:       503 passed, 503 total
 Snapshots:   0 total
-Time:        4.818 s
+Time:        4.996 s, estimated 5 s
 Ran all test suites.
 
 > ryankrol.co.uk@1.0.0 build
@@ -1593,24 +1593,24 @@ Route (pages)                                 Size  First Load JS
 ├ ƒ /api/workouts/stats                        0 B         102 kB
 ├ ○ /dev/book-card-designs                 1.61 kB         149 kB
 ├ ○ /dev/cache                             1.94 kB         104 kB
-├ ○ /exercises/[exerciseName] (758 ms)     5.28 kB         188 kB
+├ ○ /exercises/[exerciseName] (825 ms)     5.28 kB         188 kB
 ├ ○ /hot-takes                             3.52 kB         106 kB
 ├ ○ /hot-takes/add                         1.81 kB         104 kB
 ├ ○ /hot-takes/edit                        3.67 kB         106 kB
 ├ ○ /hot-takes/edit/[id]                   2.16 kB         105 kB
 ├ ○ /listening                             1.87 kB         104 kB
 ├ ○ /projects                              3.16 kB         106 kB
-├ ○ /reviews/albums                        2.23 kB         149 kB
+├ ○ /reviews/albums                        2.23 kB         150 kB
 ├ ○ /reviews/albums/add                    2.52 kB         109 kB
 ├ ○ /reviews/albums/backfill               1.71 kB         109 kB
-├ ○ /reviews/albums/edit                   3.42 kB         151 kB
+├ ○ /reviews/albums/edit                   3.41 kB         151 kB
 ├ ○ /reviews/albums/edit/[id]              2.39 kB         110 kB
-├ ○ /reviews/books                          2.2 kB         149 kB
+├ ○ /reviews/books                          2.2 kB         150 kB
 ├ ○ /reviews/books/add                        6 kB         108 kB
 ├ ○ /reviews/books/backfill                1.74 kB         109 kB
 ├ ○ /reviews/books/edit                    3.41 kB         151 kB
 ├ ○ /reviews/books/edit/[id]               2.25 kB         109 kB
-├ ○ /reviews/movies                        2.16 kB         149 kB
+├ ○ /reviews/movies (825 ms)               2.16 kB         150 kB
 ├ ○ /reviews/movies/add                    1.22 kB         109 kB
 ├ ○ /reviews/movies/backfill               1.72 kB         109 kB
 ├ ○ /reviews/movies/edit                   3.41 kB         151 kB
@@ -1619,22 +1619,22 @@ Route (pages)                                 Size  First Load JS
 ├ ○ /reviews/perfumes/add                  3.59 kB         106 kB
 ├ ○ /reviews/perfumes/edit                   800 B         148 kB
 ├ ○ /reviews/perfumes/edit/[id]             3.9 kB         106 kB
-├ ○ /reviews/tv                            2.17 kB         149 kB
+├ ○ /reviews/tv                            2.17 kB         150 kB
 ├ ○ /reviews/tv/add                        1.22 kB         109 kB
 ├ ○ /reviews/tv/backfill                   1.72 kB         109 kB
 ├ ○ /reviews/tv/edit                       3.42 kB         151 kB
 ├ ○ /reviews/tv/edit/[id]                  2.33 kB         110 kB
 ├ ○ /tom                                   2.53 kB         147 kB
-├ ○ /vinyl (759 ms)                        4.73 kB         107 kB
+├ ○ /vinyl                                 4.73 kB         107 kB
 ├ ○ /vinyl/add                             1.52 kB         108 kB
 ├ ○ /vinyl/edit                            1.34 kB         104 kB
 ├ ○ /vinyl/edit/[id]                       1.67 kB         108 kB
-├ ○ /workouts (758 ms)                     5.54 kB         188 kB
+├ ○ /workouts (825 ms)                     5.54 kB         188 kB
 └ ○ /workouts/[id]                         2.48 kB         105 kB
 + First Load JS shared by all               114 kB
   ├ chunks/framework-4a99af1472046e21.js   57.7 kB
   ├ chunks/main-68e6916c6a9fbbfe.js        36.8 kB
-  ├ css/155156e02e815d64.css               11.2 kB
+  ├ css/3977de1e68354bcc.css               11.2 kB
   └ other shared chunks (total)            7.87 kB
 
 ○  (Static)   prerendered as static content

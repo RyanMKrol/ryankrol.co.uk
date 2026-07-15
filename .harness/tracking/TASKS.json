@@ -10768,7 +10768,7 @@
     {
       "id": "T392",
       "title": "Extend read-more/show-less truncation from book cards to movies/tv/albums cards",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
