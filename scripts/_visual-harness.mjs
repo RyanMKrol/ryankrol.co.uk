@@ -34,6 +34,8 @@ const PLACEHOLDER_PNG = Buffer.from(
 
 // Markdown body (bold + list) — its rendering is the T273 guard. And a plain one to compare.
 const MD = 'A **staggering** piece of work.\n\nWhat lands:\n\n- the _craft_\n- the pacing\n- the ending';
+// Markdown table (T394) — tests GFM table rendering with borders/padding/header styling.
+const MD_TABLE = 'A remarkable film across every dimension.\n\n| Aspect | Rating | Notes |\n| --- | --- | --- |\n| Cinematography | 9/10 | Stunning visuals |\n| Pacing | 8/10 | Engrossing throughout |\n| Performances | 9/10 | Outstanding ensemble |\n';
 const PLAIN = 'A solid, enjoyable one — plain text, no Markdown, for comparison.';
 const lastfmMeta = {
   mbid: '11111111-1111-1111-1111-111111111111', url: 'https://www.last.fm/music/x',
@@ -63,7 +65,7 @@ const movies = [
   mkScreen('Everything Everywhere All At Once', 5, '02-07-2026', { review_text: LONG_REVIEW }),
   mkScreen('The Grand Budapest Hotel', 5, '14-03-2025'),
   mkScreen('Inception', 4, '30-09-2025'),
-  mkScreen('Parasite', 5, '21-05-2026'),
+  mkScreen('Parasite', 5, '21-05-2026', { review_text: MD_TABLE }),
   mkScreen('The Social Network', 4, '09-02-2026'),
   mkScreen('Whiplash', 3, '11-12-2025'),
   // Missing tmdbId — needsMovieBackfill(item) is true, so these surface on /reviews/movies/backfill.

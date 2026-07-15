@@ -258,6 +258,34 @@
   list-style-position: outside;
 }
 
+/* Scoped GFM table styling (T394) — Markdown tables rendered inside poster-banner snippets
+   use Collection design tokens for consistent typography and borders. */
+.poster-banner-snippet table {
+  border-collapse: collapse;
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+
+.poster-banner-snippet th {
+  text-align: left;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+  background-color: var(--color-hairline);
+  padding: 0.5rem 0.65rem;
+  border-bottom: var(--border-width) solid var(--color-ink);
+  font-family: var(--font-body);
+}
+
+.poster-banner-snippet td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--color-hairline-strong);
+  font-family: var(--font-body);
+  color: var(--color-ink-soft);
+}
+
 .poster-banner-grid {
   display: flex;
   gap: 1.5rem;
@@ -311,6 +339,34 @@
 .spine-cover-snippet ol {
   list-style-type: decimal;
   list-style-position: outside;
+}
+
+/* Scoped GFM table styling (T394) — Markdown tables rendered inside spine-cover snippets
+   use Collection design tokens for consistent typography and borders. */
+.spine-cover-snippet table {
+  border-collapse: collapse;
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+
+.spine-cover-snippet th {
+  text-align: left;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+  background-color: var(--color-hairline);
+  padding: 0.5rem 0.65rem;
+  border-bottom: var(--border-width) solid var(--color-ink);
+  font-family: var(--font-body);
+}
+
+.spine-cover-snippet td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--color-hairline-strong);
+  font-family: var(--font-body);
+  color: var(--color-ink);
 }
 
 .spine-cover-snippet ul {
@@ -859,6 +915,34 @@ a:hover {
 .review-text ul {
   list-style-type: disc;
   list-style-position: outside;
+}
+
+/* Scoped GFM table styling (T394) — Markdown tables rendered inside review-text
+   use Collection design tokens for consistent typography and borders. */
+.review-text table {
+  border-collapse: collapse;
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+
+.review-text th {
+  text-align: left;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+  background-color: var(--color-hairline);
+  padding: 0.5rem 0.65rem;
+  border-bottom: var(--border-width) solid var(--color-ink);
+  font-family: var(--font-body);
+}
+
+.review-text td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--color-hairline-strong);
+  font-family: var(--font-body);
+  color: var(--color-text-secondary);
 }
 
 .review-date {
@@ -3706,6 +3790,36 @@ body::before {
 
 .home-top-of-mind-panel-inner {
   padding: 1.5rem;
+  overflow-x: auto;
+}
+
+/* Scoped GFM table styling (T394) — Markdown tables rendered inside home-top-of-mind-panel-inner
+   use Collection design tokens for consistent typography and borders. */
+.home-top-of-mind-panel-inner table {
+  border-collapse: collapse;
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+
+.home-top-of-mind-panel-inner th {
+  text-align: left;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+  background-color: var(--color-hairline);
+  padding: 0.5rem 0.65rem;
+  border-bottom: var(--border-width) solid var(--color-ink);
+  font-family: var(--font-body);
+}
+
+.home-top-of-mind-panel-inner td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--color-hairline-strong);
+  font-family: var(--font-body);
+  color: var(--color-ink);
 }
 
 .home-top-of-mind-panel-label {
@@ -3888,6 +4002,34 @@ body::before {
 .perfume-v1-description ul {
   list-style-type: disc;
   list-style-position: outside;
+}
+
+/* Scoped GFM table styling (T394) — Markdown tables rendered inside perfume-v1-description
+   use Collection design tokens for consistent typography and borders. */
+.perfume-v1-description table {
+  border-collapse: collapse;
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+
+.perfume-v1-description th {
+  text-align: left;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+  background-color: var(--color-hairline);
+  padding: 0.5rem 0.65rem;
+  border-bottom: var(--border-width) solid var(--color-ink);
+  font-family: var(--font-body);
+}
+
+.perfume-v1-description td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--color-hairline-strong);
+  font-family: var(--font-body);
+  color: var(--color-ink-mute);
 }
 
 .perfume-v6-card {
