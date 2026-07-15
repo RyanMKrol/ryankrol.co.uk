@@ -10795,7 +10795,7 @@
     {
       "id": "T393",
       "title": "Add live Markdown preview pane to all review + hot-takes add/edit forms",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": null,
       "tags": [
