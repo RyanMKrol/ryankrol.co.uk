@@ -10764,6 +10764,33 @@
         "workType": "component",
         "risk": []
       }
+    },
+    {
+      "id": "T392",
+      "title": "Extend read-more/show-less truncation from book cards to movies/tv/albums cards",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "review-cards",
+        "masonry-grid"
+      ],
+      "scope": [
+        "src/components/ReviewCard.js",
+        "src/styles/globals.css",
+        "src/hooks/",
+        "scripts/_visual-harness.mjs",
+        "CLAUDE.md"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T392.md",
+      "facets": {
+        "layer": "ui",
+        "workType": "component",
+        "risk": []
+      }
     }
   ]
 }
