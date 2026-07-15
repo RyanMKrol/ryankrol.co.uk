@@ -10791,6 +10791,93 @@
         "workType": "component",
         "risk": []
       }
+    },
+    {
+      "id": "T393",
+      "title": "Add live Markdown preview pane to all review + hot-takes add/edit forms",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "markdown",
+        "ux",
+        "reviews",
+        "hot-takes"
+      ],
+      "scope": [
+        "src/pages/reviews/movies/add.js",
+        "src/pages/reviews/movies/edit/[id].js",
+        "src/pages/reviews/tv/add.js",
+        "src/pages/reviews/tv/edit/[id].js",
+        "src/pages/reviews/books/add.js",
+        "src/pages/reviews/books/edit/[id].js",
+        "src/pages/reviews/albums/add.js",
+        "src/pages/reviews/albums/edit/[id].js",
+        "src/pages/reviews/perfumes/add.js",
+        "src/pages/reviews/perfumes/edit/[id].js",
+        "src/pages/hot-takes/add.js",
+        "src/pages/hot-takes/edit/[id].js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T393.md",
+      "facets": {
+        "layer": "page",
+        "workType": "component",
+        "risk": [
+          "cross-cutting"
+        ]
+      }
+    },
+    {
+      "id": "T394",
+      "title": "Style GFM Markdown tables for the Collection design system",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "markdown",
+        "design-system",
+        "style"
+      ],
+      "scope": [
+        "src/styles/globals.css",
+        "scripts/_visual-harness.mjs"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T394.md",
+      "facets": {
+        "layer": "style",
+        "workType": "style",
+        "risk": []
+      }
+    },
+    {
+      "id": "T395",
+      "title": "Reduce perfumes review page pagination from 12 to 4 per page",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "perfumes",
+        "pagination",
+        "config"
+      ],
+      "scope": [
+        "src/pages/reviews/perfumes/index.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": false,
+      "spec": ".harness/tasks/T395.md",
+      "facets": {
+        "layer": "page",
+        "workType": "config",
+        "risk": []
+      }
     }
   ]
 }
