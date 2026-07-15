@@ -15,7 +15,7 @@ const SORT_FIELDS = [
   { key: 'score', label: 'score', defaultValue: 'score', flippedValue: 'score-asc', defaultArrow: '↓', flippedArrow: '↑' },
 ];
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 4;
 
 const OWNERSHIP_FILTER_OPTIONS = [
   { value: 'all', label: 'all' },
