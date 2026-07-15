@@ -33,5 +33,10 @@
     "failed": true,
     "reason": "review-failed: superseded by T371 — re-scoped with a satisfiable done-when (excludes legitimate test fixtures) and widened scope to delete the obsolete migration script blocking lib removal",
     "at": "2026-07-11T22:47:02Z"
+  },
+  "T391": {
+    "failed": true,
+    "reason": "review-failed: superseded by T392 — identical spec with CLAUDE.md added to scope, fixing the scope-coverage gap that blocked the first attempt",
+    "at": "2026-07-15T10:02:35Z"
   }
 }
