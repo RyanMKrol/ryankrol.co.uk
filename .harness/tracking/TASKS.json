@@ -10878,6 +10878,32 @@
         "workType": "config",
         "risk": []
       }
+    },
+    {
+      "id": "T396",
+      "title": "Make single-newline soft breaks render as visible line breaks in Markdown block mode",
+      "status": "pending",
+      "dependsOn": [],
+      "gate": null,
+      "tags": [
+        "markdown",
+        "bugfix"
+      ],
+      "facets": {
+        "layer": "ui",
+        "workType": "bugfix",
+        "risk": [
+          "cross-cutting"
+        ]
+      },
+      "scope": [
+        "src/components/Markdown.js",
+        "src/components/Markdown.test.js"
+      ],
+      "design": null,
+      "verify": [],
+      "expectsTest": true,
+      "spec": ".harness/tasks/T396.md"
     }
   ]
 }
