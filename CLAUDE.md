@@ -173,7 +173,7 @@ src/lib (the data layer)
 | `src/lib/perfumes.js` | Validators (`validatePerfumeRating`, `validateLongevity`, `validateProjection`, `validateSeasons`, `validateApplicationSpots`, `validateFragranticaUrl`) + `perfumeId` — shared by the perfume API routes |
 | `src/components/*` | Presentational components (see below) |
 | `src/components/perfumeVariants/Variant6Hybrid.js` | The perfume review card, used directly by `src/pages/reviews/perfumes/index.js` (bypasses `ReviewCard`) |
-| `src/hooks/*` | `useChartTheme`, `useKonamiCode`, `useMatrixActive` |
+| `src/hooks/*` | `useChartTheme`, `useKonamiCode`, `useMatrixActive`, `useExpandableText` |
 | `src/styles/globals.css` | CSS custom properties: `:root` = Collection design tokens (the single site palette) + `html.matrix-active` override |
 | `src/scripts/*` | One-shot ops scripts (table creation, data migration, audits) — run via npm |
 | `scripts/visual-check.mjs` + `scripts/_visual-harness.mjs` | Hermetic Playwright visual check: `next start` with every `/api/*` served from synthetic fixtures + external images placeholdered, screenshots every `PAGES` route AND every `FLOWS` interaction (sort/filter/search/toggle — ~65 captures) to gitignored `scripts/visual-out/`, and writes `manifest.json` (`name`/`description`/`flow`/`covers`) so an auditor can match a task's scope to the relevant shots. Each `PAGES` `waitFor` is a presence gate. `_visual-harness.mjs` owns `PAGES`/`FLOWS`/fixtures — a **living artifact**, keep current (incl. a new `FLOWS` entry per new interactive state). Wired as the harness `VISUAL_VERIFY_HOOK` (auto-fires on `page`/`style`/`ui` tasks); `VISUAL_CHECK_ONLY=<name>` filters locally. Local/loop-only, **not** in CI. See the "Visual verification" note in `.harness/custom/CLAUDE.md` |

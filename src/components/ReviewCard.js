@@ -1,9 +1,9 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import CoverTile, { gradientForKey } from './CoverTile';
 import StarRating from './StarRating';
 import Markdown from './Markdown';
 import { formatReviewDate } from '../lib/dateFormat';
-import { truncateReviewText } from '../lib/reviewText';
+import { useExpandableText } from '../hooks/useExpandableText';
 
 function splitHighlights(highlights) {
   if (!highlights) return [];
@@ -16,6 +16,8 @@ function splitHighlights(highlights) {
 
 function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts, gradient }) {
   const tracks = splitHighlights(getThoughts());
+  const reviewText = item.review_text || '';
+  const { displayText, truncated, expanded, toggle } = useExpandableText(reviewText, 260);
 
   return (
     <div className="square-cover-card">
@@ -45,16 +47,28 @@ function SquareCoverCard({ item, getTitle, getAuthor, getRating, getThoughts, gr
             ))}
           </p>
         )}
+        {reviewText && (
+          <div className="square-cover-snippet">
+            <Markdown>{displayText}</Markdown>
+          </div>
+        )}
+        {truncated && (
+          <button
+            type="button"
+            className="review-expand-btn"
+            onClick={toggle}
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
 function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
-  const [expanded, setExpanded] = useState(false);
   const fullText = getThoughts();
-  const { text: previewText, truncated } = truncateReviewText(fullText, 260);
-  const displayText = expanded ? fullText : previewText;
+  const { displayText, truncated, expanded, toggle } = useExpandableText(fullText, 260);
 
   const metaParts = [
     item.author,
@@ -67,15 +81,6 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
   const rating = getRating();
   const metaText = metaParts.join(' · ');
   const tileStyle = { background: gradient || gradientForKey(item.id || title) };
-  const expandBtn = truncated && (
-    <button
-      type="button"
-      className="spine-cover-expand-btn"
-      onClick={() => setExpanded((e) => !e)}
-    >
-      {expanded ? 'Show less' : 'Read more'}
-    </button>
-  );
 
   return (
     <div className="spine-cover-card spine-v4-card">
@@ -98,7 +103,51 @@ function SpineCoverCard({ item, getTitle, getRating, getThoughts, gradient }) {
             <Markdown>{displayText}</Markdown>
           </div>
         )}
-        {expandBtn}
+        {truncated && (
+          <button
+            type="button"
+            className="review-expand-btn"
+            onClick={toggle}
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PosterBannerCard({ item, getTitle, getRating, getThoughts, formatReviewDate, gradient }) {
+  const fullThoughts = getThoughts();
+  const { displayText, truncated, expanded, toggle } = useExpandableText(fullThoughts, 260);
+
+  return (
+    <div className="poster-banner-card">
+      <div
+        className="poster-banner"
+        style={{ background: gradient || gradientForKey(item.id || getTitle()) }}
+      >
+        <h3 className="poster-banner-title">{getTitle()}</h3>
+      </div>
+      <div className="poster-banner-body">
+        <div className="poster-banner-meta">
+          <StarRating rating={getRating()} readOnly />
+          {item.date && <span className="poster-banner-date">{formatReviewDate(item.date)}</span>}
+        </div>
+        {fullThoughts && (
+          <div className="poster-banner-snippet">
+            <Markdown>{displayText}</Markdown>
+          </div>
+        )}
+        {truncated && (
+          <button
+            type="button"
+            className="review-expand-btn"
+            onClick={toggle}
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -182,25 +231,14 @@ export default function ReviewCard({ item, type, isLast = false, styleVariant, g
 
   if (styleVariant === 'poster-banner') {
     return (
-      <div className="poster-banner-card">
-        <div
-          className="poster-banner"
-          style={{ background: gradient || gradientForKey(item.id || getTitle()) }}
-        >
-          <h3 className="poster-banner-title">{getTitle()}</h3>
-        </div>
-        <div className="poster-banner-body">
-          <div className="poster-banner-meta">
-            <StarRating rating={getRating()} readOnly />
-            {item.date && <span className="poster-banner-date">{formatReviewDate(item.date)}</span>}
-          </div>
-          {getThoughts() && (
-            <div className="poster-banner-snippet">
-              <Markdown>{getThoughts()}</Markdown>
-            </div>
-          )}
-        </div>
-      </div>
+      <PosterBannerCard
+        item={item}
+        getTitle={getTitle}
+        getRating={getRating}
+        getThoughts={getThoughts}
+        formatReviewDate={formatReviewDate}
+        gradient={gradient}
+      />
     );
   }
 

@@ -63,6 +63,44 @@ describe('ReviewCard poster-banner variant', () => {
     expect(list).not.toBeNull();
     expect(list.querySelectorAll('li')).toHaveLength(2);
   });
+
+  it('truncates long review text and shows a Read more button', async () => {
+    const user = userEvent.setup();
+    const filler = 'word '.repeat(70).trim();
+    const item = {
+      id: 'movie-2',
+      title: 'Inception',
+      rating: 5,
+      review_text: `This is a long review. ${filler} The ending is ambiguous.`,
+      date: '01-01-2026',
+    };
+
+    render(<ReviewCard item={item} type="movie" styleVariant="poster-banner" />);
+
+    const readMoreBtn = screen.getByRole('button', { name: 'Read more' });
+    expect(readMoreBtn).toBeInTheDocument();
+    expect(screen.queryByText(/The ending is ambiguous/)).not.toBeInTheDocument();
+
+    await user.click(readMoreBtn);
+
+    expect(screen.getByText(/The ending is ambiguous/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show less' })).toBeInTheDocument();
+  });
+
+  it('hides the expand button for short review text', () => {
+    const item = {
+      id: 'movie-3',
+      title: 'Shortfilm',
+      rating: 4,
+      review_text: 'A brief review.',
+      date: '01-01-2026',
+    };
+
+    render(<ReviewCard item={item} type="movie" styleVariant="poster-banner" />);
+
+    expect(screen.queryByRole('button', { name: 'Read more' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Show less' })).not.toBeInTheDocument();
+  });
 });
 
 describe('ReviewCard square-cover variant (inline mode)', () => {
@@ -83,5 +121,47 @@ describe('ReviewCard square-cover variant (inline mode)', () => {
     expect(screen.getByText(/15 Step/)).toBeInTheDocument();
     expect(document.querySelector('ul')).toBeNull();
     expect(document.querySelector('li')).toBeNull();
+  });
+
+  it('truncates long review text and shows a Read more button', async () => {
+    const user = userEvent.setup();
+    const filler = 'word '.repeat(70).trim();
+    const item = {
+      id: 'album-2',
+      title: 'OK Computer',
+      artist: 'Radiohead',
+      rating: 5,
+      highlights: 'Great album',
+      review_text: `A masterpiece of the 90s. ${filler} This album shaped everything.`,
+      date: '01-01-2026',
+    };
+
+    render(<ReviewCard item={item} type="album" styleVariant="square-cover" />);
+
+    const readMoreBtn = screen.getByRole('button', { name: 'Read more' });
+    expect(readMoreBtn).toBeInTheDocument();
+    expect(screen.queryByText(/This album shaped everything/)).not.toBeInTheDocument();
+
+    await user.click(readMoreBtn);
+
+    expect(screen.getByText(/This album shaped everything/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show less' })).toBeInTheDocument();
+  });
+
+  it('hides the expand button for short review text', () => {
+    const item = {
+      id: 'album-3',
+      title: 'Brief Album',
+      artist: 'Artist',
+      rating: 4,
+      highlights: 'Good music',
+      review_text: 'Short review here.',
+      date: '01-01-2026',
+    };
+
+    render(<ReviewCard item={item} type="album" styleVariant="square-cover" />);
+
+    expect(screen.queryByRole('button', { name: 'Read more' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Show less' })).not.toBeInTheDocument();
   });
 });

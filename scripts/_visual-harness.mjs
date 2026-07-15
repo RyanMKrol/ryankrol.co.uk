@@ -46,15 +46,21 @@ const lastfmMeta = {
 // Titles intentionally UNSORTED, with a spread of ratings + dates so sort flows visibly reorder.
 // Some titles contain "the"/a distinctive word so search flows visibly filter.
 const mkScreen = (title, rating, date, over = {}) => ({
-  id: `id-${title.replace(/\W+/g, '-').toLowerCase()}`, title, rating, review_text: over.md ? MD : PLAIN,
+  id: `id-${title.replace(/\W+/g, '-').toLowerCase()}`, title, rating, review_text: over.md ? MD : (over.review_text || PLAIN),
   date, tmdbId: 100, mediaType: over.mediaType || 'movie', posterPath: '/synthetic.jpg',
   tmdbOverview: 'Synthetic overview.', tmdbDate: '2021-01-01',
 });
+// Long review for truncation test (T392)
+const LONG_REVIEW = 'An absolutely masterful piece of cinema. Every frame is composed with surgical '
+  + 'precision, every line of dialogue serves the narrative, and the performances elevate every scene. '
+  + 'The story unfolds with perfect pacing — never rushed, never sluggish. The ending lands with the '
+  + 'weight of inevitability. This is the kind of film that stays with you, that reveals new layers '
+  + 'on rewatch. A genuine classic.';
 const movies = [
   mkScreen('Arrival', 5, '02-01-2026', { md: true }),
   mkScreen('The Batman', 3, '18-11-2025'),
   mkScreen('Dune', 4, '25-06-2026', { md: true }),
-  mkScreen('Everything Everywhere All At Once', 5, '02-07-2026'),
+  mkScreen('Everything Everywhere All At Once', 5, '02-07-2026', { review_text: LONG_REVIEW }),
   mkScreen('The Grand Budapest Hotel', 5, '14-03-2025'),
   mkScreen('Inception', 4, '30-09-2025'),
   mkScreen('Parasite', 5, '21-05-2026'),
@@ -81,7 +87,7 @@ const tmdbSearchResults = [
 const tv = [
   mkScreen('Andor', 5, '20-05-2026', { mediaType: 'tv', md: true }),
   mkScreen('Breaking Bad', 5, '01-01-2025', { mediaType: 'tv' }),
-  mkScreen('The Bear', 4, '12-06-2026', { mediaType: 'tv' }),
+  mkScreen('The Bear', 4, '12-06-2026', { mediaType: 'tv', review_text: LONG_REVIEW }),
   mkScreen('Fleabag', 5, '03-03-2026', { mediaType: 'tv' }),
   mkScreen('The Leftovers', 4, '28-08-2025', { mediaType: 'tv' }),
   mkScreen('Severance', 5, '15-04-2026', { mediaType: 'tv' }),
@@ -118,20 +124,26 @@ const books = [
   { ...mkBook('Ultra-Processed People', 'Chris van Tulleken', 4, '12-03-2026'), review_text: ULTRA_PROCESSED_PEOPLE_TEXT },
   { ...mkBook('The Horus Heresy 42: Garro', 'James Swallow', 4, '04-06-2025'), review_text: HORUS_HERESY_GARRO_TEXT },
 ];
-const mkAlbum = (title, artist, rating, date, md) => ({
+const mkAlbum = (title, artist, rating, date, md, review_text) => ({
   id: `al-${title.replace(/\W+/g, '-').toLowerCase()}`, title, artist, rating, highlights: md ? MD : PLAIN,
-  date, thumbnail: 'https://example.invalid/album.png', lastfm: lastfmMeta,
+  date, thumbnail: 'https://example.invalid/album.png', lastfm: lastfmMeta, review_text,
 });
+// Long album review for truncation test (T392)
+const LONG_ALBUM_REVIEW = 'A genuinely staggering piece of work across every axis. The production '
+  + 'is immaculate, the performances land, and the songwriting reaches for something both personal '
+  + 'and universal — and *lands*. What makes it endure is how the album deepens on the fifth, tenth, '
+  + 'fiftieth listen; there is always another layer. The sonic architecture is meticulous — every '
+  + 'element earns its place. A masterpiece.';
 const albums = [
-  mkAlbum('For Ever', 'Jungle', 4, '01-03-2026', true),
-  mkAlbum('Blonde', 'Frank Ocean', 5, '12-01-2026'),
-  mkAlbum('In Rainbows', 'Radiohead', 5, '20-06-2026'),
-  mkAlbum('Currents', 'Tame Impala', 4, '09-09-2025'),
-  mkAlbum('Melodrama', 'Lorde', 5, '15-02-2026', true),
-  mkAlbum('Channel Orange', 'Frank Ocean', 4, '28-10-2025'),
-  mkAlbum('Discovery', 'Daft Punk', 5, '03-05-2026'),
-  mkAlbum('An Awesome Wave', 'alt-J', 3, '17-07-2025'),
-  mkAlbum('Igor', 'Tyler, the Creator', 4, '24-04-2026'),
+  mkAlbum('For Ever', 'Jungle', 4, '01-03-2026', true, undefined),
+  mkAlbum('Blonde', 'Frank Ocean', 5, '12-01-2026', false, LONG_ALBUM_REVIEW),
+  mkAlbum('In Rainbows', 'Radiohead', 5, '20-06-2026', false, undefined),
+  mkAlbum('Currents', 'Tame Impala', 4, '09-09-2025', false, undefined),
+  mkAlbum('Melodrama', 'Lorde', 5, '15-02-2026', true, undefined),
+  mkAlbum('Channel Orange', 'Frank Ocean', 4, '28-10-2025', false, undefined),
+  mkAlbum('Discovery', 'Daft Punk', 5, '03-05-2026', false, undefined),
+  mkAlbum('An Awesome Wave', 'alt-J', 3, '17-07-2025', false, undefined),
+  mkAlbum('Igor', 'Tyler, the Creator', 4, '24-04-2026', false, undefined),
 ];
 // Perfumes — ownership MIX (≥2 each of Sample / Travel size / Full bottle) so every filter shows results.
 const mkPerfume = (title, designer, rating, ownership, date, over = {}) => ({
@@ -432,7 +444,52 @@ const bookCardDesignFlows = [
   },
 ];
 
-export const FLOWS = [...reviewFlows, ...bespokeFlows, ...bookCardDesignFlows];
+const expandableTextFlows = [
+  {
+    name: 'reviews-albums-read-more',
+    path: '/reviews/albums',
+    waitFor: ['.square-cover-card'],
+    flow: 'Click the "Read more" button on the Blonde card; it expands to show the full review text.',
+    description: 'Album square-cover card in expanded read-more state (T392).',
+    covers: ['src/pages/reviews/albums/index.js', 'src/components/ReviewCard.js', 'src/styles/globals.css'],
+    actions: async (page) => {
+      const buttons = page.locator('.review-expand-btn');
+      if (await buttons.count() > 0) {
+        await buttons.first().click();
+      }
+    },
+  },
+  {
+    name: 'reviews-movies-read-more',
+    path: '/reviews/movies',
+    waitFor: ['.poster-banner-card'],
+    flow: 'Click the "Read more" button on Everything Everywhere All At Once; it expands to show the full review.',
+    description: 'Movie poster-banner card in expanded read-more state (T392).',
+    covers: ['src/pages/reviews/movies/index.js', 'src/components/ReviewCard.js', 'src/styles/globals.css'],
+    actions: async (page) => {
+      const buttons = page.locator('.review-expand-btn');
+      if (await buttons.count() > 0) {
+        await buttons.first().click();
+      }
+    },
+  },
+  {
+    name: 'reviews-tv-read-more',
+    path: '/reviews/tv',
+    waitFor: ['.poster-banner-card'],
+    flow: 'Click the "Read more" button on The Bear card; it expands to show the full review.',
+    description: 'TV poster-banner card in expanded read-more state (T392).',
+    covers: ['src/pages/reviews/tv/index.js', 'src/components/ReviewCard.js', 'src/styles/globals.css'],
+    actions: async (page) => {
+      const buttons = page.locator('.review-expand-btn');
+      if (await buttons.count() > 0) {
+        await buttons.first().click();
+      }
+    },
+  },
+];
+
+export const FLOWS = [...reviewFlows, ...bespokeFlows, ...bookCardDesignFlows, ...expandableTextFlows];
 
 // ── Request interception ───────────────────────────────────────────────────────────────────────
 /** Serve every `/api/*` from a fixture, replace every EXTERNAL image with a placeholder — fully hermetic. */
