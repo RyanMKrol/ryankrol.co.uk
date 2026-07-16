@@ -77,9 +77,16 @@ export default function Markdown({ children, inline = false }) {
     );
   }
 
+  // Wrap block-mode output in a scoping hook so paragraph spacing can be
+  // restored without a bare `p { margin }` rule (the global `* { margin: 0 }`
+  // reset in globals.css otherwise collapses every paragraph gap to nothing —
+  // see the `.markdown-body p` rule). The wrapper is inert layout-wise; all
+  // snippet/table styling uses descendant selectors that pass through it.
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-      {preserveBlankLines(preserveSingleNewlines(children))}
-    </ReactMarkdown>
+    <div className="markdown-body">
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {preserveBlankLines(preserveSingleNewlines(children))}
+      </ReactMarkdown>
+    </div>
   );
 }

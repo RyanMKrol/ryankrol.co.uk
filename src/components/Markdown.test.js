@@ -132,4 +132,20 @@ describe('Markdown', () => {
     expect(container.textContent).toContain('line one');
     expect(container.textContent).toContain('line two');
   });
+
+  it('wraps block-mode output in a .markdown-body element so paragraph spacing can be scoped', () => {
+    // The `.markdown-body p` rule in globals.css restores the paragraph margin
+    // the global `* { margin: 0 }` reset removes. Without this wrapper the rule
+    // has nothing to hook onto, so blank-line paragraph breaks collapse to no
+    // visible gap. Locking the wrapper in stops a refactor silently removing it.
+    const { container } = render(<Markdown>{'para one\n\npara two'}</Markdown>);
+    const wrapper = container.querySelector('.markdown-body');
+    expect(wrapper).not.toBeNull();
+    expect(wrapper.querySelectorAll('p')).toHaveLength(2);
+  });
+
+  it('does not wrap inline-mode output in a .markdown-body element', () => {
+    const { container } = render(<Markdown inline>{'just text'}</Markdown>);
+    expect(container.querySelector('.markdown-body')).toBeNull();
+  });
 });

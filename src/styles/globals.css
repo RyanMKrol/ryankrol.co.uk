@@ -752,6 +752,21 @@ html.matrix-active body {
   font-family: var(--font-body);
 }
 
+/* Restore paragraph spacing for rendered Markdown content only. The universal
+   reset above zeroes every element's margin, which collapsed the gap between
+   Markdown paragraphs to nothing (a blank-line paragraph break looked identical
+   to a line break). Scoped to `.markdown-body` (the block-mode wrapper in
+   Markdown.js) so class-styled paragraphs elsewhere keep their explicit margins.
+   `:last-child` keeps single-paragraph content (the common case) visually
+   unchanged, so only genuinely multi-paragraph content gains inter-paragraph gaps. */
+.markdown-body p {
+  margin-bottom: 0.9em;
+}
+
+.markdown-body p:last-child {
+  margin-bottom: 0;
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--font-size-base);
