@@ -41,6 +41,26 @@ export function preserveBlankLines(src) {
   return result.join('\n');
 }
 
+// CommonMark collapses a single typed Enter (one newline, no blank line) into
+// a plain space when rendering a paragraph. Append a hard-break marker (two
+// trailing spaces) to any line immediately followed by another non-blank
+// line, so that soft break renders as a visible line break instead. Blank
+// lines are left untouched — they start a real paragraph break, handled by
+// preserveBlankLines.
+export function preserveSingleNewlines(src) {
+  if (typeof src !== 'string') return src;
+
+  const lines = src.split('\n');
+  const result = lines.map((line, i) => {
+    if (line.trim() === '') return line;
+    const nextLine = lines[i + 1];
+    if (nextLine === undefined || nextLine.trim() === '') return line;
+    return `${line}  `;
+  });
+
+  return result.join('\n');
+}
+
 export default function Markdown({ children, inline = false }) {
   if (!children) return null;
 
@@ -57,5 +77,9 @@ export default function Markdown({ children, inline = false }) {
     );
   }
 
-  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{preserveBlankLines(children)}</ReactMarkdown>;
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      {preserveBlankLines(preserveSingleNewlines(children))}
+    </ReactMarkdown>
+  );
 }

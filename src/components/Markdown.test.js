@@ -89,4 +89,47 @@ describe('Markdown', () => {
     expect(link.tagName).toBe('A');
     expect(link.getAttribute('href')).toBe('https://example.com');
   });
+
+  it('renders a single typed newline as a visible line break within one paragraph in block mode', () => {
+    const { container } = render(<Markdown>{'line one\nline two'}</Markdown>);
+    const paragraphs = container.querySelectorAll('p');
+    expect(paragraphs).toHaveLength(1);
+    const br = paragraphs[0].querySelector('br');
+    expect(br).not.toBeNull();
+    expect(paragraphs[0].textContent).toBe('line one\nline two');
+  });
+
+  it('still renders a normal single-blank-line paragraph break as two p elements with no injected br', () => {
+    const { container } = render(<Markdown>{'para one\n\npara two'}</Markdown>);
+    const paragraphs = container.querySelectorAll('p');
+    expect(paragraphs).toHaveLength(2);
+    expect(container.querySelector('br')).toBeNull();
+    expect(paragraphs[0].textContent).toBe('para one');
+    expect(paragraphs[1].textContent).toBe('para two');
+  });
+
+  it('still renders gap paragraphs for blank-line runs, unaffected by soft-break handling', () => {
+    const { container } = render(<Markdown>{'para one\n\n\npara two'}</Markdown>);
+    const paragraphs = container.querySelectorAll('p');
+    expect(paragraphs).toHaveLength(3);
+    expect(paragraphs[0].textContent).toBe('para one');
+    expect(paragraphs[1].textContent).toBe(' ');
+    expect(paragraphs[2].textContent).toBe('para two');
+    expect(container.querySelector('br')).toBeNull();
+  });
+
+  it('still renders roughly twice the gap for two consecutive blank lines, unaffected by soft-break handling', () => {
+    const { container } = render(<Markdown>{'para one\n\n\n\npara two'}</Markdown>);
+    const paragraphs = container.querySelectorAll('p');
+    expect(paragraphs).toHaveLength(4);
+    expect(paragraphs[1].textContent).toBe(' ');
+    expect(paragraphs[2].textContent).toBe(' ');
+  });
+
+  it('does not introduce a br for a single newline in inline mode', () => {
+    const { container } = render(<Markdown inline>{'line one\nline two'}</Markdown>);
+    expect(container.querySelector('br')).toBeNull();
+    expect(container.textContent).toContain('line one');
+    expect(container.textContent).toContain('line two');
+  });
 });
