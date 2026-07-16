@@ -10668,7 +10668,7 @@
     {
       "id": "T388",
       "title": "Decide the fix direction for single-newline markdown spacing",
-      "status": "pending",
+      "status": "done",
       "dependsOn": [],
       "gate": "needs-human",
       "tags": [
