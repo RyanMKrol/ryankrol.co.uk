@@ -259,17 +259,15 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
   (tracked as the harness backlog's `collection-redesign` tag, T141–T169) is complete — every page
   now uses the Collection tokens; there is no pre-redesign styling left to expect.
 - **Markdown rendering goes through `src/components/Markdown.js` (block + `inline` modes).** Block
-  mode wraps its output in a `<div class="markdown-body">` and runs one pure preprocessing pass on
+  mode wraps its output in a `<div class="markdown-body">` and runs two pure preprocessing passes on
   the raw string before `react-markdown`: `preserveSingleNewlines` (one typed Enter → a `<br>` hard
-  break, so a soft break shows as a visible line break; T396). Blank-line paragraph breaks are left
-  to standard CommonMark — a run of extra blank lines collapses to one paragraph break. **Paragraph
-  spacing is provided by the `.markdown-body p` rule in `globals.css`** because the global
+  break, so a soft break shows as a visible line break; T396) and `preserveBlankLines` (each extra
+  blank line → a standalone gap paragraph for proportional vertical space; T382). **Paragraph spacing
+  is deliberately restored under `.markdown-body p` in `globals.css`** because the global
   `* { margin: 0 }` reset zeroes every paragraph's margin (without it, blank-line paragraph breaks
   collapse to no visible gap). If you add a new block element type that needs spacing, scope it under
-  `.markdown-body`, not a bare element selector. (An earlier `preserveBlankLines` pass that injected
-  lone-space "gap paragraphs" for proportional spacing — T382 — was removed once real margins took
-  over that job.) `inline` mode (album track highlights in `ReviewCard.js`) intentionally does none
-  of this — no wrapper, no `<br>`.
+  `.markdown-body`, not a bare element selector. `inline` mode (album track highlights in
+  `ReviewCard.js`) intentionally does none of this — no wrapper, no `<br>`, no gap paragraphs.
 - **Respect `prefers-reduced-motion`.** The Matrix rain stops after one frame and CSS flicker is
   disabled under it — keep any new animation guarded the same way.
 - **Be generous with `console.log` in API routes / lib.** The codebase logs cache hits/misses and
