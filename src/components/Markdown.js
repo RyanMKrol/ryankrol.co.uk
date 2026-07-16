@@ -7,46 +7,14 @@ const inlineComponents = {
   p: ({ children }) => <>{children}</>,
 };
 
-// CommonMark collapses any run of blank lines down to a single paragraph
-// break, so a user's intentional extra blank line has no visible effect.
-// Turn each run of N>=2 consecutive blank lines into the normal paragraph
-// break plus (N-1) standalone "gap paragraphs" (a lone non-breaking space)
-// so the extra vertical space actually renders.
-export function preserveBlankLines(src) {
-  if (typeof src !== 'string') return src;
-
-  const lines = src.split('\n');
-  const result = [];
-  let i = 0;
-
-  while (i < lines.length) {
-    if (lines[i].trim() === '') {
-      let j = i;
-      while (j < lines.length && lines[j].trim() === '') j += 1;
-      const blankCount = j - i;
-
-      result.push('');
-      for (let k = 1; k < blankCount; k += 1) {
-        result.push(' ');
-        result.push('');
-      }
-
-      i = j;
-    } else {
-      result.push(lines[i]);
-      i += 1;
-    }
-  }
-
-  return result.join('\n');
-}
-
 // CommonMark collapses a single typed Enter (one newline, no blank line) into
 // a plain space when rendering a paragraph. Append a hard-break marker (two
 // trailing spaces) to any line immediately followed by another non-blank
 // line, so that soft break renders as a visible line break instead. Blank
-// lines are left untouched — they start a real paragraph break, handled by
-// preserveBlankLines.
+// lines are left untouched — they start a real paragraph break, which
+// ReactMarkdown renders as a separate paragraph (spaced by `.markdown-body p`
+// in globals.css). Runs of extra blank lines collapse to one paragraph break,
+// standard CommonMark — real paragraph margins carry the spacing now.
 export function preserveSingleNewlines(src) {
   if (typeof src !== 'string') return src;
 
@@ -85,7 +53,7 @@ export default function Markdown({ children, inline = false }) {
   return (
     <div className="markdown-body">
       <ReactMarkdown remarkPlugins={[remarkGfm]}>
-        {preserveBlankLines(preserveSingleNewlines(children))}
+        {preserveSingleNewlines(children)}
       </ReactMarkdown>
     </div>
   );

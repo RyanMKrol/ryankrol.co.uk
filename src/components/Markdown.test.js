@@ -37,24 +37,7 @@ describe('Markdown', () => {
     expect(link.getAttribute('href')).toBe('https://example.com');
   });
 
-  it('renders an extra gap paragraph for a blank line typed between two paragraphs in block mode', () => {
-    const { container } = render(<Markdown>{'para one\n\n\npara two'}</Markdown>);
-    const paragraphs = container.querySelectorAll('p');
-    expect(paragraphs).toHaveLength(3);
-    expect(paragraphs[0].textContent).toBe('para one');
-    expect(paragraphs[1].textContent).toBe(' ');
-    expect(paragraphs[2].textContent).toBe('para two');
-  });
-
-  it('renders roughly twice the gap for two consecutive blank lines in block mode', () => {
-    const { container } = render(<Markdown>{'para one\n\n\n\npara two'}</Markdown>);
-    const paragraphs = container.querySelectorAll('p');
-    expect(paragraphs).toHaveLength(4);
-    expect(paragraphs[1].textContent).toBe(' ');
-    expect(paragraphs[2].textContent).toBe(' ');
-  });
-
-  it('does not add an extra gap paragraph for normal single-blank-line paragraph spacing', () => {
+  it('renders a normal single-blank-line paragraph break as two p elements', () => {
     const { container } = render(<Markdown>{'para one\n\npara two'}</Markdown>);
     const paragraphs = container.querySelectorAll('p');
     expect(paragraphs).toHaveLength(2);
@@ -62,10 +45,24 @@ describe('Markdown', () => {
     expect(paragraphs[1].textContent).toBe('para two');
   });
 
-  it('does not emit a gap paragraph in inline mode for the same blank-line input', () => {
-    const { container } = render(<Markdown inline>{'para one\n\n\npara two'}</Markdown>);
-    expect(container.querySelectorAll('p')).toHaveLength(0);
-    expect(container.textContent).not.toContain(' ');
+  it('collapses a run of two or more blank lines to a single paragraph break (no gap paragraphs)', () => {
+    // T382's gap-paragraph injection was removed once real paragraph margins
+    // (`.markdown-body p`) took over the spacing — extra blank lines now
+    // collapse to one paragraph break, standard CommonMark. No lone-space `p`.
+    const { container } = render(<Markdown>{'para one\n\n\npara two'}</Markdown>);
+    const paragraphs = container.querySelectorAll('p');
+    expect(paragraphs).toHaveLength(2);
+    expect(paragraphs[0].textContent).toBe('para one');
+    expect(paragraphs[1].textContent).toBe('para two');
+    expect(container.querySelector('br')).toBeNull();
+  });
+
+  it('collapses an even longer blank-line run to a single paragraph break', () => {
+    const { container } = render(<Markdown>{'para one\n\n\n\npara two'}</Markdown>);
+    const paragraphs = container.querySelectorAll('p');
+    expect(paragraphs).toHaveLength(2);
+    expect(paragraphs[0].textContent).toBe('para one');
+    expect(paragraphs[1].textContent).toBe('para two');
   });
 
   it('renders strikethrough text inside a del element in block mode', () => {
@@ -97,33 +94,6 @@ describe('Markdown', () => {
     const br = paragraphs[0].querySelector('br');
     expect(br).not.toBeNull();
     expect(paragraphs[0].textContent).toBe('line one\nline two');
-  });
-
-  it('still renders a normal single-blank-line paragraph break as two p elements with no injected br', () => {
-    const { container } = render(<Markdown>{'para one\n\npara two'}</Markdown>);
-    const paragraphs = container.querySelectorAll('p');
-    expect(paragraphs).toHaveLength(2);
-    expect(container.querySelector('br')).toBeNull();
-    expect(paragraphs[0].textContent).toBe('para one');
-    expect(paragraphs[1].textContent).toBe('para two');
-  });
-
-  it('still renders gap paragraphs for blank-line runs, unaffected by soft-break handling', () => {
-    const { container } = render(<Markdown>{'para one\n\n\npara two'}</Markdown>);
-    const paragraphs = container.querySelectorAll('p');
-    expect(paragraphs).toHaveLength(3);
-    expect(paragraphs[0].textContent).toBe('para one');
-    expect(paragraphs[1].textContent).toBe(' ');
-    expect(paragraphs[2].textContent).toBe('para two');
-    expect(container.querySelector('br')).toBeNull();
-  });
-
-  it('still renders roughly twice the gap for two consecutive blank lines, unaffected by soft-break handling', () => {
-    const { container } = render(<Markdown>{'para one\n\n\n\npara two'}</Markdown>);
-    const paragraphs = container.querySelectorAll('p');
-    expect(paragraphs).toHaveLength(4);
-    expect(paragraphs[1].textContent).toBe(' ');
-    expect(paragraphs[2].textContent).toBe(' ');
   });
 
   it('does not introduce a br for a single newline in inline mode', () => {
