@@ -3355,21 +3355,22 @@ body::before {
   gap: 0.75rem;
 }
 
-.skeleton-stat-block {
-  border-style: dashed;
-}
-
+/* The skeleton placeholders must add up to the SAME total height as the loaded stat block, or the
+   row grows when data arrives and shoves everything below it down (measured 8px before this fix).
+   The value placeholder uses the SAME `clamp()` as `.collection-stat-value`, so it tracks the real
+   number's height at every viewport width; the label placeholder matches `.collection-stat-label`'s
+   line box (1rem / 16px). Together with the shared `.collection-stat-block` padding + neutral border,
+   skeleton and loaded block come out identical — verified 0px shift across widths (900–1710). */
 .skeleton-stat-value {
   width: 2.5rem;
-  height: 2.5rem;
+  height: clamp(2.5rem, 4vw, 3.25rem);
   border-radius: var(--radius-base);
 }
 
 .skeleton-stat-label {
   width: 3.5rem;
-  height: 0.75rem;
+  height: 1rem;
   border-radius: var(--radius-base);
-  margin-top: 0.25rem;
 }
 
 .skeleton-line {
@@ -3846,6 +3847,81 @@ body::before {
   color: var(--color-ink);
   opacity: 0.75;
   margin-bottom: 0.5rem;
+}
+
+/* Collapsed Top of Mind is clamped to a FIXED height so the skeleton (TopOfMindSkeleton)
+   and the loaded-but-collapsed panel are the same size → no layout shift on load, and a
+   short note still fills the box rather than shrinking below the skeleton. `--tom-clamp-height`
+   is 3 lines at the body line-height (1.6). The toggle row reserves its height whether or not
+   the "See more" button is present, so has-button and no-button notes are the same height too. */
+.home-top-of-mind-body {
+  position: relative;
+}
+
+.home-top-of-mind-body-clamped {
+  --tom-clamp-height: 4.8em;
+  height: var(--tom-clamp-height);
+  overflow: hidden;
+}
+
+.home-top-of-mind-body-expanded {
+  height: auto;
+}
+
+/* Fade the last line of clamped, overflowing content into the panel's gold background
+   to hint there's more behind the "See more" toggle. */
+.home-top-of-mind-body-faded::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2em;
+  background: linear-gradient(to bottom, transparent, var(--color-star-gold));
+  pointer-events: none;
+}
+
+.home-top-of-mind-toggle-row {
+  height: 1.5rem;
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.home-top-of-mind-toggle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.home-top-of-mind-toggle:hover {
+  opacity: 0.7;
+}
+
+/* Skeleton fill: three shimmer lines inside the same clamped-height box as the real panel. */
+.home-top-of-mind-body-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.home-top-of-mind-skeleton-line {
+  height: 1rem;
+  border-radius: var(--radius-base);
+}
+
+.home-top-of-mind-toggle-skeleton {
+  width: 4.5rem;
+  height: 0.9rem;
+  border-radius: var(--radius-base);
 }
 
 @media (max-width: 768px) {

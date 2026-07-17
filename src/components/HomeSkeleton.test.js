@@ -5,6 +5,7 @@ import {
   CardRowSkeleton,
   GymPanelStatsSkeleton,
   ListRowSkeleton,
+  TopOfMindSkeleton,
 } from './HomeSkeleton';
 
 describe('StatBlockSkeleton', () => {
@@ -39,6 +40,17 @@ describe('GymPanelStatsSkeleton', () => {
     const { container } = render(<GymPanelStatsSkeleton />);
     expect(container.querySelectorAll('.skeleton-gym-stat').length).toBe(2);
     expect(container.querySelector('.skeleton-sparkline')).toBeInTheDocument();
+  });
+});
+
+describe('TopOfMindSkeleton', () => {
+  it('renders the gold panel, a clamped body with three lines, and a toggle-row placeholder', () => {
+    const { container } = render(<TopOfMindSkeleton />);
+    // Same panel + clamped-body classes the real TopOfMind uses, so the two are the same size.
+    expect(container.querySelector('.home-top-of-mind-panel')).toBeInTheDocument();
+    expect(container.querySelector('.home-top-of-mind-body-clamped')).toBeInTheDocument();
+    expect(container.querySelectorAll('.home-top-of-mind-skeleton-line').length).toBe(3);
+    expect(container.querySelector('.home-top-of-mind-toggle-skeleton')).toBeInTheDocument();
   });
 });
 

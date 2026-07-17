@@ -4,8 +4,8 @@ import Link from 'next/link'
 import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
 import CoverTile, { assignGradients } from '../components/CoverTile'
-import Markdown from '../components/Markdown'
-import { StatBlockSkeleton, TileGridSkeleton, CardRowSkeleton, GymPanelStatsSkeleton, ListRowSkeleton } from '../components/HomeSkeleton'
+import TopOfMind from '../components/TopOfMind'
+import { StatBlockSkeleton, TileGridSkeleton, CardRowSkeleton, GymPanelStatsSkeleton, ListRowSkeleton, TopOfMindSkeleton } from '../components/HomeSkeleton'
 import { tmdbPosterUrl } from '../lib/tmdb'
 import { formatReviewDate } from '../lib/dateFormat'
 import { isExpired } from '../lib/topOfMind'
@@ -169,14 +169,11 @@ export default function Home() {
           </div>
         </section>
 
-        {showTopOfMind && (
-          <section className="home-top-of-mind-panel">
-            <div className="home-top-of-mind-panel-inner">
-              <span className="home-top-of-mind-panel-label">Top of mind</span>
-              <Markdown>{topOfMind.text}</Markdown>
-            </div>
-          </section>
-        )}
+        {topOfMindLoading ? (
+          <TopOfMindSkeleton />
+        ) : showTopOfMind ? (
+          <TopOfMind text={topOfMind.text} />
+        ) : null}
 
         <section className="home-stats">
           {moviesLoading ? <StatBlockSkeleton /> : <StatBlock value={movies.length} label="movies" accentColor="var(--accent-movies)" />}

@@ -53,6 +53,24 @@ export function GymPanelStatsSkeleton() {
   );
 }
 
+export function TopOfMindSkeleton() {
+  return (
+    <section className="home-top-of-mind-panel">
+      <div className="home-top-of-mind-panel-inner">
+        <span className="home-top-of-mind-panel-label">Top of mind</span>
+        <div className="home-top-of-mind-body home-top-of-mind-body-clamped home-top-of-mind-body-skeleton">
+          <div className="skeleton-shimmer home-top-of-mind-skeleton-line" style={{ width: '95%' }} />
+          <div className="skeleton-shimmer home-top-of-mind-skeleton-line" style={{ width: '88%' }} />
+          <div className="skeleton-shimmer home-top-of-mind-skeleton-line" style={{ width: '55%' }} />
+        </div>
+        <div className="home-top-of-mind-toggle-row">
+          <div className="skeleton-shimmer home-top-of-mind-toggle-skeleton" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ListRowSkeleton({ count = 3 }) {
   return (
     <>

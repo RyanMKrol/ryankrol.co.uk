@@ -253,7 +253,9 @@ const workoutStats = {
 // capture below overrides this per-page to prove the section renders NOTHING when there's no
 // saved note / the note has expired.
 const topOfMindFresh = {
-  text: 'Rewatching **Twin Peaks** from the start and reading _The Overstory_ in parallel — funny how both are about things that outlast us.',
+  // Deliberately long enough to overflow the 3-line clamp so the baseline `home` shot shows the
+  // collapsed panel + "See more" toggle, and the `home-top-of-mind-expand` flow can expand it.
+  text: 'Rewatching **Twin Peaks** from the start and reading _The Overstory_ in parallel — funny how both are about things that outlast us. Also finally got the deadlift back over 180kg after a long deload, and I have been on a real ambient-techno kick this month: Gas, Wolfgang Voigt, that whole Kompakt catalogue. The through-line to all of it is patience, I think.',
   updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
 };
 
@@ -496,6 +498,20 @@ const expandableTextFlows = [
       const buttons = page.locator('.review-expand-btn');
       if (await buttons.count() > 0) {
         await buttons.first().click();
+      }
+    },
+  },
+  {
+    name: 'home-top-of-mind-expand',
+    path: '/',
+    waitFor: ['.home-top-of-mind-panel'],
+    flow: 'Click the "See more" toggle on the Top of Mind panel; the clamped 3-line body expands to show the full note.',
+    description: 'Top of Mind panel expanded from its fixed 3-line clamp (the collapsed clamp matches TopOfMindSkeleton so there is no load-time layout shift).',
+    covers: ['src/pages/index.js', 'src/components/TopOfMind.js', 'src/components/HomeSkeleton.js', 'src/styles/globals.css'],
+    actions: async (page) => {
+      const toggle = page.locator('.home-top-of-mind-toggle');
+      if (await toggle.count() > 0) {
+        await toggle.first().click();
       }
     },
   },
