@@ -122,6 +122,13 @@ doesn't paint its signature element fails). It's for eyeballing that a change ac
 just that the build passes); it needs Playwright's Chromium (`npx playwright install chromium`) and is
 **not** part of CI. `VISUAL_CHECK_ONLY=<name>` captures a subset for fast iteration.
 
+**Layout-shift check (local-only):** `node scripts/skeleton-shift-check.mjs` verifies the home
+page's skeleton→content swap causes zero layout shift. It loads `/` with all API fixtures delayed,
+measures every section landmark while the skeletons show, lets the data land, re-measures in the
+same page session, and fails if anything moved more than 0.5px at any of six viewport widths. It
+also writes before/after screenshots and a red-overlay pixel diff per width to
+`scripts/visual-out/shift/`. Run it when changing the home page or its skeletons.
+
 ## Database Schema
 
 ### DynamoDB Tables

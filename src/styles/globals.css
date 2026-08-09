@@ -1803,6 +1803,7 @@ input[type='range'].form-input::-moz-range-thumb {
   font-size: 0.875rem;
   font-weight: 500;
   width: 100%;
+  line-height: 1.4rem;
 }
 
 /* Marquee Component */
@@ -1891,6 +1892,10 @@ input[type='range'].form-input::-moz-range-thumb {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* Same fixed line-height as .single-line-track so the chip is the same height in its
+     loading, offline, and playing states (the label's smaller font otherwise makes the
+     loading chip ~2px shorter, nudging the hero when the track resolves). */
+  line-height: 1.4rem;
 }
 
 .now-playing-split {
@@ -3351,62 +3356,93 @@ body::before {
 
 .home-wall-grid {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  /* minmax(0, 1fr), not bare 1fr: a bare 1fr track can't shrink below its content's min width,
+     so one long unwrappable caption widens its column, narrows the others, and changes every
+     square tile's height. minmax(0, 1fr) keeps all columns equal no matter the captions. */
+  grid-template-columns: repeat(9, minmax(0, 1fr));
   gap: 0.75rem;
 }
 
-/* The skeleton placeholders must add up to the SAME total height as the loaded stat block, or the
-   row grows when data arrives and shoves everything below it down (measured 8px before this fix).
-   The value placeholder uses the SAME `clamp()` as `.collection-stat-value`, so it tracks the real
-   number's height at every viewport width; the label placeholder matches `.collection-stat-label`'s
-   line box (1rem / 16px). Together with the shared `.collection-stat-block` padding + neutral border,
-   skeleton and loaded block come out identical — verified 0px shift across widths (900–1710). */
-.skeleton-stat-value {
-  width: 2.5rem;
-  height: clamp(2.5rem, 4vw, 3.25rem);
+/* Deterministic wall-tile captions: title clamps to 2 lines, subtitle to 1, and the caption box
+   always reserves that full height — so every grid row is the same height whether a tile's title
+   wraps or not, and the skeleton grid (same classes) matches the loaded grid exactly. */
+.home-wall-grid .cover-tile-caption {
+  height: calc((0.95em * 2 + 0.85em) * var(--line-height-body) + 2px);
+  overflow: hidden;
+}
+
+.home-wall-grid .cover-tile-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.home-wall-grid .cover-tile-subtitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Invisible-text skeleton sizer (see HomeSkeleton.js): the element keeps the REAL typography of
+   the class it sits inside, so the shimmer box it paints is exactly the loaded content's line box.
+   Skeleton and loaded heights then agree by construction — no hand-tuned placeholder heights. */
+.skeleton-text {
+  /* block + fit-content, NOT inline-block: an inline-block sizer participates in its parent's
+     line box and (under line-height: normal) comes out a few px taller than plain text would.
+     As a block, the parent's height is exactly the sizer's own line box — same font, same
+     line-height, same height as the real text. */
+  display: block;
+  width: fit-content;
+  color: transparent !important;
+  border-radius: var(--radius-base);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* The loaded stat blocks are the borderless `accent` variant, so the skeleton block must be
+   borderless too (the old neutral-variant skeleton's 2px border made it 4px taller than the
+   loaded block — the stat-row jitter). */
+.skeleton-stat-block {
+  background-color: var(--color-surface-alt);
+}
+
+.skeleton-stat-block .skeleton-shimmer {
+  background-color: var(--color-hairline);
+}
+
+/* Decorative shimmer bars inside a fixed-height clamped text block (.home-snippet-skeleton):
+   the container's min-height fixes the total, the bars just fill it evenly. */
+.home-snippet-skeleton {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.skeleton-snippet-line {
+  display: block;
+  height: 0.95em;
   border-radius: var(--radius-base);
 }
 
-.skeleton-stat-label {
-  width: 3.5rem;
-  height: 1rem;
-  border-radius: var(--radius-base);
-}
-
-.skeleton-line {
-  border-radius: var(--radius-base);
-  height: 0.9rem;
-}
-
-.skeleton-line-title {
-  width: 60%;
-  margin-bottom: 0.6rem;
-}
-
-.skeleton-line-snippet {
-  width: 90%;
-  height: 2.5rem;
-}
-
-.skeleton-gym-stat {
-  flex: 1;
-  height: 2.75rem;
-}
-
-.skeleton-sparkline {
+.skeleton-sparkline-fill {
   width: 100%;
-  height: 3.5rem;
+  height: 100%;
   border-radius: var(--radius-base);
 }
 
-.skeleton-list-row {
-  width: 100%;
-  height: 1.25rem;
-  margin-bottom: 0.5rem;
+/* Shimmer sits on dark/saturated panels in the rail — lift it so it reads there. */
+.home-gym-panel .skeleton-shimmer,
+.home-hot-takes-panel .skeleton-shimmer {
+  background-color: rgba(255, 255, 255, 0.22);
 }
 
-.skeleton-list-row:last-child {
-  margin-bottom: 0;
+/* For a sizer that stands in for INLINE text (the hot-takes view-all link's label, the shelf
+   header's "· NNN records" count): it must be inline like the text it replaces. A block child
+   would move its inline-block parent's baseline to the bottom edge and the line box would gain
+   the strut's descent (~5px) below it — taller than the real text's line. */
+.skeleton-text-inline {
+  display: inline;
 }
 
 .home-wall-tile-link {
@@ -3468,11 +3504,31 @@ body::before {
   margin: 0 0 0.35rem;
 }
 
+/* Single-line title + exactly-three-line snippet keep every Latest-takes card the same height,
+   so the card row can't grow when real data replaces the skeleton (the stars, not the text,
+   set the title row's height — .star is the taller line box). */
+.home-latest-title-text {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-latest-title .stars {
+  flex-shrink: 0;
+}
+
 .home-latest-snippet {
   font-family: var(--font-body);
   font-style: italic;
   color: var(--color-ink-soft);
   margin: 0;
+  line-height: var(--line-height-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(3 * var(--line-height-body) * 1em);
 }
 
 .home-rail {
@@ -3527,10 +3583,16 @@ body::before {
   margin-bottom: 1rem;
 }
 
+/* Explicit line-heights here (and on the other home panels): with the default `normal`, the line
+   box is computed from font metrics, so the box changes height when the webfont replaces the
+   fallback — a load-time jitter of its own, and it breaks skeleton/content height parity. The
+   values are nowrap because the home panel shows compact volumes ("982k") that always fit. */
 .home-gym-stat-value {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 2rem;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .home-gym-stat-unit {
@@ -3541,6 +3603,7 @@ body::before {
 .home-gym-stat-label {
   font-family: var(--font-body);
   font-size: 0.75rem;
+  line-height: 1.35;
   text-transform: uppercase;
   opacity: 0.75;
 }
@@ -3720,6 +3783,18 @@ body::before {
   padding: 0.35rem 0;
 }
 
+/* One line per shelf row (long titles truncate rather than wrap) so row height is deterministic
+   and the shelf skeleton (same classes) always matches the loaded list. */
+.home-shelf-item span {
+  white-space: nowrap;
+}
+
+.home-shelf-item span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .home-hot-takes-panel {
   background: var(--accent-hot-takes);
   color: #FFFFFF;
@@ -3765,14 +3840,24 @@ body::before {
   border-top: none;
 }
 
+/* Every home-panel take occupies exactly two lines (clamped AND reserved) so the panel's height
+   doesn't depend on how long each take happens to be — the skeleton mirrors the same slots. The
+   full text lives at /hot-takes. */
 .home-hot-takes-text {
   font-family: var(--font-body);
   font-weight: 700;
+  line-height: var(--line-height-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(2 * var(--line-height-body) * 1em);
 }
 
 .home-hot-takes-date {
   font-family: var(--font-mono);
   font-size: 0.7rem;
+  line-height: 1.5;
   letter-spacing: 0.04em;
   opacity: 0.75;
 }
@@ -3788,6 +3873,7 @@ body::before {
   margin-top: 0.5rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
+  line-height: 1.4;
   letter-spacing: 0.04em;
   color: #FFFFFF;
   text-decoration: none;

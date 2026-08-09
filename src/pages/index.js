@@ -5,10 +5,11 @@ import NowPlaying from '../components/NowPlaying'
 import StatBlock from '../components/StatBlock'
 import CoverTile, { assignGradients } from '../components/CoverTile'
 import TopOfMind from '../components/TopOfMind'
-import { StatBlockSkeleton, TileGridSkeleton, CardRowSkeleton, GymPanelStatsSkeleton, ListRowSkeleton, TopOfMindSkeleton } from '../components/HomeSkeleton'
+import { StatBlockSkeleton, TileGridSkeleton, CardRowSkeleton, GymPanelStatsSkeleton, ShelfListSkeleton, HotTakesPanelSkeleton, TopOfMindSkeleton } from '../components/HomeSkeleton'
 import { tmdbPosterUrl } from '../lib/tmdb'
 import { formatReviewDate } from '../lib/dateFormat'
 import { isExpired } from '../lib/topOfMind'
+import { formatCompactNumber } from '../lib/numberFormat'
 
 const WALL_KIND_HREF = {
   movie: '/reviews/movies',
@@ -176,12 +177,12 @@ export default function Home() {
         ) : null}
 
         <section className="home-stats">
-          {moviesLoading ? <StatBlockSkeleton /> : <StatBlock value={movies.length} label="movies" accentColor="var(--accent-movies)" />}
-          {tvLoading ? <StatBlockSkeleton /> : <StatBlock value={tv.length} label="tv shows" accentColor="var(--accent-tv)" />}
-          {booksLoading ? <StatBlockSkeleton /> : <StatBlock value={books.length} label="books" accentColor="var(--accent-books)" />}
-          {albumsLoading ? <StatBlockSkeleton /> : <StatBlock value={albums.length} label="albums" accentColor="var(--accent-albums)" />}
-          {vinylLoading ? <StatBlockSkeleton /> : <StatBlock value={vinyl.length} label="vinyl" accentColor="var(--accent-vinyl)" />}
-          {workoutStatsLoading ? <StatBlockSkeleton /> : <StatBlock value={workoutStats?.totalWorkouts ?? 0} label="workouts" accentColor="var(--accent-workouts)" />}
+          {moviesLoading ? <StatBlockSkeleton label="movies" /> : <StatBlock value={movies.length} label="movies" accentColor="var(--accent-movies)" />}
+          {tvLoading ? <StatBlockSkeleton label="tv shows" /> : <StatBlock value={tv.length} label="tv shows" accentColor="var(--accent-tv)" />}
+          {booksLoading ? <StatBlockSkeleton label="books" /> : <StatBlock value={books.length} label="books" accentColor="var(--accent-books)" />}
+          {albumsLoading ? <StatBlockSkeleton label="albums" /> : <StatBlock value={albums.length} label="albums" accentColor="var(--accent-albums)" />}
+          {vinylLoading ? <StatBlockSkeleton label="vinyl" /> : <StatBlock value={vinyl.length} label="vinyl" accentColor="var(--accent-vinyl)" />}
+          {workoutStatsLoading ? <StatBlockSkeleton label="workouts" /> : <StatBlock value={workoutStats?.totalWorkouts ?? 0} label="workouts" accentColor="var(--accent-workouts)" />}
         </section>
 
         <section className="home-wall">
@@ -215,7 +216,7 @@ export default function Home() {
                 </div>
                 <div className="home-latest-body">
                   <h3 className="home-latest-title">
-                    {item.title}
+                    <span className="home-latest-title-text">{item.title}</span>
                     <span className="stars">
                       {[...Array(5)].map((_, i) => (
                         <span key={i} className={`star ${i < (item.rating || 0) ? 'filled' : 'empty'}`}>★</span>
@@ -242,14 +243,14 @@ export default function Home() {
                     </div>
                     <div>
                       <div className="home-gym-stat-value">
-                        {totalVolume?.toLocaleString() ?? '—'}
+                        {formatCompactNumber(totalVolume) ?? '—'}
                         {totalVolume && <span className="home-gym-stat-unit">kg</span>}
                       </div>
                       <div className="home-gym-stat-label">total volume</div>
                     </div>
                     <div>
                       <div className="home-gym-stat-value">
-                        {bestSessionVolume?.toLocaleString() ?? '—'}
+                        {formatCompactNumber(bestSessionVolume) ?? '—'}
                         {bestSessionVolume && <span className="home-gym-stat-unit">kg</span>}
                       </div>
                       <div className="home-gym-stat-label">best session vol</div>
@@ -273,7 +274,10 @@ export default function Home() {
             <div className="home-shelf-panel">
               <div className="home-shelf-panel-header">
                 <Link href="/vinyl" className="home-shelf-panel-title home-shelf-panel-link">
-                  On the shelf {!vinylLoading && <>&middot; {vinyl.length} records</>}
+                  On the shelf{' '}
+                  {vinylLoading
+                    ? <span className="skeleton-shimmer skeleton-text skeleton-text-inline" aria-hidden="true">&middot; 999 records</span>
+                    : <>&middot; {vinyl.length} records</>}
                 </Link>
                 <button
                   type="button"
@@ -285,7 +289,7 @@ export default function Home() {
                   &#8635; Skim the shelf
                 </button>
               </div>
-              {vinylLoading && <ListRowSkeleton count={5} />}
+              {vinylLoading && <ShelfListSkeleton count={5} />}
               {!vinylLoading && shelfItems.map((record, i) => (
                 <div key={record.id || i} className="home-shelf-item">
                   <span>{record.title}</span>
@@ -300,7 +304,7 @@ export default function Home() {
                   Hot takes
                 </Link>
               </div>
-              {hotTakesLoading && <ListRowSkeleton count={3} />}
+              {hotTakesLoading && <HotTakesPanelSkeleton count={3} />}
               {!hotTakesLoading && latestHotTakes.length === 0 && (
                 <p className="home-hot-takes-empty">No hot takes yet.</p>
               )}

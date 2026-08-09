@@ -161,6 +161,7 @@ src/lib (the data layer)
 | `src/lib/hardcover.js` | `mapHardcoverResult(hit)` normaliser — maps Hardcover search hit.document to the common book-result shape with `source:'hardcover'`, coverUrl from image.url, ISBNs, year from release_year, genres as subjects, pages as pageCount |
 | `src/lib/dynamo.js` | `docClient`, `paginatedScan`, `scanTable` (region hardcoded `us-east-2`) |
 | `src/lib/dateFormat.js` | `formatEnglishDate(date)` / `formatReviewDate(dateString)` — shared English-language date formatting (e.g. '17 May 2026'), for use by `ReviewCard.js` and the workouts list page (not wired in yet) |
+| `src/lib/numberFormat.js` | `formatCompactNumber(value)`: compact display formatting ('982k', '11.2k', '1.23m') used by the home gym panel's volume stats so big values always fit on one line (part of the zero-layout-shift guarantee) |
 | `src/lib/apiCache.js` | `withApiCache`, `generateCacheKey`, `clearApiCache`, `getCacheStats` |
 | `src/lib/rateLimit.js` | `checkRateLimit`, `getClientIp` — fixed-window rate limiter; **per-serverless-instance only**, does not coordinate across Vercel instances (same limitation as `apiCache.js`) |
 | `src/lib/tmdb.js` | `mapTmdbResult(raw, type)` normaliser + `tmdbPosterUrl(path)` helper |
@@ -176,6 +177,7 @@ src/lib (the data layer)
 | `src/hooks/*` | `useChartTheme`, `useKonamiCode`, `useMatrixActive`, `useExpandableText` |
 | `src/styles/globals.css` | CSS custom properties: `:root` = Collection design tokens (the single site palette) + `html.matrix-active` override |
 | `src/scripts/*` | One-shot ops scripts (table creation, data migration, audits) — run via npm |
+| `scripts/skeleton-shift-check.mjs` | Home-page layout-shift regression check: loads `/` once per viewport width (390 to 1710) with every `/api/*` fixture delayed, measures each section landmark's document-relative top in the skeleton state, lets the data land, re-measures in the same page session, and fails if anything moved >0.5px. Also writes skeleton/loaded screenshots + a red-overlay pixel diff per width to `scripts/visual-out/shift/`. Run it (`node scripts/skeleton-shift-check.mjs`) whenever touching the home skeletons, home-page CSS, or anything in the load-time reveal; the zero-shift result is a P0 |
 | `scripts/visual-check.mjs` + `scripts/_visual-harness.mjs` | Hermetic Playwright visual check: `next start` with every `/api/*` served from synthetic fixtures + external images placeholdered, screenshots every `PAGES` route AND every `FLOWS` interaction (sort/filter/search/toggle — ~65 captures) to gitignored `scripts/visual-out/`, and writes `manifest.json` (`name`/`description`/`flow`/`covers`) so an auditor can match a task's scope to the relevant shots. Each `PAGES` `waitFor` is a presence gate. `_visual-harness.mjs` owns `PAGES`/`FLOWS`/fixtures — a **living artifact**, keep current (incl. a new `FLOWS` entry per new interactive state). Wired as the harness `VISUAL_VERIFY_HOOK` (auto-fires on `page`/`style`/`ui` tasks); `VISUAL_CHECK_ONLY=<name>` filters locally. Local/loop-only, **not** in CI. See the "Visual verification" note in `.harness/custom/CLAUDE.md` |
 
 **Components:** `Header` (top nav across all sections + `NowPlaying`), `Footer` (social links),
@@ -192,8 +194,9 @@ mode), `PipMeter` (discrete-step meter, used for perfume longevity/projection), 
 widgets, see the cooldown convention below), `Tooltip` (small hover/focus-shown label bubble;
 CSS-only, generalizes the home-sparkline tooltip idiom), `TopOfMind` (home 'Top of mind' panel —
 fixed 3-line clamp + 'See more' toggle, sized to match `TopOfMindSkeleton`), `HomeSkeleton`
-(the per-section home loading placeholders — each mirrors its real content's height so the
-skeleton→content swap causes no layout shift), `MatrixLayout` / `MatrixRain` /
+(the per-section home loading placeholders: structural skeletons that render the real content's
+own classes with invisible placeholder text, so skeleton and content heights match by
+construction; verified by `scripts/skeleton-shift-check.mjs`), `MatrixLayout` / `MatrixRain` /
 `CRTOverlay` (the easter egg — `MatrixLayout` just switches these on/off via the `active` prop, no
 other chrome).
 
@@ -280,6 +283,16 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
   category labels. Use `toTimeSeries(rows, getDate, getValue)` from `src/lib/chartTime.js` to map
   rows, and spread `timeScaleOptions` into the `scales.x` block. Exception: aggregated bar charts
   (e.g. frequency-by-month with string labels) stay as category scale.
+- **Home-page skeletons are structural, and load-time layout shift is a P0 bug.** A skeleton in
+  `HomeSkeleton.js` renders the real content's own markup/classes with invisible placeholder text
+  (`.skeleton-text` sizers + `.skeleton-shimmer`), never a hand-tuned shimmer box with a guessed
+  height (guessed heights drift). Content whose height depends on data is clamped to a fixed line
+  count with the space reserved (`min-height`), so skeleton and loaded heights agree by
+  construction: wall captions (2-line title + 1-line subtitle), Latest-takes cards (1-line title,
+  3-line snippet), hot takes (2-line slots), gym volumes (compact via `formatCompactNumber`, one
+  line). Home panels also set explicit `line-height`, because with the default `normal` the line box is
+  font-metric-derived and changes height when the webfont replaces the fallback. When touching any
+  of this, run `node scripts/skeleton-shift-check.mjs`; it must report 0.00px at every width.
 - **Search-trigger buttons enforce a 2s client-side cooldown.** `TmdbSearch.js`, `BookSearch.js`,
   and `LastfmAlbumSearch.js` each set a `cooldown` state true on click and clear it after 2s via
   `setTimeout`, factored into the button's `disabled` alongside `searching` — this is on top of,
