@@ -11,7 +11,11 @@
 //
 // Run:  node scripts/skeleton-shift-check.mjs
 //   Env: VISUAL_CHECK_SKIP_BUILD=1 to reuse .next, VISUAL_CHECK_PORT (default 4798).
-// Exits 1 if any landmark shifts by more than TOLERANCE_PX at any width.
+// Also checks horizontal overflow: the page must never be wider than the viewport, in either state.
+// A too-wide page makes mobile browsers zoom the whole page out (the top half looks "squished"),
+// which is what a nowrap title inside a bare `1fr` grid column did at 401px.
+//
+// Exits 1 if any landmark shifts by more than TOLERANCE_PX, or the page overflows horizontally, at any width.
 
 import { mkdirSync, rmSync, existsSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -73,6 +77,7 @@ async function measure(page) {
       out[label] = { top: r.top + window.scrollY, height: r.height };
     }
     out['page height'] = { top: 0, height: document.documentElement.scrollHeight };
+    out.overflowX = document.documentElement.scrollWidth - document.documentElement.clientWidth;
     return out;
   }, LANDMARKS);
 }
@@ -144,7 +149,8 @@ async function checkWidth(browser, width) {
     worst = Math.max(worst, Math.abs(dTop));
     rows.push({ label, sTop: s.top, dTop, dHeight });
   }
-  return { width, rows, worst, diffStats };
+  const overflowX = Math.max(skeleton.overflowX, loaded.overflowX);
+  return { width, rows, worst, overflowX, diffStats };
 }
 
 async function main() {
@@ -171,8 +177,10 @@ async function main() {
   let fail = false;
   for (const r of results) {
     const bad = r.worst > TOLERANCE_PX;
-    if (bad) fail = true;
+    const overflow = r.overflowX > 0;
+    if (bad || overflow) fail = true;
     console.log(`\n── ${r.width}px  ${bad ? '\x1b[31m✗ SHIFT DETECTED\x1b[0m' : '\x1b[32m✓ no shift\x1b[0m'} (worst Δtop ${r.worst.toFixed(2)}px)`);
+    console.log(`   ${overflow ? `\x1b[31m✗ page is ${r.overflowX}px wider than the viewport (mobile browsers will zoom out)\x1b[0m` : '\x1b[32m✓ no horizontal overflow\x1b[0m'}`);
     for (const row of r.rows) {
       if (row.note) { console.log(`   ${row.label.padEnd(18)} ${row.note}`); continue; }
       const flag = Math.abs(row.dTop) > TOLERANCE_PX ? ' ◀ MOVED' : '';
@@ -184,8 +192,8 @@ async function main() {
 
   writeFileSync(resolve(OUT_DIR, 'shift-results.json'), JSON.stringify(results, null, 2));
   console.log(`\nScreenshots + diffs in ${OUT_DIR}`);
-  if (fail) { console.log('\x1b[31m✗ skeleton→content swap moves the page\x1b[0m'); process.exit(1); }
-  console.log('\x1b[32m✓ all landmarks stable across skeleton→content at every width\x1b[0m');
+  if (fail) { console.log('\x1b[31m✗ skeleton→content swap moves the page, or the page overflows horizontally\x1b[0m'); process.exit(1); }
+  console.log('\x1b[32m✓ all landmarks stable across skeleton→content, and no horizontal overflow, at every width\x1b[0m');
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

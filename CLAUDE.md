@@ -177,7 +177,7 @@ src/lib (the data layer)
 | `src/hooks/*` | `useChartTheme`, `useKonamiCode`, `useMatrixActive`, `useExpandableText` |
 | `src/styles/globals.css` | CSS custom properties: `:root` = Collection design tokens (the single site palette) + `html.matrix-active` override |
 | `src/scripts/*` | One-shot ops scripts (table creation, data migration, audits) — run via npm |
-| `scripts/skeleton-shift-check.mjs` | Home-page layout-shift regression check: loads `/` once per viewport width (390 to 1710) with every `/api/*` fixture delayed, measures each section landmark's document-relative top in the skeleton state, lets the data land, re-measures in the same page session, and fails if anything moved >0.5px. Also writes skeleton/loaded screenshots + a red-overlay pixel diff per width to `scripts/visual-out/shift/`. Run it (`node scripts/skeleton-shift-check.mjs`) whenever touching the home skeletons, home-page CSS, or anything in the load-time reveal; the zero-shift result is a P0 |
+| `scripts/skeleton-shift-check.mjs` | Home-page layout-shift regression check: loads `/` once per viewport width (390 to 1710) with every `/api/*` fixture delayed, measures each section landmark's document-relative top in the skeleton state, lets the data land, re-measures in the same page session, and fails if anything moved >0.5px. It also fails if the page is ever wider than the viewport in either state (on a phone that makes the browser zoom the whole page out). Also writes skeleton/loaded screenshots + a red-overlay pixel diff per width to `scripts/visual-out/shift/`. Run it (`node scripts/skeleton-shift-check.mjs`) whenever touching the home skeletons, home-page CSS, or anything in the load-time reveal; the zero-shift result is a P0 |
 | `scripts/visual-check.mjs` + `scripts/_visual-harness.mjs` | Hermetic Playwright visual check: `next start` with every `/api/*` served from synthetic fixtures + external images placeholdered, screenshots every `PAGES` route AND every `FLOWS` interaction (sort/filter/search/toggle — ~65 captures) to gitignored `scripts/visual-out/`, and writes `manifest.json` (`name`/`description`/`flow`/`covers`) so an auditor can match a task's scope to the relevant shots. Each `PAGES` `waitFor` is a presence gate. `_visual-harness.mjs` owns `PAGES`/`FLOWS`/fixtures — a **living artifact**, keep current (incl. a new `FLOWS` entry per new interactive state). Wired as the harness `VISUAL_VERIFY_HOOK` (auto-fires on `page`/`style`/`ui` tasks); `VISUAL_CHECK_ONLY=<name>` filters locally. Local/loop-only, **not** in CI. See the "Visual verification" note in `.harness/custom/CLAUDE.md` |
 
 **Components:** `Header` (top nav across all sections + `NowPlaying`), `Footer` (social links),
@@ -293,6 +293,10 @@ The reviews are an almost mechanical pattern. To add a new type (e.g. `perfumes`
   line). Home panels also set explicit `line-height`, because with the default `normal` the line box is
   font-metric-derived and changes height when the webfont replaces the fallback. When touching any
   of this, run `node scripts/skeleton-shift-check.mjs`; it must report 0.00px at every width.
+  Clamping with `white-space: nowrap` has a trap: inside a grid column declared as a bare `1fr` (or a
+  flex item with the default `min-width: auto`), the unwrapped text sets the column's minimum width and
+  pushes the page wider than a phone screen. Home grids use `minmax(0, 1fr)` and the flex children
+  get `min-width: 0` so the ellipsis can kick in. The same script fails on any horizontal overflow.
 - **Search-trigger buttons enforce a 2s client-side cooldown.** `TmdbSearch.js`, `BookSearch.js`,
   and `LastfmAlbumSearch.js` each set a `cooldown` state true on click and clear it after 2s via
   `setTimeout`, factored into the button's `disabled` alongside `searching` — this is on top of,

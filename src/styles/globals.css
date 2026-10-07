@@ -3458,7 +3458,10 @@ body::before {
 
 .home-lower {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  /* minmax(0, …) rather than bare fr: a bare 1fr column can't shrink below its min-content width,
+     and the nowrap Latest-takes titles would then push the column (and the whole page) wider than
+     a phone viewport, which makes mobile browsers zoom the entire page out. */
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
   gap: 1.5rem;
   margin: 2.5rem 0;
 }
@@ -3491,6 +3494,7 @@ body::before {
 
 .home-latest-body {
   flex: 1;
+  min-width: 0;
 }
 
 .home-latest-title {
@@ -4039,7 +4043,7 @@ body::before {
   }
 
   .home-lower {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
